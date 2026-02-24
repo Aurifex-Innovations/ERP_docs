@@ -10,12 +10,16 @@ Before starting work on any module or screen, please follow the below order stri
 
 1. **First**, refer to the provided Figma design:  
    👉 https://www.figma.com/design/a85AHKJ6mYHcksgbnJSIb8/New-enhanced?node-id=235-28040&m=draw
+   👉 https://www.figma.com/design/a85AHKJ6mYHcksgbnJSIb8/New-enhanced?node-id=235-28040&m=draw
 
 2. **If any required screen is not available there**, then refer to **Jay’s ERP Figma file**
    👉https://www.figma.com/design/mHNlJGxWHuUlzFx35YJcpG/ERP--Aurifex-?t=eHxRtMiPZJqywVMQ-0
    .
+3. **If any required screen is not available there**, then refer to **Jay’s ERP Figma file**
+   👉https://www.figma.com/design/mHNlJGxWHuUlzFx35YJcpG/ERP--Aurifex-?t=eHxRtMiPZJqywVMQ-0
+   .
 
-3. **If the screen is not found in both Figma files**, only then create a new screen as per the requirement.
+4. **If the screen is not found in both Figma files**, only then create a new screen as per the requirement.
 
 ---
 
