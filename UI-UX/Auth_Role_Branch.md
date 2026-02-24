@@ -208,15 +208,104 @@ Flow:
 
 =============================================================================================================
 
-# Module 3: Subscription
+# Module 3: Super Admin (Seravion) Management Module
+
+This module is exclusively for Seravion internal operations.
+It includes dashboard monitoring, customer approval workflow, subscription tracking, and role management.
+
+All items mentioned below are either new modules or enhancements as specified.
+
+---
+
+## 3.1 Super Admin Sidebar (New – To Be Developed)
+
+A completely new sidebar structure must be created for Super Admin (Seravion).
+
+### Sidebar Modules:
+
+- Dashboard
+- Subscription Plan Creation / View / Edit
+- Reports
+- Role Management
+
+This sidebar should be visible only to Super Admin users.
+
+---
+
+## 3.2 Dashboard Screen (Enhancement Required)
+
+The existing Dashboard screen is functionally correct but requires modifications.
+
+### Required Changes:
+
+1. Rename "Status" field to:
+   → **Doc Status**
+
+2. Add a new field:
+   → **Pay Status**
+
+### Pay Status Options:
+
+- Paid
+- Partial Paid
+- Free
+- Non Paid
+
+This will allow Super Admin to track both document approval and payment tracking separately.
+
+---
+
+## 3.3 Particular Customer Popup (Enhancement Required)
+
+This popup appears when Super Admin clicks on a specific customer.
+
+### Required Additions:
+
+1. Status Dropdown:
+   - Approve
+   - Pending
+   - Rejected
+
+2. Trial Access Checkbox:
+   - Checkbox: "Enable Trial"
+   - If checked:
+     - From Date
+     - To Date
+
+This allows Seravion to provide temporary trial access before subscription purchase.
+
+---
+
+## 3.4 Particular Customer Popup (Document Side) – New Section
+
+This section is currently missing and must be developed.
+
+### Add:
+
+- Subscription Purchase Details
+  - Plan Name
+  - Duration
+  - Branch Count
+  - Technician Count
+  - Payment Status
+  - Start Date
+  - End Date
+
+This will help Super Admin see full customer subscription visibility inside the same popup.
+
+---
+
+=============================================================================================================
+
+# Module 4: Subscription
 
 This module handles plan selection, pricing, and subscription management.
 
 ---
 
-## 3.1 Subscription Screen (Client Side)
+## 4.1 Subscription Screen (Client Side)
 
-New screen to be developed.
+Existing screen enhancement(screen name-https://www.figma.com/design/mHNlJGxWHuUlzFx35YJcpG/ERP--Aurifex-?node-id=5925-75976&t=ThWj8nSZUO8qVZql-4)
 
 ### Features:
 
@@ -234,7 +323,7 @@ Accessible only after document approval.
 
 ---
 
-## 3.2 Subscription Module (Company Admin Sidebar)
+## 4.2 Subscription Module (Company Admin Sidebar add module)
 
 New sidebar module to be created.
 
@@ -242,7 +331,7 @@ New sidebar module to be created.
 
 - Subscription Purchased List (Logs)
 - View Subscription Details
-- Purchase New Plan
+- Purchase New Plan (redirect to 3.1)
 - Payment Status:
   - Paid
   - Partial Paid
@@ -251,7 +340,7 @@ New sidebar module to be created.
 
 ---
 
-## 3.3 Subscription Plans (Super Admin Side)
+## 4.3 Subscription Plans (Super Admin Sidebar add module)
 
 New module to be developed.
 
@@ -279,13 +368,13 @@ Fields:
 
 =============================================================================================================
 
-# Module 4: Role Management
+# Module 5: Role Management
 
 This module handles permission-based access control.
 
 ---
 
-## 4.1 Role Management (Company Admin Side)
+## 5.1 Role Management (Company Admin Side)
 
 New sidebar module to be created.
 
@@ -320,7 +409,7 @@ Each module will have toggles:
 
 ---
 
-## 4.2 Role Management (Super Admin Side)
+## 5.2 Role Management (Super Admin Side)
 
 New module to be developed.
 
@@ -350,22 +439,15 @@ Fields:
 
 =============================================================================================================
 
-# Module 5: Branch Management (Client Side)
+# Module 6: Branch Management (Client Side)
 
 This module includes changes to the existing Branch Management system.
 
 ---
 
-## 5.1 ADD Branch Screen
+## 6.1 ADD Branch Screen
 
 Enhancement to existing screen.
-
-### Branch Types:
-
-- HEAD_OFFICE
-- STATE_BRANCH
-- CITY_BRANCH
-- WAREHOUSE
 
 ### Fields:
 
@@ -373,6 +455,7 @@ Enhancement to existing screen.
 - Address Fields
 - 3 Letter Code
 - Created By
+- Branch Types dropdown[HEAD_OFFICE, STATE_BRANCH, CITY_BRANCH, WAREHOUSE]
 
 ### Required Fields:
 
@@ -382,7 +465,7 @@ Enhancement to existing screen.
 
 ---
 
-## 5.2 GET LIST Screen
+## 6.2 GET LIST Screen
 
 Modification required.
 
@@ -400,7 +483,7 @@ Modification required.
 
 ---
 
-## 5.3 Edit Screen
+## 6.3 Edit Screen
 
 Same structure as Add Branch Screen.
 
@@ -410,7 +493,7 @@ Change:
 
 ---
 
-## 5.4 View Details for Specific Branch
+## 6.4 View Details for Specific Branch
 
 This screen should contain 2 Tabs:
 
