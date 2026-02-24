@@ -31,26 +31,19 @@ Before starting work on any module or screen, please follow the below order stri
 ⚠️ **Important:**  
 No new screen should be created without verifying both Figma references first.
 
-## ==========================================================================
+# =============================================================================================================
 
-# UI/UX Documentation
+# Module 1: Authentication
 
-> Note:
->
-> - "Missing" mentioned in the raw input indicates **New Screen / New Module to be developed from scratch**.
-> - # All other items are enhancements or modifications to the existing system.
-
-# 1. Authentication Module (Sign Up / Login Screen)
-
-This module covers authentication flow for both Super Admin (Seravion) and Company Admin (Client Side), including onboarding and subscription activation.
+This module handles login and registration access for both Super Admin (Seravion side) and Company Admin (Client side).
 
 ---
 
-## Super Admin (Seravion Login)
+## 1.1 Super Admin (Seravion Login)
 
 ### Screen: Super Admin (Seravion Login)
 
-This screen is dedicated only for Seravion internal access.
+This screen is only for internal Seravion access.
 
 ### Fields:
 
@@ -60,20 +53,20 @@ This screen is dedicated only for Seravion internal access.
 
 ### Required Changes:
 
-- Remove "Forgot Password" option.
-- Remove "Sign Up" line.
-- No external registration should be allowed.
-- Strict login-only access for Seravion users.
+- Remove “Forgot Password”.
+- Remove “Signup” line.
+- No public registration allowed.
+- Dedicated secure login only.
 
-This screen is an existing login screen but requires UI modification.
+This is an existing screen with UI modifications.
 
 ---
 
-## Company Admin (Client Sign Up)
+## 1.2 Company Admin (Client Sign Up)
 
 ### Screen: Company Admin (Client Sign Up)
 
-This screen allows new companies to register into the system.
+This screen allows new companies to register.
 
 ### Fields:
 
@@ -87,19 +80,18 @@ This screen allows new companies to register into the system.
 
 ### Required Changes:
 
-- Remove Google login button.
-- No third-party authentication.
-- Keep a clean onboarding-focused registration form.
+- Remove Google button.
+- No social login integration.
 
-This is an existing screen but requires UI adjustment.
+Existing screen with UI refinement.
 
 ---
 
-## Company Admin (Client Login)
+## 1.3 Company Admin (Client Login)
 
 ### Screen: Company Admin (Client Login)
 
-Standard login screen for registered company admins.
+Standard login functionality.
 
 ### Fields:
 
@@ -111,17 +103,27 @@ No major structural changes required.
 
 ---
 
-# Onboarding Screen
+=============================================================================================================
 
-This flow starts immediately after Signup/Login for Company Admin.
+# Module 2: User Onboarding
+
+This module begins after Company Admin completes Signup/Login.
+
+It covers company information submission and document verification.
 
 ---
 
-## Company Information
+## 2.1 Onboarding Screen
+
+Triggered immediately after authentication.
+
+---
+
+### Company Information
 
 ### Screen: Company Information
 
-This screen collects essential company details.
+This screen captures official company details.
 
 ### Fields:
 
@@ -133,133 +135,171 @@ This screen collects essential company details.
 - GST Number
 - PAN Number
 - Address Fields
-- Save & Continue Button
+- Save & Continue
 
-### Change Required:
+### Changes:
 
-- License Number should be optional (Non-mandatory field).
+- License Number should be optional (Non-required field).
 
-This is an enhancement to the existing onboarding flow.
+Enhancement to onboarding flow.
 
 ---
 
-## Upload Document
+### Upload Document
 
 ### Screen: Upload Document
 
-This screen allows company to upload required compliance documents.
+This screen collects compliance documents.
 
-### File Upload Fields:
+### Upload Fields:
 
-- GST Certificate
-- PAN Card
+- GST Document
+- PAN Document
 - Business / Registration Document
 
-File validation and secure storage must be implemented.
+---
+
+### Document Success Screen
+
+New screen to be developed.
+
+Purpose:
+
+- Show successful submission confirmation.
+- Inform user that approval is pending from Seravion side.
 
 ---
 
-## Document Success Screen
+### Missing Screen (Waiting Period)
 
-This is a new screen to be developed from scratch.
+New screen to be developed.
 
-After successful document upload:
+Purpose:
 
-- Show confirmation message.
-- Inform the user that approval is pending from Seravion side.
-- User should not get full system access yet.
-
----
-
-## Missing Screen (Waiting Period)
-
-This is a new screen to be developed from scratch.
-
-Until document approval:
-
-- Show popup or restricted dashboard.
-- Display message like:
+- Restrict dashboard access until approval.
+- Show popup message:
   “We will approve your access shortly.”
-- Prevent access to subscription and operational modules.
 
 ---
 
-## On Document Approve
+### On Document Approve
 
-Once Seravion approves the document:
+Flow:
 
 - Redirect user to Subscription Screen.
-- Allow user to proceed with Pay Now.
+- Allow user to proceed with payment.
 
 ---
 
-## On Document Reject
+### On Document Reject
 
-### Document Rejected Screen
+### Screen: Document Rejected Screen
 
-This is a new screen to be developed from scratch.
+New screen to be developed.
 
 Flow:
 
 - Show rejection reason.
 - Allow document re-upload.
-- Send again for review.
-- Upon approval → Redirect to Subscription Screen.
+- Resubmit for review.
+- Once approved → Redirect to Subscription Screen.
 
 ---
 
-## Subscription Screen
+=============================================================================================================
 
-This is a new screen to be developed from scratch.
+# Module 3: Subscription
 
-### Fields:
+This module handles plan selection, pricing, and subscription management.
+
+---
+
+## 3.1 Subscription Screen (Client Side)
+
+New screen to be developed.
+
+### Features:
 
 - Plan Selection Dropdown
 - Plan Details (Short Description)
 - Per Branch Price
 - Per Technician Price
-- Time Duration:
+- Duration Options:
   - Yearly
   - Monthly
   - Quarterly
 - Pay Now Button
 
-This screen becomes accessible only after document approval.
+Accessible only after document approval.
 
 ---
 
-## Missing Module in Sidebar (Subscription Module for Company Admin)
+## 3.2 Subscription Module (Company Admin Sidebar)
 
-This is a new module to be developed from scratch.
+New sidebar module to be created.
 
 ### Features:
 
 - Subscription Purchased List (Logs)
 - View Subscription Details
-- Purchase New Subscription
-- View Payment Status
-
-This module must be added in Company Admin sidebar.
+- Purchase New Plan
+- Payment Status:
+  - Paid
+  - Partial Paid
+  - Free
+  - Non Paid
 
 ---
 
-## Missing Module for Company Admin – ROLE Management
+## 3.3 Subscription Plans (Super Admin Side)
 
-This is a new module to be developed from scratch.
+New module to be developed.
 
-Must be added in sidebar.
+### Add Plan
+
+Fields:
+
+- Plan Name
+- Per Branch Pricing (branch count + price per branch)
+- Per Technician Pricing (technician count + price per technician)
+- Description
+- Duration:
+  - Monthly
+  - Quarterly
+  - Yearly
+
+### Functionalities:
+
+- View Plan List
+- View Plan Detail
+- Edit Plan
+- Delete Plan
+
+---
+
+=============================================================================================================
+
+# Module 4: Role Management
+
+This module handles permission-based access control.
+
+---
+
+## 4.1 Role Management (Company Admin Side)
+
+New sidebar module to be created.
 
 ### Add Role
 
 Fields:
 
-- Select Role from dropdown (created by Seravion)
-- Clone permission from existing role (optional)
+- Select Role from dropdown (Created by Seravion)
+- Clone permission from existing role
 - Role Name
 
-### Permission Structure:
+### Permission Structure (25+ Modules)
 
-25+ module-wise permission toggles:
+Each module will have toggles:
 
 - Add
 - View
@@ -269,103 +309,20 @@ Fields:
 - Configure
 - Approval Authority
 
-### Role Management Features:
+### Functionalities:
 
 - Save Role
 - Roles List
-- View particular Role permissions
-- Delete (with warning if role is assigned to users)
+- View Role Permissions
+- Edit (With Warning)
+- Delete (Warning if users assigned)
 - Migrate role to another role
-- Edit with warning
 
 ---
 
-# Super Admin (Seravion Side)
+## 4.2 Role Management (Super Admin Side)
 
----
-
-## Side Bar Missing for Super Admin
-
-This is a new sidebar structure to be created.
-
-Modules to include:
-
-- Dashboard
-- Subscription Plan Creation / View / Edit
-- Reports
-- Role Management
-
----
-
-## Dashboard Screen
-
-Existing screen but requires modification.
-
-### Required Changes:
-
-- Change Status name to “Doc Status”.
-- Add Pay Status:
-  - Paid
-  - Partial Paid
-  - Free
-  - Non Paid
-
----
-
-## Particular Customer Popup
-
-Enhancement required.
-
-### Add:
-
-- Status dropdown:
-  - Approve
-  - Pending
-  - Rejected
-- One checkbox for Trial
-  - Select From Date – To Date
-
----
-
-## Particular Customer Popup (Document Side)
-
-Missing section to be developed.
-
-Add:
-
-- Subscription Purchase Details
-
----
-
-## Subscription Plans (Missing Module)
-
-This is a new module to be developed from scratch.
-
-### Add Plan
-
-Fields:
-
-- Plan Name
-- Per Branch Pricing (Branch count, price per branch)
-- Per Technician Pricing (Branch count, price per technician)
-- Description
-- Duration:
-  - Monthly
-  - Yearly
-  - Quarterly
-
-### Features:
-
-- View List of Plans
-- View Plan Detail
-- Edit Plan
-- Delete Plan
-
----
-
-## Role Management (Missing Module – Super Admin)
-
-This is a new module to be developed from scratch.
+New module to be developed.
 
 ### Add Role
 
@@ -381,26 +338,27 @@ Fields:
   - Configure
   - Approval Authority
 
-### Features:
+### Functionalities:
 
 - Save Role
 - Roles List
-- View particular role permissions
-- Delete (with migration warning)
-- Migrate role
+- View Role Permissions
 - Edit with warning
+- Delete with migration handling
 
 ---
 
-# Client Side – Branch Management
+=============================================================================================================
 
-(Only changes from existing module)
+# Module 5: Branch Management (Client Side)
+
+This module includes changes to the existing Branch Management system.
 
 ---
 
-## ADD Branch Screen
+## 5.1 ADD Branch Screen
 
-Enhancement required.
+Enhancement to existing screen.
 
 ### Branch Types:
 
@@ -424,9 +382,9 @@ Enhancement required.
 
 ---
 
-## GET LIST Screen
+## 5.2 GET LIST Screen
 
-Modify existing branch list.
+Modification required.
 
 ### Remove:
 
@@ -442,9 +400,9 @@ Modify existing branch list.
 
 ---
 
-## Edit Screen
+## 5.3 Edit Screen
 
-Same as Add Branch Screen.
+Same structure as Add Branch Screen.
 
 Change:
 
@@ -452,9 +410,9 @@ Change:
 
 ---
 
-## View Details for Specific Branch
+## 5.4 View Details for Specific Branch
 
-This screen must contain 2 Tabs:
+This screen should contain 2 Tabs:
 
 ### Tab 1: Branch Info.
 
@@ -462,7 +420,7 @@ This screen must contain 2 Tabs:
 - Address
 - 3 Letter Code
 - Status
-- Created/Edited details
+- Created / Edited Details
 
 ### Tab 2: Branch Employees List
 
