@@ -1,7 +1,3 @@
-I'll create a comprehensive Backend Development Document based strictly on your 7 modules, with clear workflows, API specifications, and field requirements for beginner-level developers.
-
----
-
 # **PEST CONTROL ERP - BACKEND DEVELOPMENT GUIDE**
 
 ---
