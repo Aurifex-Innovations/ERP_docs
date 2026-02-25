@@ -396,7 +396,7 @@ Each module will have toggles:
 - Delete
 - Export
 - Configure
-- Approval Authority
+- Approval Authority [Selected then show dropdown to select role]
 
 ### Functionalities:
 
@@ -425,7 +425,7 @@ Fields:
   - Delete
   - Export
   - Configure
-  - Approval Authority
+  - Approval Authority [Selected then show dropdown to select user]
 
 ### Functionalities:
 
@@ -434,6 +434,86 @@ Fields:
 - View Role Permissions
 - Edit with warning
 - Delete with migration handling
+
+---
+
+## 5.3 Role Salary & Leave Configuration (Company Admin Side)
+
+New sidebar module to be created.
+
+### Purpose
+
+Company Admin can define Salary Structure and Leave Structure role-wise.  
+During User Creation, based on selected Role, the system auto-fetches this configuration.  
+Admin can modify if required, otherwise default values will be used.
+
+---
+
+## Add Role Compensation Configuration
+
+### Basic Details
+
+- Select Role – Required (Dropdown)
+- Effective From Date – Required
+- Effective To Date – Optional
+- Status (Active / Inactive) – Required
+
+---
+
+## Salary Configuration Section (Role Based)
+
+- Salary Type (CTC / Fixed / Hourly) – Required
+- Default Basic Salary – Required
+- Default HRA – Optional
+- Default Other Allowance – Optional
+- Default Incentive – Optional
+- Default Deductions – Optional
+
+- PF Applicable – Optional
+- ESI Applicable – Optional
+- TDS Applicable – Optional
+
+### Holiday Work Configuration
+
+- Holiday Work Incentive Applicable – Optional
+- Holiday Work Incentive Type (Fixed / Per Day / Per Hour) – Optional
+- Holiday Work Incentive Default Amount – Optional
+
+### Overtime Configuration
+
+- Overtime Applicable – Optional
+- Overtime Type (Per Hour / Per Shift) – Optional
+- Overtime Shift Type – Optional
+- Overtime Shift Incentive Default Amount – Optional
+
+- Per Hour Incentive Default Pay Amount – Optional
+- Maximum Overtime Hours Per Month – Optional
+
+---
+
+## Leave Configuration Section (Role Based)
+
+- Casual Leave (CL) Per Year – Optional
+- Sick Leave (SL) Per Year – Optional
+- Paid Leave (PL) Per Year – Optional
+- Annual Leave Allocation – Optional
+
+- Carry Forward Allowed – Optional
+- Max Carry Forward Days – Optional
+
+- Leave Approval Authority Role – Required
+- Leave Reset Cycle (Yearly / Monthly) – Required
+
+---
+
+## Functionalities
+
+- Save Configuration
+- Configuration List (Role Wise)
+- View Configuration
+- Edit (With Effective Date Handling)
+- Deactivate Configuration
+- Clone Configuration to Another Role
 
 ---
 
@@ -516,5 +596,421 @@ Columns:
 - Designation
 - Staff Status
 - Branch Name
+
+---
+
+============================================================================================================
+
+# Module 7 – User Management
+
+---
+
+## 7.1 Overview with Tab Logic
+
+User Management contains 3 Tabs:
+
+- Tab 1: User List
+- Tab 2: Send Request to Add New Employee
+- Tab 3: Received Requests to Add New Employee
+
+Tab visibility depends on user role level.
+
+---
+
+### Role-Based Tab Visibility
+
+#### Lower-Level Roles (Manager / Team Lead)
+
+Can See:
+
+- Tab 1: User List
+- Tab 2: Send Request to Add New Employee
+
+Cannot See:
+
+- Tab 3: Received Requests
+
+##### Why?
+
+- They can view existing users (as per permission).
+- They cannot directly create employees.
+- They can only raise hiring requests.
+- They cannot approve or review other requests.
+
+---
+
+#### Upper-Level Roles (Admin / HR / Company Admin)
+
+Can See:
+
+- Tab 1: User List
+- Tab 2: Send Request to Add New Employee
+- Tab 3: Received Requests
+
+##### Why?
+
+- They manage employee creation.
+- They review and approve hiring requests.
+- They can convert approved requests into actual employees.
+
+---
+
+### Tab Combination Matrix
+
+| Role Level  | Tab 1 | Tab 2    | Tab 3 |
+| ----------- | ----- | -------- | ----- |
+| Lower-Level | Yes   | Yes      | No    |
+| Upper-Level | Yes   | No       | Yes   |
+| Super Admin | Yes   | Optional | Yes   |
+
+---
+
+## 7.2 Get All User List
+
+### Tab 1: User List (View Permissions)
+
+Exisiting screen have in figma.
+
+Purpose:  
+Display all existing users with quick actions.
+
+#### Table Columns
+
+- EMP ID
+- Employee Name
+- Email ID
+- Contact Number
+- Designation
+- Department
+- Role
+- Branch Name (If multiple, show comma separated or count + view option)
+- Reporting Manager
+- Status (Active / Inactive)
+- Created Date
+
+#### Actions
+
+- View
+- Edit
+- Delete (With confirmation)
+
+---
+
+## 7.3 Get Tabs Wise
+
+---
+
+### Tab 2: Send Request to Add New Employee
+
+(For Lower-Level Manager to request hiring)
+
+New form module in User Management.
+
+Purpose:  
+Managers cannot directly create users but can raise hiring request to Admin.
+
+---
+
+#### A) Request Form Fields
+
+##### Basic Information
+
+- Requested By – Auto-filled (Logged-in User)
+- Department – Required (Textfield)
+- Designation – Required (Textfield)
+- Proposed Role – Required (Dropdown)
+- Branch – Required (Multiple Selection)
+- Employment Type (Permanent / Contract / Intern) – Required
+- Expected Date of Joining – Required
+- Number of Positions – Required
+- Hiring Reason – Required (Textarea)
+- Job Description – Optional (Textarea)
+- Additional Remarks – Optional (Textarea)
+- Supporting Document – Optional (File Upload)
+
+##### Actions
+
+- Submit Request
+- Cancel
+
+---
+
+#### B) My Hiring Requests (Table View)
+
+Purpose:  
+Requester can see all requests submitted by them.  
+New form module in User Management.
+
+##### Table Columns
+
+- Request ID
+- Department
+- Proposed Role
+- Branch (can be multiple)
+- Number of Positions
+- Expected Joining Date
+- Hiring Reason (Short Preview)
+- Status (Pending / Approved / Rejected / Converted)
+- Submitted Date
+- Last Updated Date
+
+##### Actions
+
+- View (Full Details)
+- View Rejection Reason (If Rejected)
+
+---
+
+### Tab 3: Received Requests to Add New Employee
+
+(Admin / Higher Authority View)
+
+New form module in User Management.
+
+Purpose:  
+Admin or authorized role can review, approve, reject, or convert hiring requests into actual employees.
+
+---
+
+#### A) Received Requests – Table View
+
+##### Table Columns
+
+- Request ID
+- Requested By (Employee Name)
+- Department
+- Proposed Role
+- Branch
+- Employment Type
+- Number of Positions
+- Expected Joining Date
+- Proposed Salary (if applicable)
+- Status (Pending / Approved / Rejected)
+- Submitted Date
+- Reviewed By
+- Reviewed Date
+
+---
+
+#### B) Filters & Search
+
+- Filter by Status
+- Filter by Department
+- Filter by Branch
+- Filter by Requested By
+- Date Range Filter
+- Search (Request ID / Employee Name / Role)
+
+---
+
+#### C) Actions
+
+##### For Pending Requests
+
+- View (Full Details)
+- Approve
+- Reject (Rejection Reason Mandatory)
+
+##### For Rejected Requests
+
+- View Rejection Reason
+
+---
+
+#### D) Request Detail View (On Clicking View)
+
+Display Full Information:
+
+- Requested By
+- Department
+- Designation
+- Proposed Role
+- Branch
+- Employment Type
+- Expected Date of Joining
+- Number of Positions
+- Hiring Reason
+- Job Description
+- Additional Remarks
+- Supporting Document (Download Option)
+
+---
+
+#### Status Flow
+
+- Pending → Approved
+- Pending → Rejected
+
+---
+
+#### Validation Rules
+
+- Reject → Rejection Reason Mandatory
+- Approve → Reviewer Name Auto-Captured
+
+---
+
+## 7.4 Add User Form
+
+Exisiting screen have in figma. but we have to change
+
+Add User Form for After hiring manual work done just add emp in system
+
+---
+
+# USER ADD FORM
+
+-Multi step form with skip and previous next button
+
+## Step 1: Personal Details
+
+### Basic Information
+
+- EMP ID – Required
+- First Name – Required
+- Last Name – Required
+- Email – Optional
+- Contact Number – Required
+- Alternate Number – Optional
+- Password – Required (Only at creation)
+- Department – Required
+- Designation – Required
+- Role – Required
+- Branch (Multiple Selection) – Required
+- Reporting Manager – Required (Filtered by Branch & Role)
+- Employment Type (Permanent / Contract / Intern) – Required
+- Date of Joining – Required
+- Status (Active / Inactive) – Required
+
+---
+
+### Address Details
+
+#### Current Address
+
+- Address Line 1 – Required
+- Address Line 2 – Optional
+- City – Required
+- State – Required
+- Country – Required
+- Pincode – Required
+
+#### Permanent Address
+
+- Permanent Address Line 1 – Required
+- Permanent Address Line 2 – Optional
+- Permanent City – Required
+- Permanent State – Required
+- Permanent Country – Required
+- Permanent Pincode – Required
+
+---
+
+## Step 2: Module Permissions
+
+(Load based on selected Role)
+
+- Is Application User – Optional (Checkbox)
+
+If "Is Application User" is checked:
+
+- Disable entire module permission section.
+
+If unchecked:
+
+- Load 25+ modules with permission toggles.
+
+For each module:
+
+- Add – Optional
+- View – Optional
+- Edit – Optional
+- Delete – Optional
+- Export – Optional
+- Approval Authority – Optional
+  - If enabled → Show dropdown to select Role
+
+---
+
+## Step 3: Salary Details
+
+(Auto-fetch from Role Configuration if available)
+
+- Salary Type (CTC / Fixed / Hourly) – Required
+- Basic Salary – Required
+- HRA – Optional
+- Other Allowance – Optional
+- Incentive – Optional
+- Deductions – Optional
+- PF Applicable – Optional
+- ESI Applicable – Optional
+- TDS Applicable – Optional
+- Bank Name – Required
+- Account Number – Required
+- IFSC Code – Required
+- Salary Effective From – Required
+- Salary Effective To – Optional
+
+### Incentive Configuration
+
+- Holiday Work Incentive Applicable – Optional
+- Holiday Work Incentive Type – Optional
+- Holiday Work Incentive Amount – Optional
+- Overtime Applicable – Optional
+- Overtime Type – Optional
+- Overtime Shift Type – Optional
+- Overtime Shift Incentive Amount – Optional
+- Per Hour Incentive Pay Amount – Optional
+- Maximum Overtime Hours Per Month – Optional
+
+---
+
+## Step 4: Leave Details
+
+(Auto-fetch from Role Configuration if available)
+
+- Casual Leave (CL) – Optional
+- Sick Leave (SL) – Optional
+- Paid Leave (PL) – Optional
+- Annual Leave Allocation – Optional
+- Carry Forward Allowed – Optional
+- Max Carry Forward Days – Optional
+- Leave Approval Authority – Required
+- Leave Reset Cycle (Yearly / Monthly) – Required
+
+---
+
+## Step 5: Documents & Additional Data
+
+### Identity & Compliance
+
+- Aadhar Number – Optional
+- PAN Number – Optional
+- UAN Number – Optional
+- Employee ID Card Number – Optional
+
+### Upload Documents
+
+- Aadhar Upload – Optional
+- PAN Upload – Optional
+- Address Proof Upload – Optional
+- Educational Certificates – Optional
+- Experience Letter – Optional
+- Offer Letter – Optional
+- Appointment Letter – Optional
+- Other Documents – Optional
+
+### Additional Professional Data
+
+- Grade / Level – Optional
+- Shift Type – Optional
+- Weekly Off – Optional
+- Target Amount – Optional
+- Commission Percentage – Optional
+- Employee Photo – Optional
+
+## Edit User Form
+
+-Edit User Form – Same as Add User Form (All steps and fields remain same as Add User).
 
 ---
