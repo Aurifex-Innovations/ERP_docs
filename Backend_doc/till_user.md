@@ -1,1623 +1,1693 @@
-# **PEST CONTROL ERP - BACKEND DEVELOPMENT GUIDE**
+# 📘 ERP System - Module Wise Workflow Documentation
 
 ---
 
-## **DOCUMENT STRUCTURE**
+# 🎯 MODULE 1: AUTHENTICATION
 
-Each module contains:
+## 1.1 Overview
 
-- Workflow Diagram
-- API Endpoints
-- Request/Response Specifications
-- Field Validation Rules
-- Database Schema Notes
+Authentication module handles access control for two distinct user types:
 
----
-
-# **MODULE 1: AUTHENTICATION**
-
-## **1.1 Super Admin Login (Seravion)**
-
-### **Workflow**
-
-```
-[Super Admin enters credentials]
-        ↓
-[Validate against seravion_admin table]
-        ↓
-[Generate JWT with role: SUPER_ADMIN]
-        ↓
-[Redirect to Super Admin Dashboard]
-```
-
-### **API Endpoint**
-
-| Method | Endpoint                         | Access |
-| ------ | -------------------------------- | ------ |
-| POST   | `/api/v1/auth/super-admin/login` | Public |
-
-### **Request Body**
-
-| Field    | Type   | Required | Validation  |
-| -------- | ------ | -------- | ----------- |
-| username | String | Yes      | Min 4 chars |
-| password | String | Yes      | Min 8 chars |
-
-```json
-{
-  "username": "admin@seravion.com",
-  "password": "SecurePass123"
-}
-```
-
-### **Response Success (200)**
-
-```json
-{
-  "status": 200,
-  "message": "Login successful",
-  "data": {
-    "accessToken": "eyJhbGciOiJIUzI1NiIs...",
-    "refreshToken": "eyJhbGciOiJIUzI1NiIs...",
-    "expiresIn": 3600,
-    "user": {
-      "id": "uuid",
-      "username": "admin@seravion.com",
-      "role": "SUPER_ADMIN",
-      "permissions": ["ALL"]
-    }
-  }
-}
-```
-
-### **Response Error (401)**
-
-```json
-{
-  "status": 401,
-  "message": "Invalid credentials",
-  "data": null
-}
-```
+- **Super Admin (Seravion)**: Platform owner access
+- **Company Admin (Client)**: Tenant/company access
 
 ---
 
-## **1.2 Company Admin Sign Up**
-
-### **Workflow**
+## 1.2 Super Admin (Seravion) Authentication Flow
 
 ```
-[Company enters registration details]
-        ↓
-[Validate email uniqueness across tenants]
-        ↓
-[Create tenant record (INACTIVE status)]
-        ↓
-[Create company_admin user]
-        ↓
-[Send verification email]
-        ↓
-[Redirect to Onboarding - Company Info]
+┌─────────────────────────────────────────────────────────────┐
+│                    SERAVION LOGIN SCREEN                     │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
+│  │  Username   │  │  Password   │  │      SUBMIT         │ │
+│  │   [Text]    │  │   [Mask]    │  │      [Button]       │ │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘ │
+│                                                              │
+│  ❌ NO Forgot Password Link                                  │
+│  ❌ NO Signup Link                                           │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│              CREDENTIALS VALIDATION                          │
+│  • Check against Seravion internal user database             │
+│  • No public registration exists                             │
+└─────────────────────────────────────────────────────────────┘
+                              │
+              ┌───────────────┴───────────────┐
+              ▼                               ▼
+        ┌─────────────┐                 ┌─────────────┐
+        │   VALID     │                 │   INVALID   │
+        └──────┬──────┘                 └──────┬──────┘
+               │                               │
+               ▼                               ▼
+    ┌─────────────────────┐           ┌─────────────────────┐
+    │  SUPER ADMIN        │           │  SHOW ERROR MESSAGE │
+    │  DASHBOARD          │           │  "Invalid Credentials"│
+    │  (Module 3)         │           │  Return to Login    │
+    └─────────────────────┘           └─────────────────────┘
 ```
 
-### **API Endpoint**
+### Screen Fields: Super Admin Login
 
-| Method | Endpoint                      | Access |
-| ------ | ----------------------------- | ------ |
-| POST   | `/api/v1/auth/company/signup` | Public |
+| Field    | Type     | Required | Validation                 |
+| -------- | -------- | -------- | -------------------------- |
+| Username | Text     | Yes      | Internal Seravion username |
+| Password | Password | Yes      | Strong password policy     |
+| Submit   | Button   | -        | Triggers authentication    |
 
-### **Request Body**
+### Business Rules:
 
-| Field                | Type   | Required | Validation                   |
-| -------------------- | ------ | -------- | ---------------------------- |
-| companyName          | String | Yes      | Max 200 chars                |
-| authorizedPersonName | String | Yes      | Max 100 chars                |
-| phone                | String | Yes      | 10 digits, Indian format     |
-| email                | String | Yes      | Valid email, unique          |
-| password             | String | Yes      | Min 8, 1 uppercase, 1 number |
-| confirmPassword      | String | Yes      | Must match password          |
-
-```json
-{
-  "companyName": "ABC Pest Control Pvt Ltd",
-  "authorizedPersonName": "Rajesh Kumar",
-  "phone": "9876543210",
-  "email": "rajesh@abcpest.com",
-  "password": "SecurePass123",
-  "confirmPassword": "SecurePass123"
-}
-```
-
-### **Response Success (201)**
-
-```json
-{
-  "status": 201,
-  "message": "Company registered successfully",
-  "data": {
-    "tenantId": "TENANT_2024_001234",
-    "companyName": "ABC Pest Control Pvt Ltd",
-    "status": "ONBOARDING_PENDING",
-    "nextStep": "COMPANY_INFO"
-  }
-}
-```
+- **No self-registration**: Super Admin accounts created internally by Seravion only
+- **No password recovery**: Managed internally by Seravion IT team
+- **Secure access**: Dedicated login portal, separate from client login
 
 ---
 
-## **1.3 Company Admin Login**
+## 1.3 Company Admin (Client) Sign Up Flow
 
-### **API Endpoint**
-
-| Method | Endpoint                     | Access |
-| ------ | ---------------------------- | ------ |
-| POST   | `/api/v1/auth/company/login` | Public |
-
-### **Request Body**
-
-| Field    | Type   | Required | Validation  |
-| -------- | ------ | -------- | ----------- |
-| email    | String | Yes      | Valid email |
-| password | String | Yes      | Min 8 chars |
-
-### **Response Success (200)**
-
-```json
-{
-  "status": 200,
-  "message": "Login successful",
-  "data": {
-    "accessToken": "eyJhbGciOiJIUzI1NiIs...",
-    "tenantId": "TENANT_2024_001234",
-    "onboardingStatus": "COMPANY_INFO_PENDING",
-    "nextScreen": "/onboarding/company-info"
-  }
-}
+```
+┌─────────────────────────────────────────────────────────────┐
+│               COMPANY ADMIN SIGN UP SCREEN                   │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  Company Name                    [____________]     │    │
+│  │  Authorized Person Name          [____________]     │    │
+│  │  Phone                           [____________]     │    │
+│  │  Email                           [____________]     │    │
+│  │  Password                        [____________]     │    │
+│  │  Re-enter Password               [____________]     │    │
+│  │                                                     │    │
+│  │  ┌─────────────────────────────────────────────┐    │    │
+│  │  │         GET STARTED BUTTON                  │    │    │
+│  │  └─────────────────────────────────────────────┘    │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                                                              │
+│  ❌ NO Google Signup Button                                  │
+│  ❌ NO Social Login Options                                  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│              VALIDATION CHECKS                               │
+│  • Email uniqueness check                                    │
+│  • Phone number format (10 digits)                           │
+│  • Password strength (min 8 chars, complexity)               │
+│  • Password match confirmation                               │
+└─────────────────────────────────────────────────────────────┘
+                              │
+              ┌───────────────┴───────────────┐
+              ▼                               ▼
+        ┌─────────────┐                 ┌─────────────┐
+        │   VALID     │                 │   INVALID   │
+        └──────┬──────┘                 └──────┬──────┘
+               │                               │
+               ▼                               ▼
+    ┌─────────────────────┐           ┌─────────────────────┐
+    │  CREATE TENANT      │           │  SHOW FIELD ERRORS  │
+    │  RECORD             │           │  Highlight issues   │
+    │                     │           │  Allow correction   │
+    │  Status: PENDING    │           │                     │
+    │  Approval           │           │                     │
+    └──────────┬──────────┘           └─────────────────────┘
+               │
+               ▼
+    ┌─────────────────────┐
+    │  REDIRECT TO        │
+    │  MODULE 2:          │
+    │  USER ONBOARDING    │
+    │  (Company Info)     │
+    └─────────────────────┘
 ```
 
-**Note:** If onboarding incomplete, redirect to respective onboarding screen.
+### Screen Fields: Company Admin Sign Up
+
+| Field                  | Type     | Required | Validation Rules                   |
+| ---------------------- | -------- | -------- | ---------------------------------- |
+| Company Name           | Text     | Yes      | Min 3 chars, alphanumeric          |
+| Authorized Person Name | Text     | Yes      | Full name of primary contact       |
+| Phone                  | Phone    | Yes      | 10 digits, Indian format           |
+| Email                  | Email    | Yes      | Unique across platform             |
+| Password               | Password | Yes      | Min 8 chars, 1 uppercase, 1 number |
+| Re-enter Password      | Password | Yes      | Must match password field          |
+| Get Started            | Button   | -        | Triggers registration              |
 
 ---
 
-# **MODULE 2: ONBOARDING**
-
-## **2.1 Company Information Screen**
-
-### **Workflow**
+## 1.4 Company Admin (Client) Login Flow
 
 ```
-[Company Admin submits company details]
-        ↓
-[Update tenant record with company info]
-        ↓
-[Mark onboarding status: DOCUMENT_UPLOAD_PENDING]
-        ↓
-[Redirect to Upload Document screen]
+┌─────────────────────────────────────────────────────────────┐
+│                COMPANY ADMIN LOGIN SCREEN                    │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  Email / Username                [____________]     │    │
+│  │  Password                        [____________]     │    │
+│  │                                                     │    │
+│  │  ┌─────────────────────────────────────────────┐    │    │
+│  │  │           SUBMIT BUTTON                     │    │    │
+│  │  └─────────────────────────────────────────────┘    │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│              AUTHENTICATION CHECK                            │
+│  • Verify email/username exists                              │
+│  • Validate password hash                                    │
+│  • Check tenant status                                       │
+└─────────────────────────────────────────────────────────────┘
+                              │
+              ┌───────────────┼───────────────┐
+              ▼               ▼               ▼
+        ┌─────────┐    ┌──────────┐    ┌──────────┐
+        │  VALID  │    │ INVALID  │    │ PENDING  │
+        │CREDENTIALS   │CREDENTIALS    │APPROVAL   │
+        └────┬────┘    └────┬─────┘    └────┬─────┘
+             │               │               │
+             ▼               ▼               ▼
+    ┌─────────────────┐ ┌──────────┐ ┌─────────────────┐
+    │ CHECK DOCUMENT  │ │ SHOW     │ │ SHOW WAITING    │
+    │ APPROVAL STATUS │ │ "Invalid │ │ SCREEN          │
+    │                 │ │ Login"   │ │ (Module 2.1)    │
+    │ (From Module 2) │ │          │ │                 │
+    └────────┬────────┘ └──────────┘ └─────────────────┘
+             │
+    ┌────────┴────────┐
+    ▼                 ▼
+┌──────────┐    ┌──────────┐
+│ APPROVED │    │ REJECTED │
+│          │    │          │
+│ Route to │    │ Route to │
+│ Dashboard│    │ Rejection│
+│ or       │    │ Screen   │
+│ Subscription│  │ (Module  │
+│ (Module 4)│   │ 2.1)     │
+└──────────┘    └──────────┘
 ```
 
-### **API Endpoint**
+### Screen Fields: Company Admin Login
 
-| Method | Endpoint                          | Access              |
-| ------ | --------------------------------- | ------------------- |
-| POST   | `/api/v1/onboarding/company-info` | Company Admin (JWT) |
-
-### **Request Body**
-
-| Field             | Type   | Required | Validation                                      |
-| ----------------- | ------ | -------- | ----------------------------------------------- |
-| companyName       | String | Yes      | Max 200 chars                                   |
-| industryType      | String | Yes      | Dropdown: PEST_CONTROL, CLEANING, FACILITY_MGMT |
-| contactPersonName | String | Yes      | Max 100 chars                                   |
-| contactEmail      | String | Yes      | Valid email                                     |
-| contactPhone      | String | Yes      | 10 digits                                       |
-| gstNumber         | String | Yes      | 15 chars, GST format                            |
-| panNumber         | String | Yes      | 10 chars, PAN format                            |
-| addressLine1      | String | Yes      | Max 200 chars                                   |
-| addressLine2      | String | No       | Max 200 chars                                   |
-| city              | String | Yes      | Max 50 chars                                    |
-| state             | String | Yes      | Indian state dropdown                           |
-| pincode           | String | Yes      | 6 digits                                        |
-| licenseNumber     | String | No       | Max 50 chars                                    |
-
-```json
-{
-  "companyName": "ABC Pest Control Pvt Ltd",
-  "industryType": "PEST_CONTROL",
-  "contactPersonName": "Rajesh Kumar",
-  "contactEmail": "rajesh@abcpest.com",
-  "contactPhone": "9876543210",
-  "gstNumber": "27AABCU9603R1ZX",
-  "panNumber": "AABCU9603R",
-  "addressLine1": "42, Industrial Estate",
-  "addressLine2": "Near Sakinaka Metro",
-  "city": "Mumbai",
-  "state": "MAHARASHTRA",
-  "pincode": "400072",
-  "licenseNumber": ""
-}
-```
-
-### **Response Success (200)**
-
-```json
-{
-  "status": 200,
-  "message": "Company information saved",
-  "data": {
-    "onboardingStatus": "DOCUMENT_UPLOAD_PENDING",
-    "nextScreen": "/onboarding/upload-documents"
-  }
-}
-```
+| Field            | Type     | Required | Notes                        |
+| ---------------- | -------- | -------- | ---------------------------- |
+| Email / Username | Text     | Yes      | Registered email or username |
+| Password         | Password | Yes      | Case-sensitive               |
+| Submit           | Button   | -        | Triggers login               |
 
 ---
 
-## **2.2 Document Upload Screen**
+# 🎯 MODULE 2: USER ONBOARDING
 
-### **Workflow**
+## 2.1 Overview
 
-```
-[Admin uploads 3 documents]
-        ↓
-[Store files in S3/Azure Blob]
-        ↓
-[Save document URLs in tenant_documents table]
-        ↓
-[Update status: PENDING_VERIFICATION]
-        ↓
-[Show Document Success Screen]
-        ↓
-[Restrict access - show waiting popup]
-```
-
-### **API Endpoint**
-
-| Method       | Endpoint                              | Access              |
-| ------------ | ------------------------------------- | ------------------- |
-| POST         | `/api/v1/onboarding/upload-documents` | Company Admin (JWT) |
-| Content-Type | `multipart/form-data`                 |                     |
-
-### **Request Body (Form Data)**
-
-| Field                   | Type | Required | Validation             |
-| ----------------------- | ---- | -------- | ---------------------- |
-| gstDocument             | File | Yes      | PDF, JPG, PNG. Max 5MB |
-| panDocument             | File | Yes      | PDF, JPG, PNG. Max 5MB |
-| businessRegistrationDoc | File | Yes      | PDF, JPG, PNG. Max 5MB |
-
-### **Response Success (200)**
-
-```json
-{
-  "status": 200,
-  "message": "Documents uploaded successfully",
-  "data": {
-    "documentStatus": "PENDING_VERIFICATION",
-    "estimatedReviewTime": "24-48 hours",
-    "nextScreen": "/onboarding/waiting-approval"
-  }
-}
-```
+Post-authentication workflow for Company Admin to complete company profile and document verification before system access.
 
 ---
 
-## **2.3 Check Onboarding Status**
+## 2.2 Complete Onboarding Flow
 
-### **API Endpoint**
-
-| Method | Endpoint                    | Access              |
-| ------ | --------------------------- | ------------------- |
-| GET    | `/api/v1/onboarding/status` | Company Admin (JWT) |
-
-### **Response Scenarios**
-
-**Scenario 1: Pending Verification**
-
-```json
-{
-  "status": 200,
-  "data": {
-    "currentStage": "WAITING_APPROVAL",
-    "message": "We will approve your access shortly",
-    "canAccessDashboard": false
-  }
-}
+```
+┌─────────────────────────────────────────────────────────────┐
+│         TRIGGER: Company Admin Sign Up Complete              │
+│                    OR                                        │
+│         Login with Pending Document Status                   │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  STEP 1: COMPANY INFORMATION SCREEN                          │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  Company Name                    [____________]     │    │
+│  │  Industry Type                   [▼ Dropdown ]      │    │
+│  │  Contact Person Name             [____________]     │    │
+│  │  Contact Person Email            [____________]     │    │
+│  │  Contact Person Phone            [____________]     │    │
+│  │  GST Number                      [____________]     │    │
+│  │  PAN Number                      [____________]     │    │
+│  │  Address Line 1                  [____________]     │    │
+│  │  Address Line 2                  [____________]     │    │
+│  │  City                            [____________]     │    │
+│  │  State                           [____________]     │    │
+│  │  Pincode                         [____________]     │    │
+│  │                                                     │    │
+│  │  ⚠️ License Number is OPTIONAL                      │    │
+│  │                                                     │    │
+│  │  ┌─────────────────────────────────────────────┐    │    │
+│  │  │         SAVE & CONTINUE                     │    │    │
+│  │  └─────────────────────────────────────────────┘    │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  STEP 2: UPLOAD DOCUMENT SCREEN                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  GST Document                    [📎 Upload ]       │    │
+│  │  PAN Document                    [📎 Upload ]       │    │
+│  │  Business / Registration Doc     [📎 Upload ]       │    │
+│  │                                                     │    │
+│  │  ┌─────────────────────────────────────────────┐    │    │
+│  │  │         SUBMIT FOR APPROVAL                 │    │    │
+│  │  └─────────────────────────────────────────────┘    │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  STEP 3: DOCUMENT SUCCESS SCREEN                             │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │                                                     │    │
+│  │           ✅ DOCUMENTS SUBMITTED                   │    │
+│  │                                                     │    │
+│  │    "We will approve your access shortly."          │    │
+│  │                                                     │    │
+│  │    Your documents are under review by Seravion.    │    │
+│  │    You will be notified once approved.             │    │
+│  │                                                     │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  WAITING PERIOD (Background Process)                         │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  SUPER ADMIN REVIEW (Module 3.2)                    │    │
+│  │  • Review uploaded documents                         │    │
+│  │  • Verify GST/PAN authenticity                       │    │
+│  │  • Check business registration                       │    │
+│  │                                                     │    │
+│  │  Decision: ───────────────────────►                 │    │
+│  │            │  APPROVE  │  REJECT  │                 │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+              ┌───────────────┴───────────────┐
+              ▼                               ▼
+    ┌─────────────────────┐         ┌─────────────────────┐
+    │   IF APPROVED       │         │   IF REJECTED       │
+    │                     │         │                     │
+    │  Redirect to:       │         │  Show:              │
+    │  Subscription       │         │  DOCUMENT REJECTED  │
+    │  Screen (Module 4)  │         │  SCREEN             │
+    │                     │         │                     │
+    │                     │         │  Display:           │
+    │                     │         │  • Rejection reason │
+    │                     │         │  • Re-upload option │
+    │                     │         │                     │
+    │                     │         │  Flow:              │
+    │                     │         │  Re-upload →        │
+    │                     │         │  Re-submit →        │
+    │                     │         │  Back to Review     │
+    └─────────────────────┘         └─────────────────────┘
 ```
 
-**Scenario 2: Approved**
+### Screen 2.1: Company Information Fields
 
-```json
-{
-  "status": 200,
-  "data": {
-    "currentStage": "APPROVED",
-    "message": "Documents approved",
-    "nextScreen": "/subscription/select-plan",
-    "canAccessDashboard": false
-  }
-}
-```
+| Field                | Type     | Required | Notes                       |
+| -------------------- | -------- | -------- | --------------------------- |
+| Company Name         | Text     | Yes      | Pre-filled from signup      |
+| Industry Type        | Dropdown | Yes      | Select from predefined list |
+| Contact Person Name  | Text     | Yes      | Pre-filled from signup      |
+| Contact Person Email | Email    | Yes      | Pre-filled from signup      |
+| Contact Person Phone | Phone    | Yes      | Pre-filled from signup      |
+| GST Number           | Text     | Yes      | 15-character GSTIN format   |
+| PAN Number           | Text     | Yes      | 10-character alphanumeric   |
+| Address Fields       | Text     | Yes      | Complete address            |
+| License Number       | Text     | **NO**   | Optional field              |
 
-**Scenario 3: Rejected**
+### Screen 2.2: Upload Document Fields
 
-```json
-{
-  "status": 200,
-  "data": {
-    "currentStage": "REJECTED",
-    "rejectionReason": "GST document unclear. Please re-upload.",
-    "nextScreen": "/onboarding/reupload-documents",
-    "canAccessDashboard": false
-  }
-}
-```
+| Field                          | Type        | Required | Format                   |
+| ------------------------------ | ----------- | -------- | ------------------------ |
+| GST Document                   | File Upload | Yes      | PDF, JPG, PNG (Max 5MB)  |
+| PAN Document                   | File Upload | Yes      | PDF, JPG, PNG (Max 5MB)  |
+| Business/Registration Document | File Upload | Yes      | PDF, JPG, PNG (Max 10MB) |
 
 ---
 
-## **2.4 Re-upload Documents (After Rejection)**
+# 🎯 MODULE 3: SUPER ADMIN (SERAVION) MANAGEMENT
 
-### **API Endpoint**
+## 3.1 Overview
 
-| Method       | Endpoint                                | Access              |
-| ------------ | --------------------------------------- | ------------------- |
-| POST         | `/api/v1/onboarding/reupload-documents` | Company Admin (JWT) |
-| Content-Type | `multipart/form-data`                   |                     |
-
-### **Request Body**
-
-Same as 2.2, but only rejected documents required.
-
-### **Response**
-
-Same as 2.2, status returns to PENDING_VERIFICATION.
+Internal Seravion operations module for tenant management, subscription oversight, and platform administration.
 
 ---
 
-# **MODULE 3: SUPER ADMIN (SERAVION PANEL)**
+## 3.2 Super Admin Sidebar Structure
 
-## **3.1 Super Admin Sidebar Structure**
-
-**Backend Implementation:** Role-based menu generation
-
-```json
-{
-  "menuItems": [
-    {
-      "id": "dashboard",
-      "label": "Dashboard",
-      "icon": "dashboard",
-      "route": "/super-admin/dashboard"
-    },
-    {
-      "id": "subscription-plans",
-      "label": "Subscription Plans",
-      "icon": "plans",
-      "route": "/super-admin/plans"
-    },
-    {
-      "id": "reports",
-      "label": "Reports",
-      "icon": "reports",
-      "route": "/super-admin/reports"
-    },
-    {
-      "id": "role-management",
-      "label": "Role Management",
-      "icon": "roles",
-      "route": "/super-admin/roles"
-    }
-  ]
-}
+```
+┌─────────────────────────────────────────────────────────────┐
+│              SUPER ADMIN SIDEBAR (New)                       │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  📊 Dashboard                                        │    │
+│  │     └── Customer approval & payment tracking         │    │
+│  │                                                      │    │
+│  │  💳 Subscription Plan Creation / View / Edit         │    │
+│  │     └── Manage pricing plans for clients             │    │
+│  │                                                      │    │
+│  │  📈 Reports                                          │    │
+│  │     └── Platform analytics & tenant reports          │    │
+│  │                                                      │    │
+│  │  🔐 Role Management                                  │    │
+│  │     └── Define system-wide roles (Module 5.2)        │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                                                              │
+│  ⚠️ VISIBLE ONLY TO SUPER ADMIN ROLE                         │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## **3.2 Dashboard Screen - Customer List**
+## 3.3 Dashboard Screen Flow (Enhanced)
 
-### **API Endpoint**
+```
+┌─────────────────────────────────────────────────────────────┐
+│              SUPER ADMIN DASHBOARD                           │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  CUSTOMER LIST TABLE (Enhanced)                      │    │
+│  │                                                      │    │
+│  │  Columns:                                            │    │
+│  │  • Company Name                                      │    │
+│  │  • Email                                             │    │
+│  │  • Phone                                             │    │
+│  │  • 📋 Doc Status [Pending/Approved/Rejected]         │    │
+│  │  • 💰 Pay Status [Paid/Partial/Free/Non-Paid] ⭐ NEW │    │
+│  │  • Created Date                                      │    │
+│  │  • Actions                                           │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                              │                               │
+│                              ▼                               │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  CLICK ON CUSTOMER ROW                              │    │
+│  │  Opens: PARTICULAR CUSTOMER POPUP                   │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│      PARTICULAR CUSTOMER POPUP (Enhanced)                    │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  TAB 1: DOCUMENT STATUS & APPROVAL                   │    │
+│  │  ─────────────────────────────────────────────────   │    │
+│  │                                                      │    │
+│  │  Status Dropdown:          [▼ Pending/Approved/     │    │
+│  │                             Rejected]               │    │
+│  │                                                      │    │
+│  │  ☐ Enable Trial (Checkbox) ⭐ NEW                    │    │
+│  │                                                      │    │
+│  │  IF CHECKED:                                         │    │
+│  │    • From Date:        [📅 Date Picker]             │    │
+│  │    • To Date:          [📅 Date Picker]             │    │
+│  │                                                      │    │
+│  │  [SAVE CHANGES]                                      │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                              │                               │
+│                              ▼                               │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  TAB 2: SUBSCRIPTION DETAILS ⭐ NEW SECTION          │    │
+│  │  ─────────────────────────────────────────────────   │    │
+│  │                                                      │    │
+│  │  Subscription Purchase Details:                      │    │
+│  │  • Plan Name:          [____________]               │    │
+│  │  • Duration:           [Monthly/Quarterly/Yearly]   │    │
+│  │  • Branch Count:       [____]                       │    │
+│  │  • Technician Count:   [____]                       │    │
+│  │  • Payment Status:     [Paid/Partial/Free/Non-Paid] │    │
+│  │  • Start Date:         [📅 ____________]            │    │
+│  │  • End Date:           [📅 ____________]            │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+```
 
-| Method | Endpoint                        | Access      |
-| ------ | ------------------------------- | ----------- |
-| GET    | `/api/v1/super-admin/customers` | Super Admin |
+### Dashboard Field Changes
 
-### **Query Parameters**
+| Original Field | New Field            | Options                            |
+| -------------- | -------------------- | ---------------------------------- |
+| Status         | **Doc Status**       | Pending, Approved, Rejected        |
+| -              | **Pay Status** (New) | Paid, Partial Paid, Free, Non Paid |
 
-| Param     | Type    | Required | Description                        |
-| --------- | ------- | -------- | ---------------------------------- |
-| page      | Integer | No       | Default: 1                         |
-| size      | Integer | No       | Default: 20                        |
-| docStatus | String  | No       | PENDING, APPROVED, REJECTED        |
-| payStatus | String  | No       | PAID, PARTIAL_PAID, FREE, NON_PAID |
-| search    | String  | No       | Company name or email              |
+### Popup Fields
 
-### **Response Success (200)**
+| Field            | Type     | Behavior                         |
+| ---------------- | -------- | -------------------------------- |
+| Status           | Dropdown | Controls document approval state |
+| Enable Trial     | Checkbox | If checked, shows date fields    |
+| From Date        | Date     | Trial start date                 |
+| To Date          | Date     | Trial end date                   |
+| Plan Name        | Text     | Selected subscription plan       |
+| Duration         | Text     | Billing cycle                    |
+| Branch Count     | Number   | Allowed branches                 |
+| Technician Count | Number   | Allowed technicians              |
+| Payment Status   | Dropdown | Current payment state            |
+| Start Date       | Date     | Subscription start               |
+| End Date         | Date     | Subscription end                 |
 
-```json
-{
-  "status": 200,
-  "data": {
-    "totalRecords": 150,
-    "page": 1,
-    "size": 20,
-    "customers": [
-      {
-        "tenantId": "TENANT_2024_001234",
-        "companyName": "ABC Pest Control",
-        "contactPerson": "Rajesh Kumar",
-        "email": "rajesh@abcpest.com",
-        "docStatus": "APPROVED",
-        "payStatus": "PAID",
-        "subscriptionPlan": "GROWTH",
-        "createdAt": "2024-01-15T10:30:00"
-      }
-    ]
-  }
-}
+---
+
+# 🎯 MODULE 4: SUBSCRIPTION
+
+## 4.1 Overview
+
+Handles plan selection, pricing configuration, and subscription lifecycle management for both client and Super Admin sides.
+
+---
+
+## 4.2 Client Side Subscription Flow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  TRIGGER: Document Approved (from Module 3)                  │
+│  OR User clicks "Purchase New Plan" in sidebar               │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  STEP 1: SUBSCRIPTION SCREEN (Client Side)                   │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │                                                      │    │
+│  │  Plan Selection:         [▼ Select Plan    ▼]       │    │
+│  │                                                      │    │
+│  │  Plan Details:           [Short description         │    │
+│  │                           displayed here]           │    │
+│  │                                                      │    │
+│  │  Pricing Structure:                                  │    │
+│  │  • Per Branch Price:     ₹ ______ / unit            │    │
+│  │  • Per Technician Price: ₹ ______ / unit            │    │
+│  │                                                      │    │
+│  │  Duration:                                           │    │
+│  │  ○ Monthly       ○ Quarterly      ○ Yearly          │    │
+│  │                                                      │    │
+│  │  ┌─────────────────────────────────────────────┐    │    │
+│  │  │            PAY NOW BUTTON                   │    │    │
+│  │  └─────────────────────────────────────────────┘    │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                                                              │
+│  ⚠️ ACCESSIBLE ONLY AFTER DOCUMENT APPROVAL                  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  STEP 2: PAYMENT PROCESSING                                  │
+│  • Calculate total based on:                                 │
+│    - Number of branches                                      │
+│    - Number of technicians                                   │
+│    - Duration selected                                       │
+│  • Process payment                                           │
+│  • Update Pay Status                                         │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  STEP 3: SUBSCRIPTION ACTIVATED                              │
+│  • Grant full system access                                  │
+│  • Redirect to Company Admin Dashboard                       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Subscription Screen Fields
+
+| Field                | Type                 | Required | Behavior                            |
+| -------------------- | -------------------- | -------- | ----------------------------------- |
+| Plan Selection       | Dropdown             | Yes      | Lists active plans from Super Admin |
+| Plan Details         | Text (Read-only)     | Auto     | Description of selected plan        |
+| Per Branch Price     | Currency (Read-only) | Auto     | From plan configuration             |
+| Per Technician Price | Currency (Read-only) | Auto     | From plan configuration             |
+| Duration             | Radio Button         | Yes      | Monthly/Quarterly/Yearly            |
+| Pay Now              | Button               | -        | Triggers payment gateway            |
+
+---
+
+## 4.3 Company Admin Subscription Module (Sidebar)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│     SUBSCRIPTION MODULE (New Sidebar Item)                   │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  SUBSCRIPTION PURCHASED LIST (Logs)                  │    │
+│  │  ─────────────────────────────────────────────────   │    │
+│  │  Table:                                              │    │
+│  │  • Plan Name                                         │    │
+│  │  • Purchase Date                                     │    │
+│  │  • Duration                                          │    │
+│  │  • Amount Paid                                       │    │
+│  │  • Payment Status [Paid/Partial/Free/Non-Paid]       │    │
+│  │  • Actions: [View Details]                           │    │
+│  │                                                      │    │
+│  │  [PURCHASE NEW PLAN] → Redirects to 4.1              │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## **3.3 Customer Detail Popup**
+## 4.4 Super Admin Subscription Plan Management
 
-### **API Endpoint**
-
-| Method | Endpoint                                   | Access      |
-| ------ | ------------------------------------------ | ----------- |
-| GET    | `/api/v1/super-admin/customers/{tenantId}` | Super Admin |
-
-### **Response - Tab 1: Company Info**
-
-```json
-{
-  "status": 200,
-  "data": {
-    "tenantId": "TENANT_2024_001234",
-    "companyName": "ABC Pest Control Pvt Ltd",
-    "contactDetails": {
-      "name": "Rajesh Kumar",
-      "email": "rajesh@abcpest.com",
-      "phone": "9876543210"
-    },
-    "gstNumber": "27AABCU9603R1ZX",
-    "panNumber": "AABCU9603R",
-    "address": {
-      "line1": "42, Industrial Estate",
-      "city": "Mumbai",
-      "state": "MAHARASHTRA",
-      "pincode": "400072"
-    },
-    "docStatus": "APPROVED",
-    "payStatus": "PAID",
-    "trialEnabled": true,
-    "trialDates": {
-      "from": "2024-01-15",
-      "to": "2024-01-30"
-    }
-  }
-}
+```
+┌─────────────────────────────────────────────────────────────┐
+│     SUBSCRIPTION PLANS (Super Admin Sidebar)                 │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  [+ ADD NEW PLAN]                                    │    │
+│  │                                                      │    │
+│  │  EXISTING PLANS LIST:                                │    │
+│  │  ┌─────────────────────────────────────────────┐    │    │
+│  │  │ Plan Name │ Branch ₹ │ Tech ₹ │ Duration │ Actions│    │
+│  │  │───────────┼──────────┼────────┼──────────┼────────│    │
+│  │  │ Basic     │ 500      │ 100    │ Monthly  │ View   │    │
+│  │  │           │          │        │          │ Edit   │    │
+│  │  │           │          │        │          │ Delete │    │
+│  │  └─────────────────────────────────────────────┘    │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                              │                               │
+│                              ▼                               │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  ADD/EDIT PLAN FORM                                  │    │
+│  │  ─────────────────────────────────────────────────   │    │
+│  │                                                      │    │
+│  │  Plan Name:              [____________]             │    │
+│  │                                                      │    │
+│  │  Per Branch Pricing:                                 │    │
+│  │  • Branch Count:         [____] units               │    │
+│  │  • Price Per Branch:     ₹ [____]                   │    │
+│  │                                                      │    │
+│  │  Per Technician Pricing:                             │    │
+│  │  • Technician Count:     [____] units               │    │
+│  │  • Price Per Technician: ₹ [____]                   │    │
+│  │                                                      │    │
+│  │  Description:            [____________________]     │    │
+│  │                          [Textarea]                 │    │
+│  │                                                      │    │
+│  │  Duration Options:                                   │    │
+│  │  ☑ Monthly  ☑ Quarterly  ☑ Yearly                   │    │
+│  │                                                      │    │
+│  │  [SAVE]  [CANCEL]                                    │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### **Update Customer Status (POST)**
+### Super Admin Plan Fields
 
-| Method | Endpoint                                          | Access      |
-| ------ | ------------------------------------------------- | ----------- |
-| POST   | `/api/v1/super-admin/customers/{tenantId}/status` | Super Admin |
-
-### **Request Body**
-
-| Field           | Type    | Required    | Description                    |
-| --------------- | ------- | ----------- | ------------------------------ |
-| docStatus       | String  | Yes         | APPROVED, PENDING, REJECTED    |
-| rejectionReason | String  | Conditional | Required if docStatus=REJECTED |
-| trialEnabled    | Boolean | No          | true/false                     |
-| trialFrom       | Date    | Conditional | Required if trialEnabled=true  |
-| trialTo         | Date    | Conditional | Required if trialEnabled=true  |
-
-```json
-{
-  "docStatus": "APPROVED",
-  "trialEnabled": true,
-  "trialFrom": "2024-01-15",
-  "trialTo": "2024-01-30"
-}
-```
+| Field                | Type         | Required | Notes                    |
+| -------------------- | ------------ | -------- | ------------------------ |
+| Plan Name            | Text         | Yes      | Unique identifier        |
+| Branch Count         | Number       | Yes      | Base branch quantity     |
+| Price Per Branch     | Currency     | Yes      | Unit price               |
+| Technician Count     | Number       | Yes      | Base technician quantity |
+| Price Per Technician | Currency     | Yes      | Unit price               |
+| Description          | Textarea     | No       | Plan features            |
+| Duration             | Multi-select | Yes      | Available billing cycles |
 
 ---
 
-## **3.4 Customer Documents & Subscription Tab**
+# 🎯 MODULE 5: ROLE MANAGEMENT
 
-### **API Endpoint**
+## 5.1 Overview
 
-| Method | Endpoint                                             | Access      |
-| ------ | ---------------------------------------------------- | ----------- |
-| GET    | `/api/v1/super-admin/customers/{tenantId}/documents` | Super Admin |
+Central RBAC (Role-Based Access Control) module with three sub-modules:
 
-### **Response**
+- 5.1: Company Admin Role Management
+- 5.2: Super Admin Role Management
+- 5.3: Role Salary & Leave Configuration
 
-```json
-{
-  "status": 200,
-  "data": {
-    "documents": [
-      {
-        "type": "GST",
-        "fileUrl": "https://s3.../gst_doc.pdf",
-        "uploadedAt": "2024-01-15T10:30:00",
-        "status": "VERIFIED"
-      }
-    ],
-    "subscriptionHistory": [
-      {
-        "subscriptionId": "SUB_001",
-        "planName": "GROWTH",
-        "duration": "YEARLY",
-        "branchCount": 3,
-        "technicianCount": 30,
-        "amountPaid": 155892,
-        "paymentStatus": "PAID",
-        "startDate": "2024-01-15",
-        "endDate": "2025-01-14"
-      }
-    ]
-  }
-}
+---
+
+## 5.2 Complete RBAC Architecture Flow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    ROLE HIERARCHY                            │
+│                                                              │
+│  LEVEL 1: SUPER ADMIN (Seravion)                             │
+│  └── Creates system-wide role templates (Module 5.2)         │
+│       └── Example: "Sales Manager Template"                  │
+│                                                              │
+│  LEVEL 2: COMPANY ADMIN (Client)                             │
+│  ├── Selects from Seravion templates                         │
+│  ├── Customizes for their organization (Module 5.1)          │
+│  └── Configures salary/leave structures (Module 5.3)         │
+│                                                              │
+│  LEVEL 3: EMPLOYEE                                           │
+│  └── Assigned role → Inherits all configurations             │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## **3.5 Subscription Plan Management**
+## 5.3 Company Admin Role Management Flow
 
-### **3.5.1 Create Plan**
-
-| Method | Endpoint                    | Access      |
-| ------ | --------------------------- | ----------- |
-| POST   | `/api/v1/super-admin/plans` | Super Admin |
-
-### **Request Body**
-
-| Field                                | Type    | Required | Description                |
-| ------------------------------------ | ------- | -------- | -------------------------- |
-| planName                             | String  | Yes      | Max 50 chars               |
-| description                          | String  | Yes      | Max 500 chars              |
-| branchPricing                        | Object  | Yes      | Pricing structure          |
-| branchPricing.baseCount              | Integer | Yes      | Included branches          |
-| branchPricing.pricePerBranch         | Decimal | Yes      | ₹ amount                   |
-| technicianPricing                    | Object  | Yes      | Pricing structure          |
-| technicianPricing.baseCount          | Integer | Yes      | Included technicians       |
-| technicianPricing.pricePerTechnician | Decimal | Yes      | ₹ amount                   |
-| durationOptions                      | Array   | Yes      | MONTHLY, QUARTERLY, YEARLY |
-| isActive                             | Boolean | Yes      | true/false                 |
-
-```json
-{
-  "planName": "GROWTH",
-  "description": "Ideal for small multi-location operators",
-  "branchPricing": {
-    "baseCount": 3,
-    "pricePerBranch": 2999
-  },
-  "technicianPricing": {
-    "baseCount": 30,
-    "pricePerTechnician": 199
-  },
-  "durationOptions": ["MONTHLY", "QUARTERLY", "YEARLY"],
-  "isActive": true
-}
+```
+┌─────────────────────────────────────────────────────────────┐
+│     ROLE MANAGEMENT (Company Admin Sidebar - New)            │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  [+ ADD ROLE]                                        │    │
+│  │                                                      │    │
+│  │  EXISTING ROLES LIST:                                │    │
+│  │  ┌─────────────────────────────────────────────┐    │    │
+│  │  │ Role Name │ Users │ Created │ Actions       │    │    │
+│  │  │───────────┼───────┼─────────┼───────────────│    │    │
+│  │  │ Sales Mgr │ 5     │ Jan 24  │ View Edit Del │    │    │
+│  │  │ Acc Exec  │ 3     │ Jan 24  │ View Edit Del │    │    │
+│  │  └─────────────────────────────────────────────┘    │    │
+│  │                                                      │    │
+│  │  [MIGRATE ROLE] - Move users between roles           │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                              │                               │
+│                              ▼                               │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  ADD ROLE FORM                                       │    │
+│  │  ─────────────────────────────────────────────────   │    │
+│  │                                                      │    │
+│  │  Step 1: Basic Info                                  │    │
+│  │  ─────────────────                                   │    │
+│  │  Select Role from dropdown:    [▼ Seravion Templates│    │
+│  │                                  ▼]                 │    │
+│  │                                                      │    │
+│  │  Clone permission from:        [▼ Existing Role ▼]  │    │
+│  │  (Optional)                                         │    │
+│  │                                                      │    │
+│  │  Role Name:                    [____________]       │    │
+│  │  (e.g., "Senior Sales Manager")                     │    │
+│  │                                                      │    │
+│  │  ☐ Is Application User ⭐ CRITICAL CHECKBOX         │    │
+│  │                                                      │    │
+│  │  ─────────────────────────────────────────────────   │    │
+│  │                                                      │    │
+│  │  IF "Is Application User" = CHECKED:                │    │
+│  │    → SKIP Step 2 (Module Permissions hidden)        │    │
+│  │    → User gets mobile app access only               │    │
+│  │    → No web dashboard access                        │    │
+│  │                                                      │    │
+│  │  IF "Is Application User" = UNCHECKED:              │    │
+│  │    → SHOW Step 2 with full permission grid          │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼ (If Is Application User = false)
+┌─────────────────────────────────────────────────────────────┐
+│  Step 2: Module Permissions (25+ Modules)                    │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │                                                      │    │
+│  │  ┌─────────────────────────────────────────────────┐│    │
+│  │  │ MODULE: User Management                         ││    │
+│  │  │ ☑ Add  ☑ View  ☑ Edit  ☑ Delete  ☑ Export      ││    │
+│  │  │ ☑ Configure                                     ││    │
+│  │  │ ☑ Approval Authority [▼ Select Role ▼]          ││    │
+│  │  │   (If checked, select which role this can       ││    │
+│  │  │    approve for - e.g., Sales Mgr approves       ││    │
+│  │  │    Sales Person requests)                       ││    │
+│  │  └─────────────────────────────────────────────────┘│    │
+│  │                                                      │    │
+│  │  ┌─────────────────────────────────────────────────┐│    │
+│  │  │ MODULE: Lead Management                         ││    │
+│  │  │ ☑ Add  ☑ View  ☐ Edit  ☐ Delete  ☑ Export      ││    │
+│  │  │ ☐ Configure  ☐ Approval Authority               ││    │
+│  │  └─────────────────────────────────────────────────┘│    │
+│  │                                                      │    │
+│  │  [Repeat for 25+ modules...]                        │    │
+│  │                                                      │    │
+│  │  [PREVIOUS]  [SAVE ROLE]  [CANCEL]                  │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### **3.5.2 List Plans**
+### Permission Toggle Behavior
 
-| Method | Endpoint                    | Access      |
-| ------ | --------------------------- | ----------- |
-| GET    | `/api/v1/super-admin/plans` | Super Admin |
-
-### **3.5.3 Update Plan**
-
-| Method | Endpoint                             | Access      |
-| ------ | ------------------------------------ | ----------- |
-| PUT    | `/api/v1/super-admin/plans/{planId}` | Super Admin |
-
-### **3.5.4 Delete Plan**
-
-| Method | Endpoint                             | Access      |
-| ------ | ------------------------------------ | ----------- |
-| DELETE | `/api/v1/super-admin/plans/{planId}` | Super Admin |
-
-**Rule:** Soft delete if any active subscriptions exist.
+| Toggle             | Behavior                     | Dependencies             |
+| ------------------ | ---------------------------- | ------------------------ |
+| Add                | Can create records in module | Usually paired with View |
+| View               | Can see/list records         | Base permission          |
+| Edit               | Can modify records           | Requires View            |
+| Delete             | Can remove records           | Soft delete only         |
+| Export             | Can download reports         | Requires View            |
+| Configure          | Can access settings          | Admin-level              |
+| Approval Authority | Can approve requests         | Shows role dropdown      |
 
 ---
 
-## **3.6 Role Management (Super Admin)**
-
-### **3.6.1 Create Base Role**
-
-| Method | Endpoint                    | Access      |
-| ------ | --------------------------- | ----------- |
-| POST   | `/api/v1/super-admin/roles` | Super Admin |
-
-### **Request Body**
-
-| Field       | Type   | Required | Description             |
-| ----------- | ------ | -------- | ----------------------- |
-| roleName    | String | Yes      | Max 100 chars           |
-| description | String | No       | Max 500 chars           |
-| permissions | Object | Yes      | Module-wise permissions |
-
-```json
-{
-  "roleName": "Standard Branch Manager",
-  "description": "Manages branch operations with financial view",
-  "permissions": {
-    "DASHBOARD": {
-      "view": true,
-      "add": false,
-      "edit": false,
-      "delete": false,
-      "export": true,
-      "configure": false,
-      "approve": false
-    },
-    "BRANCH_MGMT": {
-      "view": true,
-      "add": true,
-      "edit": true,
-      "delete": false,
-      "export": true,
-      "configure": false,
-      "approve": false
-    },
-    "INVOICING": {
-      "view": true,
-      "add": true,
-      "edit": true,
-      "delete": false,
-      "export": true,
-      "configure": false,
-      "approve": true
-    }
-  }
-}
-```
-
-### **3.6.2 List Base Roles**
-
-| Method | Endpoint                    | Access      |
-| ------ | --------------------------- | ----------- |
-| GET    | `/api/v1/super-admin/roles` | Super Admin |
-
-### **3.6.3 Update Base Role**
-
-| Method | Endpoint                             | Access      |
-| ------ | ------------------------------------ | ----------- |
-| PUT    | `/api/v1/super-admin/roles/{roleId}` | Super Admin |
-
-**Warning:** Changes affect all tenants using this base role.
-
-### **3.6.4 Delete Base Role**
-
-| Method | Endpoint                             | Access      |
-| ------ | ------------------------------------ | ----------- |
-| DELETE | `/api/v1/super-admin/roles/{roleId}` | Super Admin |
-
-**Validation:** Check if any tenant has active users with this role.
-
----
-
-# **MODULE 4: SUBSCRIPTION (CLIENT SIDE)**
-
-## **4.1 Select Subscription Plan**
-
-### **Workflow**
+## 5.4 Super Admin Role Management Flow
 
 ```
-[Company Admin views available plans]
-        ↓
-[System fetches plans from super_admin with pricing]
-        ↓
-[Admin selects plan, duration, calculates total]
-        ↓
-[Payment gateway integration]
-        ↓
-[On success: Activate subscription, send invoice]
-```
-
-### **API Endpoint**
-
-| Method | Endpoint                     | Access        |
-| ------ | ---------------------------- | ------------- |
-| GET    | `/api/v1/subscription/plans` | Company Admin |
-
-### **Response**
-
-```json
-{
-  "status": 200,
-  "data": {
-    "availablePlans": [
-      {
-        "planId": "PLAN_GROWTH",
-        "planName": "GROWTH",
-        "description": "3 branches, 30 users",
-        "basePrice": {
-          "monthly": 12999,
-          "quarterly": 37047,
-          "yearly": 132588
-        },
-        "additionalPricing": {
-          "perBranch": 2999,
-          "perTechnician": 199
-        }
-      }
-    ]
-  }
-}
-```
-
-### **Calculate Price (POST)**
-
-| Method | Endpoint                         | Access        |
-| ------ | -------------------------------- | ------------- |
-| POST   | `/api/v1/subscription/calculate` | Company Admin |
-
-### **Request Body**
-
-| Field                 | Type    | Required |
-| --------------------- | ------- | -------- | -------------------------- |
-| planId                | String  | Yes      |
-| duration              | String  | Yes      | MONTHLY, QUARTERLY, YEARLY |
-| additionalBranches    | Integer | No       | Default: 0                 |
-| additionalTechnicians | Integer | No       | Default: 0                 |
-
-### **Response**
-
-```json
-{
-  "status": 200,
-  "data": {
-    "baseAmount": 12999,
-    "additionalBranchAmount": 0,
-    "additionalTechnicianAmount": 0,
-    "subtotal": 12999,
-    "gstAmount": 2339.82,
-    "totalAmount": 15338.82,
-    "currency": "INR"
-  }
-}
-```
-
-### **Purchase Subscription (POST)**
-
-| Method | Endpoint                        | Access        |
-| ------ | ------------------------------- | ------------- |
-| POST   | `/api/v1/subscription/purchase` | Company Admin |
-
-### **Request Body**
-
-| Field                 | Type    | Required |
-| --------------------- | ------- | -------- | -------------------- |
-| planId                | String  | Yes      |
-| duration              | String  | Yes      |
-| additionalBranches    | Integer | No       |
-| additionalTechnicians | Integer | No       |
-| paymentMethod         | String  | Yes      | RAZORPAY, etc.       |
-| paymentId             | String  | Yes      | From payment gateway |
-
----
-
-## **4.2 Subscription Module (Sidebar)**
-
-### **4.2.1 List Subscriptions**
-
-| Method | Endpoint                       | Access        |
-| ------ | ------------------------------ | ------------- |
-| GET    | `/api/v1/subscription/history` | Company Admin |
-
-### **Response**
-
-```json
-{
-  "status": 200,
-  "data": {
-    "currentSubscription": {
-      "subscriptionId": "SUB_001",
-      "planName": "GROWTH",
-      "status": "ACTIVE",
-      "startDate": "2024-01-15",
-      "endDate": "2025-01-14",
-      "paymentStatus": "PAID"
-    },
-    "history": [
-      {
-        "subscriptionId": "SUB_001",
-        "planName": "STARTER",
-        "status": "EXPIRED",
-        "startDate": "2023-01-15",
-        "endDate": "2024-01-14"
-      }
-    ]
-  }
-}
-```
-
-### **4.2.2 View Subscription Details**
-
-| Method | Endpoint                                | Access        |
-| ------ | --------------------------------------- | ------------- |
-| GET    | `/api/v1/subscription/{subscriptionId}` | Company Admin |
-
----
-
-# **MODULE 5: ROLE MANAGEMENT (CLIENT SIDE)**
-
-## **5.1 Create Custom Role**
-
-### **Workflow**
-
-```
-[Company Admin selects base role from Seravion list]
-        ↓
-[Optionally clones from existing custom role]
-        ↓
-[Modifies permissions per module]
-        ↓
-[System validates dependencies]
-        ↓
-[Saves role for tenant]
-```
-
-### **API Endpoint**
-
-| Method | Endpoint        | Access        |
-| ------ | --------------- | ------------- |
-| POST   | `/api/v1/roles` | Company Admin |
-
-### **Request Body**
-
-| Field            | Type   | Required    | Description                      |
-| ---------------- | ------ | ----------- | -------------------------------- |
-| baseRoleId       | String | Yes         | From super admin base roles      |
-| cloneFromRoleId  | String | No          | Existing custom role to clone    |
-| roleName         | String | Yes         | Unique within tenant             |
-| description      | String | No          | Max 500 chars                    |
-| permissions      | Object | Yes         | 25+ modules                      |
-| branchScope      | String | Yes         | ALL or SPECIFIC                  |
-| allowedBranchIds | Array  | Conditional | Required if branchScope=SPECIFIC |
-
-```json
-{
-  "baseRoleId": "ROLE_BRANCH_MANAGER",
-  "cloneFromRoleId": null,
-  "roleName": "Senior Branch Manager",
-  "description": "Can approve expenses up to 5000",
-  "permissions": {
-    "DASHBOARD": {
-      "view": true,
-      "add": false,
-      "edit": false,
-      "delete": false,
-      "export": true,
-      "configure": false,
-      "approve": false
-    },
-    "BRANCH_MGMT": {
-      "view": true,
-      "add": true,
-      "edit": true,
-      "delete": false,
-      "export": true,
-      "configure": false,
-      "approve": false
-    },
-    "EXPENSE_MGMT": {
-      "view": true,
-      "add": true,
-      "edit": true,
-      "delete": false,
-      "export": true,
-      "configure": false,
-      "approve": true
-    }
-  },
-  "branchScope": "SPECIFIC",
-  "allowedBranchIds": ["branch-uuid-1", "branch-uuid-2"]
-}
-```
-
-**Dependency Validation:** If EXPENSE_MGMT has edit=true, auto-enable view=true for same module.
-
----
-
-## **5.2 List Custom Roles**
-
-| Method | Endpoint        | Access        |
-| ------ | --------------- | ------------- |
-| GET    | `/api/v1/roles` | Company Admin |
-
----
-
-## **5.3 View Role Details**
-
-| Method | Endpoint                 | Access        |
-| ------ | ------------------------ | ------------- |
-| GET    | `/api/v1/roles/{roleId}` | Company Admin |
-
----
-
-## **5.4 Update Role**
-
-| Method | Endpoint                 | Access        |
-| ------ | ------------------------ | ------------- |
-| PUT    | `/api/v1/roles/{roleId}` | Company Admin |
-
-**Warning Check:** System returns affected user count before confirm.
-
-```json
-{
-  "warning": "This role is assigned to 5 users. Changes will apply immediately.",
-  "affectedUsers": 5,
-  "confirmUpdate": true
-}
+┌─────────────────────────────────────────────────────────────┐
+│     ROLE MANAGEMENT (Super Admin Sidebar)                    │
+│                                                              │
+│  Similar structure to Company Admin, but:                    │
+│  • Creates TEMPLATES, not specific roles                     │
+│  • "Approval Authority" dropdown shows USERS, not roles      │
+│  • Changes affect all tenants using template                 │
+│                                                              │
+│  ⚠️ EDIT WARNING:                                            │
+│  "This is a system template. Changes may affect multiple     │
+│   organizations. Proceed with caution."                      │
+│                                                              │
+│  ⚠️ DELETE WARNING:                                          │
+│  "This template is used by X companies. Migrate users first" │                                                            │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## **5.5 Delete Role with Migration**
+## 5.5 Role Salary & Leave Configuration Flow
 
-| Method | Endpoint                 | Access        |
-| ------ | ------------------------ | ------------- |
-| DELETE | `/api/v1/roles/{roleId}` | Company Admin |
-
-### **Request Body**
-
-| Field           | Type   | Required    |
-| --------------- | ------ | ----------- | ----------------------- |
-| migrateToRoleId | String | Conditional | Required if users exist |
-
-**Validation:**
-
-- If users assigned: Must provide migrateToRoleId
-- Cannot delete if no alternative role specified
-
----
-
-## **5.6 Role Salary & Leave Configuration**
-
-### **5.6.1 Create Role Configuration**
-
-| Method | Endpoint                               | Access        |
-| ------ | -------------------------------------- | ------------- |
-| POST   | `/api/v1/roles/{roleId}/configuration` | Company Admin |
-
-### **Request Body - Salary Section**
-
-| Field                          | Type    | Required    |
-| ------------------------------ | ------- | ----------- | ------------------------ |
-| effectiveFrom                  | Date    | Yes         |
-| effectiveTo                    | Date    | No          |
-| status                         | String  | Yes         | ACTIVE, INACTIVE         |
-| salaryType                     | String  | Yes         | CTC, FIXED, HOURLY       |
-| defaultBasicSalary             | Decimal | Yes         |
-| defaultHra                     | Decimal | No          |
-| defaultOtherAllowance          | Decimal | No          |
-| defaultIncentive               | Decimal | No          |
-| defaultDeductions              | Decimal | No          |
-| pfApplicable                   | Boolean | No          |
-| esiApplicable                  | Boolean | No          |
-| tdsApplicable                  | Boolean | No          |
-| holidayWorkIncentiveApplicable | Boolean | No          |
-| holidayWorkIncentiveType       | String  | Conditional | FIXED, PER_DAY, PER_HOUR |
-| holidayWorkIncentiveAmount     | Decimal | Conditional |
-| overtimeApplicable             | Boolean | No          |
-| overtimeType                   | String  | Conditional | PER_HOUR, PER_SHIFT      |
-| overtimeShiftType              | String  | Conditional |
-| overtimeShiftIncentiveAmount   | Decimal | Conditional |
-| perHourIncentiveAmount         | Decimal | Conditional |
-| maxOvertimeHoursPerMonth       | Integer | Conditional |
-
-### **Request Body - Leave Section**
-
-| Field                        | Type    | Required    |
-| ---------------------------- | ------- | ----------- | --------------- |
-| casualLeavePerYear           | Integer | No          |
-| sickLeavePerYear             | Integer | No          |
-| paidLeavePerYear             | Integer | No          |
-| annualLeaveAllocation        | Integer | No          |
-| carryForwardAllowed          | Boolean | No          |
-| maxCarryForwardDays          | Integer | Conditional |
-| leaveApprovalAuthorityRoleId | String  | Yes         |
-| leaveResetCycle              | String  | Yes         | YEARLY, MONTHLY |
-
----
-
-# **MODULE 6: BRANCH MANAGEMENT**
-
-## **6.1 Create Branch**
-
-### **API Endpoint**
-
-| Method | Endpoint           | Access                         |
-| ------ | ------------------ | ------------------------------ |
-| POST   | `/api/v1/branches` | Company Admin, Operations Head |
-
-### **Request Body**
-
-| Field           | Type   | Required | Validation                                        |
-| --------------- | ------ | -------- | ------------------------------------------------- |
-| branchName      | String | Yes      | Max 100 chars                                     |
-| branchCode      | String | Yes      | Exactly 3 uppercase letters, unique               |
-| branchType      | String | Yes      | HEAD_OFFICE, STATE_BRANCH, CITY_BRANCH, WAREHOUSE |
-| addressLine1    | String | Yes      | Max 200 chars                                     |
-| addressLine2    | String | No       | Max 200 chars                                     |
-| city            | String | Yes      | Max 50 chars                                      |
-| state           | String | Yes      | Indian state                                      |
-| pincode         | String | Yes      | 6 digits                                          |
-| phone           | String | Yes      | 10 digits                                         |
-| email           | String | Yes      | Valid email                                       |
-| branchManagerId | String | No       | Valid employee ID                                 |
-
-```json
-{
-  "branchName": "Andheri West Service Center",
-  "branchCode": "AND",
-  "branchType": "CITY_BRANCH",
-  "addressLine1": "42, Industrial Estate",
-  "addressLine2": "Phase 2, Building 7",
-  "city": "Mumbai",
-  "state": "MAHARASHTRA",
-  "pincode": "400072",
-  "phone": "9876543210",
-  "email": "andheri@company.com",
-  "branchManagerId": "EMP001"
-}
+```
+┌─────────────────────────────────────────────────────────────┐
+│  ROLE SALARY & LEAVE CONFIG (Company Admin Sidebar - New)    │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  [+ ADD CONFIGURATION]                               │    │
+│  │                                                      │    │
+│  │  EXISTING CONFIGURATIONS:                            │    │
+│  │  ┌─────────────────────────────────────────────┐    │    │
+│  │  │ Role      │ Effective    │ Status │ Actions │    │    │
+│  │  │           │ From         │        │         │    │    │
+│  │  │───────────┼──────────────┼────────┼─────────│    │    │
+│  │  │ Sales Mgr │ 01-Jan-2024  │ Active │ View... │    │    │
+│  │  │ Tech Lead │ 01-Feb-2024  │ Active │ View... │    │    │
+│  │  └─────────────────────────────────────────────┘    │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                              │                               │
+│                              ▼                               │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  ADD/EDIT CONFIGURATION FORM                         │    │
+│  │  ─────────────────────────────────────────────────   │    │
+│  │                                                      │    │
+│  │  BASIC DETAILS                                       │    │
+│  │  ─────────────                                       │    │
+│  │  Select Role:              [▼ Dropdown ▼]           │    │
+│  │  Effective From Date:      [📅 ________] *Required  │    │
+│  │  Effective To Date:        [📅 ________] Optional   │    │
+│  │  Status:                   [▼ Active/Inactive ▼]    │    │
+│  │                                                      │    │
+│  │  ─────────────────────────────────────────────────   │    │
+│  │  SALARY CONFIGURATION                                │    │
+│  │  ───────────────────                                 │    │
+│  │  Salary Type:              [▼ CTC/Fixed/Hourly ▼] * │    │
+│  │  Default Basic Salary:     ₹ [________] *Required   │    │
+│  │  Default HRA:              ₹ [________]             │    │
+│  │  Default Other Allowance:  ₹ [________]             │    │
+│  │  Default Incentive:        ₹ [________]             │    │
+│  │  Default Deductions:       ₹ [________]             │    │
+│  │                                                      │    │
+│  │  Statutory:                                          │    │
+│  │  ☐ PF Applicable    ☐ ESI Applicable                │    │
+│  │  ☐ TDS Applicable                                   │    │
+│  │                                                      │    │
+│  │  HOLIDAY WORK CONFIGURATION                          │    │
+│  │  ──────────────────────────                          │    │
+│  │  ☐ Holiday Work Incentive Applicable                │    │
+│  │    IF CHECKED:                                       │    │
+│  │    • Type: [▼ Fixed/Per Day/Per Hour ▼]             │    │
+│  │    • Default Amount: ₹ [________]                   │    │
+│  │                                                      │    │
+│  │  OVERTIME CONFIGURATION                              │    │
+│  │  ──────────────────────                              │    │
+│  │  ☐ Overtime Applicable                              │    │
+│  │    IF CHECKED:                                       │    │
+│  │    • Type: [▼ Per Hour/Per Shift ▼]                 │    │
+│  │    • Shift Type: [________]                         │    │
+│  │    • Shift Incentive: ₹ [________]                  │    │
+│  │    • Per Hour Pay: ₹ [________]                     │    │
+│  │    • Max OT Hours/Month: [____]                     │    │
+│  │                                                      │    │
+│  │  ─────────────────────────────────────────────────   │    │
+│  │  LEAVE CONFIGURATION                                 │    │
+│  │  ──────────────────                                  │    │
+│  │  Casual Leave (CL)/Year:   [____] days              │    │
+│  │  Sick Leave (SL)/Year:     [____] days              │    │
+│  │  Paid Leave (PL)/Year:     [____] days              │    │
+│  │  Annual Leave Allocation:  [____] days              │    │
+│  │                                                      │    │
+│  │  ☐ Carry Forward Allowed                            │    │
+│  │    IF CHECKED:                                       │    │
+│  │    • Max Carry Forward Days: [____]                 │    │
+│  │                                                      │    │
+│  │  Leave Approval Authority: [▼ Select Role ▼] *Req   │    │
+│  │  Leave Reset Cycle:        [▼ Yearly/Monthly ▼] *Req│    │
+│  │                                                      │    │
+│  │  [SAVE]  [CLONE TO ANOTHER ROLE]  [CANCEL]          │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-**Auto-populated:** createdBy (current user), createdAt (timestamp)
+### Configuration Usage Flow
 
----
-
-## **6.2 List Branches**
-
-| Method | Endpoint           | Access                                       |
-| ------ | ------------------ | -------------------------------------------- |
-| GET    | `/api/v1/branches` | Authenticated User (filtered by permissions) |
-
-### **Query Parameters**
-
-| Param  | Type   | Description      |
-| ------ | ------ | ---------------- |
-| status | String | ACTIVE, INACTIVE |
-| search | String | Name or code     |
-
-### **Response**
-
-```json
-{
-  "status": 200,
-  "data": [
-    {
-      "branchId": "uuid",
-      "branchCode": "AND",
-      "branchName": "Andheri West Service Center",
-      "city": "Mumbai",
-      "state": "MAHARASHTRA",
-      "employeeCount": 15,
-      "status": "ACTIVE"
-    }
-  ]
-}
 ```
-
-**Note:** Type column removed from response. City and State shown explicitly.
-
----
-
-## **6.3 Update Branch**
-
-| Method | Endpoint                      | Access                         |
-| ------ | ----------------------------- | ------------------------------ |
-| PUT    | `/api/v1/branches/{branchId}` | Company Admin, Operations Head |
-
-**Same fields as Create, except:**
-
-- editedBy: Auto-populated current user
-- editedAt: Auto-populated timestamp
-
----
-
-## **6.4 View Branch Details**
-
-| Method | Endpoint                      | Access             |
-| ------ | ----------------------------- | ------------------ |
-| GET    | `/api/v1/branches/{branchId}` | Authenticated User |
-
-### **Response - Tab 1: Branch Info**
-
-```json
-{
-  "status": 200,
-  "data": {
-    "branchId": "uuid",
-    "branchCode": "AND",
-    "branchName": "Andheri West Service Center",
-    "branchType": "CITY_BRANCH",
-    "address": {
-      "line1": "42, Industrial Estate",
-      "line2": "Phase 2, Building 7",
-      "city": "Mumbai",
-      "state": "MAHARASHTRA",
-      "pincode": "400072"
-    },
-    "contact": {
-      "phone": "9876543210",
-      "email": "andheri@company.com"
-    },
-    "branchManager": {
-      "employeeId": "EMP001",
-      "name": "Amit Sharma"
-    },
-    "status": "ACTIVE",
-    "createdBy": "Admin Raj",
-    "createdAt": "2023-12-01T10:00:00",
-    "editedBy": "Ops Head Priya",
-    "editedAt": "2024-01-15T14:30:00"
-  }
-}
-```
-
-### **Response - Tab 2: Employees (Separate API)**
-
-| Method | Endpoint                                | Access             |
-| ------ | --------------------------------------- | ------------------ |
-| GET    | `/api/v1/branches/{branchId}/employees` | Authenticated User |
-
-### **Response**
-
-```json
-{
-  "status": 200,
-  "data": [
-    {
-      "employeeId": "EMP001",
-      "employeeName": "Amit Sharma",
-      "email": "amit@company.com",
-      "contactNumber": "9876543211",
-      "designation": "Branch Manager",
-      "staffStatus": "ACTIVE",
-      "branchName": "Andheri West Service Center"
-    }
-  ]
-}
+┌─────────────────────────────────────────────────────────────┐
+│         HOW CONFIGURATION FLOWS TO USER CREATION             │
+│                                                              │
+│  1. Admin creates Role Configuration (Module 5.3)            │
+│     └── Saves to Role_Compensation_Configuration table       │
+│                                                              │
+│  2. Admin creates User (Module 7.4)                          │
+│     └── Selects Role in Step 1                               │
+│                                                              │
+│  3. System AUTO-FETCHES:                                     │
+│     • Salary details → Pre-fills Step 3                      │
+│     • Leave details → Pre-fills Step 4                       │
+│                                                              │
+│  4. Admin CAN:                                               │
+│     • Accept defaults (no changes)                           │
+│     • Override specific fields                               │
+│                                                              │
+│  5. Final values saved to Employee record                    │
+│     (Role config remains unchanged)                          │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## **6.5 Delete Branch (Soft Delete)**
+# 🎯 MODULE 6: BRANCH MANAGEMENT
 
-| Method | Endpoint                      | Access        |
-| ------ | ----------------------------- | ------------- |
-| DELETE | `/api/v1/branches/{branchId}` | Company Admin |
+## 6.1 Overview
 
-**Action:** Sets `status = INACTIVE`, does not hard delete.
+Manages organizational locations with hierarchical structure and employee associations.
 
 ---
 
-# **MODULE 7: USER MANAGEMENT**
+## 6.2 Branch Management Flow
 
-## **7.1 Tab Visibility Logic**
+```
+┌─────────────────────────────────────────────────────────────┐
+│     BRANCH MANAGEMENT (Client Side)                          │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  [+ ADD BRANCH]                                      │    │
+│  │                                                      │    │
+│  │  BRANCH LIST TABLE (Modified):                       │    │
+│  │  ┌─────────────────────────────────────────────┐    │    │
+│  │  │ Name │ 3-Code │ Status │ Actions            │    │    │
+│  │  │      │ Letter │        │                    │    │    │
+│  │  │──────┼────────┼────────┼────────────────────│    │    │
+│  │  │North │ NTH    │ Active │ View Edit Delete   │    │    │
+│  │  │South │ STH    │ Active │ View Edit Delete   │    │    │
+│  │  └─────────────────────────────────────────────┘    │    │
+│  │                                                      │    │
+│  │  ❌ REMOVED: Type column, City column, State column  │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                              │                               │
+│                              ▼                               │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  ADD/EDIT BRANCH FORM                                │    │
+│  │  ─────────────────────────────────────────────────   │    │
+│  │                                                      │    │
+│  │  Branch Name:              [____________] *         │    │
+│  │                                                      │    │
+│  │  Address:                                              │    │
+│  │  • Line 1:                 [____________]           │    │
+│  │  • Line 2:                 [____________]           │    │
+│  │  • City:                   [____________]           │    │
+│  │  • State:                  [____________]           │    │
+│  │  • Pincode:                [____________]           │    │
+│  │                                                      │    │
+│  │  3 Letter Code:            [___] *Required          │    │
+│  │  (Unique identifier, e.g., NTH, STH, BOM)           │    │
+│  │                                                      │    │
+│  │  Branch Type:              [▼ Dropdown ▼]           │    │
+│  │    • HEAD_OFFICE                                     │    │
+│  │    • STATE_BRANCH                                    │    │
+│  │    • CITY_BRANCH                                     │    │
+│  │    • WAREHOUSE                                       │    │
+│  │                                                      │    │
+│  │  Created By (Add) /                                    │    │
+│  │  Edited By (Edit):         [Auto-filled]            │    │
+│  │                                                      │    │
+│  │  [SAVE]  [CANCEL]                                    │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                              │                               │
+│                              ▼                               │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  VIEW BRANCH DETAILS (2 Tabs)                        │    │
+│  │  ─────────────────────────────────────────────────   │    │
+│  │                                                      │    │
+│  │  [TAB 1: Branch Info]  [TAB 2: Employees]           │    │
+│  │                                                      │    │
+│  │  ─────────────────────────────────────────────────   │    │
+│  │  TAB 1 CONTENT:                                      │    │
+│  │  • Branch Name                                       │    │
+│  │  • Address (Full)                                    │    │
+│  │  • 3 Letter Code                                     │    │
+│  │  • Status (Active/Inactive)                          │    │
+│  │  • Created Date & By                                 │    │
+│  │  • Edited Date & By                                  │    │
+│  │                                                      │    │
+│  │  ─────────────────────────────────────────────────   │    │
+│  │  TAB 2 CONTENT:                                      │    │
+│  │  ┌─────────────────────────────────────────────┐    │    │
+│  │  │ Emp ID │ Name │ Email │ Phone │ Designation │    │    │
+│  │  │        │      │       │       │ Staff Status│    │    │
+│  │  │────────┼──────┼───────┼───────┼─────────────│    │    │
+│  │  │ E001   │ John │ j@... │ 98... │ Mgr-Active  │    │    │
+│  │  └─────────────────────────────────────────────┘    │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+```
 
-**Backend determines visible tabs based on role:**
+### Branch Fields
 
-```java
-public List<String> getVisibleTabs(User user) {
-    Role role = user.getPrimaryRole();
+| Field          | Type     | Required | Notes                    |
+| -------------- | -------- | -------- | ------------------------ |
+| Branch Name    | Text     | Yes      | Display name             |
+| Address Line 1 | Text     | Yes      | Street address           |
+| Address Line 2 | Text     | No       | Additional info          |
+| City           | Text     | Yes      | Part of address          |
+| State          | Text     | Yes      | Part of address          |
+| Pincode        | Text     | Yes      | Postal code              |
+| 3 Letter Code  | Text     | Yes      | Unique short code        |
+| Branch Type    | Dropdown | Yes      | Hierarchical type        |
+| Created By     | Auto     | System   | Current user             |
+| Edited By      | Auto     | System   | Current user (edit only) |
 
-    if (role.isUpperLevel()) { // Admin, HR, Company Admin
-        return Arrays.asList("USER_LIST", "SEND_REQUEST", "RECEIVED_REQUESTS");
-    } else { // Manager, Team Lead
-        return Arrays.asList("USER_LIST", "SEND_REQUEST");
-    }
-}
+---
+
+# 🎯 MODULE 7: USER MANAGEMENT
+
+## 7.1 Overview
+
+Complete employee lifecycle management with request-based hiring workflow, dynamic permission loading, and multi-step user creation.
+
+---
+
+## 7.2 Tab Visibility Control Flow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│           TAB VISIBILITY DECISION TREE                       │
+│                                                              │
+│                    ┌─────────────────┐                       │
+│                    │   USER LOGIN    │                       │
+│                    └────────┬────────┘                       │
+│                             │                                │
+│                    ┌────────▼────────┐                       │
+│                    │  CHECK USER ROLE │                       │
+│                    └────────┬────────┘                       │
+│                             │                                │
+│         ┌───────────────────┼───────────────────┐            │
+│         ▼                   ▼                   ▼            │
+│    ┌─────────┐        ┌─────────┐        ┌─────────┐        │
+│    │ LOWER   │        │ UPPER   │        │ SUPER   │        │
+│    │ LEVEL   │        │ LEVEL   │        │ ADMIN   │        │
+│    │(Manager)│        │(Admin)  │        │         │        │
+│    └────┬────┘        └────┬────┘        └────┬────┘        │
+│         │                   │                   │            │
+│    ┌────▼────┐         ┌────▼────┐        ┌────▼────┐       │
+│    │Tab 1:   │         │Tab 1:   │        │Tab 1:   │       │
+│    │USER LIST│         │USER LIST│        │USER LIST│       │
+│    │    ✓    │         │    ✓    │        │    ✓    │       │
+│    ├─────────┤         ├─────────┤        ├─────────┤       │
+│    │Tab 2:   │         │Tab 2:   │        │Tab 2:   │       │
+│    │SEND     │         │SEND     │        │SEND     │       │
+│    │REQUEST  │         │REQUEST  │        │REQUEST  │       │
+│    │    ✓    │         │    ✗    │        │Optional │       │
+│    ├─────────┤         ├─────────┤        ├─────────┤       │
+│    │Tab 3:   │         │Tab 3:   │        │Tab 3:   │       │
+│    │RECEIVED │         │RECEIVED │        │RECEIVED │       │
+│    │REQUESTS │         │REQUESTS │        │REQUESTS │       │
+│    │    ✗    │         │    ✓    │        │    ✓    │       │
+│    └─────────┘         └─────────┘        └─────────┘       │
+│                                                              │
+│  LEGEND: ✓ = Visible  ✗ = Hidden  Optional = Configurable   │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## **7.2 Tab 1: User List**
+## 7.3 Complete User Management Workflow
 
-### **API Endpoint**
+```
+┌─────────────────────────────────────────────────────────────┐
+│  SCENARIO A: LOWER-LEVEL USER (Manager/Team Lead)            │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  TAB 1: USER LIST                                    │    │
+│  │  • View employees in scope (branch-based)            │    │
+│  │  • Actions: View only (no Edit/Delete)               │    │
+│  │                                                      │    │
+│  │  [SWITCH TO TAB 2]                                   │    │
+│  │                              │                       │    │
+│  │                              ▼                       │    │
+│  │  TAB 2: SEND REQUEST TO ADD NEW EMPLOYEE             │    │
+│  │                                                      │    │
+│  │  A) REQUEST FORM:                                    │    │
+│  │  ┌─────────────────────────────────────────────┐    │    │
+│  │  │ Requested By:        [Auto: Current User]   │    │    │
+│  │  │ Department:          [____________] *       │    │    │
+│  │  │ Designation:         [____________] *       │    │    │
+│  │  │ Proposed Role:       [▼ Role ▼] *           │    │    │
+│  │  │ Branch:              [☑ Multi-select] *     │    │    │
+│  │  │ Employment Type:     [▼ Perm/Contract/Int ▼]*│    │    │
+│  │  │ Expected DOJ:        [📅 ________] *        │    │    │
+│  │  │ Number of Positions: [____] *               │    │    │
+│  │  │ Hiring Reason:       [______________] *     │    │    │
+│  │  │ Job Description:     [______________]       │    │    │
+│  │  │ Additional Remarks:  [______________]       │    │    │
+│  │  │ Supporting Doc:      [📎 Upload ]           │    │    │
+│  │  │                                              │    │    │
+│  │  │ [SUBMIT REQUEST]  [CANCEL]                  │    │    │
+│  │  └─────────────────────────────────────────────┘    │    │
+│  │                                                      │    │
+│  │  B) MY HIRING REQUESTS (Table):                      │    │
+│  │  ┌─────────────────────────────────────────────┐    │    │
+│  │  │ Req ID │ Dept │ Role │ Pos │ Status │ Date │    │    │
+│  │  │────────┼──────┼──────┼─────┼────────┼──────│    │    │
+│  │  │ HRQ001 │Sales │SP    │ 2   │Pending │Jan24 │    │    │
+│  │  │ HRQ002 │Ops   │Tech  │ 1   │Approved│Jan24 │    │    │
+│  │  └─────────────────────────────────────────────┘    │    │
+│  │                                                      │    │
+│  │  Actions: View | View Rejection Reason (if rejected) │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                                                              │
+│  ❌ TAB 3: NOT VISIBLE (No approval authority)               │
+└─────────────────────────────────────────────────────────────┘
 
-| Method | Endpoint        | Access                                         |
-| ------ | --------------- | ---------------------------------------------- |
-| GET    | `/api/v1/users` | Authenticated (filtered by branch permissions) |
-
-### **Query Parameters**
-
-| Param    | Type   | Description                |
-| -------- | ------ | -------------------------- |
-| branchId | String | Filter by branch           |
-| status   | String | ACTIVE, INACTIVE, ON_LEAVE |
-| roleId   | String | Filter by role             |
-| search   | String | Name, email, or EMP ID     |
-
-### **Response**
-
-```json
-{
-  "status": 200,
-  "data": {
-    "totalRecords": 45,
-    "users": [
-      {
-        "employeeId": "EMP001",
-        "employeeName": "Amit Sharma",
-        "email": "amit@company.com",
-        "contactNumber": "9876543210",
-        "designation": "Branch Manager",
-        "department": "Operations",
-        "role": "Branch Manager",
-        "branchName": "Andheri, Bandra",
-        "reportingManager": "Rajesh Kumar",
-        "status": "ACTIVE",
-        "createdDate": "2023-12-01"
-      }
-    ]
-  }
-}
+┌─────────────────────────────────────────────────────────────┐
+│  SCENARIO B: UPPER-LEVEL USER (Admin/HR/Company Admin)       │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  TAB 1: USER LIST                                    │    │
+│  │  • View all employees (within scope)                 │    │
+│  │  • Actions: View, Edit, Delete                       │    │
+│  │  • [+ ADD USER] button visible                       │    │
+│  │                                                      │    │
+│  │  [SWITCH TO TAB 2]                                   │    │
+│  │                              │                       │    │
+│  │                              ▼                       │    │
+│  │  TAB 2: SEND REQUEST (Optional for upper-level)      │    │
+│  │  • Can submit requests on behalf of others           │    │
+│  │  • OR use direct user creation                       │    │
+│  │                                                      │    │
+│  │  [SWITCH TO TAB 3]                                   │    │
+│  │                              │                       │    │
+│  │                              ▼                       │    │
+│  │  TAB 3: RECEIVED REQUESTS TO ADD NEW EMPLOYEE        │    │
+│  │                                                      │    │
+│  │  A) RECEIVED REQUESTS TABLE:                         │    │
+│  │  ┌─────────────────────────────────────────────┐    │    │
+│  │  │ Req ID │ By │ Dept │ Role │ Pos │ Status   │    │    │
+│  │  │────────┼────┼──────┼──────┼─────┼──────────│    │    │
+│  │  │ HRQ001 │Raj │Sales │SP    │ 2   │● Pending │    │    │
+│  │  │ HRQ002 │Sam │Ops   │Tech  │ 1   │✓ Approved│    │    │
+│  │  └─────────────────────────────────────────────┘    │    │
+│  │                                                      │    │
+│  │  Filters: Status | Dept | Branch | Requested By      │    │
+│  │           Date Range | Search                        │    │
+│  │                                                      │    │
+│  │  B) ACTIONS ON PENDING REQUESTS:                     │    │
+│  │  • [VIEW] - Full details modal                       │    │
+│  │  • [APPROVE] - Status → Approved                     │    │
+│  │  • [REJECT] - Mandatory rejection reason             │    │
+│  │                                                      │    │
+│  │  C) AFTER APPROVAL:                                  │    │
+│  │  Admin can convert to employee via "Add User" form   │    │
+│  │  (Pre-filled with request data)                      │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## **7.3 Tab 2: Send Request (Hiring Request)**
+## 7.4 Add User Form - Multi-Step Flow
 
-### **7.3.1 Submit Hiring Request**
-
-| Method | Endpoint                  | Access                           |
-| ------ | ------------------------- | -------------------------------- |
-| POST   | `/api/v1/hiring-requests` | Lower-Level Manager, Upper-Level |
-
-### **Request Body**
-
-| Field                 | Type    | Required |
-| --------------------- | ------- | -------- | --------------------------- |
-| department            | String  | Yes      |
-| designation           | String  | Yes      |
-| proposedRoleId        | String  | Yes      |
-| branchIds             | Array   | Yes      |
-| employmentType        | String  | Yes      | PERMANENT, CONTRACT, INTERN |
-| expectedDateOfJoining | Date    | Yes      |
-| numberOfPositions     | Integer | Yes      |
-| hiringReason          | String  | Yes      |
-| jobDescription        | String  | No       |
-| additionalRemarks     | String  | No       |
-| supportingDocument    | File    | No       |
-
-**Auto-populated:** requestedBy (current user), requestedAt (timestamp)
-
----
-
-### **7.3.2 My Hiring Requests (List)**
-
-| Method | Endpoint                     | Access                           |
-| ------ | ---------------------------- | -------------------------------- |
-| GET    | `/api/v1/hiring-requests/my` | Lower-Level Manager, Upper-Level |
-
-### **Response**
-
-```json
-{
-  "status": 200,
-  "data": [
-    {
-      "requestId": "REQ_001",
-      "department": "Operations",
-      "proposedRole": "Technician",
-      "branches": ["Andheri", "Bandra"],
-      "numberOfPositions": 2,
-      "expectedJoiningDate": "2024-02-01",
-      "hiringReason": "Business expansion",
-      "status": "PENDING",
-      "submittedDate": "2024-01-15",
-      "lastUpdatedDate": "2024-01-15"
-    }
-  ]
-}
+```
+┌─────────────────────────────────────────────────────────────┐
+│           ADD USER FORM (5 Steps)                            │
+│     Triggered by: Direct creation OR Approved Request        │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  STEP 1: PERSONAL DETAILS                                    │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  BASIC INFORMATION                                   │    │
+│  │  ─────────────────                                   │    │
+│  │  EMP ID:                 [____________] *           │    │
+│  │  First Name:             [____________] *           │    │
+│  │  Last Name:              [____________] *           │    │
+│  │  Email:                  [____________]             │    │
+│  │  Contact Number:         [____________] *           │    │
+│  │  Alternate Number:       [____________]             │    │
+│  │  Password:               [____________] * (Create)  │    │
+│  │  Department:             [____________] *           │    │
+│  │  Designation:            [____________] *           │    │
+│  │                                                      │    │
+│  │  ⚠️ ROLE SELECTION (Triggers everything below)       │    │
+│  │  Role:                   [▼ Role ▼] * ⭐ CRITICAL    │    │
+│  │                                                      │    │
+│  │  Branch:                 [☑ Multi-select] *         │    │
+│  │                                                      │    │
+│  │  Reporting Manager:      [▼ Dropdown ▼] *           │    │
+│  │  └─► Filtered by: Selected Branch + Role Hierarchy   │    │
+│  │                                                      │    │
+│  │  Employment Type:        [▼ Perm/Contract/Int ▼] *  │    │
+│  │  Date of Joining:        [📅 ________] *            │    │
+│  │  Status:                 [▼ Active/Inactive ▼] *    │    │
+│  │                                                      │    │
+│  │  CURRENT ADDRESS (All Required)                      │    │
+│  │  • Line 1, Line 2, City, State, Country, Pincode    │    │
+│  │                                                      │    │
+│  │  PERMANENT ADDRESS (All Required)                    │    │
+│  │  • Same as Current [☑ Checkbox]                     │    │
+│  │  • Or manual entry                                  │    │
+│  │                                                      │    │
+│  │  [NEXT ►]  [CANCEL]                                  │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  STEP 2: MODULE PERMISSIONS                                  │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │                                                      │    │
+│  │  ☐ Is Application User                               │    │
+│  │                                                      │    │
+│  │  IF CHECKED → SKIP TO STEP 3 (Hide permissions)      │    │
+│  │  └─► User gets mobile app only, no web access        │    │
+│  │                                                      │    │
+│  │  IF UNCHECKED → SHOW PERMISSION GRID:                │    │
+│  │                                                      │    │
+│  │  ┌─────────────────────────────────────────────────┐│    │
+│  │  │ AUTO-LOADED FROM ROLE CONFIGURATION             ││    │
+│  │  │                                                 ││    │
+│  │  │ For each of 25+ Modules:                        ││    │
+│  │  │ ☑ Add  ☑ View  ☑ Edit  ☐ Delete  ☑ Export      ││    │
+│  │  │ ☑ Configure                                     ││    │
+│  │  │ ☑ Approval Authority [▼ Can approve: Role ▼]    ││    │
+│  │  │                                                 ││    │
+│  │  │ [Admin can override any toggle]                 ││    │
+│  │  └─────────────────────────────────────────────────┘│    │
+│  │                                                      │    │
+│  │  [◄ PREVIOUS]  [NEXT ►]  [SKIP]  [CANCEL]            │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  STEP 3: SALARY DETAILS                                      │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  AUTO-FETCHED FROM ROLE CONFIGURATION (If exists)    │    │
+│  │  ─────────────────────────────────────────────────   │    │
+│  │                                                      │    │
+│  │  Salary Type:            [▼ CTC/Fixed/Hourly ▼] *   │    │
+│  │  Basic Salary:           ₹ [________] *             │    │
+│  │  HRA:                    ₹ [________]               │    │
+│  │  Other Allowance:        ₹ [________]               │    │
+│  │  Incentive:              ₹ [________]               │    │
+│  │  Deductions:             ₹ [________]               │    │
+│  │                                                      │    │
+│  │  ☐ PF Applicable  ☐ ESI Applicable  ☐ TDS Applicable│    │
+│  │                                                      │    │
+│  │  BANKING DETAILS                                     │    │
+│  │  • Bank Name:            [____________] *           │    │
+│  │  • Account Number:       [____________] *           │    │
+│  │  • IFSC Code:            [____________] *           │    │
+│  │  • Effective From:       [📅 ________] *            │    │
+│  │  • Effective To:         [📅 ________]              │    │
+│  │                                                      │    │
+│  │  INCENTIVE CONFIGURATION                             │    │
+│  │  ☐ Holiday Work Incentive                           │    │
+│  │    └─► Type, Amount (conditional)                   │    │
+│  │  ☐ Overtime                                         │    │
+│  │    └─► Type, Shift, Per Hour, Max Hours (conditional)│   │
+│  │                                                      │    │
+│  │  [◄ PREVIOUS]  [NEXT ►]  [SKIP]  [CANCEL]            │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  STEP 4: LEAVE DETAILS                                       │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  AUTO-FETCHED FROM ROLE CONFIGURATION (If exists)    │    │
+│  │  ─────────────────────────────────────────────────   │    │
+│  │                                                      │    │
+│  │  Casual Leave (CL):      [____] days/year           │    │
+│  │  Sick Leave (SL):        [____] days/year           │    │
+│  │  Paid Leave (PL):        [____] days/year           │    │
+│  │  Annual Leave Allocation:[____] days                │    │
+│  │                                                      │    │
+│  │  ☐ Carry Forward Allowed                            │    │
+│  │    └─► Max Carry Forward Days: [____] (conditional) │    │
+│  │                                                      │    │
+│  │  Leave Approval Authority: [▼ Role ▼] *Required     │    │
+│  │  Leave Reset Cycle:        [▼ Yearly/Monthly ▼] *   │    │
+│  │                                                      │    │
+│  │  [◄ PREVIOUS]  [NEXT ►]  [SKIP]  [CANCEL]            │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  STEP 5: DOCUMENTS & ADDITIONAL DATA                         │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  IDENTITY & COMPLIANCE (All Optional)                │    │
+│  │  • Aadhar Number, PAN Number, UAN, ID Card Number   │    │
+│  │                                                      │    │
+│  │  DOCUMENT UPLOADS (All Optional)                     │    │
+│  │  • Aadhar, PAN, Address Proof, Education,           │    │
+│  │    Experience, Offer Letter, Appointment, Others    │    │
+│  │                                                      │    │
+│  │  ADDITIONAL PROFESSIONAL DATA (All Optional)         │    │
+│  │  • Grade/Level, Shift Type, Weekly Off              │    │
+│  │  • Target Amount, Commission %                      │    │
+│  │  • Employee Photo                                   │    │
+│  │                                                      │    │
+│  │  [◄ PREVIOUS]  [SAVE USER]  [CANCEL]                 │    │
+│  │                                                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                              │                               │
+│                              ▼                               │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  SUCCESS: User created, credentials sent             │    │
+│  │  If from Request: Request status → "Converted"       │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## **7.4 Tab 3: Received Requests (Admin Only)**
+## 7.5 Dynamic Permission Loading Flow
 
-### **7.4.1 List Received Requests**
-
-| Method | Endpoint                           | Access                 |
-| ------ | ---------------------------------- | ---------------------- |
-| GET    | `/api/v1/hiring-requests/received` | Upper-Level, Admin, HR |
-
-### **Query Parameters**
-
-| Param      | Type   | Description                 |
-| ---------- | ------ | --------------------------- |
-| status     | String | PENDING, APPROVED, REJECTED |
-| department | String | Filter                      |
-| branchId   | String | Filter                      |
-| fromDate   | Date   | Date range                  |
-| toDate     | Date   | Date range                  |
-
----
-
-### **7.4.2 Approve/Reject Request**
-
-| Method | Endpoint                                     | Access                 |
-| ------ | -------------------------------------------- | ---------------------- |
-| POST   | `/api/v1/hiring-requests/{requestId}/action` | Upper-Level, Admin, HR |
-
-### **Request Body**
-
-| Field               | Type   | Required    |
-| ------------------- | ------ | ----------- | ------------------ |
-| action              | String | Yes         | APPROVE, REJECT    |
-| rejectionReason     | String | Conditional | Required if REJECT |
-| approvedSalaryRange | Object | No          | If APPROVE         |
-
-```json
-{
-  "action": "APPROVE",
-  "approvedSalaryRange": {
-    "min": 25000,
-    "max": 35000
-  }
-}
 ```
-
-**OR**
-
-```json
-{
-  "action": "REJECT",
-  "rejectionReason": "Budget constraints for Q1"
-}
-```
-
----
-
-## **7.5 Add User (After Hiring Approval)**
-
-### **Multi-Step Form API Structure**
-
-### **Step 1: Personal Details**
-
-| Method | Endpoint        | Access                 |
-| ------ | --------------- | ---------------------- |
-| POST   | `/api/v1/users` | Upper-Level, Admin, HR |
-
-### **Request Body - Step 1**
-
-| Field              | Type   | Required |
-| ------------------ | ------ | -------- | ----------------------- |
-| employeeId         | String | Yes      | Unique                  |
-| firstName          | String | Yes      |
-| lastName           | String | Yes      |
-| email              | String | No       | Valid email             |
-| contactNumber      | String | Yes      | 10 digits               |
-| alternateNumber    | String | No       | 10 digits               |
-| password           | String | Yes      | Auto-generated if empty |
-| department         | String | Yes      |
-| designation        | String | Yes      |
-| roleId             | String | Yes      |
-| branchIds          | Array  | Yes      |
-| reportingManagerId | String | Yes      |
-| employmentType     | String | Yes      |
-| dateOfJoining      | Date   | Yes      |
-| status             | String | Yes      | ACTIVE, INACTIVE        |
-| currentAddress     | Object | Yes      |
-| permanentAddress   | Object | Yes      |
-
-```json
-{
-  "employeeId": "EMP005",
-  "firstName": "Rahul",
-  "lastName": "Kumar",
-  "email": "rahul@company.com",
-  "contactNumber": "9876543212",
-  "password": "TempPass123",
-  "department": "Operations",
-  "designation": "Senior Technician",
-  "roleId": "role-uuid-senior-tech",
-  "branchIds": ["branch-uuid-1"],
-  "reportingManagerId": "EMP001",
-  "employmentType": "PERMANENT",
-  "dateOfJoining": "2024-02-01",
-  "status": "ACTIVE",
-  "currentAddress": {
-    "line1": "123, Staff Quarters",
-    "city": "Mumbai",
-    "state": "MAHARASHTRA",
-    "country": "India",
-    "pincode": "400072"
-  },
-  "permanentAddress": {
-    "line1": "456, Home Town",
-    "city": "Pune",
-    "state": "MAHARASHTRA",
-    "country": "India",
-    "pincode": "411001"
-  }
-}
+┌─────────────────────────────────────────────────────────────┐
+│     HOW "ROLE SELECTION" TRIGGERS DYNAMIC LOADING            │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  EVENT: User selects "Role" in Step 1                        │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  PARALLEL DATA FETCHES (Async)                               │
+│                                                              │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐ │
+│  │ FETCH Module    │  │ FETCH Salary    │  │ FETCH Leave │ │
+│  │ Permissions     │  │ Configuration   │  │ Configuration│ │
+│  │                 │  │                 │  │             │ │
+│  │ FROM:           │  │ FROM:           │  │ FROM:       │ │
+│  │ Role_Module_    │  │ Role_Compensation│  │ Role_Leave_ │ │
+│  │ Permission      │  │ _Configuration  │  │ Configuration│ │
+│  │                 │  │                 │  │             │ │
+│  │ WHERE:          │  │ WHERE:          │  │ WHERE:      │ │
+│  │ role_id =       │  │ role_id =       │  │ role_id =   │ │
+│  │ selected_role   │  │ selected_role   │  │ selected_role│ │
+│  │ AND is_active   │  │ AND effective_  │  │ AND is_     │ │
+│  │ = true          │  │ date <= today   │  │ active = true│ │
+│  └────────┬────────┘  └────────┬────────┘  └──────┬──────┘ │
+│           │                    │                   │        │
+│           └────────────────────┼───────────────────┘        │
+│                                ▼                            │
+│                     ┌─────────────────────┐                 │
+│                     │  PRE-FILL FORMS     │                 │
+│                     │                     │                 │
+│                     │  Step 2: Permissions│                 │
+│                     │  Step 3: Salary     │                 │
+│                     │  Step 4: Leave      │                 │
+│                     │                     │                 │
+│                     │  Show: "From Role   │                 │
+│                     │  Config" badge on   │                 │
+│                     │  pre-filled fields  │                 │
+│                     └─────────────────────┘                 │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  ADMIN ACTIONS:                                              │
+│  • Accept defaults (no changes) → Save as-is                │
+│  • Override specific fields → Save with modifications       │
+│  • Clear all → Start fresh (not recommended)                │
+│                                                              │
+│  NOTE: Changes here affect ONLY this user, not the role     │
+│  template. Role configuration remains unchanged.            │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-### **Step 2: Module Permissions**
-
-| Method | Endpoint                                 | Access                 |
-| ------ | ---------------------------------------- | ---------------------- |
-| PUT    | `/api/v1/users/{employeeId}/permissions` | Upper-Level, Admin, HR |
-
-### **Request Body**
-
-| Field             | Type    | Required    |
-| ----------------- | ------- | ----------- | -------------------------- |
-| isApplicationUser | Boolean | Yes         |
-| permissions       | Object  | Conditional | If isApplicationUser=false |
-
-```json
-{
-  "isApplicationUser": false,
-  "permissions": {
-    "TASK_MGMT": {
-      "view": true,
-      "add": true,
-      "edit": true,
-      "delete": false,
-      "export": false,
-      "configure": false,
-      "approve": false
-    },
-    "INVENTORY": {
-      "view": true,
-      "add": true,
-      "edit": false,
-      "delete": false,
-      "export": false,
-      "configure": false,
-      "approve": false
-    }
-  }
-}
-```
-
-**Note:** If `isApplicationUser=true`, permissions section is disabled/ignored.
-
----
-
-### **Step 3: Salary Details**
-
-| Method | Endpoint                            | Access                 |
-| ------ | ----------------------------------- | ---------------------- |
-| PUT    | `/api/v1/users/{employeeId}/salary` | Upper-Level, Admin, HR |
-
-### **Request Body**
-
-| Field                          | Type    | Required    | Source                      |
-| ------------------------------ | ------- | ----------- | --------------------------- |
-| salaryType                     | String  | Yes         | Auto-fetch from role config |
-| basicSalary                    | Decimal | Yes         | Auto-fetch, editable        |
-| hra                            | Decimal | No          | Auto-fetch, editable        |
-| otherAllowance                 | Decimal | No          | Auto-fetch, editable        |
-| incentive                      | Decimal | No          | Auto-fetch, editable        |
-| deductions                     | Decimal | No          | Auto-fetch, editable        |
-| pfApplicable                   | Boolean | No          | Auto-fetch, editable        |
-| esiApplicable                  | Boolean | No          | Auto-fetch, editable        |
-| tdsApplicable                  | Boolean | No          | Auto-fetch, editable        |
-| bankName                       | String  | Yes         |
-| accountNumber                  | String  | Yes         |
-| ifscCode                       | String  | Yes         |
-| salaryEffectiveFrom            | Date    | Yes         |
-| salaryEffectiveTo              | Date    | No          |
-| holidayWorkIncentiveApplicable | Boolean | No          | Auto-fetch                  |
-| holidayWorkIncentiveType       | String  | Conditional | Auto-fetch                  |
-| holidayWorkIncentiveAmount     | Decimal | Conditional | Auto-fetch                  |
-| overtimeApplicable             | Boolean | No          | Auto-fetch                  |
-| overtimeType                   | String  | Conditional | Auto-fetch                  |
-| overtimeShiftType              | String  | Conditional | Auto-fetch                  |
-| overtimeShiftIncentiveAmount   | Decimal | Conditional | Auto-fetch                  |
-| perHourIncentiveAmount         | Decimal | Conditional | Auto-fetch                  |
-| maxOvertimeHoursPerMonth       | Integer | Conditional | Auto-fetch                  |
-
----
-
-### **Step 4: Leave Details**
-
-| Method | Endpoint                                  | Access                 |
-| ------ | ----------------------------------------- | ---------------------- |
-| PUT    | `/api/v1/users/{employeeId}/leave-config` | Upper-Level, Admin, HR |
-
-### **Request Body**
-
-| Field                        | Type    | Required    | Source               |
-| ---------------------------- | ------- | ----------- | -------------------- |
-| casualLeave                  | Integer | No          | Auto-fetch from role |
-| sickLeave                    | Integer | No          | Auto-fetch from role |
-| paidLeave                    | Integer | No          | Auto-fetch from role |
-| annualLeaveAllocation        | Integer | No          | Auto-fetch from role |
-| carryForwardAllowed          | Boolean | No          | Auto-fetch           |
-| maxCarryForwardDays          | Integer | Conditional | Auto-fetch           |
-| leaveApprovalAuthorityRoleId | String  | Yes         | Auto-fetch           |
-| leaveResetCycle              | String  | Yes         | Auto-fetch           |
-
----
-
-### **Step 5: Documents & Additional Data**
-
-| Method       | Endpoint                               | Access                 |
-| ------------ | -------------------------------------- | ---------------------- |
-| PUT          | `/api/v1/users/{employeeId}/documents` | Upper-Level, Admin, HR |
-| Content-Type | `multipart/form-data`                  |                        |
-
-### **Request Body**
-
-| Field                   | Type    | Required |
-| ----------------------- | ------- | -------- | --------- |
-| aadharNumber            | String  | No       | 12 digits |
-| panNumber               | String  | No       | 10 chars  |
-| uanNumber               | String  | No       |
-| employeeIdCardNumber    | String  | No       |
-| aadharDocument          | File    | No       |
-| panDocument             | File    | No       |
-| addressProof            | File    | No       |
-| educationalCertificates | File    | No       |
-| experienceLetter        | File    | No       |
-| offerLetter             | File    | No       |
-| appointmentLetter       | File    | No       |
-| otherDocuments          | File    | No       |
-| grade                   | String  | No       |
-| shiftType               | String  | No       |
-| weeklyOff               | String  | No       |
-| targetAmount            | Decimal | No       |
-| commissionPercentage    | Decimal | No       |
-| employeePhoto           | File    | No       |
-
----
-
-## **7.6 Edit User**
-
-### **API Endpoint**
-
-| Method | Endpoint                     | Access                 |
-| ------ | ---------------------------- | ---------------------- |
-| PUT    | `/api/v1/users/{employeeId}` | Upper-Level, Admin, HR |
-
-**Same fields and structure as Add User (all 5 steps).**
-
-**Difference:** Pre-populate all existing data, allow modification.
-
----
-
-## **DATABASE RELATIONSHIP SUMMARY**
+## 7.6 "Is Application User" Impact Flow
 
 ```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  SUPER_ADMIN    │     │    TENANTS      │     │ SUBSCRIPTION_   │
-│  (Seravion)     │────▶│  (Companies)    │◄────│ PLANS           │
-└─────────────────┘     └────────┬────────┘     └─────────────────┘
-                                 │
-                    ┌────────────┼────────────┐
-                    ▼            ▼            ▼
-            ┌───────────┐  ┌───────────┐  ┌───────────┐
-            │  BRANCHES │  │   ROLES   │  │   USERS   │
-            │           │  │(Custom +  │  │           │
-            │           │  │ Base from │  │           │
-            │           │  │ Seravion) │  │           │
-            └───────────┘  └─────┬─────┘  └─────┬─────┘
-                                 │              │
-                                 └──────────────┘
-                                        │
-                              ┌─────────┴─────────┐
-                              ▼                   ▼
-                        ┌───────────┐       ┌───────────┐
-                        │ HIRING_   │       │  USER_    │
-                        │ REQUESTS  │       │  ROLE_    │
-                        │           │       │  MAPPING  │
-                        └───────────┘       └───────────┘
+┌─────────────────────────────────────────────────────────────┐
+│     "IS APPLICATION USER" CHECKBOX BEHAVIOR                  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+              ┌───────────────┴───────────────┐
+              ▼                               ▼
+    ┌─────────────────────┐         ┌─────────────────────┐
+    │   CHECKED (true)    │         │  UNCHECKED (false)  │
+    │                     │         │                     │
+    │  MOBILE-ONLY USER   │         │  WEB DASHBOARD USER │
+    │  (e.g., Technician) │         │  (e.g., Manager)    │
+    │                     │         │                     │
+    │  EFFECTS:           │         │  EFFECTS:           │
+    │  ─────────          │         │  ─────────          │
+    │  • Step 2 HIDDEN    │         │  • Step 2 VISIBLE   │
+    │  • No module        │         │  • Full permission  │
+    │    permissions      │         │    grid shown       │
+    │  • Mobile app       │         │  • Web access       │
+    │    credentials      │         │    granted          │
+    │    generated        │         │  • Module access    │
+    │  • GPS tracking     │         │    based on         │
+    │    enabled          │         │    permissions      │
+    │  • Task-based UI    │         │                     │
+    │                     │         │                     │
+    │  USE CASE:          │         │  USE CASE:          │
+    │  Field staff who    │         │  Office staff who   │
+    │  only execute tasks │         │  need dashboard     │
+    │  via mobile app     │         │  access for mgmt    │
+    │                     │         │                     │
+    └─────────────────────┘         └─────────────────────┘
 ```
 
 ---
+
+# 📊 MASTER FLOWCHART: COMPLETE USER JOURNEY
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                         ENTRY POINTS                                 │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
+│  │ Super Admin │  │ Company     │  │ Company     │  │ Existing    │ │
+│  │ Login       │  │ Admin Signup│  │ Admin Login │  │ User Login  │ │
+│  │ (1.1)       │  │ (1.2)       │  │ (1.3)       │  │ (Module 7)  │ │
+│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘ │
+│         │                │                │                │        │
+│         ▼                ▼                ▼                ▼        │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
+│  │ Super Admin │  │ Company     │  │ Check Doc   │  │ Check Role  │ │
+│  │ Dashboard   │  │ Information │  │ Status      │  │ & Route to  │ │
+│  │ (Module 3)  │  │ (Module 2.1)│  │ (Module 2.1)│  │ Dashboard   │ │
+│  └─────────────┘  └──────┬──────┘  └──────┬──────┘  └─────────────┘ │
+│                          │                │                          │
+│                          ▼                ▼                          │
+│                   ┌─────────────┐  ┌─────────────┐                   │
+│                   │ Document    │  │ Waiting/    │                   │
+│                   │ Upload      │  │ Rejected    │                   │
+│                   │ (Module 2.1)│  │ (Module 2.1)│                   │
+│                   └──────┬──────┘  └──────┬──────┘                   │
+│                          │                │                          │
+│                          ▼                │                          │
+│                   ┌─────────────┐         │                          │
+│                   │ Seravion    │◄────────┘                          │
+│                   │ Review      │         (Re-upload loop)           │
+│                   │ (Module 3.2)│                                      │
+│                   └──────┬──────┘                                      │
+│                          │                                            │
+│              ┌───────────┴───────────┐                                │
+│              ▼                       ▼                                │
+│       ┌─────────────┐         ┌─────────────┐                         │
+│       │  APPROVED   │         │  REJECTED   │                         │
+│       └──────┬──────┘         └─────────────┘                         │
+│              │                                                        │
+│              ▼                                                        │
+│       ┌─────────────┐                                                 │
+│       │ Subscription│                                                 │
+│       │ Selection   │                                                 │
+│       │ (Module 4)  │                                                 │
+│       └──────┬──────┘                                                 │
+│              │                                                        │
+│              ▼                                                        │
+│       ┌─────────────┐                                                 │
+│       │ Payment     │                                                 │
+│       │ Processing  │                                                 │
+│       └──────┬──────┘                                                 │
+│              │                                                        │
+│              ▼                                                        │
+│       ┌─────────────┐     ┌─────────────────────────────────────────┐ │
+│       │ Company     │────►│  MODULE 7: USER MANAGEMENT              │ │
+│       │ Admin       │     │  (Role-based tab visibility)            │ │
+│       │ Dashboard   │     │                                         │ │
+│       └─────────────┘     │  ┌─────────┐  ┌─────────┐  ┌─────────┐  │ │
+│                           │  │ Tab 1   │  │ Tab 2   │  │ Tab 3   │  │ │
+│                           │  │ User    │  │ Send    │  │Received │  │ │
+│                           │  │ List    │  │ Request │  │Requests │  │ │
+│                           │  └────┬────┘  └────┬────┘  └────┬────┘  │ │
+│                           │       │            │            │       │ │
+│                           │       ▼            ▼            ▼       │ │
+│                           │  ┌─────────┐  ┌─────────┐  ┌─────────┐  │ │
+│                           │  │ View/   │  │ Create  │  │ Review/ │  │ │
+│                           │  │ Edit    │  │ Hiring  │  │ Approve │  │ │
+│                           │  │ Users   │  │ Request │  │ Requests│  │ │
+│                           │  └─────────┘  └─────────┘  └─────────┘  │ │
+│                           │                                         │ │
+│                           │  ┌─────────────────────────────────┐    │ │
+│                           │  │     ADD USER FORM (5 Steps)     │    │ │
+│                           │  │  ┌─────┐┌─────┐┌─────┐┌─────┐┌────┐ │ │
+│                           │  │  │Step1││Step2││Step3││Step4││Step5│ │ │
+│                           │  │  │Personal│Module│Salary│Leave│Docs │ │ │
+│                           │  │  │Details │Perm  │     │     │     │ │ │
+│                           │  │  └─────┘└─────┘└─────┘└─────┘└────┘ │ │
+│                           │  │       ▲                             │ │
+│                           │  │       │ Role selection triggers      │ │
+│                           │  │       │ dynamic config loading       │ │
+│                           │  └─────────────────────────────────────┘ │
+│                           └─────────────────────────────────────────┘
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# 📋 QUICK REFERENCE: FIELD REQUIREMENTS SUMMARY
+
+## Module 1: Authentication
+
+| Screen            | Required Fields                                                      |
+| ----------------- | -------------------------------------------------------------------- |
+| Super Admin Login | Username, Password                                                   |
+| Company Sign Up   | Company Name, Auth Person, Phone, Email, Password, Re-enter Password |
+| Company Login     | Email/Username, Password                                             |
+
+## Module 2: Onboarding
+
+| Screen              | Required Fields                |
+| ------------------- | ------------------------------ |
+| Company Information | All except License Number      |
+| Upload Document     | GST Doc, PAN Doc, Business Doc |
+
+## Module 3: Super Admin
+
+| Screen         | Required Fields                                 |
+| -------------- | ----------------------------------------------- |
+| Dashboard      | Doc Status, Pay Status (system)                 |
+| Customer Popup | Status, Enable Trial (if checked: From/To Date) |
+
+## Module 4: Subscription
+
+| Screen              | Required Fields                               |
+| ------------------- | --------------------------------------------- |
+| Client Subscription | Plan Selection, Duration                      |
+| Super Admin Plan    | Plan Name, Branch Price, Tech Price, Duration |
+
+## Module 5: Role Management
+
+| Screen      | Required Fields                                                           |
+| ----------- | ------------------------------------------------------------------------- |
+| Add Role    | Role Name, Is Application User (checkbox)                                 |
+| Role Config | Role, Effective From, Salary Type, Basic Salary, Leave Approval Authority |
+
+## Module 6: Branch Management
+
+| Screen          | Required Fields                     |
+| --------------- | ----------------------------------- |
+| Add/Edit Branch | Branch Name, Address, 3 Letter Code |
+
+## Module 7: User Management
+
+### Required Fields Per Screen
+
+| Screen          | Required Fields                                                                                                                                    |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Hiring Request  | Department, Designation, Role, Branch, Employment Type, DOJ, Positions, Reason                                                                     |
+| Add User Step 1 | EMP ID, First Name, Last Name, Contact, Department, Designation, Role, Branch, Reporting Manager, Employment Type, DOJ, Status, All Address fields |
+| Add User Step 2 | Is Application User (if false: at least one module permission)                                                                                     |
+| Add User Step 3 | Salary Type, Basic Salary, Bank Name, Account Number, IFSC, Effective From                                                                         |
+| Add User Step 4 | Leave Approval Authority, Leave Reset Cycle                                                                                                        |
+| Add User Step 5 | All optional                                                                                                                                       |
+
+---
+
+# 🎯 ROLE MANAGEMENT - OVERVIEW
+
+## Architecture: Two-Level Role System
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         LEVEL 1: SERAVION SIDE                           │
+│                    (Platform Owner - Super Admin)                        │
+│                                                                          │
+│  Purpose: Create system-wide role templates that clients can use         │
+│                                                                          │
+│  ┌─────────────────────────────────────────────────────────────────┐    │
+│  │  SUPER ADMIN CREATES ROLE TEMPLATES                             │    │
+│  │                                                                 │    │
+│  │  Examples:                                                      │    │
+│  │  • "Sales Manager Template"                                     │    │
+│  │  • "Account Executive Template"                                 │    │
+│  │  • "Branch Admin Template"                                      │    │
+│  │  • "Operations Head Template"                                   │    │
+│  │                                                                 │    │
+│  │  For Each Template, Defines:                                    │    │
+│  │  ┌─────────────────────────────────────────────────────────┐   │    │
+│  │  │ • Role Name                                             │   │    │
+│  │  │ • Is Application User (checkbox)                        │   │    │
+│  │  │ • 25+ Module Permissions (Add/View/Edit/Delete/Export/  │   │    │
+│  │  │   Configure/Approval Authority)                         │   │    │
+│  │  │                                                         │   │    │
+│  │  │ Note: "Approval Authority" dropdown shows USERS here    │   │    │
+│  │  │       (since Seravion manages platform-level access)    │   │    │
+│  │  └─────────────────────────────────────────────────────────┘   │    │
+│  │                                                                 │    │
+│  │  These templates become available to ALL client companies       │    │
+│  │                                                                 │    │
+│  └─────────────────────────────────────────────────────────────────┘    │
+│                                                                          │
+│  ⚠️ Impact: Changes to templates affect future role creations,          │
+│             not existing assigned roles                                  │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+                           ┌────────────────┐
+                           │  TEMPLATES     │
+                           │  AVAILABLE TO  │
+                           │  ALL CLIENTS   │
+                           └───────┬────────┘
+                                   │
+                                   ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      LEVEL 2: CLIENT SIDE                                │
+│                 (Company Admin - Individual Tenant)                      │
+│                                                                          │
+│  Purpose: Customize Seravion templates for their organization            │
+│                                                                          │
+│  ┌─────────────────────────────────────────────────────────────────┐    │
+│  │  STEP 1: SELECT FROM SERAVION TEMPLATES                         │    │
+│  │                                                                 │    │
+│  │  Company Admin picks: "Sales Manager Template"                  │    │
+│  │                    OR "Account Executive Template"              │    │
+│  │                                                                 │    │
+│  └─────────────────────────────────────────────────────────────────┘    │
+│                                    │                                     │
+│                                    ▼                                     │
+│  ┌─────────────────────────────────────────────────────────────────┐    │
+│  │  STEP 2: CUSTOMIZE FOR THEIR COMPANY                            │    │
+│  │                                                                 │    │
+│  │  • Clone permissions from existing role (optional)              │    │
+│  │  • Rename if needed (e.g., "Senior Sales Manager")              │    │
+│  │  • Adjust module permissions (override template defaults)       │    │
+│  │                                                                 │    │
+│  │  Note: "Approval Authority" dropdown shows ROLES here           │    │
+│  │        (e.g., Sales Manager can approve for Sales Person)       │    │
+│  │                                                                 │    │
+│  └─────────────────────────────────────────────────────────────────┘    │
+│                                    │                                     │
+│                                    ▼                                     │
+│  ┌─────────────────────────────────────────────────────────────────┐    │
+│  │  STEP 3: CONFIGURE SALARY & LEAVE STRUCTURE (Module 5.3)        │    │
+│  │                                                                 │    │
+│  │  For each role, define:                                         │    │
+│  │  • Salary components (Basic, HRA, Allowances, Incentives)       │    │
+│  │  • Statutory deductions (PF, ESI, TDS applicability)            │    │
+│  │  • Overtime and holiday work rules                              │    │
+│  │  • Leave entitlements (CL, SL, PL, carry forward)               │    │
+│  │  • Leave approval hierarchy                                     │    │
+│  │                                                                 │    │
+│  │  Effective dates control when configuration applies             │    │
+│  │                                                                 │    │
+│  └─────────────────────────────────────────────────────────────────┘    │
+│                                    │                                     │
+│                                    ▼                                     │
+│  ┌─────────────────────────────────────────────────────────────────┐    │
+│  │  STEP 4: ASSIGN TO EMPLOYEES (Module 7)                         │    │
+│  │                                                                 │    │
+│  │  When creating/editing user:                                    │    │
+│  │  • Select Role → Auto-loads permissions + salary + leave        │    │
+│  │  • Admin can override at user level if needed                   │    │
+│  │  • Employee inherits all role configurations                    │    │
+│  │                                                                 │    │
+│  └─────────────────────────────────────────────────────────────────┘    │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Key Differences: Seravion vs Client Side
+
+| Aspect                          | Seravion (Super Admin)        | Client (Company Admin)                  |
+| ------------------------------- | ----------------------------- | --------------------------------------- |
+| **What they create**            | Role Templates                | Company-specific Roles                  |
+| **Scope**                       | Platform-wide                 | Tenant-only                             |
+| **Base for creation**           | From scratch                  | From Seravion templates                 |
+| **Approval Authority dropdown** | Lists **Users**               | Lists **Roles**                         |
+| **Salary/Leave config**         | Not applicable                | Configured per role                     |
+| **Edit impact**                 | Affects future template usage | Affects only their company              |
+| **Delete restrictions**         | Warn if used by clients       | Warn if users assigned, allow migration |
+
+---
+
+## Data Flow Summary
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   SERAVION  │────►│   TEMPLATE  │────►│    CLIENT   │────►│   EMPLOYEE  │
+│   CREATES   │     │   STORED IN │     │  CUSTOMIZES │     │   ASSIGNED  │
+│   TEMPLATE  │     │   SYSTEM    │     │   & USES    │     │   ROLE      │
+└─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
+      │                                          │                  │
+      │                                          │                  │
+      └──────────────────────────────────────────┘                  │
+                    Templates propagate to                          │
+                    all tenants                                     │
+                                                                     │
+      ┌─────────────────────────────────────────────────────────────┘
+      │
+      ▼
+┌─────────────┐
+│  EMPLOYEE   │
+│  INHERITS:  │
+│  • Permissions from Role          │
+│  • Salary structure from Role Config │
+│  • Leave structure from Role Config  │
+│  (All can be overridden at user level)│
+└─────────────┘
+```
+
+---
+
+## "Is Application User" Behavior (Both Sides)
+
+| Checkbox State | Result                                                                                                             |
+| -------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Checked**    | Role is for mobile app users only (e.g., Technicians). No web dashboard access. Module permissions section hidden. |
+| **Unchecked**  | Role gets full web dashboard access with module permissions as configured.                                         |
+
+This setting is defined at template level (Seravion) and inherited by clients, but clients can modify it when creating their role.

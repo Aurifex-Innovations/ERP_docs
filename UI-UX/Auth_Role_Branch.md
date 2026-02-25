@@ -388,6 +388,10 @@ Fields:
 
 ### Permission Structure (25+ Modules)
 
+Application User: checkbox set for application user only permission
+Note:  
+If "Is Application User" is checked, module permission structure will not be applicable for this role.
+
 Each module will have toggles:
 
 - Add
@@ -414,6 +418,10 @@ Each module will have toggles:
 New module to be developed.
 
 ### Add Role
+
+Application User: checkbox set for application user only permission
+Note:  
+If "Is Application User" is checked, module permission structure will not be applicable for this role.
 
 Fields:
 
