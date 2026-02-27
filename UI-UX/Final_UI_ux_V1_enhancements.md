@@ -488,6 +488,15 @@ If unchecked:
 - Role Name required.
 - Request ON → Receiver required.
 
+### Interaction Rules (For UIUX Implementation)
+
+- Permissions displayed in table/grid layout:
+  Rows → Modules
+  Columns → Permission toggles
+- Request Receivers field appears inline under module row when Request toggle is enabled.
+- Multi-select supports search and multiple role selection.
+- Hide Request Receivers when Request toggle is OFF.
+
 ---
 
 ## 5.2 Edit Role
@@ -503,9 +512,9 @@ Show warning:
 ## 5.3 View Role Detail
 
 - Role Name
-- Assigned permissions
+- Assigned permissions grid
 - Application User type
-- Approval authority
+- Approval authority roles
 
 ---
 
@@ -638,7 +647,7 @@ During user creation:
 - Carry Forward Allowed
 - Max Carry Forward Days
 - Leave Approval Authority (Required)
-- Leave Reset Cycle (Yearly / Monthly)
+- Leave Reset Cycle (Yearly / Monthly/custom date)
 
 ---
 
