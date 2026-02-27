@@ -646,7 +646,7 @@ Central RBAC (Role-Based Access Control) module with three sub-modules:
 
 ---
 
-## 5.3 Company Admin Role Management Flow
+I'll update the flow diagram to incorporate your new permission structure with the `REQUEST` action and role-based routing. Here's the revised version:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -705,18 +705,26 @@ Central RBAC (Role-Based Access Control) module with three sub-modules:
 │  │                                                      │    │
 │  │  ┌─────────────────────────────────────────────────┐│    │
 │  │  │ MODULE: User Management                         ││    │
-│  │  │ ☑ Add  ☑ View  ☑ Edit  ☑ Delete  ☑ Export      ││    │
-│  │  │ ☑ Configure                                     ││    │
-│  │  │ ☑ Approval Authority [▼ Select Role ▼]          ││    │
-│  │  │   (If checked, select which role this can       ││    │
-│  │  │    approve for - e.g., Sales Mgr approves       ││    │
-│  │  │    Sales Person requests)                       ││    │
+│  │  │ ☑ VIEW  ☑ ADD  ☑ EDIT  ☑ DELETE  ☑ EXPORT      ││    │
+│  │  │ ☑ CONFIGURE                                     ││    │
+│  │  │                                                  ││    │
+│  │  │ ☑ APPROVAL  →  Can approve requests for:        ││    │
+│  │  │                [▼ Sales Person ▼]               ││    │
+│  │  │                [▼ Account Executive ▼]          ││    │
+│  │  │                [+ Add another role]             ││    │
+│  │  │                                                  ││    │
+│  │  │ ☑ REQUEST   →  Routes approval to:              ││    │
+│  │  │                [▼ Sales Manager ▼]              ││    │
+│  │  │                (Select approver role)           ││    │
 │  │  └─────────────────────────────────────────────────┘│    │
 │  │                                                      │    │
 │  │  ┌─────────────────────────────────────────────────┐│    │
 │  │  │ MODULE: Lead Management                         ││    │
-│  │  │ ☑ Add  ☑ View  ☐ Edit  ☐ Delete  ☑ Export      ││    │
-│  │  │ ☐ Configure  ☐ Approval Authority               ││    │
+│  │  │ ☑ VIEW  ☑ ADD  ☐ EDIT  ☐ DELETE  ☑ EXPORT      ││    │
+│  │  │ ☐ CONFIGURE                                     ││    │
+│  │  │                                                  ││    │
+│  │  │ ☐ APPROVAL                                      ││    │
+│  │  │ ☑ REQUEST   →  Routes to: [▼ Sales Manager ▼]   ││    │
 │  │  └─────────────────────────────────────────────────┘│    │
 │  │                                                      │    │
 │  │  [Repeat for 25+ modules...]                        │    │
@@ -727,19 +735,54 @@ Central RBAC (Role-Based Access Control) module with three sub-modules:
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Permission Toggle Behavior
+### Updated Permission Toggle Behavior
 
-| Toggle             | Behavior                     | Dependencies             |
-| ------------------ | ---------------------------- | ------------------------ |
-| Add                | Can create records in module | Usually paired with View |
-| View               | Can see/list records         | Base permission          |
-| Edit               | Can modify records           | Requires View            |
-| Delete             | Can remove records           | Soft delete only         |
-| Export             | Can download reports         | Requires View            |
-| Configure          | Can access settings          | Admin-level              |
-| Approval Authority | Can approve requests         | Shows role dropdown      |
+| Permission    | Description                                                         | Dependencies                                    | Typical Roles                |
+| ------------- | ------------------------------------------------------------------- | ----------------------------------------------- | ---------------------------- |
+| **VIEW**      | Read/view records within the module                                 | Base permission                                 | All Roles                    |
+| **ADD**       | Create new records                                                  | Usually paired with VIEW                        | Executives, Managers, Admins |
+| **EDIT**      | Modify existing records                                             | Requires VIEW                                   | Executives, Managers, Admins |
+| **DELETE**    | Remove or deactivate records — restricted by default                | Requires VIEW                                   | Managers, Admins only        |
+| **APPROVAL**  | Review and approve workflow requests from team members              | Requires VIEW; Shows role multi-select dropdown | Managers, Admins             |
+| **REQUEST**   | Initiate a request that routes to an approver                       | Requires VIEW; Shows single role dropdown       | Executives, Employees        |
+| **EXPORT**    | Download module data as CSV, PDF, or Excel                          | Requires VIEW                                   | Managers, Auditors, Admins   |
+| **CONFIGURE** | Master setting access — module configuration and system preferences | Admin-level                                     | Admins only                  |
 
----
+### Key Workflow Logic
+
+```
+┌─────────────────────────────────────────────────────────┐
+│              REQUEST → APPROVAL FLOW                     │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  1. User with REQUEST permission initiates action       │
+│     └─ System checks: "Which role can approve this?"    │
+│        └─ Looks up APPROVAL permission in same module   │
+│                                                          │
+│  2. Request routes to users with:                       │
+│     • APPROVAL permission = CHECKED                     │
+│     • Can approve for: [Requester's Role]               │
+│                                                          │
+│  3. Approver receives notification → Reviews → Acts     │
+│                                                          │
+│  Example:                                               │
+│  ┌─────────────┐      REQUEST      ┌─────────────┐     │
+│  │ Sales Person│ ─────────────────→│ Sales Mgr   │     │
+│  │ (REQUEST→   │   "Discount >10%" │ (APPROVAL→  │     │
+│  │  Sales Mgr) │                   │  Sales Person│    │
+│  └─────────────┘                   └─────────────┘     │
+│                                                          │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Validation Rules
+
+| Rule                         | Behavior                                                    |
+| ---------------------------- | ----------------------------------------------------------- |
+| **REQUEST without APPROVAL** | Warning: "No approver role configured for this module"      |
+| **Circular Approval**        | Prevent: Role A approves Role B who approves Role A         |
+| **Self-Approval**            | Option: Allow/Block users from approving their own requests |
+| **Multi-level Approval**     | Chain: Request → Manager → Director (if configured)         |
 
 ## 5.4 Super Admin Role Management Flow
 
