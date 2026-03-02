@@ -715,7 +715,7 @@ I'll update the flow diagram to incorporate your new permission structure with t
 │  │  │                                                  ││    │
 │  │  │ ☑ REQUEST   →  Routes approval to:              ││    │
 │  │  │                [▼ Sales Manager ▼]              ││    │
-│  │  │                (Select approver role)           ││    │
+│  │  │                (Select multiple approver role)     ││    │
 │  │  └─────────────────────────────────────────────────┘│    │
 │  │                                                      │    │
 │  │  ┌─────────────────────────────────────────────────┐│    │
