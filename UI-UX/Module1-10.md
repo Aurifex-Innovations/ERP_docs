@@ -1566,11 +1566,6 @@ This module allows the Company Admin to define salary structure and leave polici
 | PF Applicable                     | Checkbox | No          | Provident Fund applicability  |
 | ESI Applicable                    | Checkbox | No          | Employee State Insurance      |
 | TDS Applicable                    | Checkbox | No          | Tax Deducted at Source        |
-| Bank Name                         | Text     | Yes         | Employee's bank name          |
-| Account Number                    | Text     | Yes         | Bank account number           |
-| IFSC Code                         | Text     | Yes         | Bank IFSC code                |
-| Salary Effective From             | Date     | Yes         | Salary validity start         |
-| Salary Effective To               | Date     | No          | Salary validity end           |
 | Holiday Work Incentive Applicable | Checkbox | No          | Enable holiday work incentive |
 | Holiday Work Incentive Type       | Dropdown | Conditional | Fixed/Per Day/Per Hour        |
 | Holiday Work Incentive Amount     | Currency | Conditional | Amount if enabled             |
@@ -1623,6 +1618,7 @@ This module allows the Company Admin to define salary structure and leave polici
 | Sick Leave               | Optional, numeric, minimum 0, max 365              |
 | Paid Leave               | Optional, numeric, minimum 0, max 365              |
 | Annual Leave Allocation  | Optional, numeric, minimum 0, max 365              |
+| Carry Forward Allowed    | Checkbox No Enable leave carry forward             |
 | Max Carry Forward Days   | Required if Carry Forward Allowed checked, max 365 |
 | Leave Approval Authority | Required, must select valid role                   |
 | Leave Reset Cycle        | Required, must be Yearly/Monthly/Custom            |
