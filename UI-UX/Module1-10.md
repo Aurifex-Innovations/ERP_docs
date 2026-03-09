@@ -1488,12 +1488,7 @@ This module allows the Company Admin to define salary structure and leave polici
 │  │  ☐ PF Applicable    ☐ ESI Applicable                │    │
 │  │  ☐ TDS Applicable                                   │    │
 │  │                                                      │    │
-│  │  Bank Name:              [____________] *           │    │
-│  │  Account Number:         [____________] *           │    │
-│  │  IFSC Code:              [____________] *           │    │
-│  │  Salary Effective From:  [📅 ________] *            │    │
-│  │  Salary Effective To:    [📅 ________]              │    │
-│  │                                                      │    │
+│  │
 │  │  INCENTIVE CONFIGURATION                             │    │
 │  │  ☐ Holiday Work Incentive Applicable                │    │
 │  │    IF CHECKED:                                       │    │
