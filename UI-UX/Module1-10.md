@@ -1403,7 +1403,7 @@ Central RBAC (Role-Based Access Control) module for Super Admin to create system
 
 # 🎯 MODULE 6: ROLE SALARY & LEAVE CONFIGURATION
 
-## 6.1 Overview
+## Overview
 
 This module allows the Company Admin to define salary structure and leave policies role-wise. During User Creation (Module 8), when a role is selected, the system auto-fetches this configuration.
 
@@ -1415,7 +1415,7 @@ This module allows the Company Admin to define salary structure and leave polici
 
 ---
 
-## 6.2 Role Salary & Leave Configuration List (Client Side)
+## 6.1 Role Salary & Leave Configuration List (Client Side)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1457,7 +1457,7 @@ This module allows the Company Admin to define salary structure and leave polici
 
 ---
 
-## 6.3 Add Configuration Form (Multi-Step)
+## 6.2 Add Configuration Form (Multi-Step)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1620,7 +1620,7 @@ This module allows the Company Admin to define salary structure and leave polici
 
 ---
 
-## 6.4 Edit Configuration Form
+## 6.3 Edit Configuration Form
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1650,7 +1650,7 @@ Same as Add Form, plus:
 
 ---
 
-## 6.5 View Configuration Details
+## 6.4 View Configuration Details
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1683,7 +1683,7 @@ Same as Add Form, plus:
 
 ---
 
-## 6.6 Configuration Usage Flow
+## Configuration Usage Flow
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
