@@ -2452,6 +2452,7 @@ Manages the complete employee lifecycle including user visibility, hiring reques
 | Contact Number    | Phone         | Yes      | Primary contact, 10 digits                    |
 | Alternate Number  | Phone         | No       | Secondary contact                             |
 | Password          | Password      | Yes      | Auto-generated or manual                      |
+| Re-Enter Password | Password      | Yes      | Match with password                           |
 | Department        | Text          | Yes      | Department name                               |
 | Designation       | Text          | Yes      | Job designation                               |
 | Role              | Dropdown      | Yes      | ⭐ Triggers auto-load of config               |
