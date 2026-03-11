@@ -3754,7 +3754,7 @@ Same as Add User, plus:
 
 # 🎯 MODULE 9: TAX MANAGEMENT
 
-## 9.1 Overview
+## Overview
 
 Allows the client (Company Admin) to configure and manage all tax-related settings before inventory and billing operations begin. Ensures proper GST structure setup, HSN code mapping with tax rates, automatic tax calculation in inventory, tax validation during purchase, and compliance-ready reporting. **Must be configured before adding inventory (Module 10).**
 
@@ -3766,52 +3766,94 @@ Allows the client (Company Admin) to configure and manage all tax-related settin
 
 ---
 
-## 9.2 Tax Types Master - Table View
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  TAX TYPES MASTER                                            │
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  [+ ADD TAX TYPE]                                    │    │
-│  │                                                      │    │
-│  │  Filters:                                            │    │
-│  │  Search: [____________] (Tax Name/Category)         │    │
-│  │  Status: [▼ Active/Inactive ▼]                      │    │
-│  │  Applicability: [▼ Goods/Services/Both ▼]           │    │
-│  │  Date Range: [📅 From] - [📅 To]                    │    │
-│  │                                                      │    │
-│  │  Sort By: [▼ Latest/Rate High-Low/Rate Low-High ▼]  │    │
-│  │                                                      │    │
-│  │  TAX TYPES TABLE:                                    │    │
-│  │  ┌─────────────────────────────────────────────┐    │    │
-│  │  │Tax│Tax│Category│Default│Apply│Status│Created │    │    │
-│  │  │ID │Name│       │Rate % │To   │      │By/Date │    │    │
-│  │  │───┼────┼────────┼───────┼─────┼──────┼────────│    │    │
-│  │  │T01│CGST│Central │ 9%    │Both │Active│Admin   │    │    │
-│  │  │T02│SGST│State   │ 9%    │Both │Active│Admin   │    │    │
-│  │  │T03│IGST│Integrated│ 18% │Both │Active│Admin   │    │    │
-│  │  │   │    │        │       │     │      │        │    │    │
-│  │  │ Actions: [View] [Edit] [Delete]                    │    │    │
-│  │  └─────────────────────────────────────────────┘    │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Tax Types List Fields
-
-| Field                | Type       | Required | Notes                |
-| -------------------- | ---------- | -------- | -------------------- |
-| Search               | Text       | No       | Tax Name or Category |
-| Status Filter        | Dropdown   | No       | Active/Inactive      |
-| Applicability Filter | Dropdown   | No       | Goods/Services/Both  |
-| Date Range           | Date Range | No       | Created date range   |
-| Sort By              | Dropdown   | No       | Sorting options      |
+Below is the **refactored version of 9.1 Tax Types Master – Table View** using your **final table fields** and keeping the layout **simple and clean**.
 
 ---
 
-## 9.3 Add Tax Type
+# 9.1 Tax Types Master – Table View
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                TAX TYPES                                     │
+│                                                                             │
+│  [+ ADD TAX TYPE]                                                            │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │ Filters                                                              │   │
+│  │                                                                      │   │
+│  │ Search: [____________________] (Tax Name / Category)                 │   │
+│  │ Status: [▼ Active / Inactive ▼]     Applicability: [▼ Goods/Services/Both ▼] │
+│  │ Created Date: [📅 From] - [📅 To]                                      │   │
+│  │ Sort By: [▼ Latest / Rate High-Low / Rate Low-High ▼]                 │   │
+│  │                                                                      │   │
+│  │ [Reset Filters]                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  TAX TYPES TABLE                                                            │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │Tax Type│Tax Name│Tax Category│Default│Applicability│Status│Created By│   │
+│  │ID      │        │            │Rate % │             │      │          │   │
+│  │────────┼────────┼────────────┼───────┼─────────────┼──────┼──────────│   │
+│  │T01     │CGST    │Central     │9%     │Both         │Active│Admin     │   │
+│  │T02     │SGST    │State       │9%     │Both         │Active│Admin     │   │
+│  │T03     │IGST    │Integrated  │18%    │Both         │Active│Admin     │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│ ┌─────────────────────────────────────────────────────────────────────────┐ │
+│ │Created Date│Last Modified│Actions                                       │ │
+│ │────────────┼─────────────┼─────────────────────────────────────────────│ │
+│ │02-Jan-2026 │05-Jan-2026  │[👁 View] [✏ Edit] [🗑 Delete]                 │ │
+│ │02-Jan-2026 │05-Jan-2026  │[👁 View] [✏ Edit] [🗑 Delete]                 │ │
+│ │02-Jan-2026 │05-Jan-2026  │[👁 View] [✏ Edit] [🗑 Delete]                 │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                             │
+│ Pagination:  Previous   1   2   3   ...   10   Next                         │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# Tax Types Table Fields
+
+| Field         | Type           | Required | Description                             |
+| ------------- | -------------- | -------- | --------------------------------------- |
+| Tax Type ID   | Text           | Yes      | Unique tax identifier                   |
+| Tax Name      | Text           | Yes      | Name of the tax (CGST, SGST, IGST etc.) |
+| Tax Category  | Dropdown       | Yes      | Central / State / Integrated            |
+| Default Rate  | Percentage     | Yes      | Default tax percentage                  |
+| Applicability | Dropdown       | Yes      | Goods / Services / Both                 |
+| Status        | Toggle / Badge | Yes      | Active / Inactive                       |
+| Created By    | Text           | Auto     | User who created the tax                |
+| Created Date  | Date           | Auto     | Date tax was created                    |
+| Last Modified | Date           | Auto     | Last update date                        |
+| Action        | Buttons        | —        | View / Edit / Delete                    |
+
+---
+
+# Filters & Search
+
+| Filter             | Type       | Description                            |
+| ------------------ | ---------- | -------------------------------------- |
+| Search             | Text       | Search by Tax Name or Category         |
+| Status             | Dropdown   | Active / Inactive                      |
+| Applicability      | Dropdown   | Goods / Services / Both                |
+| Created Date Range | Date Range | Filter by created date                 |
+| Sort By            | Dropdown   | Latest / Rate High-Low / Rate Low-High |
+
+---
+
+# Actions
+
+| Action | Behavior                            |
+| ------ | ----------------------------------- |
+| View   | Opens Tax Type details popup        |
+| Edit   | Opens Tax Type edit form            |
+| Delete | Deletes tax type after confirmation |
+
+---
+
+## 9.2 Add Tax Type
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -3879,7 +3921,7 @@ Allows the client (Company Admin) to configure and manage all tax-related settin
 
 ---
 
-## 9.4 Edit Tax Type
+## 9.3 Edit Tax Type
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -3932,7 +3974,7 @@ Allows the client (Company Admin) to configure and manage all tax-related settin
 
 ---
 
-## 9.5 View Tax Type
+## 9.4 View Tax Type
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -3964,7 +4006,7 @@ Allows the client (Company Admin) to configure and manage all tax-related settin
 
 ---
 
-## 9.6 Delete Tax Type
+## 9.5 Delete Tax Type
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -3989,53 +4031,93 @@ Allows the client (Company Admin) to configure and manage all tax-related settin
 
 ---
 
-## 9.7 HSN Code Master - Table View
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  HSN CODE MASTER                                             │
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  [+ ADD HSN CODE]                                    │    │
-│  │                                                      │    │
-│  │  Filters:                                            │    │
-│  │  Product Category: [▼ Dropdown ▼]                   │    │
-│  │  Tax Type: [▼ Dropdown ▼]                           │    │
-│  │  Status: [▼ Active/Inactive ▼]                      │    │
-│  │  Chapter: [____________]                            │    │
-│  │  Date Range: [📅 From] - [📅 To]                    │    │
-│  │                                                      │    │
-│  │  Search: [____________] (HSN Code/Description)      │    │
-│  │                                                      │    │
-│  │  HSN CODES TABLE:                                    │    │
-│  │  ┌─────────────────────────────────────────────┐    │    │
-│  │  │HSN│Description│Category│Tax Types│Status│Created│   │
-│  │  │Code│          │        │Mapped   │      │By/Date│   │
-│  │  │───┼───────────┼────────┼─────────┼──────┼───────│   │
-│  │  │1234│Chemical X │Chemical│CGST,SGST│Active│Admin  │   │
-│  │  │5678│Machine Y  │Assets  │IGST     │Active│Admin  │   │
-│  │  │   │            │        │         │      │       │   │
-│  │  │ Actions: [View] [Edit] [Delete]                    │   │
-│  │  └─────────────────────────────────────────────┘    │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### HSN Code List Fields
-
-| Field            | Type       | Required | Notes                   |
-| ---------------- | ---------- | -------- | ----------------------- |
-| Product Category | Dropdown   | No       | Filter by category      |
-| Tax Type         | Dropdown   | No       | Filter by mapped tax    |
-| Status           | Dropdown   | No       | Active/Inactive         |
-| Chapter          | Text       | No       | Chapter number filter   |
-| Date Range       | Date Range | No       | Created date range      |
-| Search           | Text       | No       | HSN Code or Description |
+Below is the **refactored version of 9.6 HSN Code Master – Table View** using your **final table fields** and keeping the layout **simple and clean**.
 
 ---
 
-## 9.8 Add HSN Code
+# 9.6 HSN Code Master – Table View
+
+```id="b0smig"
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              HSN CODE MASTER                                 │
+│                                                                             │
+│  [+ ADD HSN CODE]                                                            │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │ Filters                                                              │   │
+│  │                                                                      │   │
+│  │ Search: [____________________] (HSN Code / Description)              │   │
+│  │ Product Category: [▼ Dropdown ▼]      Tax Type: [▼ Dropdown ▼]       │   │
+│  │ Chapter: [__________]              Status: [▼ Active / Inactive ▼]   │   │
+│  │ Created Date: [📅 From] - [📅 To]                                      │   │
+│  │                                                                      │   │
+│  │ [Reset Filters]                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  HSN CODES TABLE                                                            │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │HSN Code│Description│Chapter│Product Category│Tax Type│Status│Created By│ │
+│  │────────┼───────────┼───────┼────────────────┼────────┼──────┼──────────│ │
+│  │1234    │Chemical X │28     │Chemicals       │CGST,SGST│Active│Admin     │ │
+│  │5678    │Machine Y  │84     │Machinery       │IGST     │Active│Admin     │ │
+│  │9983    │IT Service │99     │Services        │IGST     │Active│Admin     │ │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│ ┌─────────────────────────────────────────────────────────────────────────┐ │
+│ │Created Date│Actions                                                      │ │
+│ │────────────┼───────────────────────────────────────────────────────────│ │
+│ │02-Jan-2026 │[👁 View] [✏ Edit] [🗑 Delete]                                │ │
+│ │02-Jan-2026 │[👁 View] [✏ Edit] [🗑 Delete]                                │ │
+│ │02-Jan-2026 │[👁 View] [✏ Edit] [🗑 Delete]                                │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                             │
+│ Pagination: Previous   1   2   3   ...   10   Next                          │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# HSN Code Table Fields
+
+| Field            | Type           | Required | Description                                  |
+| ---------------- | -------------- | -------- | -------------------------------------------- |
+| HSN Code         | Text / Number  | Yes      | Unique HSN identifier                        |
+| Description      | Text           | Yes      | Description of goods/services                |
+| Chapter          | Number         | Yes      | HSN chapter number                           |
+| Product Category | Dropdown       | Yes      | Product category mapping                     |
+| Tax Type         | Multi-select   | Yes      | Applicable tax types (CGST, SGST, IGST etc.) |
+| Status           | Toggle / Badge | Yes      | Active / Inactive                            |
+| Created By       | Text           | Auto     | User who created record                      |
+| Created Date     | Date           | Auto     | Date of record creation                      |
+| Action           | Buttons        | —        | View / Edit / Delete                         |
+
+---
+
+# Filters
+
+| Filter             | Type       | Description                       |
+| ------------------ | ---------- | --------------------------------- |
+| Search             | Text       | Search by HSN Code or Description |
+| Product Category   | Dropdown   | Filter by product category        |
+| Tax Type           | Dropdown   | Filter by mapped tax              |
+| Chapter            | Text       | Filter by chapter number          |
+| Status             | Dropdown   | Active / Inactive                 |
+| Created Date Range | Date Range | Filter by created date            |
+
+---
+
+# Actions
+
+| Action | Behavior                            |
+| ------ | ----------------------------------- |
+| View   | Opens HSN Code detail popup         |
+| Edit   | Opens edit form                     |
+| Delete | Deletes HSN code after confirmation |
+
+---
+
+## 9.7 Add HSN Code
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -4086,7 +4168,7 @@ Allows the client (Company Admin) to configure and manage all tax-related settin
 | ------------------- | ------------ | -------- | -------------------------------- |
 | HSN Code            | Text         | Yes      | 4/6/8 digits, numeric only       |
 | Description         | Textarea     | Yes      | Product description              |
-| Chapter             | Text         | No       | Chapter classification           |
+| Chapter no.         | Text         | No       | Chapter classification           |
 | Product Category    | Dropdown     | Yes      | Assets/Consumables/Resale        |
 | Product Subcategory | Dropdown     | No       | Chemicals/Machine/Sprayer/Powder |
 | Tax Type            | Multi-select | Yes      | Select active tax types          |
@@ -4116,7 +4198,7 @@ Allows the client (Company Admin) to configure and manage all tax-related settin
 
 ---
 
-## 9.9 Edit HSN Code
+## 9.8 Edit HSN Code
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -4177,7 +4259,7 @@ Allows the client (Company Admin) to configure and manage all tax-related settin
 
 ---
 
-## 9.10 View HSN Code
+## 9.9 View HSN Code
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -4212,7 +4294,7 @@ Allows the client (Company Admin) to configure and manage all tax-related settin
 
 ---
 
-## 9.11 Delete HSN Code
+## 9.10 Delete HSN Code
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -4234,223 +4316,282 @@ Allows the client (Company Admin) to configure and manage all tax-related settin
 
 # 🎯 MODULE 10: INVENTORY & SERVICES
 
-## 10.1 Overview
+## Overview
 
 Manages all items and services offered by the business. Helps organize products, track stock levels, and maintain records of inventory movements. Ensures accurate stock availability and supports smooth operations. **Requires Module 9 (Tax Management) to be configured first.**
 
 **Module Connections:**
 
 - Depends on: Module 9 (Tax Types and HSN Codes)
-- Uses: Module 9.7-9.9 (HSN Codes for tax auto-population)
+- Uses: Module 9.6-9.8 (HSN Codes for tax auto-population)
 - Sub-modules: Product Catalog, My Services, Stock Management, Stock Log
 
 ---
 
-## 10.2 Product Management - Table View
+# 10.1 Product Management – Table View
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  PRODUCT MANAGEMENT                                          │
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  Filters:                                            │    │
-│  │  Category: [☑ Multi-select] (Chemical/Sprayer/etc.) │    │
-│  │  Sub-Type: [▼ Cascading Dropdown ▼]                 │    │
-│  │  Company/Brand: [▼ Search Dropdown ▼]               │    │
-│  │  HSN Code: [____________]                           │    │
-│  │  Status: [☑ Active] [☑ Inactive]                   │    │
-│  │  Created Date: [📅 From] - [📅 To]                  │    │
-│  │                                                      │    │
-│  │  Search: [____________] (Product Code/Name/Brand)   │    │
-│  │                                                      │    │
-│  │  [+ ADD PRODUCT] (Head Ops Only)                     │    │
-│  │                                                      │    │
-│  │  PRODUCTS TABLE:                                     │    │
-│  │  ┌─────────────────────────────────────────────┐    │    │
-│  │  │Img│Product│Product│Category│Company│HSN│Base│Status│   │
-│  │  │   │Code   │Name   │        │/Brand │Code│UOM │      │   │
-│  │  │───┼───────┼───────┼────────┼───────┼────┼────┼──────│   │
-│  │  │[📷│PRD001 │Chem X │Chemical│ABC Co │1234│Ltr │Active│   │
-│  │  │   │       │       │        │       │    │    │      │   │
-│  │  │Pkg│Default│Created│Actions:                      │   │
-│  │  │Type│Price ₹│By/Date│[View][Edit][Delete]          │   │
-│  │  │Bottle│500  │Admin  │(Head Ops only for Edit/Del)  │   │
-│  │  └─────────────────────────────────────────────┘    │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                   PRODUCT MANAGEMENT                                          │
+│                                                                                               │
+│  [+ ADD PRODUCT] (Head Ops Only)                                                               │
+│                                                                                               │
+│  ┌─────────────────────────────────────────────────────────────────────────────────────────┐  │
+│  │ Filters                                                                                 │  │
+│  │                                                                                        │  │
+│  │ Category: [☑ Multi-select ▼]         Sub-Type: [▼ Cascading Dropdown ▼]                │  │
+│  │ Company / Brand: [🔍 Search Dropdown ▼]                                                 │  │
+│  │ HSN Code: [__________]                 Status: [☑ Active] [☑ Inactive]                 │  │
+│  │ Created Date: [📅 From] - [📅 To]                                                       │  │
+│  │                                                                                        │  │
+│  │ Search: [__________________________] (Product Code / Name / Brand / HSN Code)          │  │
+│  │                                                                                        │  │
+│  │ [Reset Filters]                                                                        │  │
+│  └─────────────────────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                               │
+│  PRODUCTS TABLE                                                                               │
+│  ┌─────────────────────────────────────────────────────────────────────────────────────────┐  │
+│  │Img│Product Code│Product Name│Category│Company / Brand│HSN Code│Base│Package│Default ₹│Status│
+│  │   │            │            │        │                │        │UOM │Type   │Purchase │      │
+│  │───┼────────────┼────────────┼────────┼────────────────┼────────┼────┼───────┼─────────┼──────│
+│  │📷 │PRD001      │Chem X      │Chemical│ABC Co          │1234    │Ltr │Bottle │500      │Active│
+│  │📷 │PRD002      │Sprayer A   │Sprayer │AgroTech        │8424    │Nos │Box    │1200     │Active│
+│  │📷 │PRD003      │Electric P1 │Machine │PowerTools      │8501    │Nos │Set    │3500     │Inactive│
+│  └─────────────────────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                               │
+│ ┌───────────────────────────────────────────────────────────────────────────────────────────┐ │
+│ │Created Date│Created By│Actions                                                             │ │
+│ │────────────┼──────────┼──────────────────────────────────────────────────────────────────│ │
+│ │02-Jan-2026 │Admin     │[👁 View] [✏ Edit] [🗑 Delete]                                       │ │
+│ │02-Jan-2026 │Admin     │[👁 View] [✏ Edit] [🗑 Delete]                                       │ │
+│ │03-Jan-2026 │Admin     │[👁 View] [✏ Edit] [🗑 Delete]                                       │ │
+│ └───────────────────────────────────────────────────────────────────────────────────────────┘ │
+│                                                                                               │
+│ Pagination:  Previous   1   2   3   ...   10   Next                                           │
+│                                                                                               │
+└──────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Product List Fields
-
-| Field           | Type            | Required | Notes                         |
-| --------------- | --------------- | -------- | ----------------------------- |
-| Category Filter | Multi-select    | No       | Chemical/Sprayer/Machine/etc. |
-| Sub-Type Filter | Dropdown        | No       | Cascading based on Category   |
-| Company/Brand   | Search Dropdown | No       | Manufacturer filter           |
-| HSN Code        | Text            | No       | Search by tax code            |
-| Status          | Multi-select    | No       | Active/Inactive               |
-| Created Date    | Date Range      | No       | Date range filter             |
-| Search          | Text            | No       | Code, Name, or Brand          |
 
 ---
 
-## 10.3 Add Product
+# Table View Fields
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│              ADD PRODUCT                                     │
-│                                                              │
-│  SECTION 1: BASIC PRODUCT INFORMATION                        │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  Product Name*:            [____________]           │    │
-│  │  Product Code:             [____________]           │    │
-│  │  (Auto-generate or manual)                          │    │
-│  │                                                      │    │
-│  │  Category*:                [▼ Dropdown ▼]           │    │
-│  │    • Chemical / Sprayer / Electric Pump / Machine   │    │
-│  │    • Trap / Tool / Other                            │    │
-│  │                                                      │    │
-│  │  Sub-Type:                 [▼ Cascading Dropdown ▼] │    │
-│  │                                                      │    │
-│  │  Company / Brand*:         [▼ Search Dropdown ▼]    │    │
-│  │    (with + Add New option)                          │    │
-│  │                                                      │    │
-│  │  Description:              [____________________]   │    │
-│  │                            [Textarea]               │    │
-│  │                                                      │    │
-│  │  Status:                   [☑ Active] (Toggle)      │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-│  SECTION 2: PRODUCT MEDIA                                    │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  Product Images:           [📎 Upload Multiple]     │    │
-│  │  (Max 5 images, JPG/PNG, Max 2MB each)              │    │
-│  │                                                      │    │
-│  │  Primary Image:            [Select from uploaded]   │    │
-│  │  (Selected as cover image)                          │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-│  SECTION 3: UNITS & PACKAGING                                │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  Base UOM*:                [▼ Dropdown ▼]           │    │
-│  │    • Nos / Ltr / Kg / Gram / ml / Set / Pkt         │    │
-│  │                                                      │    │
-│  │  Secondary UOM:            [▼ Dropdown ▼]           │    │
-│  │                                                      │    │
-│  │  Package Type:             [▼ Dropdown ▼]           │    │
-│  │    • Bottle / Packet / Box / Bag / Pouch / Can / Set│    │
-│  │                                                      │    │
-│  │  Quantity Per Package*:    [____] (Base unit)       │    │
-│  │  Example: 1 Ltr per bottle                          │    │
-│  │                                                      │    │
-│  │  Units Per Package:        [____]                   │    │
-│  │  Example: 12 bottles per box                        │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-│  SECTION 4: PRODUCT VARIANTS                                 │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  [+ ADD VARIANT]                                     │    │
-│  │                                                      │    │
-│  │  Variant Name*:            [____________]           │    │
-│  │  Example: 100 ml / 250 ml / 1 Ltr                   │    │
-│  │                                                      │    │
-│  │  Variant SKU:              [____________]           │    │
-│  │  (Auto-generate or manual)                          │    │
-│  │                                                      │    │
-│  │  Variant Package Type:     [▼ Dropdown ▼]           │    │
-│  │  Variant Quantity:         [____] (Base conversion) │    │
-│  │  Barcode / QR Code:        [____________]           │    │
-│  │  (Text input or scanner)                            │    │
-│  │                                                      │    │
-│  │  Variant Status:           [☑ Active]               │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-│  SECTION 5: TAX CONFIGURATION                                │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  HSN Code*:                [▼ Search Dropdown ▼]    │    │
-│  │    (From Module 9 - Tax Management)                 │    │
-│  │                                                      │    │
-│  │  Auto-populated from HSN:                            │    │
-│  │  • Tax Type:           [Read-only]                  │    │
-│  │  • CGST Rate:          [__]% [Read-only]            │    │
-│  │  • SGST Rate:          [__]% [Read-only]            │    │
-│  │  • IGST Rate:          [__]% [Read-only]            │    │
-│  │  • CESS Rate:          [__]% [Read-only]            │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-│  SECTION 6: DEFAULT PRICING                                  │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  Purchase Price*:          ₹ [________]             │    │
-│  │  (Reference price during stock purchase)            │    │
-│  │                                                      │    │
-│  │  Selling Price:            ₹ [________]             │    │
-│  │  Base Price:               ₹ [________] (Pre-tax)   │    │
-│  │                                                      │    │
-│  │  Tax Amount:               ₹ [Auto-calculated]      │    │
-│  │  Total Cost:               ₹ [Auto-calculated]      │    │
-│  │                                                      │    │
-│  │  [SAVE PRODUCT]  [CANCEL]                            │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Add Product Fields
-
-| Section | Field                | Type            | Required | Notes                           |
-| ------- | -------------------- | --------------- | -------- | ------------------------------- |
-| 1       | Product Name         | Text            | Yes      | Max 100 characters              |
-| 1       | Product Code         | Text            | No       | Auto-generate or manual         |
-| 1       | Category             | Dropdown        | Yes      | Predefined categories           |
-| 1       | Sub-Type             | Dropdown        | No       | Cascading from Category         |
-| 1       | Company/Brand        | Search Dropdown | Yes      | With add new option             |
-| 1       | Description          | Textarea        | No       | Product details                 |
-| 1       | Status               | Toggle          | No       | Active/Inactive, default Active |
-| 2       | Product Images       | Multi-file      | No       | Max 5, JPG/PNG, 2MB each        |
-| 2       | Primary Image        | Selection       | No       | From uploaded images            |
-| 3       | Base UOM             | Dropdown        | Yes      | Nos/Ltr/Kg/Gram/ml/Set/Pkt      |
-| 3       | Secondary UOM        | Dropdown        | No       | Same options                    |
-| 3       | Package Type         | Dropdown        | No       | Bottle/Packet/Box/etc.          |
-| 3       | Quantity Per Package | Number          | Yes      | Base unit quantity              |
-| 3       | Units Per Package    | Number          | No       | Units in package                |
-| 4       | Variant Name         | Text            | Yes\*    | \*If variant added              |
-| 4       | Variant SKU          | Text            | No       | Auto or manual                  |
-| 4       | Variant Package Type | Dropdown        | No       | Package type                    |
-| 4       | Variant Quantity     | Number          | Yes\*    | \*If variant added              |
-| 4       | Barcode/QR Code      | Text            | No       | Scanner or manual               |
-| 4       | Variant Status       | Toggle          | No       | Active/Inactive                 |
-| 5       | HSN Code             | Search Dropdown | Yes      | From Module 9                   |
-| 5       | Tax Type             | Auto            | System   | From HSN                        |
-| 5       | CGST/SGST/IGST/CESS  | Auto            | System   | From HSN config                 |
-| 6       | Purchase Price       | Currency        | Yes      | Reference purchase price        |
-| 6       | Selling Price        | Currency        | No       | Reference selling price         |
-| 6       | Base Price           | Currency        | No       | Pre-tax price                   |
-
-### Validation Rules
-
-| Section | Field                | Rule                                               |
-| ------- | -------------------- | -------------------------------------------------- |
-| 1       | Product Name         | Required, unique within company, 3-100 characters  |
-| 1       | Product Code         | Optional, unique if provided, alphanumeric         |
-| 1       | Category             | Required, must be valid option                     |
-| 1       | Company/Brand        | Required, min 2 characters                         |
-| 3       | Base UOM             | Required, must be valid option                     |
-| 3       | Quantity Per Package | Required, numeric, greater than 0                  |
-| 4       | Variant Name         | Required if variant added, unique within product   |
-| 4       | Variant Quantity     | Required if variant added, numeric, greater than 0 |
-| 5       | HSN Code             | Required, must be active HSN from Module 9         |
-| 6       | Purchase Price       | Required, numeric, greater than or equal to 0      |
-| 6       | Selling Price        | Optional, numeric, greater than or equal to 0      |
+| Field                      | Type     | Required | Description                                                        |
+| -------------------------- | -------- | -------- | ------------------------------------------------------------------ |
+| Product Code               | Text     | Auto     | Auto-generated unique SKU                                          |
+| Cover Image                | Image    | Optional | Product thumbnail                                                  |
+| Product Name               | Text     | Yes      | Product full name                                                  |
+| Category                   | Dropdown | Yes      | Chemical / Sprayer / Electric Pump / Machine / Trap / Tool / Other |
+| Company / Brand            | Dropdown | Yes      | Manufacturer or brand                                              |
+| HSN Code                   | Link     | Yes      | Clickable tax code                                                 |
+| Base UOM                   | Dropdown | Yes      | Nos / Ltr / Kg / Gram / ml / Set / Pkt                             |
+| Package Type               | Dropdown | Yes      | Bottle / Packet / Box / Bag / Pouch / Can / Set                    |
+| Default Purchase Price (₹) | Currency | Yes      | Reference purchase price                                           |
+| Status                     | Badge    | Yes      | Active / Inactive                                                  |
+| Created Date               | Date     | Auto     | Record creation date                                               |
+| Created By                 | Text     | Auto     | User who created product                                           |
 
 ---
 
-## 10.4 Edit Product
+# Actions
+
+| Action | Role Access   | Behavior                        |
+| ------ | ------------- | ------------------------------- |
+| View   | All Roles     | Opens product detail drawer     |
+| Edit   | Head Ops Only | Opens Edit Product form         |
+| Delete | Head Ops Only | Soft delete (Status → Inactive) |
+
+---
+
+# Filters
+
+| Filter          | Type               | Description                                                        |
+| --------------- | ------------------ | ------------------------------------------------------------------ |
+| Category        | Multi-select       | Chemical / Sprayer / Electric Pump / Machine / Trap / Tool / Other |
+| Sub-Type        | Cascading Dropdown | Changes based on Category                                          |
+| Company / Brand | Search Dropdown    | Manufacturer filter                                                |
+| HSN Code        | Text / Numeric     | Search by tax code                                                 |
+| Status          | Multi-select       | Active / Inactive                                                  |
+| Created Date    | Date Range         | Filter by creation date                                            |
+
+---
+
+# Search
+
+Global search supports:
+
+| Search Field    | Type    |
+| --------------- | ------- |
+| Product Code    | Text    |
+| Product Name    | Text    |
+| HSN Code        | Numeric |
+| Company / Brand | Text    |
+
+---
+
+# 10.2 Add Product
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│                         ADD PRODUCT                             │
+│                                                                │
+│  Description: Create a new product in the Product Master with  │
+│  basic details, packaging, variants, and tax configuration.   │
+│  Stock will be managed separately in the Add Stock module.    │
+│                                                                │
+├────────────────────────────────────────────────────────────────┤
+│ SECTION 1: BASIC PRODUCT INFORMATION                           │
+│ ┌────────────────────────────────────────────────────────────┐ │
+│ │ Product Name*           : [________________________]      │ │
+│ │ Product Code            : [________________________]      │ │
+│ │ (Auto-generate or manual entry)                          │ │
+│ │                                                          │ │
+│ │ Category*               : [▼ Select Category ▼]          │ │
+│ │   Chemical / Sprayer / Electric Pump / Machine           │ │
+│ │   Trap / Tool / Other                                    │ │
+│ │                                                          │ │
+│ │ Sub-Type               : [▼ Cascading Dropdown ▼]        │ │
+│ │ (Based on selected category)                             │ │
+│ │                                                          │ │
+│ │ Company / Brand*        : [🔍 Search Dropdown ▼]         │ │
+│ │ [+ Add New Brand]                                       │ │
+│ │                                                          │ │
+│ │ Description             : [___________________________]  │ │
+│ │                           [ Text Area ]                 │ │
+│ │                                                          │ │
+│ │ Status                  : [☑ Active] Toggle             │ │
+│ └────────────────────────────────────────────────────────────┘ │
+│                                                                │
+├────────────────────────────────────────────────────────────────┤
+│ SECTION 2: PRODUCT MEDIA                                       │
+│ ┌────────────────────────────────────────────────────────────┐ │
+│ │ Product Images         : [📎 Upload Images]               │ │
+│ │ (Maximum 5 images allowed)                                │ │
+│ │ Supported Format       : JPG / PNG                        │ │
+│ │ Max Size               : 2MB per image                    │ │
+│ │                                                          │ │
+│ │ Image Preview          : [Thumbnail Preview Area]        │ │
+│ │                                                          │ │
+│ │ Primary Image          : [Select Cover Image ▼]          │ │
+│ │ (Choose one image as product cover)                      │ │
+│ └────────────────────────────────────────────────────────────┘ │
+│                                                                │
+├────────────────────────────────────────────────────────────────┤
+│ SECTION 3: UNITS & PACKAGING                                   │
+│ ┌────────────────────────────────────────────────────────────┐ │
+│ │ Measurement Units                                          │ │
+│ │                                                          │ │
+│ │ Base UOM*             : [▼ Nos / Ltr / Kg / Gram / ml / Set / Pkt] │
+│ │                                                          │ │
+│ │ Secondary UOM         : [▼ Same Options ▼]               │ │
+│ │                                                          │ │
+│ │ Packaging Details                                          │ │
+│ │                                                          │ │
+│ │ Package Type          : [▼ Bottle / Packet / Pouch / Box │ │
+│ │                         Bag / Can / Set ▼]               │ │
+│ │                                                          │ │
+│ │ Quantity Per Package* : [________]                       │ │
+│ │ Example: 1 Ltr per bottle                                │ │
+│ │                                                          │ │
+│ │ Units Per Package     : [________]                       │ │
+│ │ Example: 12 bottles per box                              │ │
+│ └────────────────────────────────────────────────────────────┘ │
+│                                                                │
+├────────────────────────────────────────────────────────────────┤
+│ SECTION 4: PRODUCT VARIANTS                                    │
+│ (Used when the same product has multiple packing sizes)       │
+│ ┌────────────────────────────────────────────────────────────┐ │
+│ │ [+ ADD VARIANT]                      [Delete]              │ │
+│ │                                                          │ │
+│ │ Variant Name*         : [________________________]       │ │
+│ │ Example: 100 ml / 250 ml / 1 Ltr                         │ │
+│ │                                                          │ │
+│ │ Variant SKU           : [________________________]       │ │
+│ │ (Auto-generate or manual entry)                          │ │
+│ │                                                          │ │
+│ │ Variant Package Type  : [▼ Bottle / Packet / Box / Pouch]│ │
+│ │                                                          │ │
+│ │ Variant Quantity*     : [________]                       │ │
+│ │ (Base unit conversion value)                             │ │
+│ │                                                          │ │
+│ │ Barcode / QR Code     : [________________________]       │ │
+│ │ (Scanner or manual entry)                                │ │
+│ │                                                          │ │
+│ │ Variant Status        : [☑ Active] Toggle                │ │
+│ └────────────────────────────────────────────────────────────┘ │
+│                                                                │
+├────────────────────────────────────────────────────────────────┤
+│ SECTION 5: TAX CONFIGURATION                                   │
+│ ┌────────────────────────────────────────────────────────────┐ │
+│ │ HSN Code*             : [🔍 Search Dropdown ▼]            │ │
+│ │ (Select from Tax Module)                                  │ │
+│ │                                                          │ │
+│ │ Auto-filled Tax Information                              │ │
+│ │                                                          │ │
+│ │ Tax Type              : [Read Only]                      │ │
+│ │ CGST Rate (%)         : [Read Only]                      │ │
+│ │ SGST Rate (%)         : [Read Only]                      │ │
+│ │ IGST Rate (%)         : [Read Only]                      │ │
+│ │ CESS Rate (%)         : [Read Only]                      │ │
+│ └────────────────────────────────────────────────────────────┘ │
+│                                                                │
+├────────────────────────────────────────────────────────────────┤
+│ SECTION 6: DEFAULT PRICING                                     │
+│ (Used as reference price during stock purchase)               │
+│ ┌────────────────────────────────────────────────────────────┐ │
+│ │ Purchase Price*       : ₹ [________]                       │ │
+│ │                                                          │ │
+│ │ Selling Price         : ₹ [________]                       │ │
+│ │                                                          │ │
+│ │ Base Price            : ₹ [________] (Pre-tax price)      │ │
+│ │                                                          │ │
+│ │ Tax Amount            : ₹ [Auto Calculated]               │ │
+│ │                                                          │ │
+│ │ Total Cost            : ₹ [Auto Calculated]               │ │
+│ │                                                          │ │
+│ │ [ SAVE PRODUCT ]     [ CANCEL ]                           │ │
+│ └────────────────────────────────────────────────────────────┘ │
+│                                                                │
+└────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# Add Product Field Summary
+
+| Section | Field                | Type               | Required | Notes                                                              |
+| ------- | -------------------- | ------------------ | -------- | ------------------------------------------------------------------ |
+| 1       | Product Name         | Text               | Yes      | Max 100 characters                                                 |
+| 1       | Product Code         | Text               | No       | Auto-generate or manual                                            |
+| 1       | Category             | Dropdown           | Yes      | Chemical / Sprayer / Electric Pump / Machine / Trap / Tool / Other |
+| 1       | Sub-Type             | Cascading Dropdown | No       | Based on category                                                  |
+| 1       | Company / Brand      | Search Dropdown    | Yes      | With Add New option                                                |
+| 1       | Description          | Text Area          | No       | Product information                                                |
+| 1       | Status               | Toggle             | No       | Active / Inactive                                                  |
+| 2       | Product Images       | Multi Upload       | No       | Max 5 images                                                       |
+| 2       | Primary Image        | Selection          | No       | Cover image                                                        |
+| 3       | Base UOM             | Dropdown           | Yes      | Nos / Ltr / Kg / Gram / ml / Set / Pkt                             |
+| 3       | Secondary UOM        | Dropdown           | No       | Same options                                                       |
+| 3       | Package Type         | Dropdown           | No       | Bottle / Packet / Pouch / Box / Bag / Can / Set                    |
+| 3       | Quantity Per Package | Number             | Yes      | Example: 1 Ltr per bottle                                          |
+| 3       | Units Per Package    | Number             | No       | Example: 12 bottles per box                                        |
+| 4       | Variant Name         | Text               | Yes      | Required when variant added                                        |
+| 4       | Variant SKU          | Text               | No       | Auto or manual                                                     |
+| 4       | Variant Package Type | Dropdown           | No       | Packaging type                                                     |
+| 4       | Variant Quantity     | Number             | Yes      | Base conversion                                                    |
+| 4       | Barcode / QR Code    | Text               | No       | Scanner input supported                                            |
+| 4       | Variant Status       | Toggle             | No       | Active / Inactive                                                  |
+| 5       | HSN Code             | Search Dropdown    | Yes      | From Tax Module                                                    |
+| 5       | Tax Rates            | Auto               | System   | Read-only                                                          |
+| 6       | Purchase Price       | Currency           | Yes      | Reference purchase price                                           |
+| 6       | Selling Price        | Currency           | No       | Optional                                                           |
+| 6       | Base Price           | Currency           | No       | Pre-tax                                                            |
+| 6       | Tax Amount           | Auto               | System   | Calculated                                                         |
+| 6       | Total Cost           | Auto               | System   | Calculated                                                         |
+
+---
+
+## 10.3 Edit Product
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -4481,25 +4622,108 @@ Same as Add Product, plus:
 
 ---
 
-## 10.5 View Product
+Here is the **improved 10.4 View Product screen** with **Audit Information added** and structured in a way that is typical for **ERP read-only detail views**.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│              VIEW PRODUCT                                    │
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  All sections displayed in READ-ONLY mode            │    │
-│  │  Same structure as Add Product form                  │    │
-│  │                                                      │    │
-│  │  [CLOSE]  [EDIT] (if Head Ops permission)            │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
+---
+
+# 10.4 View Product
+
+```id="view_product_layout"
+┌────────────────────────────────────────────────────────────────┐
+│                         VIEW PRODUCT                            │
+│                                                                │
+│  Product information is displayed in READ-ONLY mode.           │
+│  Structure follows the same layout as the Add Product screen. │
+│                                                                │
+├────────────────────────────────────────────────────────────────┤
+│ SECTION 1: BASIC PRODUCT INFORMATION                           │
+│ ┌────────────────────────────────────────────────────────────┐ │
+│ │ Product Name            : Chemical X                      │ │
+│ │ Product Code            : PRD001                          │ │
+│ │ Category                : Chemical                        │ │
+│ │ Sub-Type                : Insecticide                     │ │
+│ │ Company / Brand         : ABC Agro                        │ │
+│ │ Description             : Pest control chemical product   │ │
+│ │ Status                  : Active                          │ │
+│ └────────────────────────────────────────────────────────────┘ │
+│                                                                │
+├────────────────────────────────────────────────────────────────┤
+│ SECTION 2: PRODUCT MEDIA                                       │
+│ ┌────────────────────────────────────────────────────────────┐ │
+│ │ Product Images           : [Image Thumbnails]              │ │
+│ │ Primary Image            : [Cover Image]                   │ │
+│ │ Supported Formats        : JPG / PNG                       │ │
+│ └────────────────────────────────────────────────────────────┘ │
+│                                                                │
+├────────────────────────────────────────────────────────────────┤
+│ SECTION 3: UNITS & PACKAGING                                   │
+│ ┌────────────────────────────────────────────────────────────┐ │
+│ │ Base UOM                : Ltr                              │ │
+│ │ Secondary UOM           : ml                               │ │
+│ │                                                          │ │
+│ │ Package Type            : Bottle                           │ │
+│ │ Quantity Per Package    : 1 Ltr                            │ │
+│ │ Units Per Package       : 12                               │ │
+│ └────────────────────────────────────────────────────────────┘ │
+│                                                                │
+├────────────────────────────────────────────────────────────────┤
+│ SECTION 4: PRODUCT VARIANTS                                    │
+│ ┌────────────────────────────────────────────────────────────┐ │
+│ │ Variant Name │ Variant SKU │ Package Type │ Quantity │Status│ │
+│ │──────────────┼─────────────┼──────────────┼──────────┼──────│ │
+│ │ 100 ml       │ PRD001-V1   │ Bottle       │ 0.1 Ltr  │Active│ │
+│ │ 250 ml       │ PRD001-V2   │ Bottle       │ 0.25 Ltr │Active│ │
+│ │ 1 Ltr        │ PRD001-V3   │ Bottle       │ 1 Ltr    │Active│ │
+│ └────────────────────────────────────────────────────────────┘ │
+│                                                                │
+├────────────────────────────────────────────────────────────────┤
+│ SECTION 5: TAX CONFIGURATION                                   │
+│ ┌────────────────────────────────────────────────────────────┐ │
+│ │ HSN Code               : 1234                              │ │
+│ │ Tax Type               : GST                               │ │
+│ │ CGST Rate              : 9%                                │ │
+│ │ SGST Rate              : 9%                                │ │
+│ │ IGST Rate              : 18%                               │ │
+│ │ CESS Rate              : 0%                                │ │
+│ └────────────────────────────────────────────────────────────┘ │
+│                                                                │
+├────────────────────────────────────────────────────────────────┤
+│ SECTION 6: DEFAULT PRICING                                     │
+│ ┌────────────────────────────────────────────────────────────┐ │
+│ │ Purchase Price          : ₹ 500                             │ │
+│ │ Selling Price           : ₹ 650                             │ │
+│ │ Base Price              : ₹ 550                             │ │
+│ │ Tax Amount              : ₹ 99                              │ │
+│ │ Total Cost              : ₹ 649                             │ │
+│ └────────────────────────────────────────────────────────────┘ │
+│                                                                │
+├────────────────────────────────────────────────────────────────┤
+│ SECTION 7: AUDIT INFORMATION                                   │
+│ ┌────────────────────────────────────────────────────────────┐ │
+│ │ Created By              : Admin                            │ │
+│ │ Created Date            : 02 Jan 2026 10:35 AM             │ │
+│ │ Last Updated By         : Head Ops                         │ │
+│ │ Last Updated Date       : 05 Jan 2026 03:12 PM             │ │
+│ │ Record Status           : Active                           │ │
+│ └────────────────────────────────────────────────────────────┘ │
+│                                                                │
+│ [ CLOSE ]                         [ EDIT ] (Head Ops Only)     │
+│                                                                │
+└────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 10.6 Delete Product
+# Audit Fields
+
+| Field             | Type     | Description                        |
+| ----------------- | -------- | ---------------------------------- |
+| Created By        | Text     | User who created the product       |
+| Created Date      | DateTime | When product was created           |
+| Last Updated By   | Text     | User who last modified the product |
+| Last Updated Date | DateTime | Last modification timestamp        |
+
+## 10.5 Delete Product
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
