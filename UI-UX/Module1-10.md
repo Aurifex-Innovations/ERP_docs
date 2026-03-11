@@ -4,7 +4,7 @@
 
 # 🎯 MODULE 1: AUTHENTICATION
 
-## 1.1 Overview
+## Overview
 
 Authentication module handles access control for three distinct user types:
 
@@ -14,7 +14,7 @@ Authentication module handles access control for three distinct user types:
 
 ---
 
-## 1.2 Super Admin (Seravion) Authentication Flow
+## 1.1 Super Admin (Seravion) Authentication Flow
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -72,7 +72,7 @@ Authentication module handles access control for three distinct user types:
 
 ---
 
-## 1.3 Company Admin (Client) Sign Up Flow
+## 1.2 Company Admin (Client) Sign Up Flow
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -153,7 +153,7 @@ Authentication module handles access control for three distinct user types:
 
 ---
 
-## 1.4 Login Option Screen
+## 1.3 Login Option Screen
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -179,7 +179,7 @@ Authentication module handles access control for three distinct user types:
 
 ---
 
-## 1.5 Company Admin (Client) Login Flow
+## 1.4 Company Admin (Client) Login Flow
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -250,7 +250,7 @@ Authentication module handles access control for three distinct user types:
 
 ---
 
-## 1.6 IAM User (Company User) Login Flow
+## 1.5 IAM User (Company User) Login Flow
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -309,71 +309,161 @@ Authentication module handles access control for three distinct user types:
 
 ---
 
-## 1.7 Forgot Password for IAM Role
+# 1.6 Forgot Password (Root User + IAM User)
+
+This feature allows **Root Users and IAM Users** to securely reset their password using **OTP verification via Email or Mobile Number**.
+
+The password reset process follows a **4-step verification flow** to ensure account security.
+
+---
+
+## Forgot Password Flow
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              FORGOT PASSWORD SCREEN                          │
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  STEP 1: VERIFY MOBILE NUMBER                        │    │
-│  │  ─────────────────────────────                       │    │
-│  │  Mobile Number                   [____________]     │    │
-│  │                                                     │    │
-│  │  [SEND OTP]                                         │    │
-│  └─────────────────────────────────────────────────────┘    │
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│  STEP 2: VERIFY OTP                                          │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  Enter OTP                       [____]             │    │
-│  │                                                     │    │
-│  │  [VERIFY]                                           │    │
-│  └─────────────────────────────────────────────────────┘    │
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│  STEP 3: SET NEW PASSWORD                                    │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  New Password                    [____________]     │    │
-│  │  Re-enter New Password           [____________]     │    │
-│  │                                                     │    │
-│  │  [RESET PASSWORD]                                   │    │
-│  └─────────────────────────────────────────────────────┘    │
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│  SUCCESS: Password reset complete, redirect to Login         │
-└─────────────────────────────────────────────────────────────┘
+User clicks "Forgot Password"
+        │
+        ▼
+STEP 1: Select Recovery Method
+        │
+        ├── Email
+        └── Mobile Number
+        │
+        ▼
+STEP 2: Enter Email / Mobile Number
+        │
+        ▼
+System Sends OTP
+        │
+        ▼
+STEP 3: OTP Verification
+        │
+        ▼
+STEP 4: Set New Password
+        │
+        ▼
+SUCCESS: Password Reset Complete
+        │
+        ▼
+Redirect to Login Screen
 ```
 
-### Screen Fields: Forgot Password
+---
 
-| Step | Field             | Type     | Required | Notes                    |
-| ---- | ----------------- | -------- | -------- | ------------------------ |
-| 1    | Mobile Number     | Phone    | Yes      | Registered mobile number |
-| 1    | Send OTP          | Button   | -        | Triggers OTP SMS         |
-| 2    | OTP               | Text     | Yes      | 6-digit code             |
-| 2    | Verify            | Button   | -        | Validates OTP            |
-| 3    | New Password      | Password | Yes      | Min 8 chars, complexity  |
-| 3    | Re-enter Password | Password | Yes      | Must match new password  |
-| 3    | Reset Password    | Button   | -        | Updates password         |
+# Screen Flow
 
-### Validation Rules
+## Step 1: Select Password Recovery Method
 
-| Step | Field             | Rule                                                             |
-| ---- | ----------------- | ---------------------------------------------------------------- |
-| 1    | Mobile Number     | Must be 10 digits, must exist in system                          |
-| 2    | OTP               | Must match sent OTP, expires in 10 minutes                       |
-| 3    | New Password      | Minimum 8 characters, 1 uppercase, 1 number, 1 special character |
-| 3    | Re-enter Password | Must exactly match New Password field                            |
+User selects how they want to receive the **OTP verification code**.
+
+| Field Name      | Type   | Required | Description                           |
+| --------------- | ------ | -------- | ------------------------------------- |
+| Recovery Method | Radio  | Yes      | Select **Email** or **Mobile Number** |
+| Continue        | Button | -        | Moves to next step based on selection |
+
+---
+
+## Step 2: Enter Email or Mobile Number
+
+Based on the selected recovery method, the system displays the appropriate input field.
+
+### If Email is Selected
+
+| Field Name | Type   | Required | Description              |
+| ---------- | ------ | -------- | ------------------------ |
+| Email      | Email  | Yes      | Registered email address |
+| Send OTP   | Button | -        | Sends OTP to email       |
+
+### If Mobile Number is Selected
+
+| Field Name    | Type   | Required | Description              |
+| ------------- | ------ | -------- | ------------------------ |
+| Mobile Number | Phone  | Yes      | Registered mobile number |
+| Send OTP      | Button | -        | Sends OTP via SMS        |
+
+---
+
+## Step 3: OTP Verification
+
+User enters the **One-Time Password (OTP)** received via Email or SMS.
+
+| Field Name | Type   | Required | Description               |
+| ---------- | ------ | -------- | ------------------------- |
+| OTP        | Text   | Yes      | 6-digit verification code |
+| Verify OTP | Button | -        | Validates OTP             |
+
+---
+
+## Step 4: Set New Password
+
+User sets a new password after successful OTP verification.
+
+| Field Name       | Type     | Required | Description              |
+| ---------------- | -------- | -------- | ------------------------ |
+| New Password     | Password | Yes      | Enter new password       |
+| Confirm Password | Password | Yes      | Re-enter new password    |
+| Reset Password   | Button   | -        | Updates account password |
+
+---
+
+# Validation Rules
+
+## Step 2: Email / Mobile
+
+| Field         | Rule                                                 |
+| ------------- | ---------------------------------------------------- |
+| Email         | Must be a valid email format and exist in the system |
+| Mobile Number | Must be 10 digits and registered with the account    |
+
+---
+
+## Step 3: OTP Verification
+
+| Field       | Rule                            |
+| ----------- | ------------------------------- |
+| OTP         | Must match system generated OTP |
+| OTP Expiry  | OTP expires in **10 minutes**   |
+| Retry Limit | Maximum **3 attempts** allowed  |
+
+---
+
+## Step 4: Password Rules
+
+| Field            | Rule                                |
+| ---------------- | ----------------------------------- |
+| New Password     | Minimum **8 characters**            |
+|                  | At least **1 uppercase letter**     |
+|                  | At least **1 number**               |
+|                  | At least **1 special character**    |
+| Confirm Password | Must exactly match **New Password** |
+
+---
+
+# System Behavior
+
+| Event                  | System Action                                   |
+| ---------------------- | ----------------------------------------------- |
+| OTP Sent               | System generates OTP and sends via Email or SMS |
+| OTP Verified           | User is allowed to reset password               |
+| OTP Failed             | Error message shown with retry option           |
+| Password Reset Success | Redirect to Login Screen                        |
+| OTP Expired            | User must request a new OTP                     |
+
+---
+
+# Success Message
+
+```
+Password reset successfully.
+Please login with your new password.
+```
+
+Redirects user to **Login Screen**.
 
 ---
 
 # 🎯 MODULE 2: USER ONBOARDING
 
-## 2.1 Overview
+## Overview
 
 Post-authentication workflow for Company Admin to complete company profile and document verification before system access. This module bridges authentication and full system access, ensuring compliance through document verification by Seravion.
 
@@ -384,7 +474,7 @@ Post-authentication workflow for Company Admin to complete company profile and d
 
 ---
 
-## 2.2 Complete Onboarding Flow
+## Complete Onboarding Flow
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -616,7 +706,101 @@ Post-authentication workflow for Company Admin to complete company profile and d
 
 ---
 
-## 2.6 Document Verification Success Screen (Client Facing)
+# 2.6 Document Reupload (After Rejection)
+
+This feature allows the **User to reupload a document when the previously submitted document is rejected** during the verification process.
+
+When a document is rejected in **2.5 Document Verification**, the system provides a **Reupload option**.
+Clicking this option opens a **Reupload Document Popup**, allowing the user to submit a corrected file.
+
+---
+
+# Reupload Flow
+
+```text
+Document Rejected (2.5 Verification)
+        │
+        ▼
+User clicks "Reupload Document"
+        │
+        ▼
+Reupload Popup Opens
+        │
+        ▼
+User uploads corrected document
+        │
+        ▼
+User clicks Submit
+        │
+        ▼
+Document resubmitted for verification
+```
+
+---
+
+# Reupload Document Popup
+
+```
+┌─────────────────────────────────────────────┐
+│            REUPLOAD DOCUMENT                │
+│                                             │
+│  Document Type : GST Certificate           │
+│                                             │
+│  Upload New File                            │
+│  [ Choose File ]                            │
+│                                             │
+│  Supported Formats: PDF, JPG, PNG           │
+│  Maximum Size: 5MB                          │
+│                                             │
+│  [ Cancel ]        [ Submit ]                │
+└─────────────────────────────────────────────┘
+```
+
+---
+
+# Screen Fields
+
+| Field         | Type        | Required | Description                        |
+| ------------- | ----------- | -------- | ---------------------------------- |
+| Document Type | Label       | -        | Shows rejected document name       |
+| Upload File   | File Upload | Yes      | Upload corrected document          |
+| Cancel        | Button      | -        | Close popup                        |
+| Submit        | Button      | -        | Resubmit document for verification |
+
+---
+
+# Validation Rules
+
+| Field         | Rule                                      |
+| ------------- | ----------------------------------------- |
+| Upload File   | Only **PDF, JPG, PNG** formats allowed    |
+| File Size     | Maximum **5MB**                           |
+| File Required | User must upload a file before submitting |
+
+---
+
+# System Behavior
+
+| Event                | System Action                            |
+| -------------------- | ---------------------------------------- |
+| Document Rejected    | System enables **Reupload option**       |
+| User Clicks Reupload | Popup window opens                       |
+| File Uploaded        | System validates file type and size      |
+| Submit Clicked       | Document is resubmitted for verification |
+| Cancel Clicked       | Popup closes without changes             |
+
+---
+
+# Success Message
+
+```text
+Document uploaded successfully.
+Your document has been resubmitted for verification.
+```
+
+---
+
+## 2.7 Document Verification Success Screen (Client Facing)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -639,7 +823,7 @@ Post-authentication workflow for Company Admin to complete company profile and d
 
 ---
 
-## 2.7 Subscription Screen (Client Side)
+## 2.8 Subscription Screen (Client Side)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -718,34 +902,170 @@ Post-authentication workflow for Company Admin to complete company profile and d
 
 ---
 
-## 2.8 Subscription Module (Company Admin Sidebar)
+# 2.9 Subscription Module (Company Admin Sidebar)
 
+The **Subscription Module** allows the **Company Admin** to manage and monitor the organization's subscription plan, including purchased resources, validity, and billing details.
+
+This module is accessible from the **Company Admin Sidebar**.
+
+---
+
+## Sidebar Navigation Structure
+
+```text
+Home
+
+Role Management
+    ├─ Role Config
+    └─ Salary & Leave
+
+Branch Management
+
+Employee Management
+
+Stock Management
+    ├─ Tax
+    ├─ Stock Details
+    ├─ Products
+    └─ Services
+
+Subscription Management
 ```
-┌─────────────────────────────────────────────────────────────┐
-│     SUBSCRIPTION MODULE (Sidebar Item)                       │
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  SUBSCRIPTION PURCHASED LIST (Logs)                  │    │
-│  │  ─────────────────────────────────────────────────   │    │
-│  │  Table:                                              │    │
-│  │  • Plan Name                                         │    │
-│  │  • Purchase Date                                     │    │
-│  │  • Duration                                          │    │
-│  │  • Amount Paid                                       │    │
-│  │  • Payment Status [Paid/Partial/Free/Non-Paid]       │    │
-│  │  • Actions: [View Details]                           │    │
-│  │                                                      │    │
-│  │  [PURCHASE NEW PLAN] → Redirects to 2.7              │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
+
+The **Subscription Management section** allows administrators to:
+
+- View purchased subscription plans
+- Track subscription validity
+- Monitor resource usage (branches, technicians, users)
+- Access subscription purchase logs
+- View detailed billing and payment information
+
+---
+
+# 2.10 Subscription Purchase List (Logs)
+
+This screen displays the **history of all purchased subscriptions** for the company.
+
+Each record represents a **subscription purchase entry**.
+
+---
+
+## Table View
+
+| Field                   | Description                              |
+| ----------------------- | ---------------------------------------- |
+| Subscription ID         | Unique identifier of the subscription    |
+| Plan Type               | Type of subscription plan                |
+| Duration                | Subscription duration (Monthly / Yearly) |
+| Branches                | Number of branches included              |
+| Technicians             | Number of technicians included           |
+| Extra Users             | Additional users purchased               |
+| Subscription Start Date | Date when subscription becomes active    |
+| Expiry Date             | Subscription end date                    |
+| Status                  | Active / Expired / Cancelled             |
+| Action                  | View icon to open subscription details   |
+
+---
+
+## Available Actions
+
+| Action | Description                             |
+| ------ | --------------------------------------- |
+| View   | Opens detailed subscription information |
+
+---
+
+# 2.11 View Subscription Details
+
+This screen provides **complete details of a selected subscription**, including plan information, resources, pricing, and payment details.
+
+---
+
+## Subscription Details Screen
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│                     SUBSCRIPTION DETAILS                     │
+└──────────────────────────────────────────────────────────────┘
+
+Subscription ID
+560096
+
+Status : Active
+-267 days remaining
+
+
+---------------------------------------------------------------
+PLAN INFORMATION
+---------------------------------------------------------------
+
+Plan Type          : Professional
+Duration           : Yearly
+Start Date         : 2024-03-01
+End Date           : 2025-03-01
+Purchase Date      : 2024-03-01
+Days Remaining     : -267 days
+
+
+---------------------------------------------------------------
+INCLUDED RESOURCES
+---------------------------------------------------------------
+
+Number of Branches     : 3
+Price per Branch       : ₹5,000
+
+Number of Technicians  : 10
+Price per Technician   : ₹2,000
+
+
+---------------------------------------------------------------
+PRICING DETAILS
+---------------------------------------------------------------
+
+Branch Cost (3 × ₹5,000)        : ₹15,000
+Technician Cost (10 × ₹2,000)   : ₹20,000
+
+Subtotal                        : ₹35,000
+GST (18%)                       : ₹6,300
+
+Final Total                     : ₹41,300
+
+
+---------------------------------------------------------------
+PAYMENT INFORMATION
+---------------------------------------------------------------
+
+Payment Method      : Credit Card
+Transaction ID      : TXN-20240301-001
+Auto-Renew          : Enabled
 ```
+
+---
+
+## System Behavior
+
+| Event                 | System Action                            |
+| --------------------- | ---------------------------------------- |
+| User clicks View icon | Opens Subscription Details page          |
+| Subscription Active   | Remaining days calculated automatically  |
+| Subscription Expired  | Status displayed as Expired              |
+| Auto-Renew Enabled    | System automatically renews subscription |
+
+---
+
+## Status Types
+
+| Status    | Description                     |
+| --------- | ------------------------------- |
+| Active    | Subscription currently valid    |
+| Expired   | Subscription validity ended     |
+| Cancelled | Subscription manually cancelled |
 
 ---
 
 # 🎯 MODULE 3: SUPER ADMIN (SERAVION) MANAGEMENT
 
-## 3.1 Overview
+## Overview
 
 Internal Seravion operations module for tenant management, subscription oversight, and platform administration. This module provides complete control over client companies, subscription plans, and system-wide configurations.
 
@@ -757,7 +1077,7 @@ Internal Seravion operations module for tenant management, subscription oversigh
 
 ---
 
-## 3.2 Super Admin Sidebar Structure
+## 3 Super Admin Sidebar Structure
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -784,7 +1104,7 @@ Internal Seravion operations module for tenant management, subscription oversigh
 
 ---
 
-## 3.3 Company Management (Seravion Side)
+## 3.1 Company Management (Seravion Side)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -816,12 +1136,34 @@ Internal Seravion operations module for tenant management, subscription oversigh
 └─────────────────────────────────────────────────────────────┘
 ```
 
+---
+
+### Table View Fields
+
+| Field               | Description                                             |
+| ------------------- | ------------------------------------------------------- |
+| Company ID          | Unique identifier for the company                       |
+| Company Name        | Registered company name                                 |
+| Email,ContactPerson | Official company email ,person name                     |
+| Created On          | Date when company account was created                   |
+| Subscription Start  | Subscription activation date                            |
+| Expiry Date         | Subscription expiration date                            |
+| Location            | Company primary location                                |
+| Branches            | Total number of branches registered                     |
+| Technicians         | Total number of technicians under the company           |
+| Status              | Current approval status (Pending / Approved / Rejected) |
+| Action(Edit/view)   | Edit icon to modify company details                     |
+
+---
+
 ### Company Management Fields
 
 | Field         | Type     | Required | Notes                            |
 | ------------- | -------- | -------- | -------------------------------- |
 | Status Filter | Dropdown | No       | All, Pending, Approved, Rejected |
 | Search        | Text     | No       | Company Name or Email            |
+
+---
 
 ### Validation Rules
 
@@ -832,7 +1174,7 @@ Internal Seravion operations module for tenant management, subscription oversigh
 
 ---
 
-## 3.4 View Company Details (Seravion Side) - Before Approval
+## 3.2 View Company Details (Seravion Side) - Before Approval
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -870,67 +1212,183 @@ Internal Seravion operations module for tenant management, subscription oversigh
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Company Details Fields
-
-| Field            | Type     | Required    | Behavior                         |
-| ---------------- | -------- | ----------- | -------------------------------- |
-| Status           | Dropdown | Yes         | Controls document approval state |
-| Rejection Reason | Textarea | Conditional | Required if Status = Rejected    |
-| Enable Trial     | Checkbox | No          | If checked, shows date fields    |
-| From Date        | Date     | Conditional | Required if Enable Trial = true  |
-| To Date          | Date     | Conditional | Required if Enable Trial = true  |
-
-### Validation Rules
-
-| Field            | Rule                                                      |
-| ---------------- | --------------------------------------------------------- |
-| Status           | Must be one of: Approve, Pending, Rejected                |
-| Rejection Reason | Required if Status = Rejected, minimum 10 characters      |
-| From Date        | Required if Enable Trial checked, must be today or future |
-| To Date          | Required if Enable Trial checked, must be after From Date |
+Here is the **refactored version of your section**, keeping your **existing structure** and **adding the missing fields in the same “Fields table format”** so it stays consistent with the rest of your documentation.
 
 ---
 
-## 3.5 View Company Details - After Document Approved
+### Company Details Fields
+
+| Field                   | Type            | Required    | Behavior                                   |
+| ----------------------- | --------------- | ----------- | ------------------------------------------ |
+| Company ID              | Text / Label    | No          | System generated unique company identifier |
+| Company Name            | Text            | Yes         | Registered company name                    |
+| Industry Type           | Dropdown        | Yes         | Select industry category                   |
+| Contact Person Name     | Text            | Yes         | Primary contact person                     |
+| Contact Email           | Email           | Yes         | Used for communication and login           |
+| Contact Phone           | Phone           | Yes         | Registered contact number                  |
+| Shop No                 | Text            | No          | Shop or office number                      |
+| Address Line 1          | Text            | Yes         | Primary business address                   |
+| Address Line 2          | Text            | No          | Additional address information             |
+| Country                 | Dropdown        | Yes         | Country selection                          |
+| State                   | Dropdown        | Yes         | State based on selected country            |
+| City                    | Dropdown / Text | Yes         | City location                              |
+| Pincode                 | Number          | Yes         | Postal code                                |
+| GST Number              | Text            | Conditional | Required if GST registered                 |
+| PAN Number              | Text            | Yes         | Business PAN number                        |
+| License Number          | Text            | Conditional | Business license number                    |
+| Business Certificate    | File Upload     | Conditional | Upload supporting certificate              |
+| Aadhaar Document        | File Upload     | Conditional | Aadhaar verification document              |
+| GST Document            | File Upload     | Conditional | GST certificate upload                     |
+| Status                  | Dropdown        | Yes         | Controls company approval state            |
+| Rejection Reason        | Textarea        | Conditional | Required if Status = Rejected              |
+| Enable Trial            | Checkbox        | No          | Enables trial period configuration         |
+| Trial From Date         | Date            | Conditional | Required if Enable Trial = true            |
+| Trial To Date           | Date            | Conditional | Required if Enable Trial = true            |
+| Number of Branches      | Number          | Yes         | Total allowed branches                     |
+| Number of Technicians   | Number          | Yes         | Total allowed technicians                  |
+| Subscription Start Date | Date            | Conditional | Set when company subscription begins       |
+| Subscription End Date   | Date            | Conditional | Set based on subscription duration         |
+| Admin Comment           | Textarea        | No          | Internal notes by admin                    |
+
+---
+
+### Validation Rules
+
+| Field                 | Rule                                                      |
+| --------------------- | --------------------------------------------------------- |
+| Company Name          | Must not be empty                                         |
+| Contact Email         | Must be valid email format                                |
+| Contact Phone         | Must be valid 10-digit phone number                       |
+| PAN Number            | Must follow valid PAN format                              |
+| GST Number            | Must follow valid GST format                              |
+| Status                | Must be one of: Approve, Pending, Rejected                |
+| Rejection Reason      | Required if Status = Rejected, minimum 10 characters      |
+| Trial From Date       | Required if Enable Trial checked, must be today or future |
+| Trial To Date         | Required if Enable Trial checked, must be after From Date |
+| Number of Branches    | Must be a positive number                                 |
+| Number of Technicians | Must be a positive number                                 |
+
+---
+
+# 3.3 View Company Details – After Document Approved
+
+This screen allows the **Seravion Admin** to **view complete company information after document verification**.
+All fields are **read-only** and displayed only for **monitoring and administrative reference**.
+
+---
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│      PARTICULAR COMPANY DETAILS (Approved)                   │
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  TAB 1: COMPANY INFO  TAB 2: SUBSCRIPTION DETAILS   │    │
-│  │                                                      │    │
-│  │  ─────────────────────────────────────────────────   │    │
-│  │  SUBSCRIPTION DETAILS:                               │    │
-│  │  • Plan Name:          [____________]               │    │
-│  │  • Duration:           [Monthly/Quarterly/Yearly]   │    │
-│  │  • Branch Count:       [____]                       │    │
-│  │  • Technician Count:   [____]                       │    │
-│  │  • Payment Status:     [Paid/Partial/Free/Non-Paid] │    │
-│  │  • Start Date:         [📅 ____________]            │    │
-│  │  • End Date:           [📅 ____________]            │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                    COMPANY DETAILS (Approved)                   │
+│                                                                 │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ COMPANY DETAILS                                             │ │
+│ │                                                             │ │
+│ │ Company ID            : 560096                              │ │
+│ │ Company Name          : ABC Pest Control                    │ │
+│ │ Industry Type         : Pest Management                     │ │
+│ │ Contact Person        : Rahul Sharma                        │ │
+│ │ Contact Email         : abc@company.com                     │ │
+│ │ Contact Phone         : 9876543210                          │ │
+│ │                                                             │ │
+│ │ Address                                                      │ │
+│ │ Shop No              : 21A                                   │ │
+│ │ Address Line 1       : MG Road                              │ │
+│ │ Address Line 2       : Near Metro Station                   │ │
+│ │ Country              : India                                │ │
+│ │ State                : Karnataka                            │ │
+│ │ City                 : Bangalore                            │ │
+│ │ Pincode              : 560001                               │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ DOCUMENT DETAILS                                            │ │
+│ │                                                             │ │
+│ │ GST Number           : 29ABCDE1234F1Z5                      │ │
+│ │ PAN Number           : ABCDE1234F                           │ │
+│ │ License Number       : LIC-8899                             │ │
+│ │                                                             │ │
+│ │ GST Document         : [View] [Download]                    │ │
+│ │ PAN Document         : [View] [Download]                    │ │
+│ │ Business Certificate : [View] [Download]                    │ │
+│ │                                                             │ │
+│ │ Verification Status  : Approved                             │ │
+│ │ Reject Reason        : -                                    │ │
+│ │ Admin Comment        : Verified and approved                │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ SUBSCRIPTION DETAILS                                        │ │
+│ │                                                             │ │
+│ │ Subscription ID      : 560096                               │ │
+│ │ Status               : Active                               │ │
+│ │ Days Remaining       : -267 days                            │ │
+│ │                                                             │ │
+│ │ Plan Information                                            │ │
+│ │ Plan Type            : Professional                         │ │
+│ │ Duration             : Yearly                               │ │
+│ │ Start Date           : 2024-03-01                           │ │
+│ │ End Date             : 2025-03-01                           │ │
+│ │ Purchase Date        : 2024-03-01                           │ │
+│ │                                                             │ │
+│ │ Included Resources                                          │ │
+│ │ Number of Branches   : 3                                    │ │
+│ │ Number of Technicians: 10                                   │ │
+│ │                                                             │ │
+│ │ Pricing Details                                             │ │
+│ │ Price per Branch        : ₹5,000                            │ │
+│ │ Branch Cost (3 × 5000)  : ₹15,000                           │ │
+│ │ Price per Technician    : ₹2,000                            │ │
+│ │ Technician Cost (10×2000): ₹20,000                          │ │
+│ │ Subtotal                : ₹35,000                           │ │
+│ │ GST (18%)               : ₹6,300                            │ │
+│ │ Final Total             : ₹41,300                           │ │
+│ │                                                             │ │
+│ │ Payment Information                                         │ │
+│ │ Payment Method       : Credit Card                          │ │
+│ │ Transaction ID       : TXN-20240301-001                     │ │
+│ │ Auto Renew           : Enabled                              │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### Subscription Details Fields
+---
 
-| Field            | Type     | Required | Notes                      |
-| ---------------- | -------- | -------- | -------------------------- |
-| Plan Name        | Text     | Auto     | Selected subscription plan |
-| Duration         | Text     | Auto     | Billing cycle              |
-| Branch Count     | Number   | Auto     | Allowed branches           |
-| Technician Count | Number   | Auto     | Allowed technicians        |
-| Payment Status   | Dropdown | Auto     | Current payment state      |
-| Start Date       | Date     | Auto     | Subscription start         |
-| End Date         | Date     | Auto     | Subscription end           |
+# View Fields
+
+| Field                 | Description                               |
+| --------------------- | ----------------------------------------- |
+| Company ID            | Unique identifier assigned to the company |
+| Company Name          | Registered company name                   |
+| Industry Type         | Type of business                          |
+| Contact Person        | Primary contact person                    |
+| Contact Email         | Company communication email               |
+| Contact Phone         | Company phone number                      |
+| Address               | Business address details                  |
+| GST Number            | GST registration number                   |
+| PAN Number            | PAN number of the business                |
+| License Number        | Business license                          |
+| Documents             | GST, PAN, and Business Certificate files  |
+| Verification Status   | Document approval status                  |
+| Reject Reason         | Displayed if application was rejected     |
+| Number of Branches    | Total allowed branches                    |
+| Number of Technicians | Total allowed technicians                 |
+| Plan Type             | Subscription plan name                    |
+| Duration              | Billing cycle                             |
+| Start Date            | Subscription start                        |
+| End Date              | Subscription expiry                       |
+| Days Remaining        | Remaining subscription days               |
+| Pricing Details       | Cost breakdown of subscription            |
+| Final Total           | Total amount paid                         |
+| Payment Method        | Payment type used                         |
+| Transaction ID        | Payment transaction reference             |
+| Auto Renew            | Indicates if subscription auto-renews     |
 
 ---
 
 # 🎯 MODULE 4: SUBSCRIPTION PLANS
 
-## 4.1 Overview
+## Overview
 
 Handles plan creation, pricing configuration, and subscription lifecycle management from Super Admin side. These plans are then available for Company Admins to purchase in Module 2.
 
