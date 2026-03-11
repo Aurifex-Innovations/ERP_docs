@@ -1400,52 +1400,88 @@ Handles plan creation, pricing configuration, and subscription lifecycle managem
 
 ---
 
-## 4.2 Get All Plans - List View Screen
+# 4.1 Get All Plans – List View Screen
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│              SUBSCRIPTION PLANS LIST                         │
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  [+ ADD NEW PLAN]                                    │    │
-│  │                                                      │    │
-│  │  PLANS LIST TABLE:                                   │    │
-│  │  ┌─────────────────────────────────────────────┐    │    │
-│  │  │ Plan │ Duration │ Branch ₹ │ Tech ₹ │ Status│    │    │
-│  │  │      │          │          │        │       │    │    │
-│  │  │Basic │ Monthly  │ 500      │ 100    │ Active│    │    │
-│  │  │Pro   │ Yearly   │ 450      │ 90     │ Active│    │    │
-│  │  │      │          │          │        │       │    │    │
-│  │  │ Actions: [View] [Edit] [Delete]                   │    │    │
-│  │  └─────────────────────────────────────────────┘    │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│  FLOW:                                                       │
-│  • Click View → Open Plan Detail screen                      │
-│  • Click Edit → Open Edit screen                             │
-│  • Click Delete → Open Delete confirmation popup             │
-│    (Soft delete - marks as Inactive only)                    │
-└─────────────────────────────────────────────────────────────┘
-```
+This screen allows the **Seravion Admin** to **view and manage all available subscription plans** in the system.
 
-### Plan List Fields
-
-| Field        | Type     | Required | Notes                    |
-| ------------ | -------- | -------- | ------------------------ |
-| Plan Name    | Text     | Auto     | From plan data           |
-| Duration     | Text     | Auto     | Monthly/Quarterly/Yearly |
-| Branch Price | Currency | Auto     | Price per branch         |
-| Tech Price   | Currency | Auto     | Price per technician     |
-| Status       | Badge    | Auto     | Active/Inactive          |
-| Actions      | Buttons  | -        | View, Edit, Delete       |
+The screen displays **plan summary statistics** along with the **plan list table**.
 
 ---
 
-## 4.3 Add Plan Screen
+```
+┌────────────────────────────────────────────────────────────────────┐
+│                 SUBSCRIPTION PLANS MANAGEMENT                      │
+│                                                                    │
+│  Plan Summary                                                      │
+│  Total Plans : 12   |   Active Plans : 10   |   Inactive Plans : 2  │
+│                                                                    │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │  [+ ADD NEW PLAN]                                            │  │
+│  │                                                             │  │
+│  │  PLANS LIST TABLE                                           │  │
+│  │  ┌───────────────────────────────────────────────────────┐  │  │
+│  │  │ Plan Name │ Branch Cnt │ Branch ₹ │ Tech Cnt │ Tech ₹ │ │  │
+│  │  │ Description │ Created On │ Status │ Actions │        │ │  │
+│  │  │──────────────────────────────────────────────────────│ │  │
+│  │  │ Basic   │ 3 │ 500 │ 10 │ 100 │ Starter plan │Active │ │  │
+│  │  │ Pro     │ 5 │ 450 │ 20 │ 90  │ Business plan│Active │ │  │
+│  │  │ Enterprise│10│400 │50 │80 │ Enterprise plan │Inactive│ │ │
+│  │  │                                                          │ │
+│  │  │ Actions: [Edit] [Delete]                                 │ │
+│  │  └───────────────────────────────────────────────────────┘  │  │
+│  │                                                             │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│  FLOW:                                                       │
+│  • Click Edit → Open Edit Plan screen                        │
+│  • Click Delete → Open Delete confirmation popup             │
+│    (Soft delete – plan marked as Inactive)                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# Plan Summary Fields
+
+| Field          | Description                                |
+| -------------- | ------------------------------------------ |
+| Total Plans    | Total number of subscription plans created |
+| Active Plans   | Number of currently active plans           |
+| Inactive Plans | Number of disabled or inactive plans       |
+
+---
+
+# Plan List Fields
+
+| Field            | Type     | Required | Notes                                  |
+| ---------------- | -------- | -------- | -------------------------------------- |
+| Plan Name        | Text     | Auto     | Name of the subscription plan          |
+| Branch Count     | Number   | Auto     | Number of branches allowed in the plan |
+| Branch Price     | Currency | Auto     | Cost per branch                        |
+| Technician Count | Number   | Auto     | Number of technicians allowed          |
+| Technician Price | Currency | Auto     | Cost per technician                    |
+| Description      | Text     | Auto     | Short description of the plan          |
+| Date of Creation | Date     | Auto     | Date when the plan was created         |
+| Status           | Badge    | Auto     | Active / Inactive                      |
+| Actions          | Buttons  | -        | Edit, Delete                           |
+
+---
+
+# System Behavior
+
+| Event        | System Action                                   |
+| ------------ | ----------------------------------------------- |
+| Add New Plan | Opens Plan Creation Screen                      |
+| Edit Plan    | Opens Edit Plan Screen                          |
+| Delete Plan  | Soft deletes the plan (sets status to Inactive) |
+| Plan Status  | Determines if plan is available for purchase    |
+
+---
+
+## 4.2 Add Plan Screen
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1466,7 +1502,7 @@ Handles plan creation, pricing configuration, and subscription lifecycle managem
 │  │                          [Textarea]                 │    │
 │  │                                                      │    │
 │  │  Duration Options:                                   │    │
-│  │  ☑ Monthly  ☑ Quarterly  ☑ Yearly                   │    │
+│  │  ☑ Monthly  ☑ Quarterly  ☑ Yearly  Custom with date│    │
 │  │                                                      │    │
 │  │  [SAVE]  [CANCEL]                                    │    │
 │  │                                                      │    │
@@ -1500,7 +1536,7 @@ Handles plan creation, pricing configuration, and subscription lifecycle managem
 
 ---
 
-## 4.4 Edit Plan Screen
+## 4.3 Edit Plan Screen
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1544,7 +1580,7 @@ Handles plan creation, pricing configuration, and subscription lifecycle managem
 
 ---
 
-## 4.5 Delete Plan - Warning Popup
+## 4.4 Delete Plan - Warning Popup
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1578,7 +1614,7 @@ Handles plan creation, pricing configuration, and subscription lifecycle managem
 
 # 🎯 MODULE 5: ROLE MANAGEMENT (SERAVION SIDE)
 
-## 5.1 Overview
+## Overview
 
 Central RBAC (Role-Based Access Control) module for Super Admin to create system-wide role templates. These templates propagate to all client companies for customization.
 
@@ -1590,7 +1626,77 @@ Central RBAC (Role-Based Access Control) module for Super Admin to create system
 
 ---
 
-## 5.2 Role Management (Seravion/Super Admin Side)
+# 5 Role Management Dashboard
+
+This screen allows the **Company Admin** to manage system roles and monitor role usage across the organization.
+
+The dashboard shows **role statistics cards** and a **table view of all roles with permissions and user assignments**.
+
+---
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     ROLE MANAGEMENT DASHBOARD                   │
+│                                                                 │
+│  STATISTICS                                                     │
+│  ┌───────────────┐ ┌───────────────┐ ┌────────────────────┐     │
+│  │ Total Roles   │ │ Active Roles  │ │ Total Users        │     │
+│  │      8        │ │       6       │ │        42          │     │
+│  └───────────────┘ └───────────────┘ └────────────────────┘     │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │                     ROLE LIST TABLE                        │ │
+│  │                                                           │ │
+│  │ ┌──────────────────────────────────────────────────────┐  │ │
+│  │ │ Role Name │ Status │ Users │ Permission Modules │Action│ │ │
+│  │ │───────────┼────────┼───────┼───────────────────┼──────│ │ │
+│  │ │ Admin     │Active  │ 5     │ 12 Modules        │Edit  │ │ │
+│  │ │ Manager   │Active  │ 10    │ 8 Modules         │Edit  │ │ │
+│  │ │ Technician│Active  │ 20    │ 5 Modules         │Edit  │ │ │
+│  │ │ Viewer    │Inactive│ 7     │ 2 Modules         │Edit  │ │ │
+│  │ │                                                     │ │ │
+│  │ │ Actions: [View] [Edit] [Delete]                     │ │ │
+│  │ └──────────────────────────────────────────────────────┘ │ │
+│  └───────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# Statistics Cards
+
+| Field        | Description                                 |
+| ------------ | ------------------------------------------- |
+| Total Roles  | Total number of roles created in the system |
+| Active Roles | Number of roles currently active            |
+| Total Users  | Total users assigned across all roles       |
+
+---
+
+# Role List Table Fields
+
+| Field                          | Type    | Required | Notes                                     |
+| ------------------------------ | ------- | -------- | ----------------------------------------- |
+| Role Name                      | Text    | Auto     | Name of the role                          |
+| Status                         | Badge   | Auto     | Active / Inactive                         |
+| Total User Count               | Number  | Auto     | Number of users assigned to the role      |
+| Module Permission Matrix Count | Number  | Auto     | Number of modules this role has access to |
+| Action                         | Buttons | -        | View, Edit, Delete                        |
+
+---
+
+# System Behavior
+
+| Event         | System Action                                     |
+| ------------- | ------------------------------------------------- |
+| View Role     | Opens Role Permission Details                     |
+| Edit Role     | Opens Role Configuration Screen                   |
+| Delete Role   | Soft deletes role if not assigned to active users |
+| Status Change | Role becomes Active or Inactive                   |
+
+---
+
+## 5.1 Create Role (Seravion/Super Admin Side)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1615,7 +1721,8 @@ Central RBAC (Role-Based Access Control) module for Super Admin to create system
 │  │  ADD/EDIT ROLE FORM                                  │    │
 │  │  ─────────────────────────────────────────────────   │    │
 │  │                                                      │    │
-│  │  Role Name:                    [____________] *     │    │
+│  │  Role Name:                    [____________] *      │    │
+│  │  description   :               [____________] *      │    │
 │  │                                                      │    │
 │  │  ☐ Is Application User ⭐ CRITICAL CHECKBOX         │    │
 │  │                                                      │    │
@@ -1635,6 +1742,7 @@ Central RBAC (Role-Based Access Control) module for Super Admin to create system
 | Field               | Type     | Required | Notes                         |
 | ------------------- | -------- | -------- | ----------------------------- |
 | Role Name           | Text     | Yes      | Unique template name          |
+| description         | Text     | Yes      | description of the role       |
 | Is Application User | Checkbox | No       | If true, disables permissions |
 
 ### Validation Rules
@@ -1645,8 +1753,6 @@ Central RBAC (Role-Based Access Control) module for Super Admin to create system
 | Is Application User | Boolean, defaults to false                       |
 
 ---
-
-## 5.3 Module Permissions Configuration
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1702,7 +1808,7 @@ Central RBAC (Role-Based Access Control) module for Super Admin to create system
 
 ---
 
-## 5.4 Edit Role (Seravion Side)
+## 5.2 Edit Role (Seravion Side)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1723,7 +1829,7 @@ Central RBAC (Role-Based Access Control) module for Super Admin to create system
 
 ---
 
-## 5.5 View Role Detail (Seravion Side)
+## 5.3 View Role Detail (Seravion Side)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1747,9 +1853,7 @@ Central RBAC (Role-Based Access Control) module for Super Admin to create system
 └─────────────────────────────────────────────────────────────┘
 ```
 
----
-
-## 5.6 Delete Role (With Warning & Migration Handling)
+## 5.4 Delete Role (With Warning & Migration Handling)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1797,7 +1901,7 @@ Central RBAC (Role-Based Access Control) module for Super Admin to create system
 
 ---
 
-## 5.7 Role Management (Client Side)
+## 5.5 Role Management (Client Side)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1842,12 +1946,12 @@ Central RBAC (Role-Based Access Control) module for Super Admin to create system
 
 ### Client Add Role Fields
 
-| Field                 | Type     | Required | Notes                                 |
-| --------------------- | -------- | -------- | ------------------------------------- |
-| Select Role Template  | Dropdown | Yes      | From Seravion templates               |
-| Clone Permission From | Dropdown | No       | Optional, from existing company roles |
-| Role Name             | Text     | Yes      | Company-specific name                 |
-| Is Application User   | Checkbox | No       | Disables permissions if checked       |
+| Field                | Type     | Required | Notes                           |
+| -------------------- | -------- | -------- | ------------------------------- |
+| Select Role Template | Dropdown | Yes      | From Seravion templates         |
+| Description          | Text     | No       | Description of Role             |
+| Role Name            | Text     | Yes      | Company-specific name           |
+| Is Application User  | Checkbox | No       | Disables permissions if checked |
 
 ### Validation Rules
 
@@ -1873,45 +1977,75 @@ This module allows the Company Admin to define salary structure and leave polici
 
 ---
 
-## 6.1 Role Salary & Leave Configuration List (Client Side)
+# 6.1 Role Salary & Leave Configuration List (Client Side)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  ROLE SALARY & LEAVE CONFIGURATION                           │
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  Filters:                                            │    │
-│  │  Role: [▼ Dropdown ▼]  Status: [▼ Active/Inactive ▼]│    │
-│  │  Salary Type: [▼ Dropdown ▼]  Leave Cycle: [▼ ▼]    │    │
-│  │  Effective From: [📅 Date Range]  Search: [____]    │    │
-│  │                                                      │    │
-│  │  [+ ADD CONFIGURATION]                               │    │
-│  │                                                      │    │
-│  │  CONFIGURATIONS TABLE:                               │    │
-│  │  ┌─────────────────────────────────────────────┐    │    │
-│  │  │ Role │ Effective │ Salary Type │ Leave Auth │    │    │
-│  │  │      │ From      │ Basic ₹     │ Cycle      │    │    │
-│  │  │──────┼───────────┼─────────────┼────────────│    │    │
-│  │  │Sales │01-Jan-24  │ CTC/50000   │ Mgr/Yearly │    │    │
-│  │  │Tech  │01-Feb-24  │ Fixed/30000 │ Lead/Month │    │    │
-│  │  │      │           │             │            │    │    │
-│  │  │ Actions: [View] [Edit] [Deactivate] [Clone]  │    │    │
-│  │  └─────────────────────────────────────────────┘    │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
+│  ROLE SALARY & LEAVE CONFIGURATION                          │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  Filters:                                           │   │
+│  │  Role: [▼ Dropdown ▼]  Status: [▼ Active/Inactive ▼]│   │
+│  │  Salary Type: [▼ Dropdown ▼]  Leave Cycle: [▼ ▼]    │   │
+│  │  Effective From: [📅 Date Range]  Search: [____]    │   │
+│  │                                                     │   │
+│  │  [+ ADD CONFIGURATION]                              │   │
+│  │                                                     │   │
+│  │  CONFIGURATIONS TABLE                               │   │
+│  │  ┌────────────────────────────────────────────────┐ │   │
+│  │  │Role │Status│Eff From│Eff To│Salary Type│Basic ₹│ │   │
+│  │  │Salary Eff From│Salary Eff To│Leave Auth│Action │ │   │
+│  │  │────────────────────────────────────────────────│ │   │
+│  │  │Sales │Active │01-Jan-24│31-Dec-24│CTC │50000   │ │   │
+│  │  │01-Jan-24│31-Dec-24│Manager │View/Edit │ │   │
+│  │  │Tech  │Active │01-Feb-24│31-Dec-24│Fixed│30000  │ │   │
+│  │  │01-Feb-24│31-Dec-24│Team Lead│View/Edit│ │   │
+│  │  └────────────────────────────────────────────────┘ │   │
+│  │                                                     │   │
+│  └─────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Configuration List Fields
+---
 
-| Field                | Type       | Required | Notes               |
-| -------------------- | ---------- | -------- | ------------------- |
-| Role Filter          | Dropdown   | No       | Filter by role      |
-| Status Filter        | Dropdown   | No       | Active/Inactive     |
-| Salary Type Filter   | Dropdown   | No       | CTC/Fixed/Hourly    |
-| Leave Cycle Filter   | Dropdown   | No       | Yearly/Monthly      |
-| Effective From Range | Date Range | No       | Date range filter   |
-| Search               | Text       | No       | Search by role name |
+# Configuration Table Fields
+
+| Field                 | Type     | Required | Notes                                |
+| --------------------- | -------- | -------- | ------------------------------------ |
+| Role Name             | Text     | Auto     | Name of the role                     |
+| Status                | Badge    | Auto     | Active / Inactive configuration      |
+| Effective From        | Date     | Auto     | Configuration start date             |
+| Effective To          | Date     | Auto     | Configuration end date               |
+| Salary Type           | Text     | Auto     | CTC / Fixed / Hourly                 |
+| Basic Salary          | Currency | Auto     | Base salary defined for the role     |
+| Salary Effective From | Date     | Auto     | Salary rule start date               |
+| Salary Effective To   | Date     | Auto     | Salary rule end date                 |
+| Leave Approval        | Text     | Auto     | Role responsible for approving leave |
+| Action                | Buttons  | -        | View, Edit                           |
+
+---
+
+# Filters / Search Fields
+
+| Field                | Type       | Required | Notes                                   |
+| -------------------- | ---------- | -------- | --------------------------------------- |
+| Role Filter          | Dropdown   | No       | Filter configurations by role           |
+| Status Filter        | Dropdown   | No       | Active / Inactive configurations        |
+| Salary Type Filter   | Dropdown   | No       | CTC / Fixed / Hourly                    |
+| Leave Cycle Filter   | Dropdown   | No       | Monthly / Yearly                        |
+| Effective From Range | Date Range | No       | Filter by configuration effective dates |
+| Search               | Text       | No       | Search by role name                     |
+
+---
+
+# System Behavior
+
+| Event             | System Action                                |
+| ----------------- | -------------------------------------------- |
+| Add Configuration | Opens Role Salary & Leave Configuration Form |
+| View              | Opens configuration details screen           |
+| Edit              | Opens edit configuration screen              |
+| Filters Applied   | Table refreshes with filtered records        |
 
 ---
 
@@ -2052,29 +2186,29 @@ This module allows the Company Admin to define salary structure and leave polici
 
 ### Step 3: Leave Details Fields
 
-| Field                    | Type     | Required    | Notes                         |
-| ------------------------ | -------- | ----------- | ----------------------------- |
-| Casual Leave (CL)        | Number   | No          | Days per year                 |
-| Sick Leave (SL)          | Number   | No          | Days per year                 |
-| Paid Leave (PL)          | Number   | No          | Days per year                 |
-| Annual Leave Allocation  | Number   | No          | Total annual allocation       |
-| Carry Forward Allowed    | Checkbox | No          | Enable leave carry forward    |
-| Max Carry Forward Days   | Number   | Conditional | Maximum days to carry forward |
-| Leave Approval Authority | Dropdown | Yes         | Role who can approve leaves   |
-| Leave Reset Cycle        | Dropdown | Yes         | Yearly/Monthly/Custom(From to TO)
+| Field                    | Type     | Required    | Notes                             |
+| ------------------------ | -------- | ----------- | --------------------------------- |
+| Casual Leave (CL)        | Number   | No          | Days per year                     |
+| Sick Leave (SL)          | Number   | No          | Days per year                     |
+| Paid Leave (PL)          | Number   | No          | Days per year                     |
+| Annual Leave Allocation  | Number   | No          | Total annual allocation           |
+| Carry Forward Allowed    | Checkbox | No          | Enable leave carry forward        |
+| Max Carry Forward Days   | Number   | Conditional | Maximum days to carry forward     |
+| Leave Approval Authority | Dropdown | Yes         | Role who can approve leaves       |
+| Leave Reset Cycle        | Dropdown | Yes         | Yearly/Monthly/Custom(From to TO) |
 
 ### Step 3 Validation Rules
 
-| Field                    | Rule                                               |
-| ------------------------ | -------------------------------------------------- |
-| Casual Leave             | Optional, numeric, minimum 0, max 365              |
-| Sick Leave               | Optional, numeric, minimum 0, max 365              |
-| Paid Leave               | Optional, numeric, minimum 0, max 365              |
-| Annual Leave Allocation  | Optional, numeric, minimum 0, max 365              |
-| Carry Forward Allowed    | Checkbox No Enable leave carry forward             |
-| Max Carry Forward Days   | Required if Carry Forward Allowed checked, max 365 |
-| Leave Approval Authority | Required, must select valid role                   |
-| Leave Reset Cycle        | Required, must be Yearly/Monthly/Custom(From to TO)|
+| Field                    | Rule                                                |
+| ------------------------ | --------------------------------------------------- |
+| Casual Leave             | Optional, numeric, minimum 0, max 365               |
+| Sick Leave               | Optional, numeric, minimum 0, max 365               |
+| Paid Leave               | Optional, numeric, minimum 0, max 365               |
+| Annual Leave Allocation  | Optional, numeric, minimum 0, max 365               |
+| Carry Forward Allowed    | Checkbox No Enable leave carry forward              |
+| Max Carry Forward Days   | Required if Carry Forward Allowed checked, max 365  |
+| Leave Approval Authority | Required, must select valid role                    |
+| Leave Reset Cycle        | Required, must be Yearly/Monthly/Custom(From to TO) |
 
 ---
 
@@ -2108,36 +2242,87 @@ Same as Add Form, plus:
 
 ---
 
-## 6.4 View Configuration Details
+# 6.4 View Configuration Details
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              VIEW CONFIGURATION DETAILS                      │
+┌──────────────────────────────────────────────────────────────┐
+│ ← Back                                                       │
 │                                                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  All fields displayed in READ-ONLY mode              │    │
-│  │                                                      │    │
-│  │  BASIC DETAILS                                       │    │
-│  │  • Role: [Value]                                    │    │
-│  │  • Effective From: [Value]                          │    │
-│  │  • Effective To: [Value]                            │    │
-│  │  • Status: [Value]                                  │    │
-│  │                                                      │    │
-│  │  SALARY DETAILS                                      │    │
-│  │  • Salary Type: [Value]                             │    │
-│  │  • Basic Salary: [Value]                            │    │
-│  │  • [All other fields...]                            │    │
-│  │                                                      │    │
-│  │  LEAVE DETAILS                                       │    │
-│  │  • Casual Leave: [Value]                            │    │
-│  │  • [All other fields...]                            │    │
-│  │                                                      │    │
-│  │  Created By: [Value]  Created Date: [Value]         │    │
-│  │  Last Modified By: [Value]  Last Modified: [Value]  │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
+│  Sales Manager                                               │
+│  Salary Type: CTC                                            │
+│                                                              │
+│  Basic Salary: ₹65,000                                       │
+│  Config ID: RHC-00124                                        │
+│  Effective: 02/01/2025 – 01/01/2026                          │
+│  Created By&date: Admin -01/01/2026                          │
+│  Last Modified By&date: Admin -01/01/2026                    │
+│  Status: Active                                              │
+│                                                              │
+│  ───────────────── GENERAL INFORMATION ─────────────────     │
+│                                                              │
+│  COMPENSATION                                                │
+│  ┌───────────────────────────────┬─────────────────────────┐ │
+│  │ Basic Salary      : ₹65,000   │ Deductions : ₹5,200     │ │
+│  │ HRA               : ₹10,000   │ Salary Effective From   │ │
+│  │ Other Allowance   : ₹5,000    │ : 02/01/2025            │ │
+│  │ Incentive         : ₹2,000    │ Salary Effective To     │ │
+│  │                               │ : 01/01/2026            │ │
+│  └───────────────────────────────┴─────────────────────────┘ │
+│                                                              │
+│  INCENTIVE CONFIGURATION                                     │
+│  ┌───────────────────────────────┬─────────────────────────┐ │
+│  │ Holiday Work Incentive: Yes   │ Overtime Type: Hourly   │ │
+│  │ Incentive Type       : Fixed  │ Overtime Shift Type     │ │
+│  │ Incentive Amount     : ₹500   │ : Night Shift           │ │
+│  │ Overtime             : Yes    │ Per Hour Pay: ₹150      │ │
+│  │                               │ Max OT Hours: 40        │ │
+│  └───────────────────────────────┴─────────────────────────┘ │
+│                                                              │
+│  STATUTORY DEDUCTIONS                                        │
+│  • PF Applicable : Yes                                       │
+│  • ESIC Applicable : No                                      │
+│  • TDS Applicable : Yes                                      │
+│                                                              │
+│  LEAVE CONFIGURATION                                         │
+│  ┌───────────────────────────────┬─────────────────────────┐ │
+│  │ Casual Leave (CL) : 12 Days   │ Max Carry Forward: 10   │ │
+│  │ Sick Leave (SL)   : 10 Days   │ Leave Approval Role     │ │
+│  │ Paid Leave (PL)   : 15 Days   │ : Director              │ │
+│  │ Annual Leave      : 37 Days   │ Leave Reset Cycle       │ │
+│  │                               │ : Monthly               │ │
+│  │                               │ Reset From: 12/06/2024  │ │
+│  │                               │ Reset To  : 12/06/2024  │ │
+│  └───────────────────────────────┴─────────────────────────┘ │
+│                                                              │
+│  All fields displayed in READ-ONLY mode                      │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+# View Screen Behavior
+
+| Element         | Behavior                      |
+| --------------- | ----------------------------- |
+| Back Button     | Returns to Configuration List |
+| All Fields      | Read-only                     |
+| Status Badge    | Shows Active / Inactive       |
+| Currency Fields | Displayed with ₹ format       |
+| Date Fields     | Displayed in DD/MM/YYYY       |
+
+---
+
+# Sections in View Screen
+
+| Section                 | Description                       |
+| ----------------------- | --------------------------------- |
+| Header                  | Role name, salary type, status    |
+| Configuration Info      | Config ID, Effective dates        |
+| Compensation            | Salary structure                  |
+| Incentive Configuration | Incentives and overtime           |
+| Statutory Deductions    | PF / ESIC / TDS                   |
+| Leave Configuration     | Leave entitlement and reset rules |
 
 ---
 
@@ -2171,7 +2356,7 @@ Same as Add Form, plus:
 
 # 🎯 MODULE 7: BRANCH MANAGEMENT
 
-## 7.1 Overview
+## Overview
 
 Manages organizational locations with hierarchical structure and employee associations. This module allows Company Admin to manage branches used for operations, employee allocation, service execution, and reporting.
 
@@ -2183,7 +2368,7 @@ Manages organizational locations with hierarchical structure and employee associ
 
 ---
 
-## 7.2 Branch List Screen
+# 7.1 Branch List Screen
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -2201,33 +2386,58 @@ Manages organizational locations with hierarchical structure and employee associ
 │  │  [+ ADD BRANCH]                                      │    │
 │  │                                                      │    │
 │  │  BRANCH LIST TABLE:                                  │    │
-│  │  ┌─────────────────────────────────────────────┐    │    │
-│  │  │Branch│3-Code│Branch Name  │Contact│City    │    │    │
-│  │  │ID    │      │             │Info   │State   │    │    │
-│  │  │──────┼──────┼─────────────┼───────┼────────│    │    │
-│  │  │B001  │ NTH  │North Branch │98...  │Delhi   │    │    │
-│  │  │B002  │ STH  │South Branch │99...  │Mumbai  │    │    │
-│  │  │      │      │             │       │        │    │    │
-│  │  │ Status│ Actions: [View] [Edit] [Delete]            │    │
-│  │  └─────────────────────────────────────────────┘    │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
+│  │  ┌─────────────────────────────────────────────────────────────┐
+│  │  │Branch ID│3-Code│Branch Name│Contact Info│Location│City│State│Status│Action│
+│  │  │─────────┼──────┼───────────┼────────────┼────────┼────┼─────┼──────┼──────│
+│  │  │B001     │NTH   │North Br.  │98xxxx /    │Street  │Delhi│DL  │Active│View  │
+│  │  │         │      │           │mail@ex.com │Address │    │     │      │Edit  │
+│  │  │B002     │STH   │South Br.  │99xxxx /    │Street  │Mumbai│MH│Active│Delete│
+│  │  │         │      │           │mail@ex.com │Address │     │    │      │      │
+│  │  └─────────────────────────────────────────────────────────────┘
+│  │                                                      │
+│  └─────────────────────────────────────────────────────┘
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Branch List Fields
+# Branch List Table Fields
 
-| Field              | Type     | Required | Notes                       |
-| ------------------ | -------- | -------- | --------------------------- |
-| Search             | Text     | No       | Global search across fields |
-| Status Filter      | Dropdown | No       | All/Active/Inactive         |
-| City Filter        | Dropdown | No       | Dynamic list from branches  |
-| State Filter       | Dropdown | No       | Dynamic list from branches  |
-| Branch Code Filter | Text     | No       | 3-letter code search        |
+| Field                   | Type    | Required | Notes                             |
+| ----------------------- | ------- | -------- | --------------------------------- |
+| Branch ID               | Text    | Auto     | Unique system generated branch ID |
+| 3 Letter Code           | Text    | Yes      | Unique short code for branch      |
+| Branch Name             | Text    | Yes      | Name of branch                    |
+| Contact Info            | Text    | Yes      | Email and Mobile number           |
+| Location (Full Address) | Text    | Yes      | Full branch address               |
+| City                    | Text    | Yes      | Branch city                       |
+| State                   | Text    | Yes      | Branch state                      |
+| Status                  | Badge   | Auto     | Active / Inactive                 |
+| Action                  | Buttons | -        | View / Edit / Delete              |
 
 ---
 
-## 7.3 Add Branch Screen
+# Table Actions
+
+| Action | Description                            |
+| ------ | -------------------------------------- |
+| View   | Opens branch details in read-only mode |
+| Edit   | Opens edit branch screen               |
+| Delete | Soft deletes branch after confirmation |
+
+---
+
+# Filters / Search Fields
+
+| Field              | Type     | Required | Notes                                        |
+| ------------------ | -------- | -------- | -------------------------------------------- |
+| Search             | Text     | No       | Search by Branch ID, Name, Code, City, State |
+| Status Filter      | Dropdown | No       | All / Active / Inactive                      |
+| City Filter        | Dropdown | No       | Populated from branch records                |
+| State Filter       | Dropdown | No       | Populated from branch records                |
+| Branch Code Filter | Text     | No       | Search by 3-letter branch code               |
+
+---
+
+## 7.2 Add Branch Screen
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -2293,7 +2503,7 @@ Manages organizational locations with hierarchical structure and employee associ
 
 ---
 
-## 7.4 Edit Branch Screen
+## 7.3 Edit Branch Screen
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -2315,6 +2525,9 @@ Manages organizational locations with hierarchical structure and employee associ
 
 Same as Add Branch with Edited By instead of Created By.
 
+1. Status - required -active/inactive dropdown
+2. Edited by instead created by of add screen.
+
 ### Validation Rules
 
 Same as Add Branch, plus:
@@ -2324,7 +2537,7 @@ Same as Add Branch, plus:
 
 ---
 
-## 7.5 Delete Branch (Soft Delete)
+## 7.4 Delete Branch (Soft Delete)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -2355,52 +2568,131 @@ Same as Add Branch, plus:
 
 ---
 
-## 7.6 View Particular Branch Details
+Based on your UI screenshots, it is better to **split section 7.5 into two separate subsections**:
+
+- **7.5.1 Branch Information (Tab 1)**
+- **7.5.2 Branch Users / Employees (Tab 2)**
+
+This matches the **actual UI tabs** and keeps the documentation clean.
+
+Below is the **correctly structured version based on your images.**
+
+---
+
+# 7.5 View Particular Branch Details
+
+---
+
+# 7.5.1 Branch Information (Tab 1)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│              BRANCH DETAILS                                  │
-│                                                              │
-│  [TAB 1: Branch Info]  [TAB 2: Employees]                    │
-│                                                              │
-│  ─────────────────────────────────────────────────────────   │
-│  TAB 1: BRANCH INFORMATION                                 │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  Branch ID:              [Value]                    │    │
-│  │  Branch Name:            [Value]                    │    │
-│  │  3 Letter Code:          [Value]                    │    │
-│  │  Address:                [Full Address]             │    │
-│  │  City:                   [Value]                    │    │
-│  │  State:                  [Value]                    │    │
-│  │  Contact Information:    [Email, Phone]             │    │
-│  │  Branch Type:            [Value]                    │    │
-│  │  Status:                 [Active/Inactive]          │    │
-│  │  Created By & Date:      [Value]                    │    │
-│  │  Edited By & Date:       [Value]                    │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-│  ─────────────────────────────────────────────────────────   │
-│  TAB 2: BRANCH EMPLOYEES                                   │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  Emp ID │ Name │ Email │ Phone │ Designation │Status│    │
-│  │─────────┼──────┼───────┼───────┼─────────────┼──────│    │
-│  │ E001    │ John │ j@... │ 98... │ Manager     │Active│    │
-│  │ E002    │ Jane │ jn... │ 99... │ Technician  │Active│    │
-│  │         │      │       │       │             │      │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-│  • Click Employee Name → Open Employee Detail (Module 8.8)   │
-│  • Pagination and Search supported                           │
-│  • Empty State: "No employees assigned to this branch."      │
-│                                                              │
+│ ← Back                                                      │
+│                                                             │
+│  PestGuard Solutions (HSR)                                  │
+│  Branch Name: PestGuard Solutions (HSR)                     │
+│  Branch ID: AD-560096                                       │
+│  Email: suraj@gmail.com                                     │
+│  Status: ● Active                                           │
+│                                                             │
+│  [TAB 1: Branch Information]   [TAB 2: Branch User's]        │
+│                                                             │
+│  ─────────────── BRANCH INFORMATION ─────────────────────   │
+│                                                             │
+│  3 Letter Code       : 214                                   │
+│  Address Details     : Flat 301, Sunshine Apartments         │
+│                        27th Main, HSR Layout, Sector 1       │
+│  City                : Bangalore                             │
+│  State               : Karnataka                             │
+│  Contact Number      : +91 8876523456                        │
+│  Branch Type         : Service                               │
+│                                                             │
+│  Created By          : Suraj Kumar on 26th Jan 2026          │
+│  Edited By           : Suraj Kumar on 26th Jan 2026          │
+│                                                             │
+│  All fields displayed in READ-ONLY mode                     │
+│                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+### Branch Information Fields
+
+| Field           | Type     | Notes                        |
+| --------------- | -------- | ---------------------------- |
+| Branch ID       | Text     | System generated unique ID   |
+| Branch Name     | Text     | Name of the branch           |
+| 3 Letter Code   | Text     | Unique short code            |
+| Address Details | Text     | Full branch address          |
+| City            | Text     | Branch city                  |
+| State           | Text     | Branch state                 |
+| Contact Number  | Phone    | Primary branch contact       |
+| Branch Type     | Dropdown | Service / Warehouse / Office |
+| Status          | Badge    | Active / Inactive            |
+| Created By      | Text     | User who created branch      |
+| Edited By       | Text     | Last modified user           |
+
+---
+
+Good catch 👍 — your **UI table contains more columns** than the documentation.
+Below is the **corrected version of 7.5.2 with all missing fields added** based on your reference.
+
+---
+
+# 7.5.2 Branch Users / Employees (Tab 2)
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                          BRANCH USERS / EMPLOYEES                             │
+│                                                                              │
+│  Search: [________________________]                 [Filters]                 │
+│                                                                              │
+│ ┌──────────────────────────────────────────────────────────────────────────┐ │
+│ │Emp ID │Employee Name│Email ID │Contact No│Designation│Department│Role │ │
+│ │       │             │         │          │           │          │     │ │
+│ │Branch │Reporting Manager│Status│Created Date│Action(View)                │ │
+│ │───────┼─────────────┼─────────┼──────────┼───────────┼──────────┼──────│ │
+│ │EMP001 │Suraj Sharma │suraj@.. │+91..     │Manager    │Operations│Admin │ │
+│ │HSR    │Amit Verma   │Active   │12-Jan-26 │[View]                    │ │
+│ │EMP002 │Anita Singh  │anita@.. │+91..     │Executive  │Sales     │User  │ │
+│ │HSR    │Rohit Shah   │Inactive │11-Jan-26 │[View]                    │ │
+│ │EMP003 │Rahul Patel  │rahul@.. │+91..     │Technician │Service   │Staff │ │
+│ │HSR    │Suraj Sharma │Active   │10-Jan-26 │[View]                    │ │
+│ └──────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│ Pagination:  Previous   1   2   3   ...   10   Next                          │
+│                                                                              │
+│ • Click Employee Name → Opens Employee Detail Screen                         │
+│ • Search supported across Name / Email / Contact / Employee ID               │
+│ • Filters available for Status / Role / Department                           │
+│ • Empty State: "No employees assigned to this branch."                       │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# Branch Employees Table Fields
+
+| Field             | Type   | Notes                         |
+| ----------------- | ------ | ----------------------------- |
+| Emp ID            | Text   | Unique employee ID            |
+| Employee Name     | Text   | Full name of employee         |
+| Email ID          | Email  | Employee email                |
+| Contact Number    | Phone  | Mobile number                 |
+| Designation       | Text   | Job title                     |
+| Department        | Text   | Department name               |
+| Role              | Text   | System role (RBAC role)       |
+| Branch            | Text   | Assigned branch               |
+| Reporting Manager | Text   | Manager name                  |
+| Status            | Badge  | Active / Inactive             |
+| Created Date      | Date   | Employee record creation date |
+| Action            | Button | View employee details         |
 
 ---
 
 # 🎯 MODULE 8: EMPLOYEE (USERS) MANAGEMENT
 
-## 8.1 Overview
+## Overview
 
 Manages the complete employee lifecycle including user visibility, hiring requests, employee creation, role-based permissions, salary configuration, leave setup, and employee records management. Supports a controlled hiring workflow where lower-level roles request new employees, while higher authorities review, approve, and convert requests into active system users.
 
@@ -2412,7 +2704,7 @@ Manages the complete employee lifecycle including user visibility, hiring reques
 
 ---
 
-## 8.2 Tab Visibility Control Flow
+## 8 Tab Visibility Control Flow
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -2454,161 +2746,377 @@ Manages the complete employee lifecycle including user visibility, hiring reques
 └─────────────────────────────────────────────────────────────┘
 ```
 
----
-
-## 8.3 Tab 1: Employee (User) List
+# 8.1 Tab 1: Employee (User) List
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  TAB 1: EMPLOYEE LIST                                        │
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  Filters:                                            │    │
-│  │  Branch: [☑ Multi-select]  Department: [▼ ▼]        │    │
-│  │  Designation: [▼ ▼]  Role: [▼ ▼]                    │    │
-│  │  Reporting Manager: [▼ Searchable ▼]                │    │
-│  │  Status: [▼ Active/Inactive ▼]                      │    │
-│  │  Created Date Range: [📅 From] - [📅 To]            │    │
-│  │  Search: [____________] (EMP ID/Name/Email/Phone)   │    │
-│  │                                                      │    │
-│  │  [+ ADD USER] (Visible to Upper-level only)         │    │
-│  │                                                      │    │
-│  │  EMPLOYEE TABLE:                                     │    │
-│  │  ┌─────────────────────────────────────────────┐    │    │
-│  │  │EMP│Name│Email│Contact│Designation│Dept│Role│    │    │
-│  │  │ID │    │     │       │           │    │    │    │    │
-│  │  │───┼────┼─────┼───────┼───────────┼────┼────│    │    │
-│  │  │E01│John│j@...│98...  │Manager    │Sales│SM │    │    │
-│  │  │E02│Jane│jn...│99...  │Technician │Ops │Tech│    │    │
-│  │  │   │    │     │       │           │    │    │    │    │
-│  │  │Branch│Reporting│Status│Created    │Actions    │    │    │
-│  │  │      │Manager  │      │Date       │           │    │    │
-│  │  │North,│Mike     │Active│Jan 24     │View Edit  │    │    │
-│  │  │South │         │      │           │Delete     │    │    │
-│  │  └─────────────────────────────────────────────┘    │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────────┐
+│                           TAB 1: EMPLOYEE LIST                                      │
+│                                                                                    │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐  │
+│  │ Filters                                                                      │  │
+│  │ Branch: [☑ Multi-select ▼]        Department: [▼ Dropdown ▼]                 │  │
+│  │ Designation: [▼ Dropdown ▼]       Role: [▼ Dropdown ▼]                        │  │
+│  │ Reporting Manager: [🔍 Searchable ▼]                                         │  │
+│  │ Status: [▼ All / Active / Inactive ▼]                                        │  │
+│  │ Created Date Range: [📅 From] - [📅 To]                                      │  │
+│  │                                                                              │  │
+│  │ Search: [_____________________________]                                      │  │
+│  │ (Search by EMP ID / Name / Email / Contact Number)                           │  │
+│  │                                                                              │  │
+│  │ [RESET FILTERS]                     [+ ADD USER]                              │  │
+│  │                                                                              │  │
+│  │ EMPLOYEE TABLE                                                               │  │
+│  │ ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │ │Emp ID│Employee Name│Email ID│Contact No│Designation│Department│Role    │ │
+│  │ │──────┼─────────────┼────────┼──────────┼───────────┼──────────┼────────│ │
+│  │ │EMP01 │John Doe     │j@..    │9876....  │Manager    │Sales     │Admin   │ │
+│  │ │EMP02 │Jane Smith   │js@..   │9987....  │Technician │Operations│Staff   │ │
+│  │ │EMP03 │Rahul Patel  │rp@..   │9765....  │Executive  │Sales     │User    │ │
+│  │ └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                                │
+│  ┌───────────────────────────────────────────────────────────────────────────┐ │
+│  │Branch│Reporting Manager│Status│Created Date│Action                        │ │
+│  │──────┼─────────────────┼──────┼────────────┼──────────────────────────────│ │
+│  │HSR   │Suraj Sharma     │Active│24-Jan-2026 │[View] [Edit] [Delete]        │ │
+│  │BTM   │Rohit Mehta      │Active│21-Jan-2026 │[View] [Edit] [Delete]        │ │
+│  │Indira│Anil Kumar       │Inactive│20-Jan-26 │[View] [Edit] [Delete]        │ │
+│  └───────────────────────────────────────────────────────────────────────────┘ │
+│                                                                                │
+│ Pagination:  Previous   1   2   3   ...   10   Next                            │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Employee List Fields
+# Employee Table Fields
 
-| Field              | Type         | Required | Notes                       |
-| ------------------ | ------------ | -------- | --------------------------- |
-| Branch Filter      | Multi-select | No       | Filter by assigned branches |
-| Department Filter  | Dropdown     | No       | Filter by department        |
-| Designation Filter | Dropdown     | No       | Filter by designation       |
-| Role Filter        | Dropdown     | No       | Filter by role              |
-| Reporting Manager  | Searchable   | No       | Filter by reporting manager |
-| Status Filter      | Dropdown     | No       | Active/Inactive             |
-| Created Date Range | Date Range   | No       | From - To dates             |
-| Search             | Text         | No       | EMP ID, Name, Email, Phone  |
-
----
-
-## 8.4 Tab 2: My Hiring Requests (Table View)
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  TAB 2: MY HIRING REQUESTS                                   │
-│  (For requesters to track their submitted requests)          │
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  Filters:                                            │    │
-│  │  Status: [▼ Pending/Approved/Rejected/Converted ▼]  │    │
-│  │  Department: [▼ ▼]  Proposed Role: [▼ ▼]            │    │
-│  │  Branch: [☑ Multi-select]                           │    │
-│  │  Expected Joining Date Range: [📅 From] - [📅 To]   │    │
-│  │  Submitted Date Range: [📅 From] - [📅 To]          │    │
-│  │  Search: [____________] (Request ID/Dept/Role/Reason)│   │
-│  │                                                      │    │
-│  │  [+ NEW HIRING REQUEST]                              │    │
-│  │                                                      │    │
-│  │  MY REQUESTS TABLE:                                  │    │
-│  │  ┌─────────────────────────────────────────────┐    │    │
-│  │  │Req│Dept│Proposed│Branch│Pos│Expected│Status│    │    │
-│  │  │ID │    │Role    │      │   │Joining │      │    │    │
-│  │  │───┼────┼────────┼──────┼───┼────────┼──────│    │    │
-│  │  │HRQ│Sales│SP     │North │ 2 │Feb 24  │●Pend │    │    │
-│  │  │001│    │        │South │   │        │      │    │    │
-│  │  │HRQ│Ops │Tech   │East  │ 1 │Mar 24  │✓Apprv│    │    │
-│  │  │002│    │        │      │   │        │      │    │    │
-│  │  │   │    │        │      │   │Sent To│Submtd│    │    │
-│  │  │   │    │        │      │   │Date   │Date  │    │    │
-│  │  │   │    │        │      │   │Raj,M  │Jan 24│    │    │
-│  │  │   │    │        │      │   │ike    │      │    │    │
-│  │  └─────────────────────────────────────────────┘    │    │
-│  │                                                      │    │
-│  │  Actions: [View] [View Rejection Reason] (if rejected)   │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### My Hiring Requests Fields
-
-| Field                  | Type         | Required | Notes                               |
-| ---------------------- | ------------ | -------- | ----------------------------------- |
-| Status Filter          | Dropdown     | No       | Pending/Approved/Rejected/Converted |
-| Department Filter      | Dropdown     | No       | Filter by department                |
-| Proposed Role Filter   | Dropdown     | No       | Filter by role                      |
-| Branch Filter          | Multi-select | No       | Filter by branch                    |
-| Expected Joining Range | Date Range   | No       | From - To dates                     |
-| Submitted Date Range   | Date Range   | No       | From - To dates                     |
-| Search                 | Text         | No       | Request ID, Dept, Role, Reason      |
+| Field             | Type    | Notes                      |
+| ----------------- | ------- | -------------------------- |
+| Emp ID            | Text    | Unique employee identifier |
+| Employee Name     | Text    | Full name                  |
+| Email ID          | Email   | Employee email             |
+| Contact Number    | Phone   | Employee mobile            |
+| Designation       | Text    | Job title                  |
+| Department        | Text    | Employee department        |
+| Role              | Text    | System role assigned       |
+| Branch            | Text    | Assigned branch            |
+| Reporting Manager | Text    | Direct reporting manager   |
+| Status            | Badge   | Active / Inactive          |
+| Created Date      | Date    | Employee creation date     |
+| Action            | Buttons | View / Edit / Delete       |
 
 ---
 
-## 8.5 Tab 3: Received Requests to Add New Employee
+# Table Actions
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  TAB 3: RECEIVED REQUESTS                                    │
-│  (For admins to review and approve hiring requests)          │
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  Filters:                                            │    │
-│  │  Status: [▼ Pending/Approved/Rejected ▼]            │    │
-│  │  Department: [▼ ▼]  Branch: [▼ ▼]                   │    │
-│  │  Requested By: [▼ ▼]  Date Range: [📅 From-To]      │    │
-│  │  Search: [____________] (Request ID/Employee Name)  │    │
-│  │                                                      │    │
-│  │  RECEIVED REQUESTS TABLE:                            │    │
-│  │  ┌─────────────────────────────────────────────┐    │    │
-│  │  │Req│Requested│Dept│Role│Branch│Emp│Expected│    │    │
-│  │  │ID │By       │    │    │      │Type│Joining │    │    │
-│  │  │───┼─────────┼────┼────┼──────┼────┼────────│    │    │
-│  │  │HRQ│Raj      │Sales│SP │North │Perm│Feb 24  │    │    │
-│  │  │001│         │    │    │      │    │        │    │    │
-│  │  │   │         │    │    │Pos   │Prop│Status  │    │    │
-│  │  │   │         │    │    │      │Sal │        │    │    │
-│  │  │   │         │    │    │2     │50k │●Pend   │    │    │
-│  │  │   │         │    │    │      │    │        │    │    │
-│  │  │Submtd│Reviewed│Reviewed│Actions:              │    │    │
-│  │  │Date  │By      │Date    │[View][Approve][Reject]│   │    │
-│  │  │Jan 24│-       │-       │                      │    │    │
-│  │  └─────────────────────────────────────────────┘    │    │
-│  │                                                      │    │
-│  │  FOR REJECTED: [View Rejection Reason]               │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Received Requests Fields
-
-| Field               | Type       | Required | Notes                     |
-| ------------------- | ---------- | -------- | ------------------------- |
-| Status Filter       | Dropdown   | No       | Pending/Approved/Rejected |
-| Department Filter   | Dropdown   | No       | Filter by department      |
-| Branch Filter       | Dropdown   | No       | Filter by branch          |
-| Requested By Filter | Dropdown   | No       | Filter by requester       |
-| Date Range          | Date Range | No       | From - To dates           |
-| Search              | Text       | No       | Request ID, Employee Name |
+| Action | Description                              |
+| ------ | ---------------------------------------- |
+| View   | Opens Employee Detail Screen             |
+| Edit   | Opens Employee Edit Screen               |
+| Delete | Soft deletes employee after confirmation |
 
 ---
 
-## 8.6 Request Form Fields
+---
+
+# Filters
+
+| Filter             | Type                | Required | Description                                |
+| ------------------ | ------------------- | -------- | ------------------------------------------ |
+| Branch             | Multi-select        | No       | Filter employees by assigned branch        |
+| Department         | Dropdown            | No       | Filter by department                       |
+| Designation        | Dropdown            | No       | Filter by designation                      |
+| Role               | Dropdown            | No       | Filter by system role                      |
+| Reporting Manager  | Searchable Dropdown | No       | Filter by reporting manager                |
+| Status             | Dropdown            | No       | Active / Inactive                          |
+| Created Date Range | Date Range          | No       | Filter employees created within date range |
+
+---
+
+# Search
+
+| Field         | Type | Description                                        |
+| ------------- | ---- | -------------------------------------------------- |
+| Global Search | Text | Search by Employee ID, Name, Email, Contact Number |
+
+---
+
+# System Behaviour
+
+| Event         | System Response                         |
+| ------------- | --------------------------------------- |
+| Apply Filters | Table refreshes with filtered results   |
+| Search        | Filters records based on search keyword |
+| Add User      | Opens Add Employee screen               |
+| Delete        | Confirmation popup before removal       |
+
+---
+
+# 8.2 Tab 2: My Hiring Requests (Table View)
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                       TAB 2: MY HIRING REQUESTS                                   │
+│             (For requesters to track their submitted requests)                   │
+│                                                                                  │
+│  ┌────────────────────────────────────────────────────────────────────────────┐  │
+│  │ Filters                                                                    │  │
+│  │ Status: [▼ All / Pending / Approved / Rejected / Converted ▼]             │  │
+│  │ Department: [▼ Dropdown ▼]        Proposed Role: [▼ Dropdown ▼]            │  │
+│  │ Branch: [☑ Multi-select ▼]                                                │  │
+│  │ Expected Joining Date: [📅 From] - [📅 To]                                 │  │
+│  │ Submitted Date: [📅 From] - [📅 To]                                        │  │
+│  │ Last Updated Date: [📅 From] - [📅 To]                                     │  │
+│  │                                                                            │  │
+│  │ Search: [________________________]                                         │  │
+│  │ (Search by Request ID / Department / Role / Hiring Reason)                 │  │
+│  │                                                                            │  │
+│  │ [RESET FILTERS]                 [+ NEW HIRING REQUEST]                     │  │
+│  │                                                                            │  │
+│  │ HIRING REQUESTS TABLE                                                      │  │
+│  │ ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │ │Req ID│Department│Proposed Role│Branch│Positions│Expected Joining Date  │ │
+│  │ │──────┼──────────┼─────────────┼──────┼─────────┼──────────────────────│ │
+│  │ │HRQ001│Sales     │Sales Person │HSR   │2        │12-Feb-2026            │ │
+│  │ │HRQ002│Operations│Technician   │BTM   │1        │05-Mar-2026            │ │
+│  │ │HRQ003│HR        │HR Executive │Indira│1        │15-Feb-2026            │ │
+│  │ └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                               │
+│ ┌───────────────────────────────────────────────────────────────────────────┐ │
+│ │Hiring Reason│Status│Sent To│Submitted Date│Last Updated Date│Action       │ │
+│ │─────────────┼──────┼───────┼──────────────┼─────────────────┼────────────│ │
+│ │Replacement  │Pending│HR Head│01-Jan-2026   │02-Jan-2026      │[View]      │ │
+│ │New Project  │Approved│HR Team│05-Jan-2026  │07-Jan-2026      │[View]      │ │
+│ │Expansion    │Rejected│Director│08-Jan-2026 │09-Jan-2026      │[View]      │ │
+│ └───────────────────────────────────────────────────────────────────────────┘ │
+│                                                                               │
+│ Pagination:  Previous   1   2   3   ...   10   Next                           │
+│                                                                               │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
+# Hiring Requests Table Fields
+
+| Field                 | Type   | Notes                                     |
+| --------------------- | ------ | ----------------------------------------- |
+| Request ID            | Text   | Unique hiring request ID                  |
+| Department            | Text   | Department requesting hiring              |
+| Proposed Role         | Text   | Role requested                            |
+| Branch                | Text   | Branch for which hiring is requested      |
+| Positions             | Number | Number of positions requested             |
+| Expected Joining Date | Date   | Expected start date                       |
+| Hiring Reason         | Text   | Reason for hiring                         |
+| Status                | Badge  | Pending / Approved / Rejected / Converted |
+| Sent To               | Text   | Approver / HR reviewer                    |
+| Submitted Date        | Date   | Request creation date                     |
+| Last Updated Date     | Date   | Last modification date                    |
+| Action                | Button | View hiring request                       |
+
+---
+
+# Table Actions
+
+| Action             | Description                          |
+| ------------------ | ------------------------------------ |
+| View               | Opens detailed hiring request screen |
+| New Hiring Request | Opens hiring request form            |
+
+---
+
+# Filters
+
+| Filter                | Type         | Required | Description                               |
+| --------------------- | ------------ | -------- | ----------------------------------------- |
+| Status                | Dropdown     | No       | Pending / Approved / Rejected / Converted |
+| Department            | Dropdown     | No       | Filter by department                      |
+| Proposed Role         | Dropdown     | No       | Filter by role                            |
+| Branch                | Multi-select | No       | Filter by requested branch                |
+| Expected Joining Date | Date Range   | No       | Filter by expected joining date           |
+| Submitted Date        | Date Range   | No       | Filter by request submission date         |
+| Last Updated Date     | Date Range   | No       | Filter by request update date             |
+
+---
+
+# Search
+
+| Field         | Type | Description                                                    |
+| ------------- | ---- | -------------------------------------------------------------- |
+| Global Search | Text | Search by Request ID, Department, Proposed Role, Hiring Reason |
+
+---
+
+# System Behaviour
+
+| Event              | System Response                        |
+| ------------------ | -------------------------------------- |
+| Apply Filters      | Table refreshes with filtered requests |
+| Search             | Filters records based on keyword       |
+| View               | Opens request details page             |
+| New Hiring Request | Opens hiring request creation screen   |
+
+### 8.2.1 My Hiring Request View (Popup)
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│                    MY HIRING REQUEST DETAILS                   │
+│ Request ID: HRQ001                                  [X Close] │
+│                                                               │
+│ Status: ● Pending                                            │
+│                                                               │
+│ ───────────────── REQUEST INFORMATION ─────────────────       │
+│ Requested By            : Raj Mehta                          │
+│ Department              : Sales                              │
+│ Designation             : Team Lead                          │
+│ Proposed Role           : Sales Executive                    │
+│ Branch Name             : Bangalore - HSR                    │
+│ Employment Type         : Permanent                          │
+│ Expected Date of Joining: 12-Feb-2026                        │
+│ Number of Positions     : 2                                  │
+│ Proposed Salary         : ₹50,000                            │
+│ Hiring Reason           : Replacement for resigned employee  │
+│                                                               │
+│ ───────────────── REVIEW INFORMATION ─────────────────        │
+│ Status                 : Pending                             │
+│ Reviewed By            : —                                   │
+│ Review Date            : —                                   │
+│                                                               │
+│ IF REJECTED:                                                 │
+│ Rejection Reason       : —                                   │
+│                                                               │
+│ ───────────────── SUBMISSION INFORMATION ─────────────        │
+│ Sent To                : HR Manager                          │
+│ Submitted Date         : 02-Jan-2026                         │
+│ Last Updated           : 03-Jan-2026                         │
+│                                                               │
+│                           [Close]                             │
+└───────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# Request Details Fields (Table)
+
+| Field                    | Type         | Description                           |
+| ------------------------ | ------------ | ------------------------------------- |
+| Request ID               | Text         | Unique hiring request identifier      |
+| Status                   | Status Badge | Pending / Approved / Rejected         |
+| Reviewed By              | Text         | Name of reviewer if approved/rejected |
+| Review Date              | Date         | Date of review                        |
+| Requested By             | Text         | Employee who created request          |
+| Department               | Text         | Department requesting hiring          |
+| Designation              | Text         | Requester designation                 |
+| Proposed Role            | Text         | Role requested                        |
+| Branch Name              | Text         | Branch where employee will work       |
+| Employment Type          | Dropdown     | Permanent / Contract / Intern         |
+| Expected Date of Joining | Date         | Expected joining date                 |
+| Number of Positions      | Number       | Total required employees              |
+| Proposed Salary          | Currency     | Proposed salary amount                |
+| Hiring Reason            | Long Text    | Reason for hiring                     |
+| Rejection Reason         | Long Text    | Reason if rejected                    |
+| Sent To                  | Text         | Reviewer or HR responsible            |
+| Submitted Date           | Date         | Date request was submitted            |
+| Last Updated             | Date         | Last update timestamp                 |
+
+---
+
+# 8.3 Tab 3: Received Requests to Add New Employee
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                   TAB 3: RECEIVED REQUESTS                                        │
+│           (For admins / HR to review hiring requests)                             │
+│                                                                                   │
+│  ┌────────────────────────────────────────────────────────────────────────────┐   │
+│  │ Filters                                                                    │   │
+│  │ Status: [▼ All / Pending / Approved / Rejected ▼]                          │   │
+│  │ Department: [▼ Dropdown ▼]         Proposed Role: [▼ Dropdown ▼]            │   │
+│  │ Branch: [▼ Dropdown ▼]             Requested By: [▼ Dropdown ▼]             │   │
+│  │ Employment Type: [▼ Permanent / Contract / Intern ▼]                        │   │
+│  │ Expected Joining Date: [📅 From] - [📅 To]                                   │   │
+│  │ Submitted Date: [📅 From] - [📅 To]                                          │   │
+│  │ Review Date: [📅 From] - [📅 To]                                             │   │
+│  │                                                                              │   │
+│  │ Search: [____________________________]                                       │   │
+│  │ (Search by Request ID / Requested By / Department / Role)                   │   │
+│  │                                                                              │   │
+│  │ [RESET FILTERS]                                                             │   │
+│  │                                                                              │   │
+│  │ RECEIVED REQUESTS TABLE                                                     │   │
+│  │ ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │ │Request│Requested│Department│Proposed│Branch│Positions│Employment Type  │ │
+│  │ │ID     │By       │          │Role    │      │         │                 │ │
+│  │ │───────┼─────────┼──────────┼────────┼──────┼─────────┼────────────────│ │
+│  │ │HRQ001 │Raj Mehta│Sales     │Sales   │HSR   │2        │Permanent       │ │
+│  │ │HRQ002 │Anita Rao│Operations│Technician│BTM│1        │Contract        │ │
+│  │ │HRQ003 │Rohit Shah│HR       │HR Exec │Indira│1       │Permanent       │ │
+│  │ └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                                │
+│ ┌────────────────────────────────────────────────────────────────────────────┐ │
+│ │Expected Joining│Status│Submitted Date│Reviewed By│Review Date│Action       │ │
+│ │Date            │      │              │           │           │             │ │
+│ │───────────────┼──────┼──────────────┼───────────┼───────────┼────────────│ │
+│ │12-Feb-2026    │Pending│02-Jan-2026  │—          │—          │[View]      │ │
+│ │05-Mar-2026    │Approved│04-Jan-2026 │HR Head    │06-Jan-26  │[View]      │ │
+│ │20-Feb-2026    │Rejected│05-Jan-2026 │Director   │07-Jan-26  │[View]      │ │
+│ └────────────────────────────────────────────────────────────────────────────┘ │
+│                                                                                │
+│ Pagination:  Previous   1   2   3   ...   10   Next                            │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
+# Received Requests Table Fields
+
+| Field                 | Type   | Notes                                |
+| --------------------- | ------ | ------------------------------------ |
+| Request ID            | Text   | Unique hiring request ID             |
+| Requested By          | Text   | User who submitted the request       |
+| Department            | Text   | Department requesting hiring         |
+| Proposed Role         | Text   | Requested role                       |
+| Branch                | Text   | Branch for which hiring is requested |
+| Positions             | Number | Number of employees required         |
+| Employment Type       | Text   | Permanent / Contract / Intern        |
+| Expected Joining Date | Date   | Expected joining date                |
+| Status                | Badge  | Pending / Approved / Rejected        |
+| Submitted Date        | Date   | Request submission date              |
+| Reviewed By           | Text   | Approver or reviewer                 |
+| Review Date           | Date   | Date of review decision              |
+| Action                | Button | View request details                 |
+
+---
+
+# Table Actions
+
+| Action | Description                        |
+| ------ | ---------------------------------- |
+| View   | Opens Hiring Request Detail Screen |
+
+---
+
+# Filters
+
+| Filter                | Type       | Required | Description                              |
+| --------------------- | ---------- | -------- | ---------------------------------------- |
+| Status                | Dropdown   | No       | Pending / Approved / Rejected            |
+| Department            | Dropdown   | No       | Filter by department                     |
+| Proposed Role         | Dropdown   | No       | Filter by requested role                 |
+| Branch                | Dropdown   | No       | Filter by requested branch               |
+| Requested By          | Dropdown   | No       | Filter by employee who submitted request |
+| Employment Type       | Dropdown   | No       | Permanent / Contract / Intern            |
+| Expected Joining Date | Date Range | No       | Filter by joining date                   |
+| Submitted Date        | Date Range | No       | Filter by request submission date        |
+| Review Date           | Date Range | No       | Filter by approval/rejection date        |
+
+---
+
+# Search
+
+| Field         | Type | Description                                          |
+| ------------- | ---- | ---------------------------------------------------- |
+| Global Search | Text | Search by Request ID, Requested By, Department, Role |
+
+---
+
+## 8.4 Request Form Fields(8.2 refer for open this)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -2673,6 +3181,8 @@ Manages the complete employee lifecycle including user visibility, hiring reques
 | Additional Remarks  | Textarea     | No       | Any additional info        |
 | Supporting Document | File Upload  | No       | JD, approval doc, etc.     |
 
+### 8.4.2 after submit opens pop up whom to send this request (check above diagram )
+
 ### Validation Rules
 
 | Field               | Rule                                           |
@@ -2691,57 +3201,150 @@ Manages the complete employee lifecycle including user visibility, hiring reques
 
 ---
 
-## 8.7 Request Detail View (Popup)
+Based on the **reference UI in your image**, the popup structure is slightly different from your current draft. The screen is organized into **clear sections**:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│              REQUEST DETAILS                                 │
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  REQUESTED BY:           [Name]                     │    │
-│  │  DEPARTMENT:             [Value]                    │    │
-│  │  DESIGNATION:            [Value]                    │    │
-│  │  PROPOSED ROLE:          [Value]                    │    │
-│  │  BRANCH:                 [Value(s)]                 │    │
-│  │  EMPLOYMENT TYPE:        [Value]                    │    │
-│  │  EXPECTED DOJ:           [Value]                    │    │
-│  │  NUMBER OF POSITIONS:    [Value]                    │    │
-│  │  HIRING REASON:          [Full Text]                │    │
-│  │  JOB DESCRIPTION:        [Full Text]                │    │
-│  │  ADDITIONAL REMARKS:     [Full Text]                │    │
-│  │  SUPPORTING DOC:         [📎 Download]              │    │
-│  │                                                      │    │
-│  │  ─────────────────────────────────────────────────   │    │
-│  │  STATUS:                 [● Pending/✓ Approved/✗ Rejected]│
-│  │  REVIEWED BY:            [Name if reviewed]         │    │
-│  │  REVIEWED DATE:          [Date if reviewed]         │    │
-│  │                                                      │    │
-│  │  IF REJECTED:                                        │    │
-│  │  REJECTION REASON:       [Full Reason Text]         │    │
-│  │                                                      │    │
-│  │  [CLOSE]                                             │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
-```
+1. **Header + Status**
+2. **Basic Information (2-column layout)**
+3. **Hiring Reason**
+4. **Job Description + Document**
+5. **Submission Information**
+6. **Actions (Reject / Approve)**
 
-### Request Detail Actions
-
-| Action  | Behavior                                                      |
-| ------- | ------------------------------------------------------------- |
-| Approve | Status → Approved, Reviewer name auto-captured, Date recorded |
-| Reject  | Mandatory rejection reason required, Status → Rejected        |
-
-### Validation Rules for Actions
-
-| Action  | Rule                                                 |
-| ------- | ---------------------------------------------------- |
-| Reject  | Rejection Reason is mandatory, minimum 20 characters |
-| Approve | Reviewer Name auto-captured from logged-in user      |
+I refactored your **8.5 Request Detail View** to match the UI structure in the screenshot.
 
 ---
 
-## 8.8 Add User Form (Multi-Step)
+# 8.5 Request Detail View (Popup)
+
+_(Triggered from Tab 3 → Action: View)_
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│                     REQUEST DETAILS                            │
+│                     Request ID: HRQ001                         │
+│                                                [X Close]       │
+│                                                               │
+│  STATUS:  ● Pending                                           │
+│                                                               │
+│ ───────────────── BASIC INFORMATION ─────────────────         │
+│                                                               │
+│ Requested By        : [Employee Name]                         │
+│ Department          : [Department Name]                       │
+│ Designation         : [Requester Designation]                 │
+│ Proposed Role       : [Requested Role]                        │
+│ Branch              : [Branch Name(s)]                        │
+│ Employment Type     : [Permanent / Contract / Intern]         │
+│ Expected Date of Joining : [Date]                             │
+│ Number of Positions : [Value]                                 │
+│ Proposed Salary     : [Amount]                                │
+│                                                               │
+│ ───────────────── HIRING REASON ─────────────────              │
+│ [Full reason text explaining why hiring is required]          │
+│                                                               │
+│ ───────────────── JOB DESCRIPTION ────────────────             │
+│ [Detailed job description text]                                │
+│                                                               │
+│ Supporting Document                                           │
+│ [📄 Document.pdf]  Uploaded on: [Date]                         │
+│ [Download]                                                    │
+│                                                               │
+│ ───────────────── SUBMISSION INFORMATION ─────────             │
+│ Sent To              : [Approver Role/User]                   │
+│ Submitted Date       : [Date]                                 │
+│ Last Updated         : [Date]                                 │
+│                                                               │
+│                                                               │
+│ IF REJECTED:                                                 │
+│ Rejection Reason     : [Full rejection text]                  │
+│                                                               │
+│                                                               │
+│                          ACTIONS                              │
+│             [ Reject ]            [ Approve ]                 │
+│                                                               │
+└───────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 8.5.2 Reject Request Popup (Triggered from Reject Button)
+
+```
+┌───────────────────────────────────────────────┐
+│                Reject Request                  │
+│                                               │
+│ Rejection Reason *                            │
+│ ┌───────────────────────────────────────────┐ │
+│ │ Please provide reason for rejection...    │ │
+│ │                                           │ │
+│ │                                           │ │
+│ └───────────────────────────────────────────┘ │
+│                                               │
+│                 [Cancel]   [Reject Request]   │
+└───────────────────────────────────────────────┘
+```
+
+---
+
+# Request Detail Fields
+
+| Field               | Type        | Description                           |
+| ------------------- | ----------- | ------------------------------------- |
+| Request ID          | Text        | Unique hiring request ID              |
+| Requested By        | Text        | Employee who created request          |
+| Department          | Text        | Department requesting hiring          |
+| Designation         | Text        | Requester designation                 |
+| Proposed Role       | Text        | Role requested                        |
+| Branch              | Multi-value | Branch(es) where employee is required |
+| Employment Type     | Dropdown    | Permanent / Contract / Intern         |
+| Expected DOJ        | Date        | Expected joining date                 |
+| Number of Positions | Number      | Total headcount required              |
+| Proposed Salary     | Currency    | Suggested salary for role             |
+| Hiring Reason       | Long Text   | Reason for request                    |
+| Job Description     | Long Text   | Role responsibilities                 |
+| Supporting Document | File        | JD or supporting file                 |
+| Sent To             | Text        | Reviewer / approver                   |
+| Submitted Date      | Date        | Request creation date                 |
+| Last Updated        | Date        | Last modification                     |
+| Reviewed By         | Text        | Approver name                         |
+| Review Date         | Date        | Date of approval/rejection            |
+| Rejection Reason    | Long Text   | Reason if rejected                    |
+
+---
+
+# Actions
+
+| Action  | Behavior              |
+| ------- | --------------------- |
+| Approve | Status → **Approved** |
+| Reject  | Opens rejection popup |
+| Close   | Closes popup          |
+
+---
+
+# Validation Rules
+
+| Action  | Rule                                                |
+| ------- | --------------------------------------------------- |
+| Reject  | Rejection Reason **mandatory (min 20 characters)**  |
+| Approve | Reviewer Name **auto-captured from logged-in user** |
+| Approve | Review Date **auto-recorded**                       |
+| Reject  | Status updated to **Rejected**                      |
+
+---
+
+```
+View Request
+   ↓
+Popup opens
+   ↓
+Admin reviews details
+   ↓
+Approve / Reject
+   ↓
+Status updated
+```
+
+## 8.6 Add User Form (Multi-Step)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -3078,7 +3681,7 @@ Manages the complete employee lifecycle including user visibility, hiring reques
 
 ---
 
-## 8.9 Edit Employee Form
+## 8.7 Edit Employee Form
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -3090,7 +3693,7 @@ Manages the complete employee lifecycle including user visibility, hiring reques
 │  │                                                      │    │
 │  │  Changes:                                            │    │
 │  │  • EMP ID is DISABLED (cannot change)               │    │
-│  │  • Password field shows [RESET PASSWORD] option     │    │
+│  │  • Password field shows [Keep empty for not change it] option     │    │
 │  │  • All other fields editable based on permissions   │    │
 │  │                                                      │    │
 │  │  [◄ PREVIOUS]  [SAVE CHANGES]  [CANCEL]              │    │
@@ -3113,7 +3716,7 @@ Same as Add User, plus:
 
 ---
 
-## 8.10 View Employee Screen
+## 8.8 View Employee Screen
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
