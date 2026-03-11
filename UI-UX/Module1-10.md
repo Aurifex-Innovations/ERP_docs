@@ -2061,7 +2061,7 @@ This module allows the Company Admin to define salary structure and leave polici
 | Carry Forward Allowed    | Checkbox | No          | Enable leave carry forward    |
 | Max Carry Forward Days   | Number   | Conditional | Maximum days to carry forward |
 | Leave Approval Authority | Dropdown | Yes         | Role who can approve leaves   |
-| Leave Reset Cycle        | Dropdown | Yes         | Yearly/Monthly/Custom         |
+| Leave Reset Cycle        | Dropdown | Yes         | Yearly/Monthly/Custom(From to TO)
 
 ### Step 3 Validation Rules
 
@@ -2074,7 +2074,7 @@ This module allows the Company Admin to define salary structure and leave polici
 | Carry Forward Allowed    | Checkbox No Enable leave carry forward             |
 | Max Carry Forward Days   | Required if Carry Forward Allowed checked, max 365 |
 | Leave Approval Authority | Required, must select valid role                   |
-| Leave Reset Cycle        | Required, must be Yearly/Monthly/Custom            |
+| Leave Reset Cycle        | Required, must be Yearly/Monthly/Custom(From to TO)|
 
 ---
 
@@ -2910,6 +2910,7 @@ Manages the complete employee lifecycle including user visibility, hiring reques
 | Contact Number    | Phone         | Yes      | Primary contact, 10 digits                    |
 | Alternate Number  | Phone         | No       | Secondary contact                             |
 | Password          | Password      | Yes      | Auto-generated or manual                      |
+| Re-Enter Password | Password      | Yes      | Match with password                           |
 | Department        | Text          | Yes      | Department name                               |
 | Designation       | Text          | Yes      | Job designation                               |
 | Role              | Dropdown      | Yes      | ⭐ Triggers auto-load of config               |
