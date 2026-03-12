@@ -1082,185 +1082,531 @@ Searchable by: Product Code, Product Name, HSN Code, Asset ID (if asset tracking
 
 ### Screen Layout
 
-```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                     PRODUCT: Brass Sprayer Pump 3.5L                         │
-│                                                                              │
-│  Code: BSP3-001 | HSN: 8414 | GST: 18%                    [Edit] [History]  │
-│                                                                              │
-│  [Stock Overview] [Assets List] [Activity Log] [Transfers]                    │
-│                                                                              │
+│ PRODUCT: Brass Sprayer Pump 3.5L │
+│ │
+│ Code: BSP3-001 | HSN: 8414 | GST: 18% [Edit] [History] │
+│ │
+│ [Stock Overview] [Assets List] [Activity Log] [Transfers] │
+│ │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ TAB 1: STOCK OVERVIEW                                                        │
-│                                                                              │
-│  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │ LOCATION WISE STOCK BREAKDOWN                                           │ │
-│  │                                                                         │ │
-│  │  ┌───────────┬────────┬────────────┬────────┬────────────┬────────────┐│ │
-│  │  │ Location  │ Assets │Consumable  │ Resell │ In-Transit │ Reserved   ││ │
-│  │  │───────────┼────────┼────────────┼────────┼────────────┼────────────││ │
-│  │  │ Central   │ 20     │ 50         │ 0      │ 0          │ 10         ││ │
-│  │  │ BLR       │ 5      │ 15         │ 0      │ 2          │ 0          ││ │
-│  │  │ HYD       │ 8      │ 25         │ 0      │ 0          │ 5          ││ │
-│  │  │ BOM       │ 3      │ 10         │ 0      │ 0          │ 0          ││ │
-│  │  │───────────┼────────┼────────────┼────────┼────────────┼────────────││ │
-│  │  │ TOTAL     │ 36     │ 100        │ 0      │ 2          │ 15         ││ │
-│  │  └───────────┴────────┴────────────┴────────┴────────────┴────────────┘│ │
-│  │                                                                         │ │
-│  │  Total Valuation: ₹ 4,25,000 (at purchase price)                        │ │
-│  └─────────────────────────────────────────────────────────────────────────┘ │
-│                                                                              │
+│ TAB 1: STOCK OVERVIEW │
+│ │
+│ ┌─────────────────────────────────────────────────────────────────────────┐ │
+│ │ LOCATION WISE STOCK BREAKDOWN │ │
+│ │ │ │
+│ │ ┌───────────┬────────┬────────────┬────────┬────────────┬────────────┐│ │
+│ │ │ Location │ Assets │Consumable │ Resell │ In-Transit │ Reserved ││ │
+│ │ │ │ │ │ │ │ ││ │
+│ │ │───────────┼────────┼────────────┼────────┼────────────┼────────────││ │
+│ │ │ Central │ 20 │ 50 │ 0 │ 0 │ 10 ││ │
+│ │ │ BLR │ 5 │ 15 │ 0 │ 2 │ 0 ││ │
+│ │ │ HYD │ 8 │ 25 │ 0 │ 0 │ 5 ││ │
+│ │ │ BOM │ 3 │ 10 │ 0 │ 0 │ 0 ││ │
+│ │ │───────────┼────────┼────────────┼────────┼────────────┼────────────││ │
+│ │ │ TOTAL │ 36 │ 100 │ 0 │ 2 │ 15 ││ │
+│ │ └───────────┴────────┴────────────┴────────┴────────────┴────────────┘│ │
+│ │ │ │
+│ │ Total Valuation: ₹ 4,25,000 (at purchase price) │ │
+│ │ │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│ │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ TAB 2: ASSETS LIST                                                           │
-│                                                                              │
-│  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │ ASSET INVENTORY                                                         │ │
-│  │                                                                         │ │
-│  │  Filters: Location: [▼ All ▼]  Status: [▼ All ▼]  Condition: [▼ All ▼] │ │
-│  │                                                                         │ │
-│  │  ┌───────────┬─────────────┬────────────────┬───────────┬─────────────┐│ │
-│  │  │ Asset ID  │ Location    │ Assigned To    │ Employee  │ Condition   ││ │
-│  │  │───────────┼─────────────┼────────────────┼───────────┼─────────────││ │
-│  │  │BSP3/0001  │ BLR         │ Employee       │ Ramesh K. │ Good        ││ │
-│  │  │BSP3/0002  │ BLR         │ Branch Pool    │ —         │ Good        ││ │
-│  │  │BSP3/0015  │ HYD         │ Employee       │ Suresh M. │ Needs Repair││ │
-│  │  │BSP3/0026  │ Central     │ Unassigned     │ —         │ New         ││ │
-│  │  │BSP3/0156  │ In Transit  │ BLR (Incoming) │ —         │ Good        ││ │
-│  │  └───────────┴─────────────┴────────────────┴───────────┴─────────────┘│ │
-│  │                                                                         │ │
-│  │  ┌───────────┬───────────┬───────────┬─────────────────────────────────┐│ │
-│  │  │ Status    │ Since     │ Actions   │                                 ││ │
-│  │  │───────────┼───────────┼───────────┼─────────────────────────────────││ │
-│  │  │ Active    │ 15 Jan 24 │[View][Reassign][Transfer][Maintenance]      ││ │
-│  │  │ Available │ —         │[View][Reassign][Transfer]                   ││ │
-│  │  │Maintenance│ 10 Jan 24 │[View][Damaged][Lost]                        ││ │
-│  │  │ Available │ —         │[View][Reassign][Transfer]                   ││ │
-│  │  │ Dispatched│ 16 Jan 24 │[View]                                       ││ │
-│  │  └───────────┴───────────┴───────────┴─────────────────────────────────┘│ │
-│  │                                                                         │ │
-│  │  Actions per Asset: View history / Reassign / Mark for maintenance /   │ │
-│  │                     Mark as damaged or lost / Transfer to other branch  │ │
-│  └─────────────────────────────────────────────────────────────────────────┘ │
-│                                                                              │
+│ TAB 2: ASSETS LIST │
+│ │
+│ ┌─────────────────────────────────────────────────────────────────────────┐ │
+│ │ ASSET INVENTORY │ │
+│ │ │ │
+│ │ Filters: Location: [▼ All ▼] Status: [▼ All ▼] Condition: [▼ All ▼] │ │
+│ │ │ │
+│ │ ┌───────────┬─────────────┬────────────────┬───────────┬─────────────┐│ │
+│ │ │ Asset ID │ Location │ Assigned To │ Employee │ Condition ││ │
+│ │ │───────────┼─────────────┼────────────────┼───────────┼─────────────││ │
+│ │ │BSP3/0001 │ BLR │ Employee │ Ramesh K. │ Good ││ │
+│ │ │BSP3/0002 │ BLR │ Branch Pool │ — │ Good ││ │
+│ │ │BSP3/0015 │ HYD │ Employee │ Suresh M. │ Needs Repair││ │
+│ │ │BSP3/0026 │ Central │ Unassigned │ — │ New ││ │
+│ │ │BSP3/0156 │ In Transit │ BLR (Incoming) │ — │ Good ││ │
+│ │ └───────────┴─────────────┴────────────────┴───────────┴─────────────┘│ │
+│ │ │ │
+│ │ ┌───────────┬───────────┬───────────┬─────────────────────────────────┐│ │
+│ │ │ Status │ Since │ Actions │ [View] [Reassign] [Transfer] ││ │
+│ │ │───────────┼───────────┼───────────┼─────────────────────────────────││ │
+│ │ │ Active │ 15 Jan 24 │ │ [Maintenance] [Damaged] [Lost] ││ │
+│ │ │ Available │ — │ │ ││ │
+│ │ │ Maintenance│10 Jan 24 │ │ ││ │
+│ │ │ Available │ — │ │ ││ │
+│ │ │ Dispatched│ 16 Jan 24 │ │ ││ │
+│ │ └───────────┴───────────┴───────────┴─────────────────────────────────┘│ │
+│ │ │ │
+│ │ Actions per Asset: View history | Reassign | Mark for maintenance │ │
+│ │ Mark as damaged/lost | Transfer to other branch │ │
+│ │ │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│ │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ TAB 3: ACTIVITY LOG                                                          │
-│                                                                              │
-│  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │ STOCK MOVEMENT HISTORY                                                  │ │
-│  │                                                                         │ │
-│  │  ┌───────────┬─────────────┬───────────┬─────┬──────────┬─────────────┐│ │
-│  │  │ Date      │ Activity    │ Type      │ Qty │ By       │ Branch      ││ │
-│  │  │───────────┼─────────────┼───────────┼─────┼──────────┼─────────────││ │
-│  │  │16 Jan 14:30│Stock Added  │Consumable │ +50 │ Rajesh K.│ Central     ││ │
-│  │  │16 Jan 16:00│Asset Created│Assets     │ +20 │ Rajesh K.│ Central     ││ │
-│  │  │17 Jan 09:00│Transfer Out │Assets     │ -5  │ Rajesh K.│ Central→BLR ││ │
-│  │  └───────────┴─────────────┴───────────┴─────┴──────────┴─────────────┘│ │
-│  └─────────────────────────────────────────────────────────────────────────┘ │
-│                                                                              │
+│ TAB 3: ACTIVITY LOG (CONTINUED) │
+│ │
+│ ┌─────────────────────────────────────────────────────────────────────────┐ │
+│ │ STOCK MOVEMENT HISTORY (CONTINUED) │ │
+│ │ │ │
+│ │ ┌───────────┬─────────────┬───────────┬─────┬──────────┬─────────────┐│ │
+│ │ │ Date │ Activity │ Type │ Qty │ By │ Branch ││ │
+│ │ │───────────┼─────────────┼───────────┼─────┼──────────┼─────────────││ │
+│ │ │16 Jan 14:30│Stock Added │Consumable │ +50 │ Rajesh K.│ Central ││ │
+│ │ │16 Jan 16:00│Asset Created│Assets │ +20 │ Rajesh K.│ Central ││ │
+│ │ │17 Jan 09:00│Transfer Out │Assets │ -5 │ Rajesh K.│ Central ││ │
+│ │ │17 Jan 09:00│Transfer Out │Consumable │ -10 │ Rajesh K.│ Central ││ │
+│ │ │17 Jan 14:00│Transfer In │Assets │ +5 │ John D. │ BLR ││ │
+│ │ │17 Jan 14:00│Transfer In │Consumable │ +10 │ John D. │ BLR ││ │
+│ │ │17 Jan 15:30│Asset Assigned│Assets │ -1 │ John D. │ BLR ││ │
+│ │ │18 Jan 10:00│Stock Request│Consumable │ -5 │ Ramesh K.│ BLR ││ │
+│ │ │18 Jan 14:00│Asset Returned│Assets │ +1 │ John D. │ BLR ││ │
+│ │ │19 Jan 09:00│Maintenance │Assets │ — │ Suresh M.│ HYD ││ │
+│ │ │ │ (Mark) │ │ │ │ ││ │
+│ │ └───────────┴─────────────┴───────────┴─────┴──────────┴─────────────┘│ │
+│ │ │ │
+│ │ Filters: Activity Type: [▼ All ▼] Date Range: [📅 From] - [📅 To] │ │
+│ │ User: [🔍 Search ▼] Branch: [▼ All ▼] │ │
+│ │ │ │
+│ │ [Export to Excel] [Export to PDF] │ │
+│ │ │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│ │
+│ Click any row to view detailed transaction information │
+│ │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ TAB 4: TRANSFER HISTORY │
+│ │
+│ ┌─────────────────────────────────────────────────────────────────────────┐ │
+│ │ BRANCH TRANSFER LOG │ │
+│ │ │ │
+│ │ Filters: From: [▼ All ▼] To: [▼ All ▼] Status: [▼ All ▼] │ │
+│ │ Date Range: [📅 From] - [📅 To] │ │
+│ │ │ │
+│ │ ┌───────────┬─────────────┬─────────────┬────────┬────────┬─────────┐│ │
+│ │ │ Date │ Transfer ID │ Type │ From │ To │ Assets ││ │
+│ │ │───────────┼─────────────┼─────────────┼────────┼────────┼─────────││ │
+│ │ │17 Jan 2024│TR-2024-0056 │Branch Trans.│Central │ BLR │ 5 ││ │
+│ │ │15 Jan 2024│TR-2024-0042 │Branch Trans.│HYD │ BOM │ 2 ││ │
+│ │ │12 Jan 2024│TR-2024-0038 │Emergency │BLR │ HYD │ 0 ││ │
+│ │ └───────────┴─────────────┴─────────────┴────────┴────────┴─────────┘│ │
+│ │ │ │
+│ │ ┌───────────┬───────────┬───────────┬─────────────────────────────────┐│ │
+│ │ │ Cons. Qty │ Resell Qty│ Status │ By ││ │
+│ │ │───────────┼───────────┼───────────┼─────────────────────────────────││ │
+│ │ │ 10 │ 0 │Completed │Rajesh K. → John D. ││ │
+│ │ │ 5 │ 0 │In Transit │Suresh M. → Pending ││ │
+│ │ │ 20 │ 10 │Completed │Amit V. → Ramesh K. ││ │
+│ │ └───────────┴───────────┴───────────┴─────────────────────────────────┘│ │
+│ │ │ │
+│ │ Status Legend: ● Completed ◐ In Transit ○ Draft ✕ Cancelled │ │
+│ │ │ │
+│ │ [View Details] [Download Report] │ │
+│ │ │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│ │
 └─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### Tab 1: Stock Overview Fields
-
-| Field           | Type     | Description                                 |
-| --------------- | -------- | ------------------------------------------- |
-| Location        | Text     | Branch name                                 |
-| Assets          | Number   | Individually tracked units at this location |
-| Consumable      | Number   | Bulk stock at this location                 |
-| Resell          | Number   | Sale stock at this location                 |
-| In-Transit      | Number   | Dispatched but not yet received             |
-| Reserved        | Number   | Allocated to pending requests               |
-| Total Valuation | Currency | At purchase price                           |
-
-### Tab 2: Assets List Fields
-
-| Field       | Type    | Description                                               |
-| ----------- | ------- | --------------------------------------------------------- |
-| Asset ID    | Text    | Unique asset identifier                                   |
-| Location    | Text    | Current branch location                                   |
-| Assigned To | Text    | Employee / Branch Pool / Unassigned                       |
-| Employee    | Text    | Employee name if assigned                                 |
-| Condition   | Badge   | New / Good / Fair / Needs Repair / Damaged                |
-| Status      | Badge   | Active / Available / Maintenance / Dispatched             |
-| Since       | Date    | Date of current status                                    |
-| Actions     | Buttons | View / Reassign / Transfer / Maintenance / Damaged / Lost |
-
-### Tab 3: Activity Log Fields
-
-| Field    | Type     | Description                   |
-| -------- | -------- | ----------------------------- |
-| Date     | DateTime | Timestamp of activity         |
-| Activity | Text     | Action description            |
-| Type     | Badge    | Assets / Consumable / Resell  |
-| Qty      | Number   | Quantity changed (+ or –)     |
-| By       | Text     | User who performed the action |
-| Branch   | Text     | Location of activity          |
-
----
-
-## Module 11 Workflow Summary
 
 ```
+
+
+## 11.7 Asset Management Views
+
+### **11.7.1 Individual Asset Detail View**
+
+**Description:** Complete lifecycle view of a single asset with assignment history, maintenance records, and current status.
+
+```
+
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                     COMPLETE WORKFLOW FLOW                                   │
-│                                                                              │
-│  [HEAD OPS]                                                                  │
-│  Add to Central Stock (11.2.1)                                               │
-│       ↓                                                                      │
-│  Stock visible in Dashboard (11.1)                                           │
-│       ↓                                                                      │
-│  [BRANCH USER / MANAGER]                                                     │
-│  Raise Stock Request (11.3)                                                  │
-│       ↓                                                                      │
-│  [HEAD OPS]                                                                  │
-│  Reviews in Approvals Tab (11.1.2)                                           │
-│       ↓                                                                      │
-│  Approval Form (11.4)                                                        │
-│  ├── Full Approve → Dispatch                                                 │
-│  ├── Partial Approve → Dispatch (modified qty)                               │
-│  ├── Branch Transfer → Initiate Transfer (11.5.1)                            │
-│  ├── Reject → Request Closed                                                 │
-│  └── On Hold → Pending further info                                          │
-│       ↓                                                                      │
-│  [HEAD OPS / SOURCE BRANCH]                                                  │
-│  Dispatch Stock (11.5.2)                                                     │
-│       ↓                                                                      │
-│  Stock moves to "In-Transit"                                                 │
-│       ↓                                                                      │
-│  [BRANCH MANAGER]                                                            │
-│  Receive & Allocate (11.2.2 / 11.5.3)                                        │
-│  ├── Verify quantities                                                       │
-│  ├── Allocate to Assets / Consumable / Resell                                │
-│  └── Assign Assets to Employees                                              │
-│       ↓                                                                      │
-│  Stock updated in Branch Dashboard                                           │
-│  Activity Log updated (11.6)                                                 │
-│                                                                              │
+│ ASSET DETAIL: BSP3/0156 │
+│ │
+│ Product: Brass Sprayer Pump 3.5L (BSP3-001) [Edit] [History] [Print]│
+│ │
+│ ┌─────────────────────────────────────────────────────────────────────────┐ │
+│ │ CURRENT STATUS │ │
+│ │ │ │
+│ │ Asset ID : BSP3/0156 │ │
+│ │ Status : ● Active (Assigned to Employee) │ │
+│ │ Condition : Good │ │
+│ │ Location : BLR - HSR Layout Warehouse │ │
+│ │ Assigned To : Ramesh Kumar (EMP-0123) │ │
+│ │ Assignment Date : 17 Jan 2024 │ │
+│ │ Assignment Type : Direct Assignment │ │
+│ │ │ │
+│ │ Purchase Info : PO-2024-0089 | Invoice: INV-78456 | Date: 15 Jan 2024│ │
+│ │ Warranty Status : ● Under Warranty (Expires: 15 Jan 2025) │ │
+│ │ │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│ │
+│ [Assignment History] [Maintenance Log] [Transfer History] [Documents] │
+│ │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ TAB 1: ASSIGNMENT HISTORY │
+│ │
+│ ┌─────────────────────────────────────────────────────────────────────────┐ │
+│ │ │ │
+│ │ ┌───────────┬─────────────┬─────────────┬─────────────┬────────────┐│ │
+│ │ │ Date │ Action │ From │ To │ By ││ │
+│ │ │───────────┼─────────────┼─────────────┼─────────────┼────────────││ │
+│ │ │15 Jan 2024│Created │Central │Central │Rajesh K. ││ │
+│ │ │ │ │(Unassigned) │(Unassigned) │ ││ │
+│ │ │17 Jan 2024│Transferred │Central │BLR │Rajesh K. ││ │
+│ │ │17 Jan 2024│Assigned │BLR Pool │Ramesh Kumar │John D. ││ │
+│ │ │ │ │ │(EMP-0123) │(Manager) ││ │
+│ │ └───────────┴─────────────┴─────────────┴─────────────┴────────────┘│ │
+│ │ │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│ │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ TAB 2: MAINTENANCE LOG │
+│ │
+│ ┌─────────────────────────────────────────────────────────────────────────┐ │
+│ │ │ │
+│ │ [+ LOG MAINTENANCE] │ │
+│ │ │ │
+│ │ ┌───────────┬─────────────┬─────────────┬─────────────┬────────────┐│ │
+│ │ │ Date │ Type │ Description │ Cost (₹) │ Status ││ │
+│ │ │───────────┼─────────────┼─────────────┼─────────────┼────────────││ │
+│ │ │20 Feb 2024│Scheduled │Regular │ 500 │Completed ││ │
+│ │ │ │Service │servicing │ │ ││ │
+│ │ │15 Mar 2024│Repair │Nozzle │ 1,200 │Completed ││ │
+│ │ │ │ │replacement │ │ ││ │
+│ │ │10 Apr 2024│Inspection │Quarterly │ 0 │Scheduled ││ │
+│ │ │ │ │check │ │ ││ │
+│ │ └───────────┴─────────────┴─────────────┴─────────────┴────────────┘│ │
+│ │ │ │
+│ │ Next Scheduled: 10 Apr 2024 │ │
+│ │ │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│ │
+│ [BACK TO PRODUCT] │
+│ │
 └─────────────────────────────────────────────────────────────────────────────┘
+
+```
+
+#### **Asset Detail Fields**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| Asset ID | Text | Unique identifier |
+| Status | Badge | Active / In Transit / Maintenance / Damaged / Lost / Retired |
+| Condition | Badge | New / Good / Fair / Needs Repair / Damaged |
+| Location | Text | Current branch/warehouse |
+| Assigned To | Text | Employee name and ID |
+| Assignment Date | Date | When assigned |
+| Assignment Type | Text | Direct / Branch Pool / Transfer |
+| Purchase Info | Text | PO and Invoice references |
+| Warranty Status | Badge | Under Warranty / Expired / No Warranty |
+
+---
+
+## 11.8 Stock Reports & Analytics
+
+### **11.8.1 Stock Summary Report**
+
+```
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ STOCK SUMMARY REPORT │
+│ │
+│ Period: [📅 From] - [📅 To] [Generate] [Export] │
+│ │
+│ ┌─────────────────────────────────────────────────────────────────────────┐ │
+│ │ EXECUTIVE SUMMARY │ │
+│ │ │ │
+│ │ Total SKUs: 156 Total Assets: 342 Total Consumables: 12,450 Ltr │ │
+│ │ Total Value: ₹ 24,56,780 In-Transit: ₹ 3,45,200 │ │
+│ │ │ │
+│ │ Low Stock Alerts: 12 items Out of Stock: 3 items │ │
+│ │ │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│ │
+│ ┌─────────────────────────────────────────────────────────────────────────┐ │
+│ │ BRANCH WISE BREAKDOWN │ │
+│ │ │ │
+│ │ ┌───────────┬──────┬───────────┬────────────┬───────────┬───────────┐│ │
+│ │ │ Branch │Assets│Consumables│ Resell │ In-Transit│ Valuation ││ │
+│ │ │ │ │ │ │ │ (₹) ││ │
+│ │ │───────────┼──────┼───────────┼────────────┼───────────┼───────────││ │
+│ │ │ Central │ 120 │ 5,000 Ltr │ 0 │ 0 │ 8,45,000 ││ │
+│ │ │ BLR │ 85 │ 3,200 Ltr │ 150 │ 25 │ 6,32,400 ││ │
+│ │ │ HYD │ 72 │ 2,800 Ltr │ 200 │ 18 │ 5,48,600 ││ │
+│ │ │ BOM │ 65 │ 1,450 Ltr │ 100 │ 12 │ 4,30,780 ││ │
+│ │ └───────────┴──────┴───────────┴────────────┴───────────┴───────────┘│ │
+│ │ │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│ │
+│ ┌─────────────────────────────────────────────────────────────────────────┐ │
+│ │ CATEGORY WISE DISTRIBUTION │ │
+│ │ │ │
+│ │ Chemicals: 45% Sprayers: 25% Machines: 15% Traps: 10% Other: 5%│ │
+│ │ │ │
+│ │ [View Detailed Breakdown] │ │
+│ │ │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│ │
+└─────────────────────────────────────────────────────────────────────────────┘
+
 ```
 
 ---
 
-## Module 11 Dependencies & Integration
+## 11.9 RBAC Summary Matrix
 
-| Module        | Integration Point   | Usage                                              |
-| ------------- | ------------------- | -------------------------------------------------- |
-| **Module 9**  | Tax Management      | Auto-calculate GST on purchase and stock valuation |
-| **Module 10** | Product Master      | Pull product details, HSN, UOM, category           |
-| **Module 8**  | Employee Management | Asset assignment to employees                      |
-| **Module 7**  | Branch Management   | Branch-wise stock distribution and transfers       |
+| Feature | Head Ops | Branch Manager | Branch User | Warehouse Staff |
+|---------|----------|----------------|-------------|-----------------|
+| **Stock Dashboard** |
+| View All Branch Stocks | ✅ | Own branches only | Own branch only | Assigned warehouse |
+| View Central Stock | ✅ | ❌ | ❌ | ❌ |
+| View In-Transit | ✅ | Own branches | Own branch | Assigned transfers |
+| **Add Stock** |
+| Add to Central | ✅ | ❌ | ❌ | ❌ |
+| Receive & Allocate | ✅ (Any) | ✅ (Their branch) | ❌ | ✅ (Their warehouse) |
+| **Stock Requests** |
+| Create Request | ✅ (Central→Branch) | ✅ | ✅ | ❌ |
+| Approve Requests | ✅ (All) | ✅ (Their branch incoming) | ❌ | ❌ |
+| **Transfers** |
+| Initiate Transfer | ✅ (Any→Any) | ✅ (Their branch→Other) | ❌ | ❌ |
+| Dispatch | ✅ | ✅ (Their branch) | ❌ | ✅ |
+| Receive | ✅ | ✅ (Their branch) | ❌ | ✅ |
+| **Asset Management** |
+| Create Asset IDs | ✅ | ✅ (on receipt) | ❌ | ❌ |
+| Assign to Employees | ✅ | ✅ | ❌ | ❌ |
+| View Asset List | ✅ All | Own branches | Own branch | Assigned assets |
+| Transfer Assets | ✅ | ✅ | ❌ | ❌ |
+| Mark Maintenance | ✅ | ✅ | Own assigned | ❌ |
+| Mark Damaged/Lost | ✅ | ✅ | Own assigned | ❌ |
+| **Reports & Logs** |
+| View Activity Logs | ✅ All | Own branches | Own branch | Own warehouse |
+| Export Reports | ✅ All | Own branches | ❌ | ❌ |
+| View Valuation | ✅ | ✅ (Their branches) | ❌ | ❌ |
 
 ---
 
-## Critical Business Rules
+## 📊 COMPLETE WORKFLOW FLOWCHART
 
-| Rule                  | Description                                                                        |
-| --------------------- | ---------------------------------------------------------------------------------- |
-| **Stock Allocation**  | Assets + Consumable + Resell must always equal Total Quantity                      |
-| **Asset Uniqueness**  | Each asset unit must have a unique Asset ID                                        |
-| **No Negative Stock** | System prevents stock from going below zero at any location                        |
-| **Approval Required** | All stock requests require approval before dispatch                                |
-| **In-Transit Lock**   | In-transit stock is deducted from source and cannot be re-requested until received |
-| **Receipt Mandatory** | Transfer cannot close without receipt confirmation from destination                |
-| **Audit Trail**       | All stock movements are logged with user, timestamp, and branch metadata           |
-| **Expiry Tracking**   | Consumables with expiry dates alert before expiration                              |
+### **Module 11: Stock Management - System Workflow**
+
+```
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ MODULE 11: STOCK MANAGEMENT WORKFLOW │
+│ │
+│ ENTRY POINTS: │
+│ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ │
+│ │ Head Ops Login │ │ Branch Manager │ │ Branch User │ │
+│ │ (Module 1.2) │ │ (Module 1.6) │ │ (Module 1.6) │ │
+│ └────────┬────────┘ └────────┬────────┘ └────────┬────────┘ │
+│ │ │ │ │
+│ ▼ ▼ ▼ │
+│ ┌─────────────────────────────────────────────────────────────────────────┐ │
+│ │ STOCK DASHBOARD (11.1) │ │
+│ │ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ │ │
+│ │ │ Tab 1: All │ │ Tab 2: My │ │ Tab 3: Appr. │ │ │
+│ │ │ Products │ │ Requests │ │ & Receipts │ │ │
+│ │ └──────┬──────┘ └──────┬──────┘ └──────┬──────┘ │ │
+│ │ │ │ │ │ │
+│ │ ▼ ▼ ▼ │ │
+│ │ [View Stock] [Track Requests] [Approve/Receive] │ │
+│ │ [Request Stock] [Create Request] │ │
+│ │ [Transfer Stock] [Cancel Request] │ │
+│ │ [View History] │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│ │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ WORKFLOW 1: ADD STOCK TO CENTRAL (Head Ops) │
+│ │
+│ 11.2 Add Stock ──► Select "Add to Central" ──► 11.2.1 Add to Central │
+│ │ Stock Form │
+│ │ │ │
+│ │ ┌─────────────────────────────────────┘ │
+│ │ ▼ │
+│ │ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ │
+│ │ │ 1. Select │───►│ 2. Allocate │───►│ 3. Asset Details │ │
+│ │ │ Product │ │ Stock Types │ │ (If Assets > 0) │ │
+│ │ │ (From Module │ │ (Assets/ │ │ Generate IDs │ │
+│ │ │ 10) │ │ Consumable/ │ │ Set Assignment│ │
+│ │ └─────────────────┘ │ Resell) │ └────────┬────────┘ │
+│ │ └─────────────────┘ │ │
+│ │ ▼ │
+│ │ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ │
+│ └───►│ 4. Purchase & │───►│ 5. Initial │───►│ [SAVE] ──► │ │
+│ │ Tax Details │ │ Allocation │ │ Stock Added │ │
+│ │ (Uses Module │ │ (Optional │ │ Assets Created │ │
+│ │ 9 for tax) │ │ Branch │ │ Notifications │ │
+│ └─────────────────┘ │ Transfer) │ │ Activity Log │ │
+│ └─────────────────┘ └─────────────────┘ │
+│ │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ WORKFLOW 2: BRANCH REQUESTS STOCK │
+│ │
+│ Branch User/Manager ──► 11.3 Stock Request ──► Create Request │
+│ │ │ │
+│ │ ┌────────────────────────────────┘ │
+│ │ ▼ │
+│ │ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ │
+│ │ │ 1. Fill Header │───►│ 2. Add Items │───►│ 3. Review & │ │
+│ │ │ (Priority, │ │ (Products, │ │ Submit │ │
+│ │ │ Required By)│ │ Type Split, │ │ │ │
+│ │ └─────────────────┘ │ Quantities) │ └────────┬────────┘ │
+│ │ └─────────────────┘ │ │
+│ │ ▼ │
+│ │ ┌─────────────────┐ │
+│ │ │ Request Sent to │ │
+│ │ │ Head Ops │ │
+│ │ │ (Status: Pending)│ │
+│ │ └────────┬────────┘ │
+│ │ │ │
+│ │ ┌────────────────────────────────────────────────────────┘ │
+│ │ ▼ │
+│ └─► Head Ops ──► 11.4 Approval Form ──► Review & Validate Stock │
+│ Availability │
+│ │ │
+│ ┌──────────────┼──────────────┐ │
+│ ▼ ▼ ▼ │
+│ ┌─────────┐ ┌─────────┐ ┌─────────┐ │
+│ │ APPROVE │ │ PARTIAL │ │ REJECT │ │
+│ │ (Full) │ │(Approve │ │ │ │
+│ └────┬────┘ │ partial, │ └────┬────┘ │
+│ │ │ transfer │ │ │
+│ │ │ rest) │ │ │
+│ │ └────┬────┘ │ │
+│ │ │ │ │
+│ └─────────────┴───────────────┘ │
+│ │ │
+│ ▼ │
+│ ┌─────────────────────────┐ │
+│ │ Generate Transfer/ │ │
+│ │ Dispatch Order │ │
+│ │ (11.5.2 Dispatch) │ │
+│ └────────────┬────────────┘ │
+│ │ │
+│ ▼ │
+│ ┌─────────────────────────┐ │
+│ │ Branch Receives │ │
+│ │ (11.2.2 or 11.5.3) │ │
+│ │ • Verify quantities │ │
+│ │ • Allocate stock types │ │
+│ │ • Assign assets │ │
+│ │ • Confirm receipt │ │
+│ └─────────────────────────┘ │
+│ │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ WORKFLOW 3: BRANCH TRANSFER (Emergency/Planned) │
+│ │
+│ Head Ops/Branch Manager ──► 11.5 Branch Transfer ──► 11.5.1 Initiate │
+│ │ │ │
+│ │ ┌──────────────────────────────────────────┘ │
+│ │ ▼ │
+│ │ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐│
+│ │ │ 1. Select From/ │───►│ 2. Select │───►│ 3. Select ││
+│ │ │ To Branches │ │ Products & │ │ Assets (if ││
+│ │ │ Transfer Type │ │ Quantities │ │ applicable) ││
+│ │ └─────────────────┘ └─────────────────┘ └────────┬────────┘│
+│ │ │ │
+│ │ ┌────────────────────────────────────────────────────────┘ │
+│ │ ▼ │
+│ └───► 11.5.2 Dispatch ──► Source Branch Dispatches │
+│ • Reduce stock immediately │
+│ • Mark assets "In Transit" │
+│ • Generate LR/Tracking │
+│ │ │
+│ ▼ │
+│ 11.5.3 Receive ──► Destination Receives │
+│ • Verify condition │
+│ • Confirm quantities │
+│ • Assign assets │
+│ • Update stock │
+│ │ │
+│ ▼ │
+│ ┌─────────────────┐ │
+│ │ Transfer Complete │ │
+│ │ Activity Logged │ │
+│ │ Both Notified │ │
+│ └─────────────────┘ │
+│ │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ WORKFLOW 4: ASSET LIFECYCLE MANAGEMENT │
+│ │
+│ Asset Created (11.2.1) ──► Central Pool │
+│ │ │
+│ ▼ │
+│ Transfer to Branch (11.5) ──► Branch Pool │
+│ │ │
+│ ▼ │
+│ Assign to Employee ──► Active Use ──► [Reassign] [Transfer] [Maintenance] │
+│ │ [Mark Damaged] [Mark Lost] [Return] │
+│ │ │
+│ ▼ │
+│ Asset Returned ──► Branch Pool ──► [Reassign] [Transfer to Other Branch] │
+│ │ │
+│ ▼ │
+│ Mark Damaged ──► Repair/Retire ──► [Repair] [Retire] [Dispose] │
+│ │ │
+│ ▼ │
+│ Asset Retired ──► Archive Record │
+│ │
+│ All states viewable in: 11.6 Product Detail ──► Tab 2: Assets List │
+│ 11.7.1 Individual Asset Detail View │
+│ │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+```
+
+---
+
+## 📋 MODULE 11 NAVIGATION STRUCTURE
+
+```
+
+MODULE 11: STOCK MANAGEMENT
+│
+├── 11.1 Stock Dashboard
+│ ├── Tab 1: All Products (Stock overview with type breakdown)
+│ ├── Tab 2: My Requests (Track requests & transfers)
+│ └── Tab 3: Approvals & Receipts (Action pending items)
+│
+├── 11.2 Add Stock (Multi-mode)
+│ ├── 11.2.1 Add to Central Stock (Head Ops)
+│ └── 11.2.2 Receive & Allocate (Branch Manager)
+│
+├── 11.3 Stock Request (Branch → Central)
+│
+├── 11.4 Approval Form (Review & decision)
+│
+├── 11.5 Branch Transfer
+│ ├── 11.5.1 Initiate Transfer
+│ ├── 11.5.2 Dispatch (Source)
+│ └── 11.5.3 Receive (Destination)
+│
+├── 11.6 Product Detail View
+│ ├── Tab 1: Stock Overview (Branch-wise)
+│ ├── Tab 2: Assets List (Individual tracking)
+│ ├── Tab 3: Activity Log (All movements)
+│ └── Tab 4: Transfer History
+│
+├── 11.7 Asset Management
+│ └── 11.7.1 Individual Asset Detail View
+│
+└── 11.8 Stock Reports & Analytics
+└── 11.8.1 Stock Summary Report
+
+```
+
+---
+
+## 🔗 MODULE INTEGRATION MAP
+
+| Module | Connection Type | Description |
+|--------|----------------|-------------|
+| **Module 9 (Tax)** | Prerequisite | Tax rates auto-populate in purchase forms |
+| **Module 10 (Product)** | Prerequisite | Product Master provides SKUs, HSN codes, UOMs |
+| **Module 7 (Branch)** | Used By | Branch list for transfers and allocations |
+| **Module 8 (Employee)** | Used By | Employee list for asset assignments |
+| **Module 5 (Roles)** | Used By | RBAC controls access to stock functions |
+| **Billing Module** | Consumer | Resell stock used for invoicing |
+| **Service Module** | Consumer | Consumable stock used for service delivery |
+```
