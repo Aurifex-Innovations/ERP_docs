@@ -4628,7 +4628,7 @@ Here is the **improved 10.4 View Product screen** with **Audit Information added
 
 # 10.4 View Product
 
-```id="view_product_layout"
+```
 ┌────────────────────────────────────────────────────────────────┐
 │                         VIEW PRODUCT                            │
 │                                                                │
