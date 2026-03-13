@@ -12,11 +12,24 @@ Comprehensive stock management system that handles inventory operations across m
 
 ---
 
-## 11.1 Stock Dashboard – Table View
+-The screen contains three tabs:
 
-**Description:** Unified stock view showing product-wise quantities across accessible branches with type-wise breakdown and filtering. Provides real-time visibility into stock levels, in-transit items, reserved quantities, and asset assignments.
+->View Entries
 
-### Screen Layout
+->My Requests
+
+->Received Requests
+
+Each tab provides a different view for managing stock and request workflows.
+
+# 11.1 Tab 1:Stock Dashboard – Table View
+
+**Description:**
+A unified stock view displaying product-wise quantities across accessible branches with category and stock-type filtering. The dashboard provides real-time visibility into total stock levels, in-transit items, reserved quantities, and asset assignments.
+
+---
+
+# Screen Layout
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -35,26 +48,25 @@ Comprehensive stock management system that handles inventory operations across m
 │  │ Search: [____________________] (Product Code / Name / HSN / Asset ID) │  │
 │  │                                                                        │  │
 │  │ [Reset Filters]                                    [+ ADD STOCK]       │  │
-│  │                                                                        │  │
 │  └───────────────────────────────────────────────────────────────────────┘  │
 │                                                                              │
 │  STOCK OVERVIEW TABLE                                                        │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │Img│Product Code│Product Name│Category│Brand│HSN│Assets│Cons.│Resell│My  │ │
-│  │   │            │            │        │     │   │Qty   │Qty  │Qty   │Br. │ │
-│  │───┼────────────┼────────────┼────────┼─────┼───┼──────┼─────┼──────┼────│ │
-│  │📷 │BSP3-001    │Brass Sprayr│Sprayer │Agro │842│ 5    │ 15  │ 0    │ 8  │ │
-│  │📷 │CH-3808-001 │Chemical X  │Chemical│ABC  │380│ 0    │ 50  │ 20   │ 30 │ │
-│  │📷 │RBS-001     │Rodent Box  │Trap    │Pest │732│ 10   │ 25  │ 0    │ 12 │ │
+│  │Img│Product Code│Product Name│Category│Brand│HSN│Assets│Cons.│Resell│Tot │ │
+│  │   │            │            │        │     │   │Qty   │Qty  │Qty   │Stock│ │
+│  │───┼────────────┼────────────┼────────┼─────┼───┼──────┼─────┼──────┼─────│ │
+│  │📷 │BSP3-001    │Brass Sprayr│Sprayer │Agro │842│ 5    │ 15  │ 0    │ 20 │ │
+│  │📷 │CH-3808-001 │Chemical X  │Chemical│ABC  │380│ 0    │ 50  │ 20   │ 70 │ │
+│  │📷 │RBS-001     │Rodent Box  │Trap    │Pest │732│ 10   │ 25  │ 0    │ 35 │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
-│  │Other│Central│In-Transit│Reserved│Available│Base│Status│Actions           ││
-│  │Br.  │Stock  │Qty       │Qty     │to Req.  │UOM │      │                  ││
-│  │─────┼───────┼──────────┼────────┼─────────┼────┼──────┼──────────────────││
-│  │ 12  │ 20    │ 2        │ 5      │ 13      │Nos │🟢    │[View][Req][Trans]││
-│  │ 40  │ 100   │ 0        │ 10     │ 90      │Ltr │🟡    │[View][Req][Trans]││
-│  │ 15  │ 30    │ 5        │ 0      │ 25      │Nos │🟢    │[View][Req][Trans]││
+│  │In-Transit│Reserved│Base UOM│Status│Actions                               ││
+│  │Qty       │Qty     │        │      │                                      ││
+│  │──────────┼────────┼────────┼──────┼──────────────────────────────────────││
+│  │2         │5       │Nos     │🟢    │[View] [Edit] [Delete]                 ││
+│  │0         │10      │Ltr     │🟡    │[View] [Edit] [Delete]                 ││
+│  │5         │0       │Nos     │🟢    │[View] [Edit] [Delete]                 ││
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
 │  Pagination:  Previous   1   2   3   ...   10   Next                         │
@@ -64,216 +76,279 @@ Comprehensive stock management system that handles inventory operations across m
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Table View Fields
+---
 
-| Field                    | Type            | Required | Description                                        |
-| ------------------------ | --------------- | -------- | -------------------------------------------------- |
-| Cover Image              | Image Thumbnail | Auto     | Product photo from Product Master                  |
-| Product Code             | Text            | Auto     | Unique SKU from Product Master                     |
-| Product Name             | Text            | Auto     | Full product name                                  |
-| Category                 | Text            | Auto     | Chemical / Sprayer / Machine / Trap / Tool / Other |
-| Company / Brand          | Text            | Auto     | Manufacturer name                                  |
-| HSN Code                 | Link            | Auto     | Clickable link to view tax details                 |
-| **Assets Qty**           | Number          | Auto     | Individual trackable units count                   |
-| **Consumable Qty**       | Number          | Auto     | Bulk usable stock quantity                         |
-| **Resell Qty**           | Number          | Auto     | Stock available for sale                           |
-| **My Branch Stock**      | Number          | Auto     | Total at user's primary branch                     |
-| **Other Branches Stock** | Number          | Auto     | Sum of other accessible branches                   |
-| **Central Stock**        | Number          | Auto     | Available at Head Office                           |
-| **In-Transit Qty**       | Number          | Auto     | Dispatched but not yet received                    |
-| **Reserved Qty**         | Number          | Auto     | Allocated to pending requests                      |
-| **Available to Request** | Number          | Auto     | Calculated: Central - Reserved - In-Transit        |
-| Base UOM                 | Text            | Auto     | Unit of measure from Product Master                |
-| Status                   | Badge           | Auto     | Available / Low / Out / Inactive                   |
-| Actions                  | Button Group    | —        | View / Request Stock / Transfer / History          |
+# Table View Fields
 
-### Visual Indicators
+| Field              | Type            | Required | Description                                            |
+| ------------------ | --------------- | -------- | ------------------------------------------------------ |
+| Cover Image        | Image Thumbnail | Auto     | Product photo from Product Master                      |
+| Product Code       | Text            | Auto     | Unique SKU from Product Master                         |
+| Product Name       | Text            | Auto     | Full product name                                      |
+| Category           | Text            | Auto     | Chemical / Sprayer / Machine / Trap / Tool / Other     |
+| Company / Brand    | Text            | Auto     | Manufacturer or brand name                             |
+| HSN Code           | Link            | Auto     | Clickable link to view tax details                     |
+| **Assets Qty**     | Number          | Auto     | Count of individually trackable asset units            |
+| **Consumable Qty** | Number          | Auto     | Quantity of consumable stock                           |
+| **Resell Qty**     | Number          | Auto     | Quantity available for resale                          |
+| **Total Stock**    | Number          | Auto     | Sum of Assets + Consumable + Resell                    |
+| **In-Transit Qty** | Number          | Auto     | Stock dispatched but not yet received                  |
+| **Reserved Qty**   | Number          | Auto     | Quantity reserved for pending requests                 |
+| Base UOM           | Text            | Auto     | Unit of measure from Product Master                    |
+| Status             | Badge           | Auto     | Available,Low Stock,Out of Stock,Inactive,Discontinued |
+| Actions            | Button Group    | —        | View / Edit / Delete                                   |
 
-| Indicator | Meaning                      | Color  |
-| --------- | ---------------------------- | ------ |
-| 🟢        | Stock healthy (> Min Level)  | Green  |
-| 🟡        | Low stock (≤ Min Level)      | Yellow |
-| 🔴        | Out of stock (= 0)           | Red    |
-| 📦        | In-transit to branch         | Blue   |
-| ⏳        | Reserved for request         | Orange |
-| 🔧        | Assets assigned to employees | Purple |
+---
 
-### Actions (RBAC Based)
+# Actions
 
-| Action          | Head Ops            | Branch Manager          | Branch User           |
-| --------------- | ------------------- | ----------------------- | --------------------- |
-| View Details    | ✅                  | ✅                      | ✅                    |
-| Request Stock   | ✅ (Central→Branch) | ✅ (For their branch)   | ✅ (For their branch) |
-| Transfer Stock  | ✅ (Any→Any)        | ✅ (Their branch→Other) | ❌                    |
-| Add Stock       | ✅ (To Central)     | ✅ (Receive & Allocate) | ❌                    |
-| Edit Allocation | ✅                  | ✅ (Their branch only)  | ❌                    |
-| View History    | ✅ (All)            | ✅ (Their branches)     | ✅ (Their branch)     |
+| Action | Description                                    |
+| ------ | ---------------------------------------------- |
+| View   | Open detailed product stock view               |
+| Edit   | Modify stock details or allocations            |
+| Delete | Remove stock entry (based on permission rules) |
 
-### Filters
+---
+
+## Actions (Table Row)
+
+| Action     | Type   | Description                                          |
+| ---------- | ------ | ---------------------------------------------------- |
+| **View**   | Button | Opens stock details in read-only mode.               |
+| **Edit**   | Button | Allows authorized users to modify stock information. |
+| **Delete** | Button | Removes the stock record (permission based).         |
+
+---
+
+## Form Actions
+
+These actions open separate forms.
+**Detailed form structure will be defined in the upcoming modules.**
+
+| Action            | Description                                                                                 |
+| ----------------- | ------------------------------------------------------------------------------------------- |
+| **Add Stock**     | Opens the **Add Stock Form** to add inventory for a selected product.                       |
+| **Request Stock** | Opens the **Stock Request Form** to request stock from another branch or central warehouse. |
+
+---
+
+# Filters
 
 | Filter       | Type         | Options                                            |
 | ------------ | ------------ | -------------------------------------------------- |
 | Branch View  | Dropdown     | All My Branches / Central / BLR / HYD / BOM / etc. |
 | Category     | Multi-select | Chemical / Sprayer / Machine / Trap / Tool / Other |
 | Stock Type   | Multi-select | Assets / Consumable / Resell                       |
-| Status       | Multi-select | Available / Low / Out / Inactive                   |
-| HSN Code     | Search       | Numeric search                                     |
-| Has Assets   | Toggle       | Yes / No                                           |
-| Created Date | Date Range   | From - To                                          |
-
-### Search
-
-Searchable by: Product Code, Product Name, HSN Code, Asset ID (if asset tracking enabled)
+| Status       | Multi-select | Available / Low / Out / Inactive,Discontinued      |
+| Created Date | Date Range   | From – To                                          |
 
 ---
 
-## 11.1.1 Tab 2: My Requests
+# Search
 
-**Description:** Track all stock requests and transfer requests initiated by or assigned to the user. Provides complete visibility into request lifecycle from draft to receipt.
+Searchable by:
 
-### Screen Layout
+- Product Code
+- Product Name
+- HSN Code
+- Asset ID _(if asset tracking is enabled)_
 
-```
+---
+
+# 11.1.1 Tab 2: My Requests
+
+**Description:**
+Track all stock and transfer requests created by the user or related to the user's branch. This tab provides visibility into the request lifecycle from creation to final receipt.
+
+---
+
+# Screen Layout
+
+```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                           STOCK DASHBOARD                                    │
 │                                                                              │
-│  [Tab 1: All Products]  [Tab 2: My Requests]  [Tab 3: Approvals & Receipts]  │
+│  [Tab 1: All Products]  [Tab 2: My Requests]  [Tab 3: Received Requests]     │
 │                                                                              │
-│  Segmented Control: [All] [Draft] [Pending] [Approved] [In-Transit] [Received]│
-│                     [Rejected] [On Hold]                                      │
-│                                                                              │
-│  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │ Filters                                                                │  │
-│  │ Request Type: [☑ Stock Request ☑ Branch Transfer ☑ Asset Assignment]  │  │
-│  │ Direction: [☑ Inward ☑ Outward]                                       │  │
-│  │ Date Range: [📅 From] - [📅 To]                                        │  │
-│  │ Priority: [☑ Low ☑ Normal ☑ High ☑ Urgent]                            │  │
-│  │                                                                        │  │
-│  │ Search: [____________________] (Request ID / Product / Branch)        │  │
-│  │                                                                        │  │
-│  │ [Reset Filters]                                                        │  │
-│  └───────────────────────────────────────────────────────────────────────┘  │
+│  Status Filter: [All] [Pending] [Approved] [Rejected] [Dispatch]             │
+│                 [In Transit] [Received]                                      │
 │                                                                              │
 │  MY REQUESTS TABLE                                                           │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │Request ID  │Type │Direction│From│To │Items│Total│Assets│Status│Priority│Exp.│
-│  │            │     │         │    │   │Count│Qty  │Count │      │        │Date│
-│  │────────────┼─────┼─────────┼────┼───┼─────┼─────┼──────┼──────┼────────┼────│
-│  │SR-BLR-001  │Stock│Inward   │CEN │BLR│ 3   │ 25  │ 5    │Pend. │High    │18Jan│
-│  │TR-2024-056 │Trans│Inward   │HYD │BLR│ 2   │ 15  │ 3    │In-Tr │Normal  │20Jan│
-│  │TR-2024-042 │Trans│Outward  │BLR │BOM│ 1   │ 10  │ 0    │Pend. │Normal  │22Jan│
+│  │Request ID │Type │Direction│From│To │Items│Total│Assets│Status │Priority│ │
+│  │───────────┼─────┼─────────┼────┼───┼─────┼─────┼──────┼───────┼────────│ │
+│  │SR-BLR-001 │Stock│Inward   │CEN │BLR│ 3   │ 25  │ 5    │Pending│High    │ │
+│  │TR-2024-056│Tran │Inward   │HYD │BLR│ 2   │ 15  │ 3    │InTran │Normal  │ │
+│  │TR-2024-042│Tran │Outward  │BLR │BOM│ 1   │ 10  │ 0    │Approved│Normal │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
-│  │Requested By│Requested Date│Action                                        ││
-│  │────────────┼──────────────┼──────────────────────────────────────────────││
-│  │John Doe    │15 Jan 2024   │[View] [Cancel]                               ││
-│  │Jane Smith  │16 Jan 2024   │[View] [Receive]                              ││
-│  │John Doe    │17 Jan 2024   │[View] [Dispatch] [Cancel]                    ││
+│  │Requested By │Requested Date & Time │Action                               ││
+│  │─────────────┼──────────────────────┼────────────────────────────────────││
+│  │John Doe     │15 Jan 2024 10:45 AM  │[View]                               ││
+│  │Jane Smith   │16 Jan 2024 02:30 PM  │[View]                               ││
+│  │John Doe     │17 Jan 2024 09:15 AM  │[View]                               ││
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
-│  Pagination:  Previous   1   2   3   ...   10   Next                         │
+│  Pagination: Previous 1 2 3 ... 10 Next                                      │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Table Fields
+---
 
-| Field          | Type   | Description                                            |
-| -------------- | ------ | ------------------------------------------------------ |
-| Request ID     | Text   | SR-XXXX-XXXX (Stock Request) / TR-XXXX-XXXX (Transfer) |
-| Request Type   | Badge  | Stock Request / Branch Transfer / Asset Assignment     |
-| Direction      | Icon   | Inward / Outward indicator                             |
-| From           | Text   | Source location                                        |
-| To             | Text   | Destination location                                   |
-| Items Count    | Number | Product lines in request                               |
-| Total Qty      | Number | Units requested                                        |
-| Assets Count   | Number | Individual asset units (if applicable)                 |
-| Status         | Badge  | Current workflow stage                                 |
-| Priority       | Badge  | Low / Normal / High / Urgent                           |
-| Expected Date  | Date   | Promised delivery date                                 |
-| Requested By   | Text   | User who created request                               |
-| Requested Date | Date   | Creation timestamp                                     |
-| Action         | Button | Context-based actions                                  |
+# Table Fields
 
-### Request Types & Actions
-
-| Type             | Direction | Description                  | Action Buttons                       |
-| ---------------- | --------- | ---------------------------- | ------------------------------------ |
-| Stock Request    | Inward    | Branch → Head Office         | View / Cancel (if pending) / Receive |
-| Transfer Request | Inward    | Other Branch → My Branch     | View / Receive / Report Issue        |
-| Transfer Request | Outward   | My Branch → Other Branch     | View / Dispatch / Cancel             |
-| Asset Assignment | Inward    | Stock → Employee (My Branch) | View / Acknowledge                   |
-| Asset Return     | Outward   | Employee → Stock             | View / Confirm Return                |
+| Field                 | Type     | Description                                                      |
+| --------------------- | -------- | ---------------------------------------------------------------- |
+| Request ID            | Text     | Unique request identifier (SR-XXXX / TR-XXXX format)             |
+| Request Type          | Badge    | Stock Request / Transfer Request / Asset Assignment              |
+| Direction             | Icon     | Indicates Inward or Outward request                              |
+| From                  | Text     | Source branch or warehouse                                       |
+| To                    | Text     | Destination branch                                               |
+| Items Count           | Number   | Number of product lines in the request                           |
+| Total Qty             | Number   | Total quantity requested                                         |
+| Assets Count          | Number   | Count of asset items (if applicable)                             |
+| Status                | Badge    | Pending / Approved / Rejected / Dispatch / In Transit / Received |
+| Priority              | Badge    | Low / Normal / High / Urgent                                     |
+| Requested By          | Text     | User+Role who created the request                                |
+| Requested Date & Time | DateTime | Request creation timestamp                                       |
+| Action                | Button   | View request details                                             |
 
 ---
 
-## 11.1.2 Tab 3: Approvals & Receipts
+# Request Types
 
-**Description:** For Branch Managers and Head Ops to approve incoming requests and confirm receipts. Provides validation indicators for stock availability.
+| Type             | Direction | Description                                         |
+| ---------------- | --------- | --------------------------------------------------- |
+| Stock Request    | Inward    | Request stock from Head Office or central warehouse |
+| Transfer Request | Inward    | Stock transferred from another branch               |
+| Transfer Request | Outward   | Stock transferred to another branch                 |
+| Asset Assignment | Inward    | Assign asset from stock to employee                 |
+| Asset Return     | Outward   | Employee returns asset back to stock                |
 
-### Screen Layout
+---
 
-```
+# Status Options
+
+| Status     | Description                              |
+| ---------- | ---------------------------------------- |
+| Pending    | Request created and awaiting approval    |
+| Approved   | Request approved for processing          |
+| Rejected   | Request rejected by approver             |
+| Dispatch   | Stock prepared and dispatched            |
+| In Transit | Stock currently moving between locations |
+| Received   | Stock received and confirmed             |
+
+---
+
+# Filters
+
+| Filter       | Type         | Options                                             |
+| ------------ | ------------ | --------------------------------------------------- |
+| Request Type | Multi Select | Stock Request / Transfer Request / Asset Assignment |
+| Direction    | Multi Select | Inward / Outward                                    |
+| Priority     | Multi Select | Low / Normal / High / Urgent                        |
+| Date Range   | Date Range   | From – To                                           |
+
+---
+
+# Search
+
+Searchable by:
+
+- Request ID
+- Product Name
+- Source Branch
+- Destination Branch
+
+---
+
+# 11.1.2 Tab 3: Received Requests
+
+**Description:**
+For **Branch Managers and Head Operations** to review incoming requests, approve stock transfers, and confirm stock receipt. This tab provides validation indicators for stock availability before approval or receipt confirmation.
+
+---
+
+# Screen Layout
+
+```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                           STOCK DASHBOARD                                    │
 │                                                                              │
-│  [Tab 1: All Products]  [Tab 2: My Requests]  [Tab 3: Approvals & Receipts]  │
+│  [Tab 1: All Products]  [Tab 2: My Requests]  [Tab 3: Received Requests]     │
 │                                                                              │
-│  Segmented Control: [Pending Approval] [Pending Receipt] [Completed Today] [All History]│
+│  Segmented Control: [Pending Approval] [Pending Receipt] [Completed Today]   │
+│                     [All History]                                            │
 │                                                                              │
-│  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │ Filters                                                                │  │
-│  │ Type: [☑ Request for Approval ☑ Receipt Confirmation]                 │  │
-│  │ From Branch: [▼ Dropdown ▼]     To Branch: [▼ Dropdown ▼]             │  │
-│  │ Requested By: [🔍 Search ▼]     Date Range: [📅 From] - [📅 To]       │  │
-│  │                                                                        │  │
-│  │ [Reset Filters]                                                        │  │
-│  └───────────────────────────────────────────────────────────────────────┘  │
-│                                                                              │
-│  APPROVALS & RECEIPTS TABLE                                                  │
+│  RECEIVED REQUESTS TABLE                                                     │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │Request ID  │Type│From│To │Items│Total Value│Requested By│Validation│Action│
-│  │            │    │    │   │     │(₹)        │            │          │      │
-│  │────────────┼────┼────┼───┼─────┼───────────┼────────────┼──────────┼──────│
-│  │SR-BLR-001  │Appr│BLR │CEN│ 3   │ ₹45,000   │John Doe    │✅ Avail. │Approve│
-│  │SR-HYD-002  │Appr│HYD │CEN│ 2   │ ₹28,500   │Jane Smith  │⚠️ Partial│Approve│
-│  │TR-2024-056 │Rcpt│CEN │BLR│ 2   │ ₹32,000   │Rajesh K.   │⏳ Pending│Receive│
+│  │Request ID │Type│From│To │Items│Total Value│Requested By│Validation│Action│ │
+│  │───────────┼────┼────┼───┼─────┼───────────┼────────────┼──────────┼──────│ │
+│  │SR-BLR-001 │Appr│BLR │CEN│ 3   │ ₹45,000   │John Doe    │✅ Avail. │View  │ │
+│  │SR-HYD-002 │Appr│HYD │CEN│ 2   │ ₹28,500   │Jane Smith  │⚠️ Partial│View  │ │
+│  │TR-2024-056│Rcpt│CEN │BLR│ 2   │ ₹32,000   │Rajesh K.   │⏳ Pending│View  │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
-│  │Request Date│Expected Date│Reviewed By│Review Date│Status                ││
-│  │────────────┼─────────────┼───────────┼───────────┼──────────────────────││
-│  │15 Jan 2024 │18 Jan 2024  │—          │—          │Pending Approval      ││
-│  │16 Jan 2024 │19 Jan 2024  │—          │—          │Pending Approval      ││
-│  │16 Jan 2024 │20 Jan 2024  │—          │—          │In-Transit            ││
+│  │Request Date & Time│Expected Date│Reviewed By│Review Date & Time│Status   ││
+│  │───────────────────┼─────────────┼───────────┼──────────────────┼────────││
+│  │15 Jan 2024 10:30  │18 Jan 2024  │—          │—                 │Pending ││
+│  │16 Jan 2024 11:15  │19 Jan 2024  │—          │—                 │Pending ││
+│  │16 Jan 2024 09:50  │20 Jan 2024  │—          │—                 │InTran  ││
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
-│  Pagination:  Previous   1   2   3   ...   10   Next                         │
+│  Pagination: Previous 1 2 3 ... 10 Next                                      │
 │                                                                              │
 │  Validation Legend: ✅ Available  ⚠️ Partial  ❌ Insufficient  ⏳ Pending     │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Table Fields
+---
 
-| Field           | Type     | Description                                              |
-| --------------- | -------- | -------------------------------------------------------- |
-| Request ID      | Text     | SR-XXXX-XXXX / TR-XXXX-XXXX                              |
-| Type            | Badge    | Request for Approval / Receipt Confirmation              |
-| From            | Text     | Requesting party                                         |
-| To              | Text     | Receiving party (your branch/central)                    |
-| Items           | Number   | Product count                                            |
-| Total Value (₹) | Currency | With tax included                                        |
-| Requested By    | Text     | User + Date                                              |
-| Validation      | Icon     | ✅ Available / ⚠️ Partial / ❌ Insufficient / ⏳ Pending |
-| Request Date    | Date     | Original request date                                    |
-| Expected Date   | Date     | Promised delivery                                        |
-| Reviewed By     | Text     | Approver name (if any)                                   |
-| Review Date     | Date     | Approval/review timestamp                                |
-| Status          | Badge    | Current state                                            |
-| Action          | Button   | Approve / Reject / Hold / Receive                        |
+# Table Fields
+
+| Field                 | Type     | Description                                                      |
+| --------------------- | -------- | ---------------------------------------------------------------- |
+| Request ID            | Text     | Unique identifier (SR-XXXX / TR-XXXX format)                     |
+| Request Type          | Badge    | Stock Request / Transfer Request / Asset Assignment              |
+| From                  | Text     | Requesting branch or location                                    |
+| To                    | Text     | Receiving branch or central warehouse                            |
+| Items                 | Number   | Number of products included in the request                       |
+| Total Value (₹)       | Currency | Total value of requested items including tax                     |
+| Requested By          | Text     | User and role who created the request                            |
+| Valid stock           | Icon     | ✅ Available / ⚠️ Partial / ❌ Insufficient / ⏳ Pending         |
+| Requested Date & Time | DateTime | Original request creation timestamp                              |
+| Expected Date         | Date     | Expected delivery or receipt date                                |
+| Reviewed By           | Text     | Name of approving authority                                      |
+| Review Date & Time    | DateTime | Timestamp when the request was reviewed                          |
+| Status                | Badge    | Pending / Approved / Rejected / Dispatch / In Transit / Received |
+| Action                | Button   | View / Edit (permission based)                                   |
+
+---
+
+# Filters
+
+| Filter       | Type         | Options                                     |
+| ------------ | ------------ | ------------------------------------------- |
+| Request Type | Multi Select | Request for Approval / Receipt Confirmation |
+| From Branch  | Dropdown     | List of available branches                  |
+| To Branch    | Dropdown     | Destination branch or central warehouse     |
+| Date Range   | Date Range   | From – To                                   |
+
+---
+
+# Search
+
+Searchable by:
+
+- Request ID
+- Product Name
+- Requesting Branch
+- Destination Branch
+- Requested By
 
 ---
 
@@ -419,25 +494,51 @@ Searchable by: Product Code, Product Name, HSN Code, Asset ID (if asset tracking
 
 #### Section 2: Stock Type Allocation Fields
 
-| Field                   | Type   | Required | Validation                |
-| ----------------------- | ------ | -------- | ------------------------- |
-| Total Quantity Received | Number | Yes      | Must be > 0               |
-| Assets Qty              | Number | No       | ≥ 0, sum must equal Total |
-| Consumable Qty          | Number | No       | ≥ 0, sum must equal Total |
-| Resell Qty              | Number | No       | ≥ 0, sum must equal Total |
+| Field                   | Type     | Required | Validation                   |
+| ----------------------- | -------- | -------- | ---------------------------- |
+| Total Quantity Received | Number   | Yes      | Must be > 0                  |
+| Select Type:            | Checkbox | Yes      | Assets / Consumable / Resell |
+| Assets Qty              | Number   | No       | ≥ 0, sum must equal Total    |
+| Consumable Qty          | Number   | No       | ≥ 0, sum must equal Total    |
+| Resell Qty              | Number   | No       | ≥ 0, sum must equal Total    |
 
 > **Validation Rule:** Assets Qty + Consumable Qty + Resell Qty = Total Quantity Received
 
-#### Section 3: Asset Details Fields (Conditional)
+---
 
-| Field               | Type     | Required            | Validation                          |
-| ------------------- | -------- | ------------------- | ----------------------------------- |
-| Asset ID Generation | Radio    | Yes (if Assets > 0) | Auto / Manual                       |
-| Asset ID Prefix     | Text     | Yes (if Auto)       | Alphanumeric, 2–10 chars            |
-| Starting Sequence   | Number   | Yes (if Auto)       | Numeric, 4–6 digits                 |
-| Asset ID Preview    | Auto     | System              | Read-only preview                   |
-| Default Assignment  | Dropdown | Yes (if Assets > 0) | Central Warehouse / Specific Branch |
-| Assignment Type     | Dropdown | Yes (if Assets > 0) | Branch Pool / Direct to Employee    |
+#### Section 3: Asset Details Fields _(Conditional – Visible only if **Assets Qty > 0**)_
+
+| Field               | Type     | Required            | Validation / Options                           |
+| ------------------- | -------- | ------------------- | ---------------------------------------------- |
+| Asset ID Generation | Radio    | Yes (if Assets > 0) | Auto / Manual                                  |
+| Assignment Type     | Dropdown | Yes (if Assets > 0) | Branch Pool / Direct to Employee               |
+| Default Assignment  | Dropdown | Conditional         | Central Warehouse / Specific Branch            |
+| Branch              | Dropdown | Conditional         | Select branch (required if Direct to Employee) |
+| Role                | Dropdown | Conditional         | Employee role in selected branch               |
+| Person              | Dropdown | Conditional         | Select employee                                |
+
+---
+
+### Field Logic
+
+| Assignment Type        | Visible Fields       | Description                                                                     |
+| ---------------------- | -------------------- | ------------------------------------------------------------------------------- |
+| **Branch Pool**        | Default Assignment   | Assets are assigned to a branch pool (Central Warehouse or Specific Branch).    |
+| **Direct to Employee** | Branch, Role, Person | Assets are directly assigned to a specific employee within the selected branch. |
+
+---
+
+### Conditional Behavior
+
+- If **Assignment Type = Branch Pool**
+  - Show **Default Assignment**
+  - Hide **Branch, Role, Person**
+
+- If **Assignment Type = Direct to Employee**
+  - Show **Branch → Role → Person selection**
+  - Hide **Default Assignment**
+
+---
 
 #### Section 4: Purchase & Tax Details Fields
 
@@ -450,19 +551,21 @@ Searchable by: Product Code, Product Name, HSN Code, Asset ID (if asset tracking
 | Invoice Amount (₹) | Currency        | Yes         | Numeric, > 0, max 2 decimals                 |
 | Tax Amount (₹)     | Auto            | System      | Calculated from HSN code rates               |
 | Total with Tax (₹) | Auto            | System      | Invoice Amount + Tax Amount                  |
-| Invoice Copy       | File Upload     | Yes         | PDF/JPG/PNG, max 5MB                         |
+| Invoice Copy       | File Upload     | No          | PDF/JPG/PNG, max 5MB                         |
 | Batch Number       | Text            | Conditional | Required for consumables, max 50 chars       |
 | Manufacturing Date | Date            | Conditional | Required for consumables                     |
 | Expiry Date        | Date            | Conditional | Required for consumables, must be > Mfg Date |
 
 #### Section 5: Initial Allocation Fields
 
-| Field                        | Type         | Required    | Validation                               |
-| ---------------------------- | ------------ | ----------- | ---------------------------------------- |
-| Immediate Transfer to Branch | Multi-select | No          | Select from active branches              |
-| [Branch] Qty                 | Number       | Conditional | Required if branch selected, sum ≤ Total |
+| Field                         | Type            | Description           |
+| ----------------------------- | --------------- | --------------------- |
+| Immediate Transfer to Branchs | Multi-select    | Distribute on receipt |
+| Branch1 Qty                   | Number          | If selected           |
+| Branch2 Qty                   | Number          | If selected           |
+| Remain at Central             | Auto-calculated | Balance               |
 
----
+## \*all non required fields are optional
 
 ### 11.2.2 Mode: Receive & Allocate (Branch Manager)
 
