@@ -2493,6 +2493,7 @@ From Branch ≠ To Branch
 
 # Workflow of Stock :
 
+```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
 │ MODULE 11: STOCK MANAGEMENT │
 │ ─── PURE DATA FLOW ─── │
@@ -2637,6 +2638,7 @@ PHASE 5: BRANCH TRANSFER (Direct)
 │ (Same as │──────────▶│ (Same as │
 │ Phase 3) │ │ Phase 4) │
 └─────────────┘ └─────────────┘
+```
 
 ---
 
