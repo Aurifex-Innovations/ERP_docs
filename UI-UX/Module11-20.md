@@ -2329,19 +2329,345 @@ Every request records:
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-#### Fields
+## Section 1: Transfer Details
 
-| Field             | Type            | Required    | Validation                      |
-| ----------------- | --------------- | ----------- | ------------------------------- |
-| Transfer ID       | Auto-generated  | System      | TR-YYYY-SEQ format              |
-| From Branch       | Dropdown        | Yes         | User's accessible branches      |
-| To Branch         | Dropdown        | Yes         | ≠ From Branch                   |
-| Transfer Type     | Dropdown        | Yes         | Emergency / Regular / Scheduled |
-| Reference Request | Link            | No          | If triggered from approval      |
-| Product           | Search Dropdown | Yes         | Active products with stock      |
-| Transfer Assets   | Number          | No          | ≤ Available Assets              |
-| Transfer Cons.    | Number          | No          | ≤ Available Consumable          |
-| Transfer Resell   | Number          | No          | ≤ Available Resell              |
-| Asset Selection   | Multi-select    | Conditional | Required if Transfer Assets > 0 |
+| Field             | Type           | Required | Dropdown Options                              | Validation                   | Description                    |
+| ----------------- | -------------- | -------- | --------------------------------------------- | ---------------------------- | ------------------------------ |
+| Transfer ID       | Auto Generated | System   | —                                             | Format `TR-YYYY-SEQ`         | Unique identifier for transfer |
+| From Branch       | Dropdown       | Yes      | List of branches accessible to logged-in user | Must have available stock    | Source branch                  |
+| To Branch         | Dropdown       | Yes      | All active branches                           | Cannot equal **From Branch** | Destination branch             |
+| Transfer Type     | Dropdown       | Yes      | Regular / Emergency / Scheduled               | Must select one              | Priority of transfer           |
+| Reference Request | Link Selector  | No       | Approved Request IDs                          | Must exist in system         | Linked stock request           |
+| Transfer Date     | Date           | Auto     | System date                                   | Read-only                    | Transfer creation date         |
+| Created By        | User           | Auto     | Logged-in user                                | Read-only                    | Transfer creator               |
 
 ---
+
+# Section 2: Product Selection
+
+This section appears when **Add Product** is clicked.
+
+| Field                 | Type            | Required | Validation           | Description                 |
+| --------------------- | --------------- | -------- | -------------------- | --------------------------- |
+| Product               | Search Dropdown | Yes      | Only active products | Product to transfer         |
+| From Branch Stock     | Number          | Auto     | Read-only            | Total available stock       |
+| Assets Available      | Number          | Auto     | Read-only            | Total assets available      |
+| Consumables Available | Number          | Auto     | Read-only            | Total consumables available |
+| Resell Available      | Number          | Auto     | Read-only            | Total resell stock          |
+
+---
+
+# Section 3: Transfer Quantity Allocation
+
+| Field                   | Type            | Required    | Validation                     | Description                  |
+| ----------------------- | --------------- | ----------- | ------------------------------ | ---------------------------- |
+| Transfer Assets Qty     | Number          | Conditional | ≤ Assets Available             | Number of assets to transfer |
+| Transfer Consumable Qty | Number          | Conditional | ≤ Consumables Available        | Quantity of consumables      |
+| Transfer Resell Qty     | Number          | Conditional | ≤ Resell Available             | Quantity of resale items     |
+| Total Transfer Qty      | Auto Calculated | System      | Sum of all transfer quantities | Total transfer quantity      |
+
+### Validation Rules
+
+1.
+
+```
+Transfer Assets ≤ Assets Available
+```
+
+2.
+
+```
+Transfer Consumable ≤ Consumable Available
+```
+
+3.
+
+```
+Transfer Resell ≤ Resell Available
+```
+
+4.
+
+At least **one quantity must be > 0**
+
+```
+Transfer Assets + Transfer Consumable + Transfer Resell > 0
+```
+
+---
+
+# Section 4: Asset Selection (Visible when Assets > 0)
+
+When **Transfer Assets Qty > 0**, the system loads all available assets.
+
+| Field              | Type     | Required | Dropdown Options                                           | Validation                                   | Description                     |
+| ------------------ | -------- | -------- | ---------------------------------------------------------- | -------------------------------------------- | ------------------------------- |
+| Select Asset       | Checkbox | Yes      | —                                                          | Must select equal to **Transfer Assets Qty** | Asset selection                 |
+| Asset ID           | Text     | Auto     | —                                                          | Read-only                                    | Unique asset identifier         |
+| Current Assignment | Text     | Auto     | Branch Pool / Employee Name                                | Read-only                                    | Current holder                  |
+| Condition          | Dropdown | Yes      | Good / Repair Needed / Damaged                             | Must select                                  | Asset condition before transfer |
+| Transfer With      | Dropdown | Yes      | Reassign at Destination / Assign to Employee / Branch Pool | Must select                                  | Asset handling rule             |
+
+---
+
+# Transfer With Options
+
+| Option                  | Description                                                  |
+| ----------------------- | ------------------------------------------------------------ |
+| Reassign at Destination | Asset will be available for assignment at destination branch |
+| Assign to Employee      | Asset directly assigned to an employee at destination        |
+| Branch Pool             | Asset added to destination branch inventory                  |
+
+---
+
+# Section 5: Destination Employee Assignment (Conditional)
+
+Visible when **Transfer With = Assign to Employee**
+
+| Field      | Type     | Required | Validation                        | Description              |
+| ---------- | -------- | -------- | --------------------------------- | ------------------------ |
+| Employee   | Dropdown | Yes      | Must belong to destination branch | Employee receiving asset |
+| Department | Auto     | Auto     | Pulled from employee record       | Employee department      |
+| Notes      | Text     | Optional | Max 200 chars                     | Additional information   |
+
+---
+
+# Section 6: Product Table (Final Transfer Summary)
+
+| Field                | Type   | Description                         |
+| -------------------- | ------ | ----------------------------------- |
+| Product Code         | Text   | Product identifier                  |
+| Transfer Assets      | Number | Total assets being transferred      |
+| Transfer Consumables | Number | Total consumables being transferred |
+| Transfer Resell      | Number | Total resell items                  |
+| Selected Assets      | Number | Number of selected assets           |
+
+---
+
+# System Validations
+
+### Stock Validation
+
+Before submission:
+
+```
+Source Branch Stock ≥ Total Transfer Quantity
+```
+
+---
+
+### Asset Selection Validation
+
+```
+Selected Assets Count = Transfer Assets Qty
+```
+
+If mismatch:
+
+```
+Error: Please select the correct number of assets.
+```
+
+---
+
+### Branch Validation
+
+```
+From Branch ≠ To Branch
+```
+
+---
+
+# Actions
+
+| Action                 | Description                   |
+| ---------------------- | ----------------------------- |
+| Add Product            | Add new product row           |
+| Remove Product         | Remove product from transfer  |
+| Next: Dispatch Details | Moves to shipment information |
+| Cancel                 | Cancel transfer creation      |
+
+---
+
+---
+
+# Workflow of Stock :
+
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│ MODULE 11: STOCK MANAGEMENT │
+│ ─── PURE DATA FLOW ─── │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+PHASE 1: CENTRAL PROCUREMENT (Head Operations Only)
+┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+│ Product Master │────▶│ Add to Central │────▶│ Asset ID Gen │
+│ (Module 10) │ │ Stock Form │ │ (Auto/Manual) │
+└─────────────────┘ └─────────────────┘ └────────┬────────┘
+│
+┌────────────────────────┘
+▼
+┌─────────────────┐
+│ 3-Way Split: │
+│ • Assets (tracked)│
+│ • Consumables │
+│ • Resell │
+└────────┬────────┘
+│
+┌───────────────────┼───────────────────┐
+▼ ▼ ▼
+┌─────────┐ ┌─────────┐ ┌─────────┐
+│ Asset │ │Consumable│ │ Resell │
+│ Table │ │ Stock │ │ Stock │
+│(Individual│ │ (Bulk) │ │(For Sale)│
+│ IDs) │ │ │ │ │
+└────┬────┘ └────┬────┘ └────┬────┘
+│ │ │
+└──────────────────┼───────────────────┘
+▼
+┌─────────────────┐
+│ Central Warehouse│
+│ (CEN) │
+└────────┬────────┘
+│
+PHASE 2: REQUEST & APPROVAL FLOW ┌─────────────────┐
+│ Tax Management │
+┌─────────────────┐ ┌─────────────────┐ │ (Module 9) │
+│ Branch User │────▶│ Stock Request │◄─────────│ HSN/Tax Calc │
+│ Creates Request│ │ (SR-XXX Form) │ └─────────────────┘
+└─────────────────┘ └────────┬────────┘
+│
+┌──────────┴──────────┐
+▼ ▼
+┌─────────────┐ ┌─────────────┐
+│ Save Draft │ │ Submit │
+│ (Invisible) │ │ Request │
+└─────────────┘ └──────┬──────┘
+│
+┌──────────┴──────────┐
+▼ ▼
+┌─────────────┐ ┌─────────────────────┐
+│ POPUP: │ │ Head Operations / │
+│ Select │──────▶│ Branch Manager │
+│ Recipients │ │ (Approval Queue) │
+└─────────────┘ └──────────┬──────────┘
+│
+┌────────────┼────────────┐
+▼ ▼ ▼
+┌─────────┐ ┌─────────┐ ┌─────────┐
+│ HOLD │ │ REJECT │ │ APPROVE │
+│ │ │ │ │ │
+└─────────┘ └─────────┘ └────┬────┘
+│
+PHASE 3: ALLOCATION & DISPATCH ▼
+┌─────────────────────┐
+│ Stock Validation │
+│ (Real-time Check) │
+└──────────┬──────────┘
+│
+┌──────────┴──────────┐
+▼ ▼
+┌─────────────┐ ┌─────────────────┐
+│ Available │ │ Insufficient │
+│ (Full Appr)│ │ (Partial/Alt) │
+└──────┬──────┘ └────────┬────────┘
+│ │
+▼ ▼
+┌─────────────┐ ┌─────────────────┐
+│ Dispatch │ │ Alternative │
+│ Workflow │ │ Sourcing: │
+│ │ │ • Other Branch │
+│ • Carrier │ │ • Purchase Order│
+│ • LR Number │ │ • Transfer Plan │
+│ • Asset Asgn│ └────────┬────────┘
+└──────┬──────┘ │
+│ │
+▼ ▼
+┌─────────────┐ ┌─────────────────┐
+│ In-Transit │ │ Branch Transfer │
+│ Status │ │ Planning (TR) │
+│ │ │ │
+│ Reserved Qty│ │ • Source Branch │
+│ Locked │ │ • Split Strategy│
+└──────┬──────┘ └─────────────────┘
+│
+PHASE 4: RECEIPT & ASSIGNMENT │
+▼
+┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+│ Destination │◄────│ Receive Stock │◄────│ In-Transit │
+│ Branch User │ │ Form │ │ Arrival │
+│ (Confirms) │ │ │ │ │
+└────────┬────────┘ │ • Verify Qty │ └─────────────────┘
+│ │ • Check Cond. │
+│ │ • Asset Assign │
+│ │ • Upload Photo │
+│ └────────┬────────┘
+│ │
+│ ┌────────────┼────────────┐
+│ ▼ ▼ ▼
+│ ┌─────────┐ ┌─────────┐ ┌─────────┐
+│ │ GOOD │ │ DAMAGED │ │ MISSING │
+│ │ Confirm │ │ Report │ │ Report │
+│ └────┬────┘ └────┬────┘ └────┬────┘
+│ │ │ │
+│ ▼ └────────────┘
+│ ┌─────────┐ │
+│ │ Issue │◄─────────────┘
+│ │ Reported│
+│ │ Status │
+│ └─────────┘
+│
+▼
+┌─────────────────┐
+│ Asset Activated│
+│ at Destination │
+│ (or Branch Pool)│
+└─────────────────┘
+
+PHASE 5: BRANCH TRANSFER (Direct)
+┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+│ Source Branch │────▶│ Create Transfer│────▶│ Asset Selection│
+│ (TR-XXX Form) │ │ (Emergency/ │ │ (If Assets>0) │
+│ │ │ Regular) │ │ │
+└─────────────────┘ └────────┬────────┘ └─────────────────┘
+│
+┌────────────┴────────────┐
+▼ ▼
+┌─────────────┐ ┌─────────────┐
+│ Dispatch │ │ Receive │
+│ (Same as │──────────▶│ (Same as │
+│ Phase 3) │ │ Phase 4) │
+└─────────────┘ └─────────────┘
+
+---
+
+-REAL-WORLD SCENARIO: Complete Lifecycle
+
+- Scenario: BLR Branch needs 10 Brass Sprayers for new client contract starting 25-Feb-2026.
+
+```
+TIMELINE:
+─────────────────────────────────────────────────────────────────────────────
+
+15-Feb  09:00 AM  Rahul (BLR) creates request → DRAFT
+        10:30 AM  Saves draft, adds 2 more items → DRAFT (modified)
+        11:15 AM  Submits request → PENDING APPROVAL
+                Notification to: Head Ops, Branch Manager
+
+15-Feb  02:45 PM  Head Ops reviews → Stock check: ✅ Available
+        03:00 PM  Approves full qty → APPROVED
+                Inventory reserved: 10 BSP3 locked at Central
+
+16-Feb  09:30 AM  Warehouse prepares dispatch → DISPATCH
+        04:00 PM  Hands to BlueDart, LR-93849201 → IN TRANSIT
+                Expected: 20-Feb (4 days)
+
+18-Feb  11:20 AM  BLR receives package
+        11:35 AM  Opens "Receive Transfer" form
+        11:40 AM  Verifies: 10 units, condition: Good
+        11:45 AM  Assigns: 5 to Employee:Amit, 5 to Employee:Priya
+        11:50 AM  Uploads receipt photo, clicks CONFIRM → RECEIVED
+                Assets activated at BLR. Central stock reduced.
+
+20-Feb  09:00 AM  System auto-archives request. Audit log complete.
+─────────────────────────────────────────────────────────────────────────────
+```
