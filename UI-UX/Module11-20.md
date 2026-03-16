@@ -2495,149 +2495,149 @@ From Branch ≠ To Branch
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│ MODULE 11: STOCK MANAGEMENT │
-│ ─── PURE DATA FLOW ─── │
+│                         MODULE 11: STOCK MANAGEMENT                              │
+│                         ─── PURE DATA FLOW ───                                   │
 └─────────────────────────────────────────────────────────────────────────────────┘
 
 PHASE 1: CENTRAL PROCUREMENT (Head Operations Only)
-┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-│ Product Master │────▶│ Add to Central │────▶│ Asset ID Gen │
-│ (Module 10) │ │ Stock Form │ │ (Auto/Manual) │
-└─────────────────┘ └─────────────────┘ └────────┬────────┘
-│
-┌────────────────────────┘
-▼
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  Product Master │────▶│  Add to Central │────▶│  Asset ID Gen   │
+│  (Module 10)    │     │  Stock Form     │     │  (Auto/Manual)  │
+└─────────────────┘     └─────────────────┘     └────────┬────────┘
+                                                       │
+                              ┌────────────────────────┘
+                              ▼
+                    ┌─────────────────┐
+                    │ 3-Way Split:    │
+                    │ • Assets (tracked)│
+                    │ • Consumables     │
+                    │ • Resell          │
+                    └────────┬────────┘
+                             │
+         ┌───────────────────┼───────────────────┐
+         ▼                   ▼                   ▼
+    ┌─────────┐        ┌─────────┐         ┌─────────┐
+    │  Asset  │        │Consumable│         │ Resell  │
+    │  Table  │        │  Stock   │         │  Stock  │
+    │(Individual│       │ (Bulk)   │         │(For Sale)│
+    │  IDs)   │        │          │         │         │
+    └────┬────┘        └────┬────┘         └────┬────┘
+         │                  │                   │
+         └──────────────────┼───────────────────┘
+                            ▼
+                    ┌─────────────────┐
+                    │ Central Warehouse│
+                    │    (CEN)         │
+                    └────────┬────────┘
+                             │
+PHASE 2: REQUEST & APPROVAL FLOW                    ┌─────────────────┐
+                                                    │  Tax Management │
+┌─────────────────┐     ┌─────────────────┐          │  (Module 9)     │
+│  Branch User    │────▶│  Stock Request  │◄─────────│  HSN/Tax Calc   │
+│  Creates Request│     │  (SR-XXX Form)  │          └─────────────────┘
+└─────────────────┘     └────────┬────────┘
+                               │
+                    ┌──────────┴──────────┐
+                    ▼                     ▼
+            ┌─────────────┐       ┌─────────────┐
+            │  Save Draft │       │   Submit    │
+            │ (Invisible) │       │   Request   │
+            └─────────────┘       └──────┬──────┘
+                                         │
+                              ┌──────────┴──────────┐
+                              ▼                     ▼
+                    ┌─────────────┐       ┌─────────────────────┐
+                    │   POPUP:    │       │  Head Operations /  │
+                    │   Select    │──────▶│  Branch Manager     │
+                    │  Recipients │       │  (Approval Queue)   │
+                    └─────────────┘       └──────────┬──────────┘
+                                                     │
+                                        ┌────────────┼────────────┐
+                                        ▼            ▼            ▼
+                                  ┌─────────┐  ┌─────────┐  ┌─────────┐
+                                  │  HOLD   │  │ REJECT  │  │ APPROVE │
+                                  │         │  │         │  │         │
+                                  └─────────┘  └─────────┘  └────┬────┘
+                                                                  │
+PHASE 3: ALLOCATION & DISPATCH                                    ▼
+                                                    ┌─────────────────────┐
+                                                    │  Stock Validation   │
+                                                    │  (Real-time Check)  │
+                                                    └──────────┬──────────┘
+                                                               │
+                                                    ┌──────────┴──────────┐
+                                                    ▼                     ▼
+                                          ┌─────────────┐       ┌─────────────────┐
+                                          │  Available  │       │  Insufficient   │
+                                          │  (Full Appr)│       │  (Partial/Alt)  │
+                                          └──────┬──────┘       └────────┬────────┘
+                                                 │                       │
+                                                 ▼                       ▼
+                                        ┌─────────────┐         ┌─────────────────┐
+                                        │  Dispatch   │         │ Alternative     │
+                                        │  Workflow   │         │ Sourcing:       │
+                                        │             │         │ • Other Branch  │
+                                        │ • Carrier   │         │ • Purchase Order│
+                                        │ • LR Number │         │ • Transfer Plan │
+                                        │ • Asset Asgn│         └────────┬────────┘
+                                        └──────┬──────┘                  │
+                                               │                          │
+                                               ▼                          ▼
+                                        ┌─────────────┐         ┌─────────────────┐
+                                        │  In-Transit │         │ Branch Transfer │
+                                        │  Status     │         │ Planning (TR)   │
+                                        │             │         │                 │
+                                        │ Reserved Qty│         │ • Source Branch │
+                                        │ Locked      │         │ • Split Strategy│
+                                        └──────┬──────┘         └─────────────────┘
+                                               │
+PHASE 4: RECEIPT & ASSIGNMENT                  │
+                                               ▼
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  Destination    │◄────│  Receive Stock  │◄────│  In-Transit     │
+│  Branch User    │     │  Form           │     │  Arrival        │
+│  (Confirms)     │     │                 │     │                 │
+└────────┬────────┘     │ • Verify Qty    │     └─────────────────┘
+         │              │ • Check Cond.   │
+         │              │ • Asset Assign  │
+         │              │ • Upload Photo  │
+         │              └────────┬────────┘
+         │                       │
+         │          ┌────────────┼────────────┐
+         │          ▼            ▼            ▼
+         │   ┌─────────┐   ┌─────────┐  ┌─────────┐
+         │   │  GOOD   │   │ DAMAGED │  │ MISSING │
+         │   │ Confirm │   │ Report  │  │ Report  │
+         │   └────┬────┘   └────┬────┘  └────┬────┘
+         │        │             │            │
+         │        ▼             └────────────┘
+         │   ┌─────────┐              │
+         │   │  Issue  │◄─────────────┘
+         │   │ Reported│
+         │   │ Status  │
+         │   └─────────┘
+         │
+         ▼
 ┌─────────────────┐
-│ 3-Way Split: │
-│ • Assets (tracked)│
-│ • Consumables │
-│ • Resell │
-└────────┬────────┘
-│
-┌───────────────────┼───────────────────┐
-▼ ▼ ▼
-┌─────────┐ ┌─────────┐ ┌─────────┐
-│ Asset │ │Consumable│ │ Resell │
-│ Table │ │ Stock │ │ Stock │
-│(Individual│ │ (Bulk) │ │(For Sale)│
-│ IDs) │ │ │ │ │
-└────┬────┘ └────┬────┘ └────┬────┘
-│ │ │
-└──────────────────┼───────────────────┘
-▼
-┌─────────────────┐
-│ Central Warehouse│
-│ (CEN) │
-└────────┬────────┘
-│
-PHASE 2: REQUEST & APPROVAL FLOW ┌─────────────────┐
-│ Tax Management │
-┌─────────────────┐ ┌─────────────────┐ │ (Module 9) │
-│ Branch User │────▶│ Stock Request │◄─────────│ HSN/Tax Calc │
-│ Creates Request│ │ (SR-XXX Form) │ └─────────────────┘
-└─────────────────┘ └────────┬────────┘
-│
-┌──────────┴──────────┐
-▼ ▼
-┌─────────────┐ ┌─────────────┐
-│ Save Draft │ │ Submit │
-│ (Invisible) │ │ Request │
-└─────────────┘ └──────┬──────┘
-│
-┌──────────┴──────────┐
-▼ ▼
-┌─────────────┐ ┌─────────────────────┐
-│ POPUP: │ │ Head Operations / │
-│ Select │──────▶│ Branch Manager │
-│ Recipients │ │ (Approval Queue) │
-└─────────────┘ └──────────┬──────────┘
-│
-┌────────────┼────────────┐
-▼ ▼ ▼
-┌─────────┐ ┌─────────┐ ┌─────────┐
-│ HOLD │ │ REJECT │ │ APPROVE │
-│ │ │ │ │ │
-└─────────┘ └─────────┘ └────┬────┘
-│
-PHASE 3: ALLOCATION & DISPATCH ▼
-┌─────────────────────┐
-│ Stock Validation │
-│ (Real-time Check) │
-└──────────┬──────────┘
-│
-┌──────────┴──────────┐
-▼ ▼
-┌─────────────┐ ┌─────────────────┐
-│ Available │ │ Insufficient │
-│ (Full Appr)│ │ (Partial/Alt) │
-└──────┬──────┘ └────────┬────────┘
-│ │
-▼ ▼
-┌─────────────┐ ┌─────────────────┐
-│ Dispatch │ │ Alternative │
-│ Workflow │ │ Sourcing: │
-│ │ │ • Other Branch │
-│ • Carrier │ │ • Purchase Order│
-│ • LR Number │ │ • Transfer Plan │
-│ • Asset Asgn│ └────────┬────────┘
-└──────┬──────┘ │
-│ │
-▼ ▼
-┌─────────────┐ ┌─────────────────┐
-│ In-Transit │ │ Branch Transfer │
-│ Status │ │ Planning (TR) │
-│ │ │ │
-│ Reserved Qty│ │ • Source Branch │
-│ Locked │ │ • Split Strategy│
-└──────┬──────┘ └─────────────────┘
-│
-PHASE 4: RECEIPT & ASSIGNMENT │
-▼
-┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-│ Destination │◄────│ Receive Stock │◄────│ In-Transit │
-│ Branch User │ │ Form │ │ Arrival │
-│ (Confirms) │ │ │ │ │
-└────────┬────────┘ │ • Verify Qty │ └─────────────────┘
-│ │ • Check Cond. │
-│ │ • Asset Assign │
-│ │ • Upload Photo │
-│ └────────┬────────┘
-│ │
-│ ┌────────────┼────────────┐
-│ ▼ ▼ ▼
-│ ┌─────────┐ ┌─────────┐ ┌─────────┐
-│ │ GOOD │ │ DAMAGED │ │ MISSING │
-│ │ Confirm │ │ Report │ │ Report │
-│ └────┬────┘ └────┬────┘ └────┬────┘
-│ │ │ │
-│ ▼ └────────────┘
-│ ┌─────────┐ │
-│ │ Issue │◄─────────────┘
-│ │ Reported│
-│ │ Status │
-│ └─────────┘
-│
-▼
-┌─────────────────┐
-│ Asset Activated│
-│ at Destination │
-│ (or Branch Pool)│
+│  Asset Activated│
+│  at Destination │
+│  (or Branch Pool)│
 └─────────────────┘
 
 PHASE 5: BRANCH TRANSFER (Direct)
-┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-│ Source Branch │────▶│ Create Transfer│────▶│ Asset Selection│
-│ (TR-XXX Form) │ │ (Emergency/ │ │ (If Assets>0) │
-│ │ │ Regular) │ │ │
-└─────────────────┘ └────────┬────────┘ └─────────────────┘
-│
-┌────────────┴────────────┐
-▼ ▼
-┌─────────────┐ ┌─────────────┐
-│ Dispatch │ │ Receive │
-│ (Same as │──────────▶│ (Same as │
-│ Phase 3) │ │ Phase 4) │
-└─────────────┘ └─────────────┘
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  Source Branch  │────▶│  Create Transfer│────▶│  Asset Selection│
+│  (TR-XXX Form)  │     │  (Emergency/    │     │  (If Assets>0)  │
+│                 │     │   Regular)      │     │                 │
+└─────────────────┘     └────────┬────────┘     └─────────────────┘
+                                 │
+                    ┌────────────┴────────────┐
+                    ▼                         ▼
+            ┌─────────────┐           ┌─────────────┐
+            │  Dispatch   │           │  Receive    │
+            │  (Same as   │──────────▶│  (Same as   │
+            │   Phase 3)  │           │   Phase 4)  │
+            └─────────────┘           └─────────────┘
 ```
 
 ---
