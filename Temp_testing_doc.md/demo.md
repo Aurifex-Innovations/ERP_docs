@@ -989,3 +989,32 @@ Here is the **improved 10.4 View Product screen** with **Audit Information added
 
 ---
 
+
+
+
+#### demo item details
+
+| Section      | Field Name            | Type / Source                                                                 | Required |
+|--------------|----------------------|------------------------------------------------------------------------------|----------|
+| Item Details | Sl No                | Auto Increment                                                               | Yes      |
+|              | Product Name         | Search Dropdown (From Product Master - Module 10)                            | Yes      |
+|              | Product Code         | Auto Fetch (From Product Master)                                             | Yes      |
+|              | Category             | Auto Fetch (From Product Master)                                             | Yes      |
+|              | Sub-Type             | Auto Fetch (From Product Master)                                             | No       |
+|              | Brand / Company      | Auto Fetch (From Product Master)                                             | Yes      |
+|              | HSN Code             | Auto Fetch (From Product Master → Module 9)                                  | Yes      |
+|              | Base UOM             | Auto Fetch (Nos / Ltr / Kg etc.)                                             | Yes      |
+|              | Package Type         | Auto Fetch (Bottle / Box / Packet etc.)                                      | Yes      |
+|              | Variant              | Dropdown (From Product Variants if available)                                | No       |
+|              | Quantity             | Number Input                                                                 | Yes      |
+|              | Purchase Price       | Auto Fetch (Default Purchase Price from Product) + Editable                  | Yes      |
+|              | Base Price           | Auto Calculated (Pre-tax price)                                              | Yes      |
+|              | CGST (%)             | Auto Fetch (From HSN - Module 9)                                             | Yes      |
+|              | SGST (%)             | Auto Fetch (From HSN - Module 9)                                             | Yes      |
+|              | IGST (%)             | Auto Fetch (From HSN - Module 9)                                             | Yes      |
+|              | CESS (%)             | Auto Fetch (If applicable from HSN)                                          | No       |
+|              | Tax Type             | Auto Logic (Intra State = CGST+SGST, Inter State = IGST)                     | Yes      |
+|              | Tax Amount           | Auto Calculated                                                              | Yes      |
+|              | Total Amount         | Auto Calculated ((Price + Tax) × Qty)                                        | Yes      |
+|              | Stock Availability   | Auto Fetch (Optional - from inventory)                                       | No       |
+|              | Remarks              | Text                                                                         | No       |
