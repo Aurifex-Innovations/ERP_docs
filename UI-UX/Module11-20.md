@@ -3304,164 +3304,133 @@ This module allows the organization to:
 
 ---
 
-# 13.1 Vendor Dashboard – Table View
+Below is the **refactored version of Module 13 Vendor Management** based on your requirement:
 
-## Description
+- Fix mismatch in **Vendor Create Form**
+- Add **dynamic contract logic**
+- If vendor **has contract → fetch products + recurring billing + stock supply**
+- If vendor **no contract → simple vendor profile**
+- Maintain **documentation style same as your module file**.
+  Base structure referenced from Vendor module section.
 
-The **Vendor Dashboard** displays a complete list of vendors registered in the system.
+---
 
-It provides:
+# **13.1 Vendor Dashboard – Table View**
 
-- Vendor overview
-- Quick vendor search
-- Advanced filtering
-- Vendor actions
-- Contract visibility
+## **Description**
 
-Administrators and procurement teams can quickly view and manage vendor records.
+The **Vendor Dashboard** provides a centralized view of all vendors registered in the system.
+
+The table allows procurement teams, finance teams, and administrators to:
+
+- View vendor contract status
+- Identify vendors linked with **products or services**
+- Monitor **billing configuration and payment terms**
+- Track **vendor status and rating**
+- Search and filter vendors for procurement operations
+
+This screen acts as the **primary entry point for vendor management**.
 
 ---
 
 # Screen Layout
 
 ```
-┌───────────────────────────────────────────────────────────────────────────────────────────┐
-│                                   VENDOR MANAGEMENT                                        │
-├───────────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                           │
-│  FILTER PANEL (Final list mention below)                                                  │
-│                                                                                           │
-│  Vendor Type        : [☑ Supplier] [☑ Service Provider] [☑ Both]                          │
-│  Vendor Category    : [All Categories ▼]                                                   │
-│  Contract Type      : [☑ Annual] [☑ Project] [☑ One Time]                                 │
-│  Vendor Status      : [☑ Active] [☑ Inactive]                                             │
-│  Vendor Rating      : [⭐1+] [⭐⭐2+] [⭐⭐⭐3+] [⭐⭐⭐⭐4+] [⭐⭐⭐⭐⭐5]                              │
-│                                                                                           │
-│  Search : [_________________________________________________________]                     │
-│           (Vendor ID / Vendor Name / Contact / Phone / Product / GST)                    │
-│                                                                                           │
-│  [Reset Filters]                                              [+ Add Vendor]              │
-│                                                                                           │
-├───────────────────────────────────────────────────────────────────────────────────────────┤
-│                                   VENDOR TABLE                                            │
-├────────┬──────────────────┬────────────┬────────────┬──────────────┬─────────────┬───────┤
-│ Vdr ID │ Vendor Name      │ Type       │ Category   │ Contact      │ Phone       │ City  │
-├────────┼──────────────────┼────────────┼────────────┼──────────────┼─────────────┼───────┤
-│ V-001  │ ABC Chemicals    │ Supplier   │ Chemical   │ Rajesh Kumar │ 9876543210  │ Pune  │
-│ V-002  │ PestPro Services │ Service    │ Fumigation │ Priya Sharma │ 8765432109  │ BLR   │
-│ V-003  │ Global Equip     │ Both       │ Equipment  │ Amit Singh   │ 7654321987  │ Delhi │
-└────────┴──────────────────┴────────────┴────────────┴──────────────┴─────────────┴───────┘
-
-┌──────────┬─────────────┬─────────────┬──────────┬─────────┬──────────────────────────────┐
-│ Contract │ Billing     │ Payment     │ Status   │ Rating  │ Actions                      │
-├──────────┼─────────────┼─────────────┼──────────┼─────────┼──────────────────────────────┤
-│ Annual   │ Per Service │ Net 30      │ Active   │ ⭐⭐⭐⭐    │ View | Edit |          │
-│ Project  │ Monthly     │ Advance     │ Active   │ ⭐⭐⭐     │ View | Edit |          │
-│ One Time │ Project     │ Net 15      │ Blocked  │ ⭐⭐      │ View | Edit |          │
-└──────────┴─────────────┴─────────────┴──────────┴─────────┴──────────────────────────────┘
-
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                             VENDOR MANAGEMENT                                 │
+│                                                                              │
+│  FILTER PANEL                                                                │
+│                                                                              │
+│ Vendor Type:      [☑ Supplier ☑ Service Provider ☑ Both]                    │
+│ Vendor Category:  [▼ Chemical / Equipment / Service / Logistics ▼]          │
+│ Contract Type:    [☑ Annual ☑ Project ☑ One Time ☑ No Contract]             │
+│ Billing Type:     [☑ Per Service ☑ Monthly ☑ Project]                       │
+│ Vendor Status:    [☑ Active ☑ Inactive ☑ Blocked]                           │
+│ Vendor Rating:    [⭐ 1+ to ⭐ 5]                                            │
+│ State:            [Multi Select]                                             │
+│ Contract End:     [📅 From] - [📅 To]                                        │
+│                                                                              │
+│ Search: [_____________________________________________]                     │
+│ (Vendor Name / Vendor ID / Contact / GST / Product)                         │
+│                                                                              │
+│ [Reset Filters]                                     [+ ADD VENDOR]          │
+│                                                                              │
+│────────────────────────────────────────────────────────────────────────────│
+│ VENDOR TABLE                                                                 │
+│                                                                              │
+│ID│Vendor Name│Category│Type│Contract│Products│Billing│Payment│Status│Action │
+│──┼───────────┼────────┼────┼────────┼────────┼───────┼───────┼──────┼───────│
+│V101│ABC Chem │Chemical│Supp│Annual  │12      │Monthly│Net30  │Active│View/Edit│
+│V102│TechServ │Service │SP  │Project │5       │Service│Advance│Active│View/Edit│
+│V103│EquipPro │Equip   │Both│None    │—       │—      │Net15  │Active│View/Edit│
+│                                                                              │
+│Pagination:  Previous   1   2   3   ...   Next                                │
+└──────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
 # Table Fields
 
-| Field                    | Type         | Required | Description                                |
-| ------------------------ | ------------ | -------- | ------------------------------------------ |
-| Vendor ID                | Text         | Auto     | Unique vendor identifier (V-001, V-002...) |
-| Vendor Name              | Text         | Yes      | Company or vendor name                     |
-| Vendor Type              | Badge        | Yes      | Supplier / Service Provider / Both         |
-| Vendor Category          | Text         | Yes      | Chemical / Equipment / Service / Other     |
-| Service/Product Provided | Text         | Yes      | Main service or product                    |
-| Contact Person           | Text         | Yes      | Primary contact name                       |
-| Phone Number             | Link         | Yes      | Click-to-call phone number                 |
-| Email ID                 | Link         | Yes      | Vendor email                               |
-| City                     | Text         | Yes      | Vendor location                            |
-| State                    | Text         | Yes      | Vendor state                               |
-| Contract Type            | Badge        | Yes      | Annual / Project / One Time                |
-| Contract Start Date      | Date         | Yes      | Contract start date                        |
-| Contract End Date        | Date         | No       | Contract expiry date                       |
-| Billing Type             | Text         | Yes      | Per Service / Monthly / Project            |
-| Payment Terms            | Text         | Yes      | Advance / Net 15 / Net 30 / Net 45         |
-| Vendor Status            | Badge        | Yes      | Active / Inactive / Blocked                |
-| Vendor Rating            | Rating       | No       | Vendor performance rating                  |
-| GST Number               | Text         | No       | Vendor GST identification                  |
-| Created Date             | Date         | Auto     | Vendor record creation date                |
-| Created By               | Text         | Auto     | User who created vendor                    |
-| Actions                  | Button Group | —        | View / Edit                                |
-
----
-
-# Search
-
-| Field         | Type       | Scope                                                              |
-| ------------- | ---------- | ------------------------------------------------------------------ |
-| Global Search | Text Input | Vendor ID, Vendor Name, Contact Person, Phone, Email, GST, Product |
+| Field           | Type     | Required | Description                                |
+| --------------- | -------- | -------- | ------------------------------------------ |
+| Vendor ID       | Auto ID  | System   | Unique vendor identifier                   |
+| Vendor Name     | Text     | Yes      | Vendor company name                        |
+| Vendor Category | Dropdown | Yes      | Chemical / Equipment / Service / Logistics |
+| Vendor Type     | Dropdown | Yes      | Supplier / Service Provider / Both         |
+| Contract Type   | Badge    | Yes      | Annual / Project / One Time / None         |
+| Linked Products | Number   | Auto     | Count of products/services under contract  |
+| Billing Type    | Text     | Yes      | Per Service / Monthly / Project            |
+| Payment Terms   | Text     | Yes      | Advance / Net 15 / Net 30 / Net 45         |
+| Vendor Status   | Badge    | Auto     | Active / Inactive / Blocked                |
+| Vendor Rating   | Rating   | Optional | Performance rating                         |
+| GST Number      | Text     | Optional | Vendor tax identification                  |
+| Created Date    | Date     | Auto     | Record creation date                       |
+| Created By      | Text     | Auto     | User who created vendor                    |
+| Actions         | Button   | —        | View / Edit                                |
 
 ---
 
 # Filters
 
-| Filter Name       | Type          | Options                            |
-| ----------------- | ------------- | ---------------------------------- |
-| Vendor Type       | Multi Select  | Supplier / Service Provider / Both |
-| Vendor Category   | Dropdown      | Chemical / Equipment / Service     |
-| Contract Type     | Multi Select  | Annual / Project / One Time        |
-| Vendor Status     | Multi Select  | Active / Inactive                  |
-| Vendor Rating     | Rating Filter | ⭐1+ to ⭐5                        |
-| State             | Multi Select  | State list                         |
-| City              | Text Search   | City name                          |
-| Contract End Date | Date Range    | From – To                          |
+| Filter            | Type          | Options                                    |
+| ----------------- | ------------- | ------------------------------------------ |
+| Vendor Type       | Multi Select  | Supplier / Service Provider / Both         |
+| Vendor Category   | Dropdown      | Chemical / Equipment / Service / Logistics |
+| Contract Type     | Multi Select  | Annual / Project / One Time / None         |
+| Vendor Status     | Multi Select  | Active / Inactive / Blocked                |
+| Vendor Rating     | Rating Filter | ⭐1+ to ⭐5                                |
+| State             | Multi Select  | State List                                 |
+| Contract End Date | Date Range    | From – To                                  |
 
 ---
 
-# Actions
+# Search
 
-| Action | Description           |
-| ------ | --------------------- |
-| View   | Open vendor profile   |
-| Edit   | Modify vendor details |
+Searchable fields:
 
----
-
-# System Behavior
-
-- Vendor ID is automatically generated.
-- Vendors linked to purchase orders or contracts cannot be deleted.
-- Blocked vendors cannot be used in new transactions.
-- Vendor ratings are updated from vendor performance feedback.
+- Vendor ID
+- Vendor Name
+- Contact Person
+- Phone Number
+- Email
+- GST Number
+- Product Name
 
 ---
 
-# Audit Trail
+# Table Actions
 
-The system logs the following events:
-
-- Vendor created
-- Vendor updated
-- Vendor status changed
-- Vendor deleted
-
-Each log includes:
-
-- User
-- Timestamp
-- Action performed
+| Action | Description              |
+| ------ | ------------------------ |
+| View   | Open full vendor profile |
+| Edit   | Modify vendor details    |
 
 ---
 
-# Permissions
+# **13.2 Add Vendor – Vendor Registration Screen**
 
-| Role                | Permission              |
-| ------------------- | ----------------------- |
-| Admin               | Full access             |
-| Procurement Manager | Create / Edit / View    |
-| Accounts Team       | View only               |
-| Operations Team     | View vendor information |
-
-# 13.2 Add Vendor – Vendor Registration Screen
-
-## Description
+## **Description**
 
 The **Add Vendor Screen** allows administrators or procurement managers to register a new vendor in the system.
 
@@ -3472,20 +3441,43 @@ This screen captures complete vendor information including:
 - Tax and compliance information
 - Bank details
 - Contract details
+- Product supply configuration
 - Billing configuration
 - Payment terms
 - Vendor performance details
 
-Vendor records created here are used across:
+The system supports **two vendor configurations**:
 
-- Procurement
-- Purchase Orders
-- Vendor Payments
-- Contract Management
+### **1. Contract Vendor**
+
+Vendors supplying **products under contract terms**.
+
+The system enables:
+
+- Product supply mapping
+- Quantity and UOM configuration
+- Delivery schedule
+- Billing configuration
+- Payment terms
+
+### **2. Non-Contract Vendor**
+
+Used for vendors that provide:
+
+- One-time procurement
+- Ad-hoc purchases
+
+Only **basic vendor details** are required.
+
+When **Has Contract = No**, the following sections remain hidden:
+
+- Contract Details
+- Product Supply Configuration
+- Billing Configuration
 
 ---
 
-# Screen Layout
+# **Screen Layout**
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
@@ -3493,773 +3485,737 @@ Vendor records created here are used across:
 └──────────────────────────────────────────────────────────────────────────────┘
 
 
-BASIC INFORMATION
+SECTION 1: BASIC INFORMATION
 ──────────────────────────────────────────────────────────────────────────────
 
-Vendor ID* (Auto Generated)            Vendor Status*       [ Active ▼ ]
+Vendor ID (Auto Generated)
 
-Vendor Name*                           [________________________________]
+Vendor Name*
+Vendor Type*                   [ Supplier / Service Provider / Both ]
+Vendor Category*               [ Chemical Supplier / Equipment Vendor / Logistics Vendor ]
 
-Vendor Type*                           [ Supplier ▼ ]
+Product Supplied*
+Contact Person*
+Phone Number*
+Email ID*
 
-Vendor Category*                       [ Chemical Supplier ▼ ]
+Vendor Status*                 [ Active / Inactive ]
 
-Service / Product Provided*            [________________________________]
-
-Contact Person*                        [________________________________]
-
-Phone Number*                          [________________________________]
-
-Email ID*                              [________________________________]
+Has Contract?*                 [ Yes / No ]
 
 
-ADDRESS DETAILS
+SECTION 2: ADDRESS DETAILS
 ──────────────────────────────────────────────────────────────────────────────
 
-Address*                               [________________________________]
-                                       [________________________________]
+Address*
+City*
+State*
+Pincode*
+Country*
 
-City*               [____________]     State*             [ Telangana ▼ ]
 
-Pincode*            [____________]     Country*           [ India ▼ ]
-
-
-TAX & COMPLIANCE
+SECTION 3: TAX & COMPLIANCE
 ──────────────────────────────────────────────────────────────────────────────
 
-GST Number                             [________________________________]
+Vendor Registration Type*      [ Registered / Unregistered ]
 
-PAN Number                             [________________________________]
+GST Number                     (Conditional)
+PAN Number                     (Optional)
 
-Vendor Registration Type               [ Registered ▼ ]
 
-
-BANK DETAILS
+SECTION 4: BANK DETAILS
 ──────────────────────────────────────────────────────────────────────────────
 
-Bank Name                              [________________________________]
-
-Account Holder Name                    [________________________________]
-
-Account Number                         [________________________________]
-
-IFSC Code                              [________________________________]
+Bank Name
+Account Holder Name
+Account Number
+IFSC Code
 
 
-CONTRACT DETAILS
+SECTION 5: CONTRACT DETAILS
+(Visible if Has Contract = YES)
 ──────────────────────────────────────────────────────────────────────────────
 
-Contract Type*                         [ Annual ▼ ]
+Contract Type*                 [ Annual / Project / One Time ]
 
-Contract Start Date*                   [ 📅 Select Date ]
+Contract Start Date*
+Contract End Date
 
-Contract End Date                      [ 📅 Select Date ]
+SLA Agreement                  [ Yes / No ]
 
-SLA Agreement                          [ Yes ▼ ]
-
-Contract Document Upload               [ Upload File ]
+Contract Document Upload
 
 
-BILLING TERMS
+SECTION 6: PRODUCT SUPPLY CONFIGURATION
+(Visible if Has Contract = YES)
 ──────────────────────────────────────────────────────────────────────────────
 
-Billing Type*                          [ Monthly ▼ ]
-
-Billing Cycle                          [ Monthly ▼ ]
-
-Custom Billing Start Date              [ 📅 Select Date ]
-
-Custom Billing End Date                [ 📅 Select Date ]
-
-Tax Applicable*                        [ Yes ▼ ]
-
-Invoice Submission Method              [ Email ▼ ]
+[ + ADD PRODUCT ]
 
 
-PAYMENT DETAILS
+┌──────────────────────────────── PRODUCT SUPPLY TABLE ────────────────────────────────┐
+│ Product │ Category │ Supply Qty │ UOM │ Unit Rate │ Min Order Qty │ Delivery Frequency │ Lead Time │ Tax │ Action │
+│─────────┼──────────┼────────────┼─────┼───────────┼───────────────┼────────────────────┼───────────┼─────┼────────│
+│ Termite Chemical │ Chemical │ 50 │ Liters │ ₹1200 │ 10 │ Monthly │ 3 Days │ Yes │ Edit/Delete │
+│ Rodent Bait │ Chemical │ 25 │ Kg │ ₹600 │ 5 │ Quarterly │ 5 Days │ Yes │ Edit/Delete │
+└───────────────────────────────────────────────────────────────────────────────────────┘
+
+
+SECTION 7: BILLING CONFIGURATION
 ──────────────────────────────────────────────────────────────────────────────
 
-Payment Terms*                         [ Net 30 ▼ ]
+Billing Type*                  [ Per Service / Monthly / Project ]
 
-Credit Days                            [______]
+Billing Cycle                  [ Weekly / Monthly / Quarterly / Custom ]
 
-Payment Method*                        [ Bank Transfer ▼ ]
+Custom Billing Start Date
+Custom Billing End Date
 
-Currency*                              [ INR ▼ ]
+Invoice Submission Method      [ Email / Portal / Physical ]
 
 
-PERFORMANCE & NOTES
+SECTION 8: PAYMENT TERMS
 ──────────────────────────────────────────────────────────────────────────────
 
-Vendor Rating                          [ 1 – 5 ]
+Payment Terms*                 [ Advance / Net15 / Net30 / Net45 ]
 
-Remarks / Notes                        [________________________________]
-                                       [________________________________]
+Advance Payment %
+Late Payment Penalty
 
 
-SYSTEM INFORMATION
+SECTION 9: PERFORMANCE TRACKING
 ──────────────────────────────────────────────────────────────────────────────
 
-Created Date (Auto)
-
-Updated Date (Auto)
-
-Created By (Auto)
+Vendor Rating
+Remarks
 
 
-┌────────────────────────────────────────────────────────────┐
-│ [ Cancel ]                                     [ Save Vendor ] │
-└────────────────────────────────────────────────────────────┘
+[ SAVE VENDOR ]                [ CANCEL ]
 ```
 
 ---
 
-# Section Wise Field Specifications
+# **SECTION 1: BASIC INFORMATION – Fields**
+
+| Field            | Field Type        | Required | Options                                                                              | Notes                                   |
+| ---------------- | ----------------- | -------- | ------------------------------------------------------------------------------------ | --------------------------------------- |
+| Vendor ID        | Auto Generated    | System   | —                                                                                    | Unique system generated ID              |
+| Vendor Name      | Text              | Yes      | —                                                                                    | Vendor company name                     |
+| Vendor Type      | Dropdown          | Yes      | Supplier / Service Provider / Both                                                   | Defines vendor role                     |
+| Vendor Category  | Dropdown          | Yes      | Chemical Supplier / Equipment Vendor / Logistics Vendor / Maintenance Vendor / Other | Vendor classification                   |
+| Product Supplied | Text              | Yes      | —                                                                                    | Product or service description          |
+| Contact Person   | Text              | Yes      | —                                                                                    | Vendor representative                   |
+| Phone Number     | Phone             | Yes      | —                                                                                    | 10 digit number                         |
+| Email ID         | Email             | Yes      | —                                                                                    | Vendor email                            |
+| Vendor Status    | Dropdown          | Yes      | Active / Inactive                                                                    | Vendor operational status               |
+| Has Contract     | Toggle / Dropdown | Yes      | Yes / No                                                                             | Determines contract sections visibility |
 
 ---
 
-# 1. Basic Information
+# **SECTION 2: ADDRESS DETAILS – Fields**
 
-| Field                      | Type        | Required | Options                                                                                           | Validation          |
-| -------------------------- | ----------- | -------- | ------------------------------------------------------------------------------------------------- | ------------------- |
-| Vendor ID                  | Text (Auto) | Auto     | System Generated                                                                                  | Unique              |
-| Vendor Status              | Dropdown    | Yes      | Active, Inactive                                                                                  | Default Active      |
-| Vendor Name                | Text        | Yes      | —                                                                                                 | Min 3 characters    |
-| Vendor Type                | Dropdown    | Yes      | Supplier, Service Provider, Both                                                                  | Required            |
-| Vendor Category            | Dropdown    | Yes      | Chemical Supplier, Equipment Vendor, Service Partner, Logistics Vendor, Maintenance Vendor, Other | Required            |
-| Service / Product Provided | Text        | Yes      | —                                                                                                 | Max 150 characters  |
-| Contact Person             | Text        | Yes      | —                                                                                                 | Alphabets only      |
-| Phone Number               | Phone       | Yes      | —                                                                                                 | 10 digit validation |
-| Email ID                   | Email       | Yes      | —                                                                                                 | Valid email format  |
+| Field   | Field Type | Required | Options                 | Notes             |
+| ------- | ---------- | -------- | ----------------------- | ----------------- |
+| Address | Textarea   | Yes      | —                       | Vendor address    |
+| City    | Text       | Yes      | —                       | City name         |
+| State   | Dropdown   | Yes      | State List              | System state list |
+| Pincode | Number     | Yes      | —                       | 6 digit           |
+| Country | Dropdown   | Yes      | India (Default) / Other | Default India     |
 
 ---
 
-# 2. Address Details
+# **SECTION 3: TAX & COMPLIANCE – Fields**
 
-| Field   | Type     | Required | Options                | Validation         |
-| ------- | -------- | -------- | ---------------------- | ------------------ |
-| Address | Textarea | Yes      | —                      | Max 250 characters |
-| City    | Text     | Yes      | —                      | Alphabets only     |
-| State   | Dropdown | Yes      | State List             | Required           |
-| Pincode | Number   | Yes      | —                      | 6 digit validation |
-| Country | Dropdown | Yes      | India (default), Other | Required           |
+| Field                    | Field Type | Required    | Options                   | Notes                      |
+| ------------------------ | ---------- | ----------- | ------------------------- | -------------------------- |
+| Vendor Registration Type | Dropdown   | Yes         | Registered / Unregistered | Determines GST requirement |
+| GST Number               | Text       | Conditional | —                         | Required if Registered     |
+| PAN Number               | Text       | Optional    | —                         | Vendor PAN                 |
 
 ---
 
-# 3. Tax & Compliance
+# **SECTION 4: BANK DETAILS – Fields**
 
-| Field                    | Type     | Required    | Options                  | Validation            |
-| ------------------------ | -------- | ----------- | ------------------------ | --------------------- |
-| GST Number               | Text     | Conditional | —                        | GST Format Validation |
-| PAN Number               | Text     | Optional    | —                        | PAN Format Validation |
-| Vendor Registration Type | Dropdown | Yes         | Registered, Unregistered | Required              |
-
-Validation Rule:
-
-If **Vendor Registration Type = Registered → GST Required**
+| Field               | Field Type | Required | Options | Notes            |
+| ------------------- | ---------- | -------- | ------- | ---------------- |
+| Bank Name           | Text       | Optional | —       | Vendor bank      |
+| Account Holder Name | Text       | Optional | —       | Name as per bank |
+| Account Number      | Number     | Optional | —       | 9–18 digits      |
+| IFSC Code           | Text       | Optional | —       | Valid IFSC       |
 
 ---
 
-# 4. Bank Details
+# **SECTION 5: CONTRACT DETAILS – Fields**
 
-| Field               | Type   | Required | Validation             |
-| ------------------- | ------ | -------- | ---------------------- |
-| Bank Name           | Text   | Optional | Alphabets only         |
-| Account Holder Name | Text   | Optional | Alphabets              |
-| Account Number      | Number | Optional | 9–18 digits            |
-| IFSC Code           | Text   | Optional | IFSC format validation |
-
----
-
-# 5. Contract Details
-
-| Field                    | Type        | Required    | Options                   | Validation            |
-| ------------------------ | ----------- | ----------- | ------------------------- | --------------------- |
-| Contract Type            | Dropdown    | Yes         | Annual, Project, One Time | Required              |
-| Contract Start Date      | Date Picker | Yes         | —                         | Cannot be future date |
-| Contract End Date        | Date Picker | Conditional | —                         | Must be > Start Date  |
-| SLA Agreement            | Dropdown    | No          | Yes, No                   | Default No            |
-| Contract Document Upload | File Upload | Optional    | PDF, DOCX                 | Max 10MB              |
+| Field                    | Field Type  | Required    | Options                     | Notes                    |
+| ------------------------ | ----------- | ----------- | --------------------------- | ------------------------ |
+| Contract Type            | Dropdown    | Yes         | Annual / Project / One Time | Vendor contract type     |
+| Contract Start Date      | Date Picker | Yes         | —                           | Contract start           |
+| Contract End Date        | Date Picker | Conditional | —                           | Must be after start date |
+| SLA Agreement            | Dropdown    | No          | Yes / No                    | Service agreement        |
+| Contract Document Upload | File Upload | Optional    | PDF / DOCX                  | Max 10MB                 |
 
 ---
 
-# 6. Billing Terms
+# **SECTION 6: PRODUCT SUPPLY CONFIGURATION – Fields**
 
-| Field                     | Type     | Required    | Options                            | Validation                         |
-| ------------------------- | -------- | ----------- | ---------------------------------- | ---------------------------------- |
-| Billing Type              | Dropdown | Yes         | Per Service, Monthly, Project      | Required                           |
-| Billing Cycle             | Dropdown | Optional    | Weekly, Monthly, Quarterly, Custom | Required for recurring billing     |
-| Custom Billing Start Date | Date     | Conditional | —                                  | Required if Billing Cycle = Custom |
-| Custom Billing End Date   | Date     | Conditional | —                                  | Must be after start date           |
-| Tax Applicable            | Dropdown | Yes         | Yes, No                            | Required                           |
-| Invoice Submission Method | Dropdown | Optional    | Email, Portal, Physical            | Default Email                      |
-
----
-
-# 7. Payment Details
-
-| Field          | Type     | Required | Options                                 | Validation   |
-| -------------- | -------- | -------- | --------------------------------------- | ------------ |
-| Payment Terms  | Dropdown | Yes      | Advance, Net 15, Net 30, Net 45, Net 60 | Required     |
-| Credit Days    | Number   | Optional | —                                       | Numeric only |
-| Payment Method | Dropdown | Yes      | Bank Transfer, UPI, Cheque, Cash        | Required     |
+| Field                  | Field Type      | Required | Options                               | Notes                    |
+| ---------------------- | --------------- | -------- | ------------------------------------- | ------------------------ |
+| Product                | Search Dropdown | Yes      | Product Master List                   | Linked to Module 10      |
+| Product Category       | Auto            | System   | —                                     | Auto from Product Master |
+| Supply Quantity        | Number          | Yes      | —                                     | Default supply quantity  |
+| UOM                    | Dropdown        | Yes      | From Product Master UOM list          | Unit of measurement      |
+| Unit Supply Rate       | Currency        | Yes      | —                                     | Vendor product price     |
+| Minimum Order Quantity | Number          | Optional | —                                     | MOQ for purchase         |
+| Delivery Frequency     | Dropdown        | Yes      | Weekly / Monthly / Quarterly / Custom | Delivery schedule        |
+| Delivery Lead Time     | Number          | Optional | —                                     | Delivery days            |
+| Tax Applicable         | Dropdown        | Yes      | Yes / No                              | GST applicable           |
 
 ---
 
-# 8. Performance & Notes
+# **SECTION 7: BILLING CONFIGURATION – Fields**
 
-| Field           | Type     | Required | Validation         |
-| --------------- | -------- | -------- | ------------------ |
-| Vendor Rating   | Number   | Optional | Range 1–5          |
-| Remarks / Notes | Textarea | Optional | Max 300 characters |
-
----
-
-# 9. System Information
-
-| Field        | Type           | Description                      |
-| ------------ | -------------- | -------------------------------- |
-| Created Date | DateTime       | Timestamp when record is created |
-| Updated Date | DateTime       | Last updated timestamp           |
-| Created By   | User Reference | System user creating vendor      |
+| Field                     | Field Type | Required    | Options                               | Notes                    |
+| ------------------------- | ---------- | ----------- | ------------------------------------- | ------------------------ |
+| Billing Type              | Dropdown   | Yes         | Per Service / Monthly / Project       | Billing structure        |
+| Billing Cycle             | Dropdown   | Optional    | Weekly / Monthly / Quarterly / Custom | Recurring billing        |
+| Custom Billing Start Date | Date       | Conditional | —                                     | Required if cycle custom |
+| Custom Billing End Date   | Date       | Conditional | —                                     | Must be after start date |
+| Invoice Submission Method | Dropdown   | Optional    | Email / Portal / Physical             | Default Email            |
 
 ---
 
-# Form Validations
+# **SECTION 8: PAYMENT TERMS – Fields**
 
-| Validation Rule      | Description                          |
-| -------------------- | ------------------------------------ |
-| Mandatory Fields     | Fields marked with \* must be filled |
-| Email Validation     | Must follow standard email format    |
-| Phone Number         | Must contain exactly 10 digits       |
-| GST Validation       | Must follow GSTIN format             |
-| PAN Validation       | Must follow PAN format               |
-| Contract End Date    | Must be after Contract Start Date    |
-| Billing Custom Dates | Required if Billing Cycle = Custom   |
+| Field                | Field Type | Required | Options                         | Notes                |
+| -------------------- | ---------- | -------- | ------------------------------- | -------------------- |
+| Payment Terms        | Dropdown   | Yes      | Advance / Net15 / Net30 / Net45 | Vendor payment terms |
+| Advance Payment %    | Number     | Optional | —                               | Percentage advance   |
+| Late Payment Penalty | Text       | Optional | —                               | Financial penalty    |
 
 ---
 
-# Form Actions
+# **SECTION 9: PERFORMANCE TRACKING – Fields**
 
-| Action      | Description                        |
-| ----------- | ---------------------------------- |
-| Cancel      | Discards vendor creation           |
-| Save Vendor | Validates and stores vendor record |
-
----
-
-# System Behavior
-
-- Vendor ID is automatically generated.
-- Vendor cannot be saved without mandatory fields.
-- Vendor becomes available for **Procurement & Purchase Orders after creation**.
-- Uploaded contract documents are stored in **Vendor Document Repository**.
-
-# 13.3 Edit Vendor – Vendor Update Screen
-
-## Description
-
-The **Edit Vendor Screen** allows authorized users to modify existing vendor details.
-
-This screen is used to:
-
-- Update vendor contact information
-- Modify billing and payment configurations
-- Update contract details
-- Maintain vendor compliance information
-- Track historical changes through **Audit Logs**
-
-All updates made through this screen are recorded in the **Audit Log Tracking system** to ensure transparency and traceability.
+| Field         | Field Type | Required | Options | Notes              |
+| ------------- | ---------- | -------- | ------- | ------------------ |
+| Vendor Rating | Rating     | Optional | ⭐1–⭐5 | Performance rating |
+| Remarks       | Text Area  | Optional | —       | Admin notes        |
 
 ---
 
-# Screen Layout
+# **Validation Rules**
 
-```
+| Validation           | Description                              |
+| -------------------- | ---------------------------------------- |
+| Mandatory Fields     | Fields marked with \* cannot be empty    |
+| Phone Number         | Must contain exactly 10 digits           |
+| Email Format         | Must follow valid email format           |
+| GST Format           | Must match GSTIN pattern                 |
+| PAN Format           | Must match PAN format                    |
+| Contract End Date    | Must be greater than Contract Start Date |
+| Billing Custom Dates | Required if Billing Cycle = Custom       |
+| Supply Quantity      | Must be greater than 0                   |
+| Unit Supply Rate     | Must be positive number                  |
+
+---
+
+Below is **Module 13.3 – Edit Vendor Form** written in the **same documentation style** as your previous section, but with a **simplified field table** where each field shows whether it is **Editable or Not Editable**, ensuring that **changes do not affect dependent modules** like Procurement, Inventory, or Finance.
+
+---
+
+# **13.3 Edit Vendor – Vendor Update Screen**
+
+---
+
+# **Screen Layout**
+
+```id="zj9z9i"
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│                               EDIT VENDOR DETAILS                             │
-│                         Vendor ID : V-001  |  Status : Active                 │
+│                                 EDIT VENDOR                                  │
 └──────────────────────────────────────────────────────────────────────────────┘
 
 
-BASIC INFORMATION
+SECTION 1: BASIC INFORMATION
 ──────────────────────────────────────────────────────────────────────────────
 
-Vendor ID (Read Only)                 V-001
+Vendor ID                       (Read Only)
 
-Vendor Status*                        [ Active ▼ ]
+Vendor Name
+Vendor Type
+Vendor Category
 
-Vendor Name*                          [ ABC Chemicals Pvt Ltd ]
+Product Supplied
+Contact Person
+Phone Number
+Email ID
 
-Vendor Type*                          [ Supplier ▼ ]
+Vendor Status
 
-Vendor Category*                      [ Chemical Supplier ▼ ]
-
-Service / Product Provided*           [ Industrial Chemicals ]
-
-Contact Person*                       [ Rajesh Kumar ]
-
-Phone Number*                         [ 9876543210 ]
-
-Email ID*                             [ rajesh@abcchem.com ]
+Has Contract
 
 
-ADDRESS DETAILS
+SECTION 2: ADDRESS DETAILS
 ──────────────────────────────────────────────────────────────────────────────
 
-Address*                              [ Plot 21 Industrial Area ]
-                                      [ Phase 2 ]
+Address
+City
+State
+Pincode
+Country
 
-City*               [ Hyderabad ]     State*          [ Telangana ▼ ]
 
-Pincode*            [ 500081 ]        Country*        [ India ▼ ]
-
-
-TAX & COMPLIANCE
+SECTION 3: TAX & COMPLIANCE
 ──────────────────────────────────────────────────────────────────────────────
 
-GST Number                            [ 36ABCDE1234F1Z5 ]
-
-PAN Number                            [ ABCDE1234F ]
-
-Vendor Registration Type              [ Registered ▼ ]
+Vendor Registration Type
+GST Number
+PAN Number
 
 
-BANK DETAILS
+SECTION 4: BANK DETAILS
 ──────────────────────────────────────────────────────────────────────────────
 
-Bank Name                             [ HDFC Bank ]
-
-Account Holder Name                   [ ABC Chemicals Pvt Ltd ]
-
-Account Number                        [ 234567890123 ]
-
-IFSC Code                             [ HDFC0001234 ]
+Bank Name
+Account Holder Name
+Account Number
+IFSC Code
 
 
-CONTRACT DETAILS
+SECTION 5: CONTRACT DETAILS
 ──────────────────────────────────────────────────────────────────────────────
 
-Contract Type*                        [ Annual ▼ ]
+Contract Type
+Contract Start Date
+Contract End Date
 
-Contract Start Date*                  [ 📅 01-Jan-2026 ]
-
-Contract End Date                     [ 📅 31-Dec-2026 ]
-
-SLA Agreement                         [ Yes ▼ ]
-
-Contract Document Upload              [ Replace File ]
+SLA Agreement
+Contract Document Upload
 
 
-BILLING TERMS
+SECTION 6: PRODUCT SUPPLY CONFIGURATION
 ──────────────────────────────────────────────────────────────────────────────
 
-Billing Type*                         [ Monthly ▼ ]
+Product Supply Table
 
-Billing Cycle                         [ Monthly ▼ ]
-
-Custom Billing Start Date             [ 📅 Select Date ]
-
-Custom Billing End Date               [ 📅 Select Date ]
-
-Tax Applicable*                       [ Yes ▼ ]
-
-Invoice Submission Method             [ Email ▼ ]
+Product | Category | Supply Qty | UOM | Unit Rate | MOQ | Delivery Frequency | Lead Time | Tax | Action
 
 
-PAYMENT DETAILS
+SECTION 7: BILLING CONFIGURATION
 ──────────────────────────────────────────────────────────────────────────────
 
-Payment Terms*                        [ Net 30 ▼ ]
+Billing Type
+Billing Cycle
 
-Credit Days                           [ 30 ]
+Custom Billing Start Date
+Custom Billing End Date
 
-Payment Method*                       [ Bank Transfer ▼ ]
-
-Currency                              [ INR ▼ ]
+Invoice Submission Method
 
 
-PERFORMANCE & NOTES
+SECTION 8: PAYMENT TERMS
 ──────────────────────────────────────────────────────────────────────────────
 
-Vendor Rating                         [ 4 ]
+Payment Terms
+Advance Payment %
+Late Payment Penalty
 
-Remarks / Notes                       [ Long term supplier with good delivery ]
-                                      [ Maintain monthly supply agreement ]
 
-
-SYSTEM INFORMATION
+SECTION 9: PERFORMANCE TRACKING
 ──────────────────────────────────────────────────────────────────────────────
 
-Created Date                          02-Feb-2026
-
-Updated Date                          10-Feb-2026
-
-Created By                            Admin
+Vendor Rating
+Remarks
 
 
-┌────────────────────────────────────────────────────────────┐
-│ [ Cancel ]                                   [ Update Vendor ] │
-└────────────────────────────────────────────────────────────┘
+[ UPDATE VENDOR ]                [ CANCEL ]
 ```
 
 ---
 
-- keep form same as Add but refer below instrcutions.
+# **SECTION 1: BASIC INFORMATION – Fields**
 
-# Editable Field Specifications
-
-| Field            | Editable | Notes                              |
-| ---------------- | -------- | ---------------------------------- |
-| Vendor ID        | ❌ No    | System generated                   |
-| Vendor Status    | ✅ Yes   | Active / Inactive(Inactive reason) |
-| Vendor Name      | ✅ Yes   | Editable                           |
-| Vendor Type      | ✅ Yes   | Supplier / Service Provider / Both |
-| Vendor Category  | ✅ Yes   | Vendor classification              |
-| Contact Person   | ✅ Yes   | Vendor representative              |
-| Phone Number     | ✅ Yes   | Must remain unique                 |
-| Email ID         | ✅ Yes   | Valid email required               |
-| Address          | ✅ Yes   | Full vendor location               |
-| GST Number       | ✅ Yes   | Editable for compliance            |
-| Bank Details     | ✅ Yes   | Can be updated                     |
-| Contract Details | ✅ Yes   | Contract renewal or update         |
-| Billing Terms    | ✅ Yes   | Billing configuration              |
-| Payment Terms    | ✅ Yes   | Financial agreement                |
-| Vendor Rating    | ✅ Yes   | Updated based on performance       |
-| Created Date     | ❌ No    | System generated                   |
-| Updated Date     | ❌ No    | Auto updated                       |
+| Field            | Editable | Notes                                           |
+| ---------------- | -------- | ----------------------------------------------- |
+| Vendor ID        | No       | System generated identifier                     |
+| Vendor Name      | Yes      | Editable if no active contracts linked          |
+| Vendor Type      | No       | Changing may affect procurement configuration   |
+| Vendor Category  | Yes      | Allowed if not used in category filtering rules |
+| Product Supplied | Yes      | Informational field                             |
+| Contact Person   | Yes      | Contact detail update allowed                   |
+| Phone Number     | Yes      | Vendor contact update                           |
+| Email ID         | Yes      | Vendor contact update                           |
+| Vendor Status    | Yes      | Active / Inactive / Blocked                     |
+| Has Contract     | No       | Cannot change once contract exists              |
 
 ---
 
-# Validation Rules
+# **SECTION 2: ADDRESS DETAILS – Fields**
 
-| Validation           | Description                           |
-| -------------------- | ------------------------------------- |
-| Mandatory Fields     | Fields marked with \* cannot be empty |
-| Phone Number         | Must contain exactly 10 digits        |
-| Email Format         | Must be valid email format            |
-| Contract End Date    | Must be greater than start date       |
-| GST Format           | Must match GSTIN pattern              |
-| PAN Format           | Must match PAN validation format      |
-| Billing Custom Dates | Required if billing cycle = Custom    |
+| Field   | Editable | Notes                   |
+| ------- | -------- | ----------------------- |
+| Address | Yes      | Operational information |
+| City    | Yes      | Vendor location         |
+| State   | Yes      | Vendor location         |
+| Pincode | Yes      | Address update          |
+| Country | Yes      | Default India           |
+
+---
+
+# **SECTION 3: TAX & COMPLIANCE – Fields**
+
+| Field                    | Editable | Notes                          |
+| ------------------------ | -------- | ------------------------------ |
+| Vendor Registration Type | No       | Impacts tax calculation        |
+| GST Number               | Yes      | Editable if vendor GST changes |
+| PAN Number               | Yes      | Compliance update              |
+
+---
+
+# **SECTION 4: BANK DETAILS – Fields**
+
+| Field               | Editable | Notes                 |
+| ------------------- | -------- | --------------------- |
+| Bank Name           | Yes      | Payment configuration |
+| Account Holder Name | Yes      | Vendor bank details   |
+| Account Number      | Yes      | Financial account     |
+| IFSC Code           | Yes      | Bank identification   |
+
+---
+
+# **SECTION 5: CONTRACT DETAILS – Fields**
+
+| Field                    | Editable | Notes                            |
+| ------------------------ | -------- | -------------------------------- |
+| Contract Type            | No       | Impacts billing configuration    |
+| Contract Start Date      | No       | Locked after contract activation |
+| Contract End Date        | Yes      | Can extend contract              |
+| SLA Agreement            | Yes      | Operational configuration        |
+| Contract Document Upload | Yes      | Updated contract file            |
+
+---
+
+# **SECTION 6: PRODUCT SUPPLY CONFIGURATION – Fields**
+
+| Field                  | Editable | Notes                         |
+| ---------------------- | -------- | ----------------------------- |
+| Product                | No       | Linked to procurement history |
+| Product Category       | No       | Auto from Product Master      |
+| Supply Quantity        | Yes      | Vendor supply configuration   |
+| UOM                    | No       | Defined in Product Master     |
+| Unit Supply Rate       | Yes      | Vendor pricing update         |
+| Minimum Order Quantity | Yes      | Procurement flexibility       |
+| Delivery Frequency     | Yes      | Delivery scheduling           |
+| Delivery Lead Time     | Yes      | Vendor logistics update       |
+| Tax Applicable         | Yes      | GST applicability             |
+
+Actions:
+
+| Action      | Description                           |
+| ----------- | ------------------------------------- |
+| Add Product | Allowed if vendor contract active     |
+| Edit Row    | Update supply configuration           |
+| Delete Row  | Allowed if product not used in orders |
+
+---
+
+# **SECTION 7: BILLING CONFIGURATION – Fields**
+
+| Field                     | Editable | Notes                           |
+| ------------------------- | -------- | ------------------------------- |
+| Billing Type              | No       | Impacts financial configuration |
+| Billing Cycle             | Yes      | Billing schedule adjustment     |
+| Custom Billing Start Date | Yes      | If custom cycle                 |
+| Custom Billing End Date   | Yes      | Billing configuration           |
+| Invoice Submission Method | Yes      | Email / Portal / Physical       |
+
+---
+
+# **SECTION 8: PAYMENT TERMS – Fields**
+
+| Field                | Editable | Notes                 |
+| -------------------- | -------- | --------------------- |
+| Payment Terms        | Yes      | Financial agreement   |
+| Advance Payment %    | Yes      | Payment configuration |
+| Late Payment Penalty | Yes      | Financial policy      |
+
+---
+
+# **SECTION 9: PERFORMANCE TRACKING – Fields**
+
+| Field         | Editable | Notes                        |
+| ------------- | -------- | ---------------------------- |
+| Vendor Rating | Yes      | Updated based on performance |
+| Remarks       | Yes      | Administrative notes         |
+
+---
+
+# **System Rules**
+
+1. Vendor ID cannot be edited.
+2. Vendor type cannot be changed after vendor creation.
+3. Contract structure cannot be modified once active.
+4. Products already used in **purchase orders cannot be removed**.
+5. Vendor status **Inactive or Blocked prevents new procurement transactions**.
 
 ---
 
 # **Audit Log Tracking**
 
-Every modification to the vendor must be recorded.
+Every modification to the vendor record is tracked.
 
-### **Audit Fields**
-
-| Field             | Description                         |
-| ----------------- | ----------------------------------- |
-| Created By        | User who created vendor             |
-| Created Date      | Creation timestamp                  |
-| Last Updated By   | Last editor of vendor record        |
-| Last Updated Date | Last modification time              |
-| Change Type       | Create / Update / Deactivate        |
-| Change Notes      | Optional admin comment about change |
+| Field          | Description        |
+| -------------- | ------------------ |
+| Updated By     | User making change |
+| Updated Date   | Timestamp          |
+| Field Changed  | Modified field     |
+| Previous Value | Old value          |
+| New Value      | Updated value      |
 
 ---
 
-### **Audit Log Example**
-
-| Date        | User  | Action      | Field Changed                     |
-| ----------- | ----- | ----------- | --------------------------------- |
-| 02-Feb-2026 | Admin | Created     | New Vendor Added                  |
-| 10-Feb-2026 | Admin | Updated     | Contact Person Updated            |
-| 12-Feb-2026 | Admin | Updated     | Payment Terms changed Net15→Net30 |
-| 15-Feb-2026 | Admin | Deactivated | Vendor marked inactive            |
+Below is **Module 13.4 – View Vendor Details Screen** written in the **same specification style as 13.2 and 13.3**, but since it is a **view screen**, all fields are **read-only** and meant only for **information display** without allowing modification.
 
 ---
 
-# Form Actions
+# **13.4 View Vendor – Vendor Detail Screen**
 
-| Action        | Description                                      |
-| ------------- | ------------------------------------------------ |
-| Cancel        | Discards changes and returns to Vendor Dashboard |
-| Update Vendor | Saves the updated vendor details                 |
-
----
-
-# System Behavior
-
-- Vendor ID remains **non-editable**.
-- Changes to **contract or billing fields** may affect procurement workflows.
-- Any modification automatically creates a **new audit log entry**.
-- Vendor cannot be set **Inactive if active purchase orders exist**.
-
----
-
-# 13.4 View Vendor Details – Vendor Profile Screen
-
-## Description
-
-The **View Vendor Details Screen** provides a complete profile of a vendor in **read-only mode**.  
-It allows users to view all information related to the vendor without modifying data.
-
-This screen acts as the **central vendor profile page**, displaying:
-
-- Vendor basic details
-- Address and compliance information
-- Contract details
-- Billing and payment configuration
-- Vendor performance rating
-- Vendor documents
-- Audit log history
-
-This screen is typically accessed from:
-
-- **Vendor Dashboard**
-- **Procurement Module**
-- **Purchase Orders**
-- **Vendor Payments**
-
----
-
-# Screen Layout
+# **Screen Layout**
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│                              VENDOR PROFILE                                  │
-│                     Vendor ID : V-001  |  Status : Active                    │
+│                              VENDOR DETAILS                                  │
 └──────────────────────────────────────────────────────────────────────────────┘
 
 
-VENDOR SUMMARY
+SECTION 1: BASIC INFORMATION
 ──────────────────────────────────────────────────────────────────────────────
 
-Vendor Name            : ABC Chemicals Pvt Ltd
-Vendor Type            : Supplier
-Vendor Category        : Chemical Supplier
-Service/Product        : Industrial Chemicals
-Vendor Rating          : ⭐⭐⭐⭐
+Vendor ID
+Vendor Name
+Vendor Type
+Vendor Category
+Product Supplied
+
+Contact Person
+Phone Number
+Email ID
+
+Vendor Status
+Vendor Rating
+Has Contract
 
 
-CONTACT INFORMATION
+SECTION 2: ADDRESS DETAILS
 ──────────────────────────────────────────────────────────────────────────────
 
-Contact Person         : Rajesh Kumar
-Phone Number           : +91 9876543210
-Email ID               : rajesh@abcchem.com
+Address
+City
+State
+Pincode
+Country
 
 
-ADDRESS DETAILS
+SECTION 3: TAX & COMPLIANCE
 ──────────────────────────────────────────────────────────────────────────────
 
-Address                : Plot 21 Industrial Area
-                         Phase 2
-
-City                   : Hyderabad
-State                  : Telangana
-Pincode                : 500081
-Country                : India
+Vendor Registration Type
+GST Number
+PAN Number
 
 
-TAX & COMPLIANCE
+SECTION 4: BANK DETAILS
 ──────────────────────────────────────────────────────────────────────────────
 
-Vendor Registration    : Registered
-GST Number             : 36ABCDE1234F1Z5
-PAN Number             : ABCDE1234F
+Bank Name
+Account Holder Name
+Account Number
+IFSC Code
 
 
-BANK DETAILS
+SECTION 5: CONTRACT DETAILS
 ──────────────────────────────────────────────────────────────────────────────
 
-Bank Name              : HDFC Bank
-Account Holder Name    : ABC Chemicals Pvt Ltd
-Account Number         : ********90123
-IFSC Code              : HDFC0001234
+Contract Type
+Contract Start Date
+Contract End Date
+SLA Agreement
+Contract Document
 
 
-CONTRACT DETAILS
+SECTION 6: PRODUCT SUPPLY DETAILS
 ──────────────────────────────────────────────────────────────────────────────
 
-Contract Type          : Annual
-Contract Start Date    : 01-Jan-2026
-Contract End Date      : 31-Dec-2026
-SLA Agreement          : Yes
-Contract Document      : View / Download
+┌──────────────────────────── PRODUCT SUPPLY TABLE ─────────────────────────────┐
+│ Product │ Category │ Supply Qty │ UOM │ Unit Rate │ MOQ │ Delivery Frequency │
+│─────────┼──────────┼────────────┼─────┼───────────┼─────┼────────────────────│
+│ Termite Chemical │ Chemical │ 50 │ Liters │ ₹1200 │ 10 │ Monthly │
+│ Rodent Bait │ Chemical │ 25 │ Kg │ ₹600 │ 5 │ Quarterly │
+└──────────────────────────────────────────────────────────────────────────────┘
 
 
-BILLING CONFIGURATION
+SECTION 7: BILLING CONFIGURATION
 ──────────────────────────────────────────────────────────────────────────────
 
-Billing Type           : Monthly
-Billing Cycle          : Monthly
-Tax Applicable         : Yes
-Invoice Submission     : Email
+Billing Type
+Billing Cycle
+Custom Billing Start Date
+Custom Billing End Date
+Invoice Submission Method
 
 
-PAYMENT DETAILS
+SECTION 8: PAYMENT TERMS
 ──────────────────────────────────────────────────────────────────────────────
 
-Payment Terms          : Net 30
-Credit Days            : 30
-Payment Method         : Bank Transfer
-Currency               : INR
+Payment Terms
+Advance Payment %
+Late Payment Penalty
 
 
-PERFORMANCE & NOTES
+SECTION 9: PERFORMANCE DETAILS
 ──────────────────────────────────────────────────────────────────────────────
 
-Vendor Rating          : 4 / 5
-Remarks / Notes        : Long term supplier with reliable delivery performance.
+Vendor Rating
+Remarks
 
 
-SYSTEM INFORMATION
+SECTION 10: AUDIT HISTORY
 ──────────────────────────────────────────────────────────────────────────────
 
-Created Date           : 02-Feb-2026
-Updated Date           : 10-Feb-2026
-Created By             : Admin
+┌──────────────────────────── AUDIT LOG TABLE ─────────────────────────────┐
+│ Date │ User │ Action │ Field Changed │ Old Value │ New Value │
+│──────┼──────┼────────┼───────────────┼───────────┼───────────│
+│ 02 Feb 2026 │ Admin │ Created │ Vendor Created │ — │ — │
+│ 10 Feb 2026 │ Admin │ Updated │ Contact Person │ A Kumar │ R Kumar │
+│ 15 Feb 2026 │ Admin │ Updated │ Payment Terms │ Net15 │ Net30 │
+└─────────────────────────────────────────────────────────────────────────┘
 
 
-┌────────────────────────────────────────────────────────────┐
-│ [ Back ]                    [ Edit Vendor ]   [ Download ]  │
-└────────────────────────────────────────────────────────────┘
+[ BACK TO VENDOR LIST ]
 ```
 
 ---
 
-# Section Wise Data Display
+# **SECTION 1: BASIC INFORMATION – Fields**
+
+| Field            | Field Type | Editable | Notes                              |
+| ---------------- | ---------- | -------- | ---------------------------------- |
+| Vendor ID        | Text       | No       | System generated                   |
+| Vendor Name      | Text       | No       | Vendor company name                |
+| Vendor Type      | Text       | No       | Supplier / Service Provider / Both |
+| Vendor Category  | Text       | No       | Vendor classification              |
+| Product Supplied | Text       | No       | Product description                |
+| Contact Person   | Text       | No       | Vendor representative              |
+| Phone Number     | Phone      | No       | Vendor contact                     |
+| Email ID         | Email      | No       | Vendor email                       |
+| Vendor Status    | Badge      | No       | Active / Inactive / Blocked        |
+| Vendor Rating    | Rating     | No       | Vendor performance                 |
+| Has Contract     | Text       | No       | Yes / No                           |
 
 ---
 
-# 1. Vendor Summary
+# **SECTION 2: ADDRESS DETAILS – Fields**
 
-| Field           | Description                        |
-| --------------- | ---------------------------------- |
-| Vendor ID       | Unique vendor identifier           |
-| Vendor Name     | Official vendor company name       |
-| Vendor Type     | Supplier / Service Provider / Both |
-| Vendor Category | Vendor classification              |
-| Service/Product | Main service or product supplied   |
-| Vendor Rating   | Performance rating                 |
-
----
-
-# 2. Contact Information
-
-| Field          | Description            |
-| -------------- | ---------------------- |
-| Contact Person | Primary vendor contact |
-| Phone Number   | Vendor contact phone   |
-| Email ID       | Vendor email address   |
+| Field   | Field Type | Editable | Notes          |
+| ------- | ---------- | -------- | -------------- |
+| Address | Text       | No       | Vendor address |
+| City    | Text       | No       | Vendor city    |
+| State   | Text       | No       | Vendor state   |
+| Pincode | Number     | No       | Postal code    |
+| Country | Text       | No       | Default India  |
 
 ---
 
-# 3. Address Details
+# **SECTION 3: TAX & COMPLIANCE – Fields**
 
-| Field   | Description             |
-| ------- | ----------------------- |
-| Address | Vendor business address |
-| City    | Vendor city             |
-| State   | Vendor state            |
-| Pincode | Postal code             |
-| Country | Vendor country          |
+| Field                    | Field Type | Editable | Notes                     |
+| ------------------------ | ---------- | -------- | ------------------------- |
+| Vendor Registration Type | Text       | No       | Registered / Unregistered |
+| GST Number               | Text       | No       | Vendor GST                |
+| PAN Number               | Text       | No       | Vendor PAN                |
 
 ---
 
-# 4. Tax & Compliance
+# **SECTION 4: BANK DETAILS – Fields**
 
-| Field                    | Description               |
-| ------------------------ | ------------------------- |
-| Vendor Registration Type | Registered / Unregistered |
-| GST Number               | Vendor GST identification |
-| PAN Number               | Vendor PAN identification |
-
----
-
-# 5. Bank Details
-
-| Field               | Description                |
-| ------------------- | -------------------------- |
-| Bank Name           | Vendor bank                |
-| Account Holder Name | Account holder name        |
-| Account Number      | Masked bank account number |
-| IFSC Code           | Bank branch code           |
+| Field               | Field Type | Editable | Notes             |
+| ------------------- | ---------- | -------- | ----------------- |
+| Bank Name           | Text       | No       | Vendor bank       |
+| Account Holder Name | Text       | No       | Bank account name |
+| Account Number      | Number     | No       | Vendor account    |
+| IFSC Code           | Text       | No       | Bank code         |
 
 ---
 
-# 6. Contract Details
+# **SECTION 5: CONTRACT DETAILS – Fields**
 
-| Field               | Description                 |
-| ------------------- | --------------------------- |
-| Contract Type       | Annual / Project / One Time |
-| Contract Start Date | Contract start date         |
-| Contract End Date   | Contract expiry date        |
-| SLA Agreement       | Indicates SLA availability  |
-| Contract Document   | Download contract file      |
-
----
-
-# 7. Billing Configuration
-
-| Field                     | Description                     |
-| ------------------------- | ------------------------------- |
-| Billing Type              | Per Service / Monthly / Project |
-| Billing Cycle             | Weekly / Monthly / Quarterly    |
-| Tax Applicable            | Indicates tax applicability     |
-| Invoice Submission Method | Email / Portal / Physical       |
+| Field               | Field Type | Editable | Notes                       |
+| ------------------- | ---------- | -------- | --------------------------- |
+| Contract Type       | Text       | No       | Annual / Project / One Time |
+| Contract Start Date | Date       | No       | Contract start              |
+| Contract End Date   | Date       | No       | Contract expiry             |
+| SLA Agreement       | Text       | No       | Yes / No                    |
+| Contract Document   | File Link  | No       | Downloadable file           |
 
 ---
 
-# 8. Payment Details
+# **SECTION 6: PRODUCT SUPPLY DETAILS – Fields**
 
-| Field          | Description                        |
-| -------------- | ---------------------------------- |
-| Payment Terms  | Advance / Net 15 / Net 30 / Net 45 |
-| Credit Days    | Allowed payment days               |
-| Payment Method | Bank Transfer / UPI / Cheque       |
-| Currency       | Payment currency                   |
-
----
-
-# 9. Performance & Notes
-
-| Field           | Description                  |
-| --------------- | ---------------------------- |
-| Vendor Rating   | Vendor performance score     |
-| Remarks / Notes | Additional internal comments |
+| Field                  | Field Type | Editable | Notes                        |
+| ---------------------- | ---------- | -------- | ---------------------------- |
+| Product                | Text       | No       | Product name                 |
+| Product Category       | Text       | No       | From Product Master          |
+| Supply Quantity        | Number     | No       | Default supply quantity      |
+| UOM                    | Text       | No       | Unit of measure              |
+| Unit Supply Rate       | Currency   | No       | Vendor price                 |
+| Minimum Order Quantity | Number     | No       | Procurement limit            |
+| Delivery Frequency     | Text       | No       | Weekly / Monthly / Quarterly |
+| Delivery Lead Time     | Number     | No       | Delivery days                |
 
 ---
 
-# **Audit Log Tracking**
+# **SECTION 7: BILLING CONFIGURATION – Fields**
 
-Every modification to the vendor record is logged for audit and compliance purposes.
-
-### **Audit Fields**
-
-| Field             | Description                  |
-| ----------------- | ---------------------------- |
-| Created By        | User who created vendor      |
-| Created Date      | Creation timestamp           |
-| Last Updated By   | Last editor                  |
-| Last Updated Date | Last modification time       |
-| Change Type       | Create / Update / Deactivate |
-| Change Notes      | Optional admin comment       |
+| Field                     | Field Type | Editable | Notes                           |
+| ------------------------- | ---------- | -------- | ------------------------------- |
+| Billing Type              | Text       | No       | Per Service / Monthly / Project |
+| Billing Cycle             | Text       | No       | Weekly / Monthly / Quarterly    |
+| Custom Billing Start Date | Date       | No       | Custom billing start            |
+| Custom Billing End Date   | Date       | No       | Custom billing end              |
+| Invoice Submission Method | Text       | No       | Email / Portal / Physical       |
 
 ---
 
-### **Audit Log Example**
+# **SECTION 8: PAYMENT TERMS – Fields**
 
-| Date        | User  | Action      | Field Changed                     |
-| ----------- | ----- | ----------- | --------------------------------- |
-| 02-Feb-2026 | Admin | Created     | New Vendor Added                  |
-| 10-Feb-2026 | Admin | Updated     | Contact Person Updated            |
-| 12-Feb-2026 | Admin | Updated     | Payment Terms changed Net15→Net30 |
-| 15-Feb-2026 | Admin | Deactivated | Vendor marked inactive            |
+| Field                | Field Type | Editable | Notes                           |
+| -------------------- | ---------- | -------- | ------------------------------- |
+| Payment Terms        | Text       | No       | Advance / Net15 / Net30 / Net45 |
+| Advance Payment %    | Number     | No       | Advance percentage              |
+| Late Payment Penalty | Text       | No       | Financial rule                  |
 
 ---
 
-# System Behavior
+# **SECTION 9: PERFORMANCE DETAILS – Fields**
 
-- All fields on this screen are **read-only**.
-- Sensitive fields such as **bank account numbers are partially masked**.
-- Vendor documents are available for **download only**.
-- Audit logs help administrators **track historical changes to vendor records**.
-- Vendor profile data is shared across **Procurement, Finance, and Contract Management modules**.
+| Field         | Field Type | Editable | Notes                |
+| ------------- | ---------- | -------- | -------------------- |
+| Vendor Rating | Rating     | No       | Performance score    |
+| Remarks       | Text Area  | No       | Administrative notes |
+
+---
+
+# **SECTION 10: AUDIT HISTORY**
+
+The system records all vendor record activities.
+
+| Field         | Description                        |
+| ------------- | ---------------------------------- |
+| Date          | Timestamp of activity              |
+| User          | User who performed action          |
+| Action        | Created / Updated / Status Changed |
+| Field Changed | Modified field                     |
+| Old Value     | Previous value                     |
+| New Value     | Updated value                      |
 
 ---
