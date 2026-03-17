@@ -844,65 +844,6 @@ If stock is damaged, missing, or incorrect, users can **report issues during rec
 
 ---
 
-# 11.2.A Stock Requests (Current)
-
-This sub-tab displays **requests sent to Central Warehouse / Head Office**.
-
-### Examples
-
-| Request ID | Type          | Direction | From | To  |
-| ---------- | ------------- | --------- | ---- | --- |
-| SR-BLR-001 | Stock Request | Inward    | CEN  | BLR |
-| SR-BLR-002 | Stock Request | Inward    | CEN  | BLR |
-
-**Purpose**
-
-Branch requesting stock from **Central Warehouse or Head Office**.
-
----
-
-# 11.2.B Branch Transfers
-
-This sub-tab displays **stock transfers between branches**.
-
-Structure remains **same as Stock Request table** to maintain UI consistency.
-
----
-
-# Screen Layout (Branch Transfer)
-
-```text
-┌──────────────────────────────────────────────────────────────────────────────┐
-│                             BRANCH TRANSFERS                                 │
-│                                                                              │
-│ [A) Stock Requests]   [B) Branch Transfers]                                  │
-│                                                                              │
-│ Status Filter: [All] [Pending] [Approved] [Rejected] [Dispatch]              │
-│                [In Transit] [Received] [Issue Reported]                      │
-│                                                                              │
-│ [+ New Transfer Request]                                                     │
-│                                                                              │
-│ TRANSFER REQUEST TABLE                                                       │
-│ ┌──────────────────────────────────────────────────────────────────────────┐ │
-│ │Request ID │Type │Direction│From│To │Items│Total│Assets│Status │Priority │ │
-│ │───────────┼─────┼─────────┼────┼───┼─────┼─────┼──────┼───────┼──────── │ │
-│ │TR-2024-056│Tran │Inward   │HYD │BLR│ 2   │ 15  │ 3    │InTran │Normal   │ │
-│ │TR-2024-042│Tran │Outward  │BLR │BOM│ 1   │ 10  │ 0    │Approved│Normal  │ │
-│ └──────────────────────────────────────────────────────────────────────────┘ │
-│                                                                              │
-│ ┌──────────────────────────────────────────────────────────────────────────┐ │
-│ │Requested By │Requested Date & Time │Action                                │ │
-│ │─────────────┼──────────────────────┼──────────────────────────────────── │ │
-│ │Rahul Shah   │12 Jan 2024 11:20 AM  │[View]                                │ │
-│ │Priya Singh  │13 Jan 2024 09:10 AM  │[View] [Receive]                      │ │
-│ └──────────────────────────────────────────────────────────────────────────┘ │
-│                                                                              │
-│ Pagination: Previous 1 2 3 ... 10 Next                                       │
-└──────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
 # Table Fields (Applicable to Both Tabs)
 
 | Field                 | Type     | Description                        |
@@ -940,6 +881,17 @@ Structure remains **same as Stock Request table** to maintain UI consistency.
 | Stock Request    | Inward    | Branch requesting stock from warehouse     |
 | Transfer Request | Inward    | Branch receiving stock from another branch |
 | Transfer Request | Outward   | Branch sending stock to another branch     |
+
+# Filters
+
+| Filter Name  | Type                | Default      | Options                                                                     | Purpose                          |
+| ------------ | ------------------- | ------------ | --------------------------------------------------------------------------- | -------------------------------- |
+| Request Type | Dropdown            | All          | Stock Request, Transfer Request                                             | Separate stock vs transfer flows |
+| Status       | Multi-Select        | All          | Pending, Approved, Rejected, Dispatch, In Transit, Received, Issue Reported | Track lifecycle stage            |
+| Direction    | Dropdown            | All          | Inward, Outward                                                             | Identify incoming vs outgoing    |
+| Branch       | Searchable Dropdown | User Branch  | All Branches / Specific Branch                                              | Filter by source/destination     |
+| Date Range   | Date Picker         | Last 30 Days | Custom Range                                                                | Filter based on request creation |
+| Priority     | Dropdown            | All          | Low, Normal, High, Urgent                                                   | Focus on critical requests       |
 
 ---
 
@@ -1066,10 +1018,6 @@ Structure remains **same as Stock Request table** to maintain UI consistency.
 
 - **[Save Draft]** — Saves without validation, no notifications sent
 - **[Submit Request]** — Validates all fields, notifies Head Ops
-
----
-
-Below is your **same popup layout kept exactly as it is**, with only the **Description section added** as requested.
 
 ---
 
