@@ -3720,10 +3720,6 @@ Remarks
 
 ---
 
-Below is **Module 13.3 – Edit Vendor Form** written in the **same documentation style** as your previous section, but with a **simplified field table** where each field shows whether it is **Editable or Not Editable**, ensuring that **changes do not affect dependent modules** like Procurement, Inventory, or Finance.
-
----
-
 # **13.3 Edit Vendor – Vendor Update Screen**
 
 ---
@@ -4219,3 +4215,720 @@ The system records all vendor record activities.
 | New Value     | Updated value                      |
 
 ---
+
+==================================================================================================
+
+# 🎯 MODULE 14: Purchase Order
+
+## Overview
+
+The **Purchase Order (PO) Module** manages the formal process of procuring goods or services from vendors. It tracks the entire lifecycle from PO generation and approval to vendor fulfillment and stock receipt.
+
+This module ensures transparent procurement, budget control, and seamless integration with inventory management.
+
+---
+
+## Module Connections
+
+### Depends On
+
+- **Module 13: Vendor Management**: For supplier details, payment terms, and product mapping.
+- **Module 10: Product Master**: For selecting catalog items and SKUs.
+- **Module 9: Tax Management**: For HSN/SAC and GST calculations.
+
+### Used By
+
+- **Module 11: Stock Management**: Received PO items trigger "Add to Central Stock" workflows.
+- **Finance Module**: For invoice matching and accounts payable.
+
+---
+
+# **14.1 Purchase Order – Table View**
+
+## **Description**
+
+Displays all Purchase Orders with their current lifecycle status.
+Used to track procurement from creation → approval → ordering → receiving.
+
+---
+
+## **Screen Layout**
+
+```text
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                          PURCHASE ORDER DASHBOARD                            │
+│                                                                              │
+│ Vendor ▼ | Status ▼ | Date Range 📅 | Branch ▼ | [Reset]                      │
+│                                                                              │
+│ [+ CREATE PURCHASE ORDER]                                                    │
+│                                                                              │
+│ PURCHASE ORDER TABLE                                                         │
+│ ┌──────────────────────────────────────────────────────────────────────────┐ │
+│ │PO ID │Vendor │PO Date │Delivery │Items│Total Amount│Status │Action       │ │
+│ │──────┼───────┼────────┼─────────┼─────┼────────────┼────────┼────────────│ │
+│ │PO-001│ABC Ltd│12 Mar  │15 Mar   │  5  │ ₹50,000    │Draft   │[Edit][Del] │ │
+│ │PO-002│XYZ Co │13 Mar  │18 Mar   │  3  │ ₹20,000    │Approved│[View]      │ │
+│ │PO-003│ABC Ltd│14 Mar  │20 Mar   │  8  │ ₹75,000    │Ordered │[View]      │ │
+│ └──────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│ Pagination: Previous 1 2 3 ... Next                                           │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## **Table Fields**
+
+| Field Name    | Type     | Description                      |
+| ------------- | -------- | -------------------------------- |
+| PO ID         | Text     | Unique Purchase Order identifier |
+| Vendor        | Text     | Vendor selected for the PO       |
+| PO Date       | Date     | Date of PO creation              |
+| Delivery Date | Date     | Expected delivery date           |
+| Items Count   | Number   | Total number of product lines    |
+| Total Amount  | Currency | Grand total including taxes      |
+| Status        | Badge    | Current PO lifecycle status      |
+| Action        | Buttons  | View / Edit / Delete / Download  |
+
+---
+
+## **Filters (Professional & Minimal)**
+
+| Filter Name | Type            | Description                |
+| ----------- | --------------- | -------------------------- |
+| Vendor      | Dropdown Search | Filter PO by vendor        |
+| Status      | Dropdown        | Filter by lifecycle status |
+| Date Range  | Date Picker     | Filter based on PO Date    |
+| Branch      | Dropdown        | Filter by branch           |
+
+---
+
+## **Actions**
+
+| Action | Available When           | Description               |
+| ------ | ------------------------ | ------------------------- |
+| View   | All statuses             | Open PO in read-only mode |
+| Edit   | Draft / Pending Approval | Modify PO details         |
+| Delete | Draft only               | Remove PO permanently     |
+
+---
+
+## **Status Indicators**
+
+| Status             | Meaning              |
+| ------------------ | -------------------- |
+| Draft              | PO not finalized     |
+| Pending Approval   | Waiting for approval |
+| Approved           | Approved internally  |
+| Ordered            | Sent to vendor       |
+| Partially Received | Some items received  |
+| Received           | Fully received       |
+| Cancelled          | PO cancelled         |
+
+---
+
+## **Notes (ERP Behavior)**
+
+- Once PO reaches **Ordered**, editing and deletion are restricted
+- **Status-driven control** ensures data integrity
+- Table structure aligns with:
+  - Stock (Module 11)
+  - Services (Module 12)
+  - Vendors (Module 13)
+
+---
+
+# **14.2 Create Purchase Order**
+
+## **Description**
+
+Create a Purchase Order by selecting a vendor and adding products.
+System auto-fetches vendor, product, and tax details while the user provides required inputs.
+
+---
+
+## **Screen Layout**
+
+```text id="po14create_refined"
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                         CREATE PURCHASE ORDER                                │
+│                                                                              │
+│  [← Back to PO List]                                                         │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 1: PO BASIC INFO                                                     │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ PO Number           : AUTO GENERATED                                         │
+│ PO Date *           : [📅 Select Date]                                        │
+│ Status *            : Draft (Default)                                         │
+│ GST Number (PO) *   : AUTO FETCH (Company)                                    │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 2: VENDOR DETAILS (Module 13)                                        │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Vendor Name *       : [Search ▼]                                              │
+│ Vendor Address *    : AUTO FETCH                                              │
+│ Vendor GST *        : AUTO FETCH                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 3: ITEM DETAILS                                                      │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ [ + ADD ITEM ]                                                               │
+│                                                                              │
+│ ┌──────────────────────────────────────────────────────────────────────────┐ │
+│ │Sl│Product │Qty│UOM│Price│GST%│Tax Amt│Total Amt│Action                    │ │
+│ │──┼────────┼───┼───┼─────┼────┼───────┼─────────┼───────────────           │ │
+│ │1 │[▼]     │ 5 │Auto│100 │18% │ 90    │ 590     │[Remove]                  │ │
+│ └──────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│ ➤ On Product Select → Auto Fetch all product details (hidden metadata)       │
+│ ➤ No duplicate fields shown (clean ERP design)                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 4: SUMMARY                                                           │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Subtotal            : AUTO CALCULATED                                         │
+│ Total Tax           : AUTO CALCULATED                                         │
+│ Grand Total *       : AUTO CALCULATED                                         │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 5: DELIVERY DETAILS                                                  │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Delivery Address *  : [Text Area]                                             │
+│ Contact Person *    : [Text]                                                  │
+│ Contact Number *    : [Number]                                                │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 6: AUTHORIZATION                                                     │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Authorized Person * : Logged-in User                                          │
+│ Designation *       : [Text]                                                  │
+│ Note                : Thank you                                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ ACTIONS                                                                      │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ [ SAVE AS DRAFT ]   [ SUBMIT FOR APPROVAL ]   [ CANCEL ]                      │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## **Section 1: PO Basic Info**
+
+| Field           | Field Type  | Required | Options                    | Notes                                        |
+| --------------- | ----------- | -------- | -------------------------- | -------------------------------------------- |
+| PO Number       | Auto Number | Yes      | System Generated           | Unique PO ID (Read-only)                     |
+| PO Date         | Date Picker | Yes      | Past / Current Date        | Cannot be future date                        |
+| Status          | Dropdown    | Yes      | Draft (Default), Submitted | Controlled by system workflow                |
+| GST Number (PO) | Text (Auto) | Yes      | Company GST                | Auto fetched from Company Master (Read-only) |
+
+---
+
+## **Section 2: Vendor Details**
+
+| Field          | Field Type      | Required | Options            | Notes                     |
+| -------------- | --------------- | -------- | ------------------ | ------------------------- |
+| Vendor Name    | Search Dropdown | Yes      | Vendor Master List | On select → fetch details |
+| Vendor Address | Text (Auto)     | Yes      | From Vendor Master | Read-only                 |
+| Vendor GST     | Text (Auto)     | Yes      | From Vendor Master | Read-only                 |
+
+---
+
+## **Section 3: Item Details (Row-Based Table)**
+
+| Field          | Field Type       | Required | Options               | Notes                                       |
+| -------------- | ---------------- | -------- | --------------------- | ------------------------------------------- |
+| Product        | Dropdown         | Yes      | Product Master        | On select → auto fetch UOM, Price, GST      |
+| Quantity       | Number           | Yes      | > 0                   | User input                                  |
+| UOM            | Text (Auto)      | Yes      | From Product Master   | Read-only                                   |
+| Purchase Price | Number           | Yes      | ≥ 0                   | Auto-filled, editable (based on permission) |
+| GST %          | Dropdown (Auto)  | Yes      | 0%, 5%, 12%, 18%, 28% | Auto from Tax/HSN                           |
+| Tax Amount     | Calculated Field | Yes      | System Calculated     | Qty × Price × GST %                         |
+| Total Amount   | Calculated Field | Yes      | System Calculated     | (Qty × Price) + Tax                         |
+| Action         | Button           | No       | Add / Remove Row      | Manage items dynamically                    |
+
+---
+
+## **Section 4: Summary**
+
+| Field       | Field Type       | Required | Options | Notes                        |
+| ----------- | ---------------- | -------- | ------- | ---------------------------- |
+| Subtotal    | Calculated Field | Yes      | System  | Sum of all item base amounts |
+| Total Tax   | Calculated Field | Yes      | System  | Sum of all tax values        |
+| Grand Total | Calculated Field | Yes      | System  | Final payable amount         |
+
+---
+
+## **Section 5: Delivery Details**
+
+| Field            | Field Type | Required | Options         | Notes                      |
+| ---------------- | ---------- | -------- | --------------- | -------------------------- |
+| Delivery Address | Text Area  | Yes      | Manual Entry    | Can be prefilled if needed |
+| Contact Person   | Text       | Yes      | Manual Entry    | Receiver name              |
+| Contact Number   | Number     | Yes      | 10-digit Mobile | Numeric only               |
+
+---
+
+## **Section 6: Authorization**
+
+| Field             | Field Type  | Required | Options          | Notes                |
+| ----------------- | ----------- | -------- | ---------------- | -------------------- |
+| Authorized Person | Text (Auto) | Yes      | Logged-in User   | System captured      |
+| Designation       | Text        | Yes      | Manual Entry     | Role of user         |
+| Note              | Text Area   | No       | Default / Custom | Default: “Thank you” |
+
+---
+
+# **Validations (Professional ERP Standard)**
+
+## **General Validations**
+
+- All mandatory (\*) fields must be filled before submission
+- System should prevent submission if no items are added
+- At least one item row is required
+
+---
+
+## **PO Basic Info**
+
+- PO Date cannot be a future date
+- Status cannot be manually changed beyond allowed workflow
+- GST Number must be valid format (GSTIN validation)
+
+---
+
+## **Vendor Details**
+
+- Vendor must be selected from master (no manual entry)
+- Vendor GST must be valid and active
+- Vendor must not be inactive/blocked
+
+---
+
+## **Item Details**
+
+- Product selection is mandatory per row
+- Quantity must be greater than 0
+- Purchase Price cannot be negative
+- GST % must match predefined tax slabs
+- Duplicate product entries should be allowed/blocked based on business rule
+- Total Amount auto recalculates on any change
+
+---
+
+## **System / Workflow Validations**
+
+- Draft → Editable
+- Submitted → Locked for editing
+- Only authorized roles can approve/reject
+- Audit log must capture:
+  - Created By
+  - Created Date
+  - Last Updated By
+  - Last Updated Date
+
+---
+
+# **14.3 Edit Purchase Order**
+
+## **Description**
+
+Allows modification of Purchase Order based on status.
+Editing is restricted to maintain data integrity after submission and approval.
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                         EDIT PURCHASE ORDER                                  │
+│                                                                              │
+│  [← Back to PO List]     [PO Number: PO-XXXX]     [Status: Draft/Approved]    │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 1: PO BASIC INFO                                                     │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ PO Number           : AUTO GENERATED (READ-ONLY)                              │
+│ PO Date *           : [📅 Select Date] (Editable if Draft)                    │
+│ Status *            : Draft / Submitted / Approved (Controlled)              │
+│ GST Number (PO) *   : AUTO FETCH (READ-ONLY)                                  │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 2: VENDOR DETAILS                                                    │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Vendor Name *       : [Search ▼] (Editable if Draft)                          │
+│ Vendor Address *    : AUTO FETCH (READ-ONLY)                                  │
+│ Vendor GST *        : AUTO FETCH (READ-ONLY)                                  │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 3: ITEM DETAILS                                                      │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ [ + ADD ITEM ] (Only in Draft)                                                │
+│                                                                              │
+│ ┌──────────────────────────────────────────────────────────────────────────┐ │
+│ │Sl│Product │Qty│UOM│Price│GST%│Tax Amt│Total Amt│Action                    │ │
+│ │──┼────────┼───┼───┼─────┼────┼───────┼─────────┼───────────────           │ │
+│ │1 │[▼]     │ 5 │Auto│100 │18% │ 90    │ 590     │[Remove]                  │ │
+│ └──────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│ ➤ Product / Qty / Price editable only in Draft                               │
+│ ➤ UOM, GST%, Tax Amt, Total Amt → READ-ONLY                                  │
+│ ➤ Row Add/Remove disabled after submission                                   │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 4: SUMMARY                                                           │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Subtotal            : AUTO CALCULATED (READ-ONLY)                             │
+│ Total Tax           : AUTO CALCULATED (READ-ONLY)                             │
+│ Grand Total *       : AUTO CALCULATED (READ-ONLY)                             │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 5: DELIVERY DETAILS                                                  │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Delivery Address *  : [Text Area] (Editable if Draft)                         │
+│ Contact Person *    : [Text] (Editable if Draft)                              │
+│ Contact Number *    : [Number] (Editable if Draft)                            │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 6: AUTHORIZATION                                                     │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Authorized Person * : Logged-in User (READ-ONLY)                              │
+│ Designation *       : [Text] (Editable if Draft)                              │
+│ Note                : [Text Area] (Editable)                                  │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 7: AUDIT TRAIL                                                       │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Last Edited By     : User ID                                                  │
+│ Last Edited Date   : DD-MM-YYYY HH:MM                                         │
+│ Changed Fields     : Field1, Field2, Field3                                   │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ ACTIONS                                                                      │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ [ UPDATE ]   [ SAVE AS DRAFT ]   [ CANCEL ]                                   │
+│                                                                              │
+│ ➤ If Status = Draft → Full Actions                                           │
+│ ➤ If Submitted/Approved → Limited / Disabled                                 │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+## **Field Editability**
+
+### **Section 1: PO Basic Info**
+
+| Field           | Editable   | Notes                                    |
+| --------------- | ---------- | ---------------------------------------- |
+| PO Number       | ❌ No      | System generated, always read-only       |
+| PO Date         | ✅ Yes     | Editable only in Draft                   |
+| Status          | ⚠️ Limited | Can change based on workflow permissions |
+| GST Number (PO) | ❌ No      | Auto from Company, not editable          |
+
+---
+
+### **Section 2: Vendor Details**
+
+| Field          | Editable | Notes                   |
+| -------------- | -------- | ----------------------- |
+| Vendor Name    | ✅ Yes   | Editable only in Draft  |
+| Vendor Address | ❌ No    | Auto from Vendor Master |
+| Vendor GST     | ❌ No    | Auto from Vendor Master |
+
+---
+
+### **Section 3: Item Details**
+
+| Field          | Editable | Notes                                   |
+| -------------- | -------- | --------------------------------------- |
+| Product        | ✅ Yes   | Editable only in Draft                  |
+| Quantity       | ✅ Yes   | Editable only in Draft                  |
+| UOM            | ❌ No    | Auto from Product Master                |
+| Purchase Price | ✅ Yes   | Editable in Draft (based on permission) |
+| GST %          | ❌ No    | Auto from Tax/HSN                       |
+| Tax Amount     | ❌ No    | System calculated                       |
+| Total Amount   | ❌ No    | System calculated                       |
+| Action (Row)   | ✅ Yes   | Add/Remove allowed only in Draft        |
+
+---
+
+### **Section 4: Summary**
+
+| Field       | Editable | Notes           |
+| ----------- | -------- | --------------- |
+| Subtotal    | ❌ No    | Auto calculated |
+| Total Tax   | ❌ No    | Auto calculated |
+| Grand Total | ❌ No    | Auto calculated |
+
+---
+
+### **Section 5: Delivery Details**
+
+| Field            | Editable | Notes                  |
+| ---------------- | -------- | ---------------------- |
+| Delivery Address | ✅ Yes   | Editable only in Draft |
+| Contact Person   | ✅ Yes   | Editable only in Draft |
+| Contact Number   | ✅ Yes   | Editable only in Draft |
+
+---
+
+### **Section 6: Authorization**
+
+| Field             | Editable | Notes                            |
+| ----------------- | -------- | -------------------------------- |
+| Authorized Person | ❌ No    | Logged-in user (system captured) |
+| Designation       | ✅ Yes   | Editable in Draft                |
+| Note              | ✅ Yes   | Editable until Approved          |
+
+---
+
+# **Status-Based Editing Rules**
+
+| Status             | Editing Allowed |
+| ------------------ | --------------- |
+| Draft              | Full Edit       |
+| Pending Approval   | ❌ No Edit      |
+| Approved           | ⚠️ Status only  |
+| Ordered            | ❌ Locked       |
+| Partially Received | ❌ Locked       |
+| Received           | ❌ Closed       |
+| Cancelled          | ❌ Closed       |
+
+---
+
+# **Audit Trail (Mandatory)**
+
+Every edit must be tracked for compliance and history.
+
+| Field           | Value Description                |
+| --------------- | -------------------------------- |
+| Edited By       | Logged-in User ID                |
+| Edited Date     | System Timestamp                 |
+| Changed Fields  | List of modified fields          |
+| Previous Values | Stored before update (for audit) |
+
+---
+
+# **14.3 View Purchase Order**
+
+## **Description**
+
+Displays complete Purchase Order details in **read-only mode**.
+Provides full visibility of vendor, items, pricing, and audit history without allowing any modification.
+
+---
+
+## **Screen Layout**
+
+```text id="po14view_refined"
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                         VIEW PURCHASE ORDER                                  │
+│                                                                              │
+│  [← Back to PO List]     [PO Number: PO-XXXX]     [Status: Approved]          │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 1: PO BASIC INFO                                                     │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ PO Number           : PO-XXXX                                                 │
+│ PO Date             : DD-MM-YYYY                                              │
+│ Status              : Draft / Submitted / Approved                            │
+│ GST Number (PO)     : 22AAAAA0000A1Z5                                         │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 2: VENDOR DETAILS                                                    │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Vendor Name         : ABC Suppliers                                           │
+│ Vendor Address      : Full Address Display                                    │
+│ Vendor GST          : 27BBBBB1111B2Z6                                         │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 3: ITEM DETAILS                                                      │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ ┌──────────────────────────────────────────────────────────────────────────┐ │
+│ │Sl│Product │Qty│UOM│Price│GST%│Tax Amt│Total Amt                          │ │
+│ │──┼────────┼───┼───┼─────┼────┼───────┼─────────                          │ │
+│ │1 │Item A  │ 5 │Nos│100 │18% │ 90    │ 590                               │ │
+│ │2 │Item B  │ 2 │Nos│200 │18% │ 72    │ 472                               │ │
+│ └──────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│ ➤ All values displayed as saved (no editing)                                  │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 4: SUMMARY                                                           │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Subtotal            : XXXX                                                    │
+│ Total Tax           : XXXX                                                    │
+│ Grand Total         : XXXX                                                    │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 5: DELIVERY DETAILS                                                  │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Delivery Address    : Full Address                                            │
+│ Contact Person      : Name                                                    │
+│ Contact Number      : 9876543210                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 6: AUTHORIZATION                                                     │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Authorized Person   : User Name                                               │
+│ Designation         : Manager                                                 │
+│ Note                : Thank you                                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SECTION 7: AUDIT TRAIL                                                       │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Created By          : User ID                                                 │
+│ Created Date        : DD-MM-YYYY HH:MM                                        │
+│ Last Edited By      : User ID                                                 │
+│ Last Edited Date    : DD-MM-YYYY HH:MM                                        │
+│ Change History      : View Full Log [🔍]                                       │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ ACTIONS                                                                      │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ [ EDIT ]   [ PRINT ]   [ DOWNLOAD PDF ]   [ CLOSE ]                           │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## **Fields (Name / Description)**
+
+### **Section 1: PO Basic Info**
+
+| Field           | Description                  |
+| --------------- | ---------------------------- |
+| PO Number       | Unique Purchase Order ID     |
+| PO Date         | Date when PO was created     |
+| Status          | Current workflow status      |
+| GST Number (PO) | Company GST used for this PO |
+
+---
+
+### **Section 2: Vendor Details**
+
+| Field          | Description               |
+| -------------- | ------------------------- |
+| Vendor Name    | Selected vendor name      |
+| Vendor Address | Vendor registered address |
+| Vendor GST     | Vendor GST number         |
+
+---
+
+### **Section 3: Item Details**
+
+| Field        | Description                |
+| ------------ | -------------------------- |
+| Product      | Product name               |
+| Quantity     | Ordered quantity           |
+| UOM          | Unit of Measurement        |
+| Price        | Purchase price per unit    |
+| GST %        | Applicable tax percentage  |
+| Tax Amount   | Calculated tax value       |
+| Total Amount | Final amount including tax |
+
+---
+
+### **Section 4: Summary**
+
+| Field       | Description          |
+| ----------- | -------------------- |
+| Subtotal    | Total before tax     |
+| Total Tax   | Total tax amount     |
+| Grand Total | Final payable amount |
+
+---
+
+### **Section 5: Delivery Details**
+
+| Field            | Description          |
+| ---------------- | -------------------- |
+| Delivery Address | Delivery location    |
+| Contact Person   | Receiver name        |
+| Contact Number   | Contact phone number |
+
+---
+
+### **Section 6: Authorization**
+
+| Field             | Description                  |
+| ----------------- | ---------------------------- |
+| Authorized Person | User who created/approved PO |
+| Designation       | Role of the user             |
+| Note              | Additional remarks           |
+
+---
+
+### **Section 7: Audit Trail**
+
+| Field            | Description                 |
+| ---------------- | --------------------------- |
+| Created By       | User who created PO         |
+| Created Date     | Creation timestamp          |
+| Last Edited By   | Last modified user          |
+| Last Edited Date | Last modification timestamp |
+| Change History   | Full audit log access       |
+
+---
+
+# **14.4 Delete action PopUP(permanent delete)**
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ DELETE PURCHASE ORDER                                                        │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ⚠️  Are you sure you want to permanently delete this Purchase Order?        │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │ [ DELETE ]                                [ CANCEL ]                     │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
