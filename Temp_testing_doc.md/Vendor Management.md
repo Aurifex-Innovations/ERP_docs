@@ -489,7 +489,7 @@ Created By (Auto)
 │                                                                                     │
 │  ┌──────────────────────────── 🔴 REQUIRED FIELDS (MANDATORY) ───────────────────┐ │
 │  │                                                                              │ │
-│  │ ⚠️ [Same as Add Vendor Screen - See Below for Structure]                     │ │
+│  │                        ⚠️ [Same as Add Vendor Screen ]                       │ │
 │  │                                                                              │ │
 │  └──────────────────────────────────────────────────────────────────────────────┘ │
  │
