@@ -257,6 +257,7 @@ Authentication module handles access control for three distinct user types:
 │                IAM USER LOGIN SCREEN                         │
 │                                                              │
 │  ┌─────────────────────────────────────────────────────┐    │
+|  |  Account ID                      [_____________]    |    |
 │  │  Email / Username                [____________]     │    │
 │  │  Password                        [____________]     │    │
 │  │                                                     │    │
@@ -296,6 +297,7 @@ Authentication module handles access control for three distinct user types:
 
 | Field            | Type     | Required | Notes                        |
 | ---------------- | -------- | -------- | ---------------------------- |
+| Account ID       | Text     | Yes      | Unique Auto generated Tenent |
 | Email / Username | Text     | Yes      | Registered email or username |
 | Password         | Password | Yes      | Case-sensitive               |
 | Submit           | Button   | -        | Triggers login               |
@@ -900,6 +902,147 @@ Your document has been resubmitted for verification.
 | Duration          | Must select one option                               |
 | Custom Date Range | If Custom selected, From Date must be before To Date |
 
+
+🟥🟥🟥🟥🟥🟥🟥🟥
+## **NOTE for Frontend & Backend (Subscription Logic Handling)**
+
+### **1. Default Behavior (On Plan Selection)**
+
+* When user selects a **Plan**, the system should:
+
+  * Automatically set **Branch Count** and **Technician Count** based on plan configuration (default included limits).
+  * Display **Per Branch Price** and **Per Technician Price** from selected plan.
+  * These default counts should be **pre-filled** in the input fields.
+
+---
+
+### **2. Scenario-Based Handling**
+
+#### **Scenario 1: Basic Plan (Lowest Plan)**
+
+* Basic plan has **fixed limits**.
+* Example:
+
+  * Branch: 10 (Fixed)
+  * Technician: 10 (Fixed)
+
+**Rules:**
+
+* User **CANNOT increase** branch or technician count.
+* Input fields should be:
+
+  * Either **disabled** OR
+  * Editable but **validated to max = plan limit**
+* If user tries to exceed:
+
+  * Show error: *"Upgrade plan to increase limits"*
+
+---
+
+#### **Scenario 2: Professional Plan (Higher Plan with Flexibility)**
+
+* Professional plan has **base limits + extra allowed**.
+* Example:
+
+  * Included: 15 Branches, 15 Technicians
+  * Base Price:
+
+    * Branch: ₹900
+    * Technician: ₹150
+  * Extra Price (from Basic Plan):
+
+    * Branch: ₹1000
+    * Technician: ₹200
+
+---
+
+### **3. Extra Count Logic (Important)**
+
+If user increases count beyond included limit:
+
+* **Base Calculation:**
+
+  * Included count × Professional price
+
+* **Extra Calculation:**
+
+  * Extra count × Basic plan price
+
+---
+
+### **4. Example Calculation**
+
+If user selects **Professional Plan** and enters:
+
+* Branch = 20 (15 included + 5 extra)
+* Technician = 18 (15 included + 3 extra)
+
+Then:
+
+* Branch Cost:
+
+  * (15 × 900) + (5 × 1000)
+
+* Technician Cost:
+
+  * (15 × 150) + (3 × 200)
+
+---
+
+### **5. Frontend Responsibilities**
+
+* Auto-fill default counts based on plan
+* Allow **+ / - controls** only for higher plans
+* Show **live calculation preview** (recommended)
+* Clearly display:
+
+  * Included vs Extra counts
+  * Price breakdown (base + extra)
+* Restrict increment for Basic plan
+* Show proper validation messages
+
+---
+
+### **6. Backend Responsibilities**
+
+* Validate:
+
+  * Plan limits
+  * Extra count eligibility (only for higher plans)
+* Fetch:
+
+  * Selected plan pricing
+  * **Lowest plan pricing (for extra calculation)**
+* Perform final calculation:
+
+  * Base + Extra logic
+* Do NOT trust frontend calculation (always recompute)
+* Store:
+
+  * Selected plan
+  * Included count
+  * Extra count
+  * Final calculated amount
+
+---
+
+### **7. Important Notes**
+
+* Extra pricing should **always be derived from the lowest plan**
+* Plan configuration must include:
+
+  * Included limits
+  * Base prices
+  * Plan hierarchy (to identify lowest plan)
+* This logic must be consistent across:
+
+  * UI calculation
+  * Backend validation
+  * Payment processing
+
+---
+🟥🟥🟥🟥🟥🟥
+
 ---
 
 # 2.9 Subscription Module (Company Admin Sidebar)
@@ -971,6 +1114,19 @@ Each record represents a **subscription purchase entry**.
 | Action | Description                             |
 | ------ | --------------------------------------- |
 | View   | Opens detailed subscription information |
+
+---
+
+
+## **Filters & Search Configuration**
+
+| Filter / Search Field | Type        | Options / Behavior                                         | Notes                  |
+| --------------------- | ----------- | ---------------------------------------------------------- | ---------------------- |
+| Search (Global)       | Text Search | Search by Subscription ID / Plan Type                      | Supports partial match |
+| Status                | Dropdown    | Active / Expired / Cancelled                               | Single select          |
+| Plan Type             | Dropdown    | Basic / Standard / Premium (configurable from plan master) | Dynamic values         |
+| Date Range            | Date Picker | Filter by Subscription Start Date (From – To)              | Range selection        |
+| Expiry Range          | Date Picker | Filter by Expiry Date (From – To)                          | Range selection        |
 
 ---
 
