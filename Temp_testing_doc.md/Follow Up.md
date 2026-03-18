@@ -182,3 +182,36 @@
 └─────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## TABLE COLUMNS SPECIFICATION
+| Column Name    | Display Name | Data Type     | Description                                  | Example Value | Required | Sortable | Searchable |
+|----------------|-------------|---------------|----------------------------------------------|--------------|----------|----------|------------|
+| followup_id    | FU ID       | VARCHAR(20)   | Unique follow-up identifier                  | FU-001       | Yes      | Yes      | Yes        |
+| lead_name      | Lead Name   | VARCHAR(100)  | Name of the lead/customer                    | Rahul Shah   | Yes      | Yes      | Yes        |
+| phone_number   | Phone       | VARCHAR(15)   | Contact number                              | 9876543210   | Yes      | No       | Yes        |
+| followup_type  | Type        | ENUM          | Type of follow-up (Call, Email, etc.)       | Call         | Yes      | Yes      | Yes        |
+| lead_status    | Status      | ENUM          | Current lead status                         | Contacted    | Yes      | Yes      | Yes        |
+| outcome        | Outcome     | ENUM          | Result of follow-up                         | Interested   | No       | Yes      | Yes        |
+| followup_date  | Date        | DATE          | Follow-up scheduled date                    | 18/03/2026   | Yes      | Yes      | Yes        |
+| followup_time  | Time        | TIME          | Follow-up scheduled time                    | 02:00 PM     | Yes      | Yes      | No         |
+| assigned_to    | Assigned    | VARCHAR(50)   | Person responsible for follow-up            | Suraj        | Yes      | Yes      | Yes        |
+| actions        | Actions     | UI (Buttons)  | Actions like View, Edit, Delete             | View         | Yes      | No       | No         |
+
+
+## FILTER DROPDOWN VALUES (COMPLETE LIST)
+| Filter Name        | Dropdown Values                                                                 |
+|--------------------|----------------------------------------------------------------------------------|
+| Follow-Up Type     | All Types, Call, WhatsApp, Email, Meeting, Site Visit, Other                    |
+| Status             | All Status, New, Contacted, Qualified, Proposal Sent, Negotiation, Won, Lost   |
+| Outcome            | All Outcomes, Interested, Not Interested, Call Back Later, Converted, Lost     |
+| Assigned To        | All Team Members, Suraj, Amit, Priya, Rahul, Sales Team 1                      |
+| Priority           | All Priority Levels, High, Medium, Low                                         |
+| Follow-Up Date     | All Dates, Today, Tomorrow, This Week, Overdue, Custom Range                   |
+
+## SEARCHABLE FIELDS (for Search Bar)
+- Follow-Up ID
+- Lead ID
+- Lead Name
+- Phone Number
+- Company Name
+- Assigned To
+- Notes (optional, if needed)
