@@ -902,147 +902,6 @@ Your document has been resubmitted for verification.
 | Duration          | Must select one option                               |
 | Custom Date Range | If Custom selected, From Date must be before To Date |
 
-
-🟥🟥🟥🟥🟥🟥🟥🟥
-## **NOTE for Frontend & Backend (Subscription Logic Handling)**
-
-### **1. Default Behavior (On Plan Selection)**
-
-* When user selects a **Plan**, the system should:
-
-  * Automatically set **Branch Count** and **Technician Count** based on plan configuration (default included limits).
-  * Display **Per Branch Price** and **Per Technician Price** from selected plan.
-  * These default counts should be **pre-filled** in the input fields.
-
----
-
-### **2. Scenario-Based Handling**
-
-#### **Scenario 1: Basic Plan (Lowest Plan)**
-
-* Basic plan has **fixed limits**.
-* Example:
-
-  * Branch: 10 (Fixed)
-  * Technician: 10 (Fixed)
-
-**Rules:**
-
-* User **CANNOT increase** branch or technician count.
-* Input fields should be:
-
-  * Either **disabled** OR
-  * Editable but **validated to max = plan limit**
-* If user tries to exceed:
-
-  * Show error: *"Upgrade plan to increase limits"*
-
----
-
-#### **Scenario 2: Professional Plan (Higher Plan with Flexibility)**
-
-* Professional plan has **base limits + extra allowed**.
-* Example:
-
-  * Included: 15 Branches, 15 Technicians
-  * Base Price:
-
-    * Branch: ₹900
-    * Technician: ₹150
-  * Extra Price (from Basic Plan):
-
-    * Branch: ₹1000
-    * Technician: ₹200
-
----
-
-### **3. Extra Count Logic (Important)**
-
-If user increases count beyond included limit:
-
-* **Base Calculation:**
-
-  * Included count × Professional price
-
-* **Extra Calculation:**
-
-  * Extra count × Basic plan price
-
----
-
-### **4. Example Calculation**
-
-If user selects **Professional Plan** and enters:
-
-* Branch = 20 (15 included + 5 extra)
-* Technician = 18 (15 included + 3 extra)
-
-Then:
-
-* Branch Cost:
-
-  * (15 × 900) + (5 × 1000)
-
-* Technician Cost:
-
-  * (15 × 150) + (3 × 200)
-
----
-
-### **5. Frontend Responsibilities**
-
-* Auto-fill default counts based on plan
-* Allow **+ / - controls** only for higher plans
-* Show **live calculation preview** (recommended)
-* Clearly display:
-
-  * Included vs Extra counts
-  * Price breakdown (base + extra)
-* Restrict increment for Basic plan
-* Show proper validation messages
-
----
-
-### **6. Backend Responsibilities**
-
-* Validate:
-
-  * Plan limits
-  * Extra count eligibility (only for higher plans)
-* Fetch:
-
-  * Selected plan pricing
-  * **Lowest plan pricing (for extra calculation)**
-* Perform final calculation:
-
-  * Base + Extra logic
-* Do NOT trust frontend calculation (always recompute)
-* Store:
-
-  * Selected plan
-  * Included count
-  * Extra count
-  * Final calculated amount
-
----
-
-### **7. Important Notes**
-
-* Extra pricing should **always be derived from the lowest plan**
-* Plan configuration must include:
-
-  * Included limits
-  * Base prices
-  * Plan hierarchy (to identify lowest plan)
-* This logic must be consistent across:
-
-  * UI calculation
-  * Backend validation
-  * Payment processing
-
----
-🟥🟥🟥🟥🟥🟥
-
 ---
 
 # 2.9 Subscription Module (Company Admin Sidebar)
@@ -1367,10 +1226,6 @@ Internal Seravion operations module for tenant management, subscription oversigh
 └─────────────────────────────────────────────────────────────┘
 ```
 
-Here is the **refactored version of your section**, keeping your **existing structure** and **adding the missing fields in the same “Fields table format”** so it stays consistent with the rest of your documentation.
-
----
-
 ### Company Details Fields
 
 | Field                   | Type            | Required    | Behavior                                   |
@@ -1401,8 +1256,6 @@ Here is the **refactored version of your section**, keeping your **existing stru
 | Trial To Date           | Date            | Conditional | Required if Enable Trial = true            |
 | Number of Branches      | Number          | Yes         | Total allowed branches                     |
 | Number of Technicians   | Number          | Yes         | Total allowed technicians                  |
-| Subscription Start Date | Date            | Conditional | Set when company subscription begins       |
-| Subscription End Date   | Date            | Conditional | Set based on subscription duration         |
 | Admin Comment           | Textarea        | No          | Internal notes by admin                    |
 
 ---
@@ -1665,17 +1518,18 @@ The screen displays **plan summary statistics** along with the **plan list table
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Add Plan Fields
+| Field                          | Type         | Required | Notes                                      |
+| ------------------------------ | ------------ | -------- | ------------------------------------------ |
+| Plan Name                      | Text         | Yes      | Unique identifier                          |
+| Total Branch Count             | Number       | Yes      | Base branch quantity                       |
+| Price Per Branch               | Currency     | Yes      | Unit price for base branches               |
+| **Extra Price Per Branch**     | Currency     | Yes      | Price for additional branches beyond limit |
+| Total Technician Count         | Number       | Yes      | Base technician quantity                   |
+| Price Per Technician           | Currency     | Yes      | Unit price for base technicians            |
+| **Extra Price Per Technician** | Currency     | Yes      | Price for additional technicians           |
+| Description                    | Textarea     | No       | Plan features                              |
+| Duration                       | Multi-select | Yes      | Available billing cycles                   |
 
-| Field                  | Type         | Required | Notes                    |
-| ---------------------- | ------------ | -------- | ------------------------ |
-| Plan Name              | Text         | Yes      | Unique identifier        |
-| Total Branch Count     | Number       | Yes      | Base branch quantity     |
-| Price Per Branch       | Currency     | Yes      | Unit price               |
-| Total Technician Count | Number       | Yes      | Base technician quantity |
-| Price Per Technician   | Currency     | Yes      | Unit price               |
-| Description            | Textarea     | No       | Plan features            |
-| Duration               | Multi-select | Yes      | Available billing cycles |
 
 ### Validation Rules
 
@@ -1711,16 +1565,18 @@ The screen displays **plan summary statistics** along with the **plan list table
 ```
 
 ### Edit Plan Fields
+| Field                          | Type         | Required | Notes                |
+| ------------------------------ | ------------ | -------- | -------------------- |
+| Plan Name                      | Text         | Yes      | Pre-filled, editable |
+| Total Branch Count             | Number       | Yes      | Pre-filled, editable |
+| Price Per Branch               | Currency     | Yes      | Pre-filled, editable |
+| **Extra Price Per Branch**     | Currency     | Yes      | Pre-filled, editable |
+| Total Technician Count         | Number       | Yes      | Pre-filled, editable |
+| Price Per Technician           | Currency     | Yes      | Pre-filled, editable |
+| **Extra Price Per Technician** | Currency     | Yes      | Pre-filled, editable |
+| Description                    | Textarea     | No       | Pre-filled, editable |
+| Duration                       | Multi-select | Yes      | Pre-filled, editable |
 
-| Field                  | Type         | Required | Notes                |
-| ---------------------- | ------------ | -------- | -------------------- |
-| Plan Name              | Text         | Yes      | Pre-filled, editable |
-| Total Branch Count     | Number       | Yes      | Pre-filled, editable |
-| Price Per Branch       | Currency     | Yes      | Pre-filled, editable |
-| Total Technician Count | Number       | Yes      | Pre-filled, editable |
-| Price Per Technician   | Currency     | Yes      | Pre-filled, editable |
-| Description            | Textarea     | No       | Pre-filled, editable |
-| Duration               | Multi-select | Yes      | Pre-filled, editable |
 
 ### Validation Rules
 
@@ -2141,8 +1997,7 @@ This module allows the Company Admin to define salary structure and leave polici
 │  ┌─────────────────────────────────────────────────────┐   │
 │  │  Filters:                                           │   │
 │  │  Role: [▼ Dropdown ▼]  Status: [▼ Active/Inactive ▼]│   │
-│  │  Salary Type: [▼ Dropdown ▼]  Leave Cycle: [▼ ▼]    │   │
-│  │  Effective From: [📅 Date Range]  Search: [____]    │   │
+│  │  Salary Type: [▼ Dropdown ▼]   Search: [____]       │   │
 │  │                                                     │   │
 │  │  [+ ADD CONFIGURATION]                              │   │
 │  │                                                     │   │
@@ -2184,10 +2039,8 @@ This module allows the Company Admin to define salary structure and leave polici
 
 | Field                | Type       | Required | Notes                                   |
 | -------------------- | ---------- | -------- | --------------------------------------- |
-| Role Filter          | Dropdown   | No       | Filter configurations by role           |
 | Status Filter        | Dropdown   | No       | Active / Inactive configurations        |
 | Salary Type Filter   | Dropdown   | No       | CTC / Fixed / Hourly                    |
-| Leave Cycle Filter   | Dropdown   | No       | Monthly / Yearly                        |
 | Effective From Range | Date Range | No       | Filter by configuration effective dates |
 | Search               | Text       | No       | Search by role name                     |
 
@@ -2584,11 +2437,10 @@ Manages organizational locations with hierarchical structure and employee associ
 
 | Field              | Type     | Required | Notes                                        |
 | ------------------ | -------- | -------- | -------------------------------------------- |
-| Search             | Text     | No       | Search by Branch ID, Name, Code, City, State |
+| Search             | Text     | No       | Search by Branch ID, Name, Code              |
 | Status Filter      | Dropdown | No       | All / Active / Inactive                      |
 | City Filter        | Dropdown | No       | Populated from branch records                |
 | State Filter       | Dropdown | No       | Populated from branch records                |
-| Branch Code Filter | Text     | No       | Search by 3-letter branch code               |
 
 ---
 
@@ -2845,6 +2697,27 @@ Below is the **corrected version of 7.5.2 with all missing fields added** based 
 
 ---
 
+# Filters
+
+| Filter             | Type                | Required | Description                                |
+| ------------------ | ------------------- | -------- | ------------------------------------------ |
+| Branch             | Multi-select        | No       | Filter employees by assigned branch        |
+| Department         | Dropdown            | No       | Filter by department                       |
+| Designation        | Dropdown            | No       | Filter by designation                      |
+| Role               | Dropdown            | No       | Filter by system role                      |
+| Status             | Dropdown            | No       | Active / Inactive                          |
+| Created Date Range | Date Range          | No       | Filter employees created within date range |
+
+---
+
+# Search
+
+| Field         | Type | Description                                        |
+| ------------- | ---- | -------------------------------------------------- |
+| Global Search | Text | Search by Employee ID, Name, Email, Contact Number |
+
+---
+
 # 🎯 MODULE 8: EMPLOYEE (USERS) MANAGEMENT
 
 ## Overview
@@ -2981,7 +2854,6 @@ Manages the complete employee lifecycle including user visibility, hiring reques
 | Department         | Dropdown            | No       | Filter by department                       |
 | Designation        | Dropdown            | No       | Filter by designation                      |
 | Role               | Dropdown            | No       | Filter by system role                      |
-| Reporting Manager  | Searchable Dropdown | No       | Filter by reporting manager                |
 | Status             | Dropdown            | No       | Active / Inactive                          |
 | Created Date Range | Date Range          | No       | Filter employees created within date range |
 
@@ -3087,7 +2959,6 @@ Manages the complete employee lifecycle including user visibility, hiring reques
 | Branch                | Multi-select | No       | Filter by requested branch                |
 | Expected Joining Date | Date Range   | No       | Filter by expected joining date           |
 | Submitted Date        | Date Range   | No       | Filter by request submission date         |
-| Last Updated Date     | Date Range   | No       | Filter by request update date             |
 
 ---
 
@@ -3256,10 +3127,7 @@ Manages the complete employee lifecycle including user visibility, hiring reques
 | Proposed Role         | Dropdown   | No       | Filter by requested role                 |
 | Branch                | Dropdown   | No       | Filter by requested branch               |
 | Requested By          | Dropdown   | No       | Filter by employee who submitted request |
-| Employment Type       | Dropdown   | No       | Permanent / Contract / Intern            |
-| Expected Joining Date | Date Range | No       | Filter by joining date                   |
 | Submitted Date        | Date Range | No       | Filter by request submission date        |
-| Review Date           | Date Range | No       | Filter by approval/rejection date        |
 
 ---
 
@@ -3994,7 +3862,6 @@ Below is the **refactored version of 9.1 Tax Types Master – Table View** using
 | Status             | Dropdown   | Active / Inactive                      |
 | Applicability      | Dropdown   | Goods / Services / Both                |
 | Created Date Range | Date Range | Filter by created date                 |
-| Sort By            | Dropdown   | Latest / Rate High-Low / Rate Low-High |
 
 ---
 
@@ -4185,11 +4052,6 @@ Below is the **refactored version of 9.1 Tax Types Master – Table View** using
 ```
 
 ---
-
-Below is the **refactored version of 9.6 HSN Code Master – Table View** using your **final table fields** and keeping the layout **simple and clean**.
-
----
-
 # 9.6 HSN Code Master – Table View
 
 ```id="b0smig"
@@ -4256,7 +4118,6 @@ Below is the **refactored version of 9.6 HSN Code Master – Table View** using 
 | Search             | Text       | Search by HSN Code or Description |
 | Product Category   | Dropdown   | Filter by product category        |
 | Tax Type           | Dropdown   | Filter by mapped tax              |
-| Chapter            | Text       | Filter by chapter number          |
 | Status             | Dropdown   | Active / Inactive                 |
 | Created Date Range | Date Range | Filter by created date            |
 
@@ -4563,9 +4424,7 @@ Manages all items and services offered by the business. Helps organize products,
 | Filter          | Type               | Description                                                        |
 | --------------- | ------------------ | ------------------------------------------------------------------ |
 | Category        | Multi-select       | Chemical / Sprayer / Electric Pump / Machine / Trap / Tool / Other |
-| Sub-Type        | Cascading Dropdown | Changes based on Category                                          |
-| Company / Brand | Search Dropdown    | Manufacturer filter                                                |
-| HSN Code        | Text / Numeric     | Search by tax code                                                 |
+| package-Type    | Cascading Dropdown | Changes based on Category                                          |
 | Status          | Multi-select       | Active / Inactive                                                  |
 | Created Date    | Date Range         | Filter by creation date                                            |
 
