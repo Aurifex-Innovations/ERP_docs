@@ -51,14 +51,15 @@
 │ ├─ Converted                                                                 │
 │ └─ Lost                                                                      │
 │                                                                            │
-│ Reason (if Lost)  [ Select ▼ ]                                              │
+│ Reason (if Lost)   [_____________]                                         │
 │                                                                            │
 ├────────────────────────────────────────────────────────────────────────────┤
-│ [ Cancel ]                                        [ Save Follow-Up ]        │
+│ [ Cancel ]                                        [ Save Follow-Up ]       │
 └────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Validations
+
 | Section                     | Field Name             | Validation Rules                                                                 | Required |
 |----------------------------|------------------------|----------------------------------------------------------------------------------|----------|
 | Lead Information           | Lead ID                | Must exist in system, auto-filled, cannot be edited                              | Yes      |
