@@ -959,7 +959,6 @@ Each record represents a **subscription purchase entry**.
 | Duration                | Subscription duration (Monthly / Yearly) |
 | Branches                | Number of branches included              |
 | Technicians             | Number of technicians included           |
-| Extra Users             | Additional users purchased               |
 | Subscription Start Date | Date when subscription becomes active    |
 | Expiry Date             | Subscription end date                    |
 | Status                  | Active / Expired / Cancelled             |
