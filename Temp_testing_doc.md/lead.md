@@ -41,7 +41,7 @@
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | **Lead Type**         | Product, Service, Inquiry, Support, Partnership                                                                        |
 | **Source**            | Website, Facebook Ads, Instagram Ads, Google Ads, WhatsApp, Referral, Walk-in, Cold Call, Email Campaign, Manual Entry |
-| **Lead Status**       | New, Contacted, Qualified, Proposal Sent, Negotiation, Won, Lost                                                       |
+| **Lead Status**       | New, Contacted, Qualified, Quotation Sent, Negotiation, Won, Lost                                                       |
 | **Customer Need**     | Pest Control, Home Cleaning, Office Cleaning, Deep Cleaning, Termite Treatment, General Inquiry, Other                 |
 | **Urgency**           | Immediate (Within 24 hrs), High (2–3 days), Medium (Within a week), Low (Just exploring)                               |
 | **Product / Service** | Indoor Pest Control Spray, Outdoor Pest Control, Termite Treatment, Annual Maintenance Package, Custom Service         |
