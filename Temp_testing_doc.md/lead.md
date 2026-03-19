@@ -78,7 +78,7 @@
 
 | Dropdown Name         | Values                                                                                                                 |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| **Lead Type**         | Product, Service, Inquiry, Support, Partnership                                                                        |
+| **Lead Type**         | Product, Service, Inquiry,                                                                                            |
 | **Source**            | Website, Facebook Ads, Instagram Ads, Google Ads, WhatsApp, Referral, Walk-in, Cold Call, Email Campaign, Manual Entry |
 | **Lead Status**       | New, Contacted, Qualified, Quotation Sent, Negotiation, Won, Lost                                                       |
 | **Customer Need**     | Pest Control, Home Cleaning, Office Cleaning, Deep Cleaning, Termite Treatment, General Inquiry, Other                 |
