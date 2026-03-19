@@ -48,6 +48,7 @@
 │ ├─ Interested                                                                │
 │ ├─ Not Interested                                                            │
 │ ├─ Call Back Later                                                           │
+│ ├─ Quotation Sent
 │ ├─ Converted                                                                 │
 │ └─ Lost                                                                      │
 │                                                                            │
