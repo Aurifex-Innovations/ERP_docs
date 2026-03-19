@@ -136,7 +136,7 @@ These actions open separate forms.
 
 | Filter       | Type         | Options                                            |
 | ------------ | ------------ | -------------------------------------------------- |
-| Branch View  | Dropdown     | All My Branches / Central / BLR / HYD / BOM / etc. |
+| Branch       | Dropdown     | All My Branches / Central / BLR / HYD / BOM / etc. |
 | Category     | Multi-select | Chemical / Sprayer / Machine / Trap / Tool / Other |
 | Stock Type   | Multi-select | Assets / Consumable / Resell                       |
 | Status       | Multi-select | Available / Low / Out / Inactive,Discontinued      |
@@ -888,10 +888,11 @@ If stock is damaged, missing, or incorrect, users can **report issues during rec
 | ------------ | ------------------- | ------------ | --------------------------------------------------------------------------- | -------------------------------- |
 | Request Type | Dropdown            | All          | Stock Request, Transfer Request                                             | Separate stock vs transfer flows |
 | Status       | Multi-Select        | All          | Pending, Approved, Rejected, Dispatch, In Transit, Received, Issue Reported | Track lifecycle stage            |
-| Direction    | Dropdown            | All          | Inward, Outward                                                             | Identify incoming vs outgoing    |
-| Branch       | Searchable Dropdown | User Branch  | All Branches / Specific Branch                                              | Filter by source/destination     |
+| Branch(from - to)       | Searchable Dropdown | User Branch  | All Branches / Specific Branch                                              | Filter by source/destination     |
 | Date Range   | Date Picker         | Last 30 Days | Custom Range                                                                | Filter based on request creation |
 | Priority     | Dropdown            | All          | Low, Normal, High, Urgent                                                   | Focus on critical requests       |
+
+### Search -Global 
 
 ---
 
@@ -1520,8 +1521,7 @@ When creating or editing a request, the form provides the following options:
 | Filter       | Type         | Options                                     |
 | ------------ | ------------ | ------------------------------------------- |
 | Request Type | Multi Select | Request for Approval / Receipt Confirmation |
-| From Branch  | Dropdown     | List of available branches                  |
-| To Branch    | Dropdown     | Destination branch or central warehouse     |
+| From-To Branch  | Dropdown     | List of available branches                  |
 | Date Range   | Date Range   | From – To                                   |
 
 ---
@@ -1532,8 +1532,6 @@ Searchable by:
 
 - Request ID
 - Product Name
-- Requesting Branch
-- Destination Branch
 - Requested By
 
 ---
@@ -3396,10 +3394,10 @@ This screen acts as the **primary entry point for vendor management**.
 | Filter            | Type          | Options                                    |
 | ----------------- | ------------- | ------------------------------------------ |
 | Vendor Type       | Multi Select  | Supplier / Service Provider / Both         |
-| Vendor Category   | Dropdown      | Chemical / Equipment / Service / Logistics |
+| Category          | Dropdown      | Chemical / Equipment / Service / Logistics |
 | Contract Type     | Multi Select  | Annual / Project / One Time / None         |
-| Vendor Status     | Multi Select  | Active / Inactive / Blocked                |
-| Vendor Rating     | Rating Filter | ⭐1+ to ⭐5                                |
+| Status            | Multi Select  | Active / Inactive / Blocked                |
+| Rating            | Rating Filter | ⭐1+ to ⭐5                                |
 | State             | Multi Select  | State List                                 |
 | Contract End Date | Date Range    | From – To                                  |
 

@@ -16,10 +16,49 @@
 │ Customer Need      [ Select ▼ ]          Urgency        [ Select ▼ ]        │
 │ Requirement Desc   [______________________________________________]        │
 │                    [______________________________________________]        │
-│                                                                            │
+│                                                                            
+
 │ 🔹 DEAL & VALUE (Auto show if needed)                                      │
-│ Product/Service   [ Select ▼ ]        Estimated Value ₹ [__________]        │
-│ Quantity          [____]               Expected Close Date [ 📅 ]            │
+│                                                                            │
+│ Product / Service *   [ 🔍 Search & Select ▼ ]                              │
+│                                                                            │
+│ ── On Product Selection → Auto Display Details ──                          │
+│                                                                            │
+│ ┌──────────────────────────────────────────────────────────────────────┐   │
+│ │                         PRODUCT DETAILS                              │   │
+│ ├──────────────┬───────────────────────────────────────────────────────┤   │
+│ │ Product Code │ PRD001                                                │   │
+│ │ Product Name │ Chemical X                                            │   │
+│ │ Category     │ Chemical                                              │   │
+│ │ Company      │ ABC Agro                                              │   │
+│ │ HSN Code     │ 1234                                                  │   │
+│ │ Base UOM     │ Ltr                                                   │   │
+│ │ Package Type │ Bottle                                                │   │
+│ │ Status       │ Active                                                │   │
+│ └──────────────┴───────────────────────────────────────────────────────┘   │
+│                                                                            │
+│ 📦 VARIANTS (if available)                                                 │
+│ ┌──────────────────────────────────────────────────────────────────────┐   │
+│ │ Variant Name │ SKU        │ Package │ Quantity │ Status              │   │
+│ │──────────────┼────────────┼─────────┼──────────┼────────             │   │
+│ │ 100 ml       │ PRD001-V1  │ Bottle  │ 0.1 Ltr  │ Active              │   │
+│ │ 250 ml       │ PRD001-V2  │ Bottle  │ 0.25 Ltr │ Active              │   │
+│ │ 1 Ltr        │ PRD001-V3  │ Bottle  │ 1 Ltr    │ Active              │   │
+│ └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                            │
+│ 💰 PRICING DETAILS                                                         │
+│ ┌──────────────────────────────────────────────────────────────────────┐   │
+│ │ Purchase Price │ ₹ 500                                                │   │
+│ │ Selling Price  │ ₹ 650                                                │   │
+│ │ Base Price     │ ₹ 550                                                │   │
+│ │ Tax (%)        │ 18% (Auto from HSN)                                  │   │
+│ │ Total Cost     │ ₹ 649                                                │   │
+│ └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                            │
+│ Quantity *          [____]                                                 │
+│ Estimated Value ₹   [ Auto = Qty × Selling Price ]                         │
+│ Expected Close Date [ 📅 ]                                                 │
+│                                                                            │
 │                                                                            │
 │ 🔹 FOLLOW-UP & ASSIGNMENT                                                  │
 │ Next Follow-Up *  [ 📅 Select Date ]   Assigned To   [ Select ▼ ]           │
@@ -39,9 +78,9 @@
 
 | Dropdown Name         | Values                                                                                                                 |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| **Lead Type**         | Product, Service, Inquiry, Support, Partnership                                                                        |
+| **Lead Type**         | Product, Service, Inquiry,                                                                                            |
 | **Source**            | Website, Facebook Ads, Instagram Ads, Google Ads, WhatsApp, Referral, Walk-in, Cold Call, Email Campaign, Manual Entry |
-| **Lead Status**       | New, Contacted, Qualified, Proposal Sent, Negotiation, Won, Lost                                                       |
+| **Lead Status**       | New, Contacted, Qualified, Quotation Sent, Negotiation, Won, Lost                                                       |
 | **Customer Need**     | Pest Control, Home Cleaning, Office Cleaning, Deep Cleaning, Termite Treatment, General Inquiry, Other                 |
 | **Urgency**           | Immediate (Within 24 hrs), High (2–3 days), Medium (Within a week), Low (Just exploring)                               |
 | **Product / Service** | Indoor Pest Control Spray, Outdoor Pest Control, Termite Treatment, Annual Maintenance Package, Custom Service         |
