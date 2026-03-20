@@ -42,7 +42,7 @@ A consolidated view displaying all GMA sheets accessible to the user, filtered b
 │  │                                                                        │  │
 │  │ Customer       : [🔍 Search / Select ▼]                                │  │
 │  │ Service Type   : [▼ All / AMC / One-Time / Quarterly / Fogging]        │  │
-│  │ Status         : [☑ Auto-Approved ☑ Pending ☑ Approved ☑ Rejected]    │  │
+│  │ Status         : [☑ Draft ☑ Approved ☑ Pending ☑ Rejected]           │  │
 │  │ Branch         : [▼ All Branches ▼]                                    │  │
 │  │ Created By     : [▼ All / My Entries]                                  │  │
 │  │ Date Range     : [📅 From] – [📅 To]                                   │  │
@@ -63,14 +63,14 @@ A consolidated view displaying all GMA sheets accessible to the user, filtered b
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
 │  │Status         │Created By    │Created Date   │Actions                    ││
 │  │───────────────┼──────────────┼───────────────┼───────────────────────────││
-│  │🟢 Auto-Approved│Ravi Sharma  │18 Mar 2026    │[View]                     ││
-│  │🟡 Pending Mgr  │Anjali M.    │17 Mar 2026    │[View]                     ││
-│  │🔴 Pending CEO  │Suresh K.    │15 Mar 2026    │[View]                     ││
+│  │✅ Approved    │Ravi Sharma  │18 Mar 2026    │[View]                     ││
+│  │🟡 Pending     │Anjali M.    │17 Mar 2026    │[View]                     ││
+│  │� Draft       │Suresh K.    │15 Mar 2026    │[View]                     ││
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
 │  Pagination:  Previous   1   2   3   ...   Next                              │
 │                                                                              │
-│  Legend: 🟢 Auto-Approved  🟡 Pending Manager  🔴 Pending CEO  ✅ Approved  ❌ Rejected │
+│  Legend: � Draft  ✅ Approved  🟡 Pending  ❌ Rejected                        │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -82,14 +82,14 @@ A consolidated view displaying all GMA sheets accessible to the user, filtered b
 | Field           | Type         | Description                                              |
 | --------------- | ------------ | -------------------------------------------------------- |
 | GMA ID          | Text (Auto)  | System-generated unique ID (e.g., GMA-00091)             |
-| Customer        | Text         | Customer name from Customer Master                       |
-| Service Type    | Text         | Service category (AMC / One-Time / Quarterly / etc.)     |
-| Branch          | Text         | Branch responsible for this service proposal             |
+| Customer/Lead Name | Text         | Customer name from Customer Master                       |
+| Service Type    | Text         | Service category (Contract / One-Time)     |
+| Branch name     | Text         | Branch responsible for this service proposal             |
 | No. of Sites    | Number       | Total locations included in this GMA sheet               |
 | Total Cost (₹)  | Currency     | Sum of all chemical + labor + revisit costs across sites |
 | Sale Price (₹)  | Currency     | Total proposed price billed to customer                  |
 | Gross Margin %  | Percentage   | Auto-calculated: `(Price – Cost) / Price × 100`          |
-| Status          | Badge        | Auto-Approved / Pending Manager / Pending CEO / Approved / Rejected |
+| Status          | Badge        | Draft / Approved / Pending / Rejected |
 | Created By      | Text         | Sales person who created the GMA sheet                   |
 | Created Date    | Date         | Date of GMA sheet creation                               |
 | Actions         | Button Group | [View]                                                   |
@@ -102,7 +102,7 @@ A consolidated view displaying all GMA sheets accessible to the user, filtered b
 | ------------ | --------------- | ----------------------------------------------------- |
 | Customer     | Search/Dropdown | Search by name or select from Customer Master         |
 | Service Type | Dropdown        | All / AMC / One-Time / Quarterly / Fogging / etc.     |
-| Status       | Multi-select    | Auto-Approved / Pending / Approved / Rejected         |
+| Status       | Multi-select    | Draft / Approved / Pending / Rejected         |
 | Branch       | Dropdown        | All Branches / Specific Branch                        |
 | Created By   | Dropdown        | All / My Entries                                      |
 | Date Range   | Date Range      | From – To (GMA creation date)                         |
@@ -164,9 +164,9 @@ Displays all GMA sheets created by the currently logged-in sales person. Include
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
 │  │GMA ID    │Customer   │Service Type│GM%│Submitted Date│Status  │Actions   ││
 │  │──────────┼───────────┼────────────┼───┼──────────────┼────────┼──────────││
-│  │GMA-00091 │XYZ Hotel  │Cockroach   │42%│ 18 Mar 2026  │🟢 Auto │[View]    ││
+│  │GMA-00091 │XYZ Hotel  │Cockroach   │42%│ 18 Mar 2026  │✅ Apprd │[View]    ││
 │  │GMA-00088 │ABC Pharma │Rodent AMC  │23%│ 17 Mar 2026  │🟡 Pend │[V][Revoke]│
-│  │GMA-00085 │DEF Mall   │General Pest│6% │ 15 Mar 2026  │🔴 Pend │[V][Revoke]│
+│  │GMA-00085 │DEF Mall   │General Pest│6% │ 15 Mar 2026  │� Draft │[View]    ││
 │  │GMA-00080 │KLM Ind.   │Termite AMC │38%│ 10 Mar 2026  │✅ Apprd │[View]   ││
 │  │GMA-00077 │PQR Office │Fogging     │8% │ 05 Mar 2026  │❌ Rejct │[View]   ││
 │  └──────────────────────────────────────────────────────────────────────────┘│
@@ -187,7 +187,7 @@ Displays all GMA sheets created by the currently logged-in sales person. Include
 | Service Type   | Type of pest control service                             |
 | GM %           | Gross margin percentage (auto-calculated)                |
 | Submitted Date | Date the GMA sheet was submitted for approval            |
-| Status         | Auto-Approved / Pending Manager / Pending CEO / Approved / Rejected |
+| Status         | Draft / Approved / Pending / Rejected |
 | Actions        | View / Revoke                                            |
 
 ---
@@ -402,11 +402,11 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 │  │                                                                         │ │
 │  │  Approval Status (Manual Selection if < 40%):                           │ │
 │  │  ┌──────────────────────────────────────────────────────────────────┐  │ │
-│  │  │ GM ≥ 40%        → ✅ Auto-Approved       (Immediate)             │  │ │
+│  │  │ GM ≥ 40%        → ✅ Approved            (Immediate)             │  │ │
 │  │  │ GM < 40%        → 🟡 Requires Manual Approver Selection          │  │ │
 │  │  └──────────────────────────────────────────────────────────────────┘  │ │
 │  │                                                                         │ │
-│  │  CURRENT STATUS: ✅ AUTO-APPROVED (GM 40.7% ≥ 40%)                      │ │
+│  │  CURRENT STATUS: ✅ APPROVED (GM 40.7% ≥ 40%)                           │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  Sales Authority Matrix:                                                     │
@@ -418,7 +418,7 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 │  │  CEO / Ops Head       │ GM < 20%         │ GM < 20%        │ [_____]  │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│              [SAVE & SUBMIT (Auto)]  [SAVE & REQUEST APPROVAL]  [CANCEL]     │
+│        [SAVE AS DRAFT]  [SAVE & SUBMIT]  [SAVE & REQUEST APPROVAL]  [CANCEL] │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -632,7 +632,8 @@ When a Pest / Service Type is selected, the system:
 
 | Button                       | Description                                                                  |
 | ---------------------------- | ---------------------------------------------------------------------------- |
-| **Save & Submit (Auto)**     | Appears if GM ≥ 40%. Validates, saves, and Auto-Approves the GMA.              |
+| **Save as Draft**            | Saves the current progress without submitting. Status becomes Draft.         |
+| **Save & Submit**            | Appears if GM ≥ 40%. Validates, saves, and sets status to Approved.          |
 | **Save & Request Approval**  | Appears if GM < 40%. Validates data and triggers the "Select Approver" popup.  |
 | **Cancel**                   | Discards all entries and returns to My Requests table.                         |
 
@@ -681,7 +682,7 @@ When the user clicks **Save & Request Approval**, this popup overlay appears:
 
 | Trigger                     | System Action                                                         |
 | --------------------------- | --------------------------------------------------------------------- |
-| GM ≥ 40%                    | Status → Auto-Approved; no approval routing needed                    |
+| GM ≥ 40%                    | Status → Approved; no approval routing needed                         |
 | GM < 40% + Approver Picked  | Status → Pending; Notification sent to selected Approver              |
 | Chemical selected           | Auto-fill UOM, Base Price, +15%, +18% GST from Product Master         |
 | Rate overridden by user     | System retains overridden value; does not reset on re-selection       |
@@ -710,7 +711,7 @@ Read-only view of a GMA sheet submitted by the logged-in user. Displays source i
 │  [← Back to My Requests]                                                     │
 │                                                                              │
 │  ─── HEADER ──────────────────────────────────────────────────────────────  │
-│  GMA ID          : GMA-00091         Status     : ✅ AUTO-APPROVED           │
+│  GMA ID          : GMA-00091         Status     : ✅ APPROVED                │
 │  Created By      : Ravi Sharma       Created On : 18 Mar 2026               │
 │  Submitted On    : 18 Mar 2026       Approved On: 18 Mar 2026 (Immediate)   │
 │                                                                              │
@@ -799,7 +800,7 @@ Read-only view of a GMA sheet submitted by the logged-in user. Displays source i
 │  GM% without Documentation : 41.3%                                           │
 │  GM% with Documentation    : 40.7%                                           │
 │                                                                              │
-│  APPROVAL STATUS  : ✅ Auto-Approved (GM 40.7% ≥ 35%)                       │
+│  APPROVAL STATUS  : ✅ Approved (GM 40.7% ≥ 40%)                            │
 │  APPROVED ON      : 18 Mar 2026 (Immediate)                                 │
 │  APPROVER         : System (Auto)                                            │
 │                                                                              │
@@ -818,7 +819,7 @@ Read-only view of a GMA sheet submitted by the logged-in user. Displays source i
 │  │──────────────────┼─────────────────────┼──────────────┼──────────────│   │
 │  │ 18 Mar 09:30 AM  │ Draft Created       │ Ravi Sharma  │ —            │   │
 │  │ 18 Mar 10:00 AM  │ Submitted           │ Ravi Sharma  │ —            │   │
-│  │ 18 Mar 10:00 AM  │ Auto-Approved       │ System       │ GM 40.7%≥35% │   │
+│  │ 18 Mar 10:00 AM  │ Approved            │ System       │ GM 40.7%≥40% │   │
 │  └──────────────────┴─────────────────────┴──────────────┴──────────────┘   │
 │                                                                              │
 │              [BACK]   [EDIT] (if Draft)   [DOWNLOAD PDF]                   │
@@ -891,7 +892,7 @@ Displays GMA sheets received by the logged-in manager or approver (Sales Manager
 │  │Status    │                                                                ││
 │  │──────────│                                                                ││
 │  │🟡 Pending│                                                                ││
-│  │🔴 Pending│                                                                ││
+│  │� Pending│                                                                ││
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
 │  Pagination:  Previous   1   2   3   ...   Next                              │
@@ -982,7 +983,7 @@ A focused action screen where the approver confirms their decision to approve or
 │  Service Type  : Rodent AMC                                                  │
 │  Branch        : Bangalore                                                   │
 │  Submitted By  : Ravi Sharma (17 Mar 2026)                                   │
-│  Overall GM%   : 23%  🟡 Pending Sales Manager                               │
+│  Overall GM%   : 23%  🟡 Pending                                             │
 │  Deadline      : 18 Mar 2026 10:00 AM                                        │
 │                                                                              │
 │  ─── QUICK SUMMARY ─────────────────────────────────────────────────────── │
@@ -1101,22 +1102,22 @@ Site Total Cost = A (Service Visit) + B (Manpower) + C (Chemical) + D (Surcharge
 ## 7. Status Lifecycle
 
 ```
-Submitted → Pending Approval → Approved / Rejected
-               (Auto-Approved if GM ≥ 40%)
+Draft → Pending → Approved / Rejected
+               (Approved automatically if GM ≥ 40%)
 ```
 
 ## 8. Revoke Rules
 
 - Sales person can **Revoke** only when status = **Pending** (not yet actioned by approver).
 - Revoked sheets are cancelled and must be recreated if needed.
-- Revoke is **not available** for Auto-Approved, Approved, or Rejected sheets.
+- Revoke is **not available** for Draft, Approved, or Rejected sheets.
 
 ## 10. Notifications
 
 | Event              | Recipient        | Channel                  |
 | ------------------ | ---------------- | ------------------------ |
 | GMA Submitted      | Approver         | In-app + Email           |
-| Auto-Approved      | Sales Person     | In-app notification      |
+| Approved (Auto)    | Sales Person     | In-app notification      |
 | Approved           | Sales Person     | In-app + Email           |
 | Rejected           | Sales Person     | In-app + Email + Remarks |
 | Deadline Reminder  | Approver         | Auto-reminder at 50% of timeline |
@@ -1141,7 +1142,7 @@ Submitted → Pending Approval → Approved / Rejected
 
 | Trigger                     | System Action                                                                   |
 | --------------------------- | ------------------------------------------------------------------------------- |
-| GM ≥ 40%                    | Status → Auto-Approved; no approval routing needed                              |
+| GM ≥ 40%                    | Status → Approved; no approval routing needed                                   |
 | GM < 40% + Approver Picked  | Status → Pending; Notification sent to selected Approver                        |
 | Service Type selected       | Auto-fetch chemicals from Module 12 → Module 10; populate chemical rows         |
 | Chemical SQFT/Qty changed   | Cost/Visit, Cost/Month, Cost/Year recalculated dynamically                      |
@@ -1178,8 +1179,9 @@ MODULE 17: GMA MANAGEMENT
 │
 ├── Tab 2: My Requests
 │   ├── [+ Add GMA Sheet] → 17.2.1 Add GMA Sheet Form
-│   │     ├── GM ≥ 40% → [Save & Submit (Auto)] → ✅ Auto-Approved → Contract unlocking
-│   │     └── GM < 40% → [Save & Request] → [Manual Select] → � Sent to selected Approver
+│   │     ├── [Save as Draft] → Status becomes Draft
+│   │     ├── GM ≥ 40% → [Save & Submit] → ✅ Approved → Contract unlocking
+│   │     └── GM < 40% → [Save & Request] → [Manual Select] → 🟡 Pending → Sent to Approver
 │   ├── [View] → 17.2.2 View My GMA Sheet (Read-only + PDF Download)
 │   └── [Revoke] → Cancels the pending sheet (if not yet approved)
 │
@@ -1300,7 +1302,7 @@ MODULE 17: GMA MANAGEMENT
 │  ┌──────────────────┐                      ┌─────────────────────────┐               │
 │  │ GM ≥ 40%         │                      │ GM < 40%                │               │
 │  │                  │                      │                         │               │
-│  │ ✅ AUTO-APPROVED │                      │ 🟡 REGULAR FLOW         │               │
+│  │ ✅ APPROVED      │                      │ 🟡 REGULAR FLOW         │               │
 │  │ (Immediate)      │                      │ User Manually Selects   │               │
 │  │                  │                      │ Approver (Popup)        │               │
 │  └────────┬─────────┘                      └────────┬────────────────┘               │
