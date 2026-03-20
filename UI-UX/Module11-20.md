@@ -2821,19 +2821,26 @@ The Add Service form allows administrators to create and configure pest control 
 │  └──────────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                     │
 │  CHEMICALS / PRODUCTS USED                                                         │
-│  (Integrated with Module 10 Product Master)                                       │
+│  (Integrated with Module 10 Product Master — prices auto-fetched on selection)    │
 │                                                                                     │
 │  ┌──────────────────────────────────────────────────────────────────────────────┐  │
-│  │ [Search Product from Product Master...]                                       │  │
+│  │ [🔍 Search Product from Product Master...]                                    │  │
 │  │                                                                              │  │
 │  │ Selected Chemicals                                                           │  │
 │  │                                                                              │  │
-│  │ ┌──────────────────────────────────────────────────────────────────────────────────────┐ │
-│  │ │ Product Name │ Product Code │ UOM │ Dilution │ Coverage (SQFT) │ Required Qty │      │ │
-│  │ ├──────────────┼──────────────┼─────┼──────────┼─────────────────┼──────────────┼──────┤ │
-│  │ │ Alpha Cyperm.. │ P-001      │ ml  │ 10 ml    │ [____] SQFT     │ [____] ml    │ [🗑] │ │
-│  │ │ Chlorpyriphos  │ P-002      │ ml  │ 20 ml    │ [____] SQFT     │ [____] ml    │ [🗑] │ │
-│  │ └──────────────────────────────────────────────────────────────────────────────────────┘ │
+│  │ ┌──────────────┬──────┬──────┬──────────┬──────────────┬────────────┬──────────────┬──────────────────┬──────────────────┬──────┐ │
+│  │ │ Product Name │ Code │ UOM  │ Dilution │Coverage(SQFT)│ Req. Qty   │ Price/UOM(₹) │ Cost/Visit(₹)    │ Est. Cost/Month  │      │ │
+│  │ ├──────────────┼──────┼──────┼──────────┼──────────────┼────────────┼──────────────┼──────────────────┼──────────────────┼──────┤ │
+│  │ │ Alpha Cyperm.│P-001 │ ml   │ 10 ml    │ [____] SQFT  │ [____] ml  │ ₹4.20 (Auto) │ ₹____ (Auto)     │ ₹____ (Auto)     │ [🗑] │ │
+│  │ │ Chlorpyriphos│P-002 │ ml   │ 20 ml    │ [____] SQFT  │ [____] ml  │ ₹3.50 (Auto) │ ₹____ (Auto)     │ ₹____ (Auto)     │ [🗑] │ │
+│  │ └──────────────┴──────┴──────┴──────────┴──────────────┴────────────┴──────────────┴──────────────────┴──────────────────┴──────┘ │
+│  │                                                                              │
+│  │  Visits/Month (Reference): [Auto from Service Frequency above]               │
+│  │                                                                              │
+│  │  ─── CHEMICAL COST SUMMARY ──────────────────────────────────────────────── │
+│  │  Total Chemical Cost / Visit  : ₹ [Auto-sum of all Cost/Visit rows]          │
+│  │  Total Chemical Cost / Month  : ₹ [Auto-sum of all Est. Cost/Month rows]     │
+│  │  (Based on Visits/Month × Qty × Price/UOM per chemical)                      │
 │  │                                                                              │
 │  │ [+ Add Custom Chemical]                                                      │
 │  └──────────────────────────────────────────────────────────────────────────────┘
@@ -2932,57 +2939,93 @@ The Add Service form allows administrators to create and configure pest control 
 
 ### **Section 4: Chemicals / Products Used**
 
-_(Integrated with Module 10 Product Master)_
+_(Integrated with Module 10 Product Master — product price auto-fetched on selection)_
 
-| Field           | Type   | Required | Validation                       |
-| --------------- | ------ | -------- | -------------------------------- |
-| Product Name    | Lookup | Yes      | Must exist in Product Master     |
-| Product Code    | Auto   | Yes      | Auto fetched                     |
-| UOM             | Auto   | Yes      | From product master              |
-| Standard Usage  | Auto   | Yes      | Based on product configuration   |
-| Dilution        | Number | Yes      | E.g., 10 ml                      |
-| Coverage (SQFT) | Number | Yes      | E.g., 100 SQFT                   |
-| Required Qty    | Number | Yes      | Must be ≥ 0                      |
-| Custom Chemical | Text   | No       | Allowed if product not available |
+| Field                    | Type            | Required | Validation / Notes                                          |
+| ------------------------ | --------------- | -------- | ----------------------------------------------------------- |
+| Product Name             | Search Dropdown | Yes      | Must exist in Product Master (active consumables only)      |
+| Product Code             | Auto-filled     | System   | Auto-fetched from Product Master on selection               |
+| UOM                      | Auto-filled     | System   | Base UOM from Product Master (ml / Ltr / gm / kg / Nos)    |
+| Dilution                 | Number          | Yes      | Standard dilution dose per treatment (e.g., 10 ml)         |
+| Coverage (SQFT)          | Number          | Yes      | Area covered per dilution dose (e.g., 100 SQFT)            |
+| Required Qty             | Number          | Yes      | Quantity needed per service visit; must be > 0              |
+| **Price / UOM (₹)**      | Auto-filled     | System   | **Purchase Price from Module 10 Product Master** (editable) |
+| **Cost / Visit (₹)**     | Auto-calculated | System   | `Required Qty × Price per UOM`                              |
+| **Est. Cost / Month (₹)**| Auto-calculated | System   | `Cost per Visit × Visits per Month`                         |
+| Custom Chemical          | Text            | No       | Allowed if product does not exist in Product Master         |
 
-**Business Rule**
+**System Behavior — On Product Selection**
 
-- When a **product is selected**, the following fields auto populate
-  - Product Code
-  - UOM
-  - Standard Usage (can populate Dilution & Coverage by default if set)
+When a product is selected from the search dropdown, the system automatically fetches and fills:
 
-- Required Qty must follow **UOM measurement**.
+| Field Auto-Filled  | Source in Module 10     |
+| ------------------ | ----------------------- |
+| Product Code       | Product Master record   |
+| UOM                | Base UOM from Product   |
+| Dilution           | Standard Usage (if set) |
+| Price / UOM (₹)    | **Purchase Price**      |
 
-Example
+> The **Price / UOM** is editable — the admin can override the fetched price if a negotiated rate applies for this service.
 
-| Product    | UOM | Required Qty |
-| ---------- | --- | ------------ |
-| Chemical A | ml  | 50 ml        |
-| Powder B   | gm  | 100 gm       |
+**Calculation Rules**
+
+| Calculation            | Formula                                          |
+| ---------------------- | ------------------------------------------------ |
+| Cost per Visit (₹)     | `Required Qty × Price per UOM`                   |
+| Est. Cost / Month (₹)  | `Cost per Visit × Visits per Month`              |
+| Total Chemical Cost    | Sum of all chemical rows' Est. Cost / Month      |
+
+**Chemical Cost Summary** (displayed below the table, read-only)
+
+| Summary Field                    | Value                                          |
+| -------------------------------- | ---------------------------------------------- |
+| Total Chemical Cost / Visit (₹)  | Sum of all Cost/Visit across chemical rows     |
+| Total Chemical Cost / Month (₹)  | Sum of all Est. Cost/Month across chemical rows |
+
+> This total is shown to guide the admin when setting the final service price in the **Pricing Configuration** section below.
+
+**Example**
+
+| Product             | UOM | Req. Qty | Price/UOM | Cost/Visit | Visits/Month | Cost/Month |
+| ------------------- | --- | -------- | --------- | ---------- | ------------ | ---------- |
+| Alpha Cypermethrin  | ml  | 50 ml    | ₹4.20     | ₹210       | 4            | ₹840       |
+| Chlorpyriphos       | ml  | 30 ml    | ₹3.50     | ₹105       | 4            | ₹420       |
+| **TOTAL**           |     |          |           | **₹315**   |              | **₹1,260** |
 
 ---
 
 ### **Section 5: Pricing Configuration**
 
+> **💡 Pricing Reference:** The **Chemical Cost Summary** calculated in **Section 4** (Total Chemical Cost / Month) is displayed as a reference banner at the top of this section, so the admin can set service prices that comfortably cover chemical costs and ensure profitability.
+
 | Field                          | Type               | Required    | Validation                                                            |
 | ------------------------------ | ------------------ | ----------- | --------------------------------------------------------------------- |
 | Price Type                     | Radio              | Yes         | Fixed Price / Area Based / Inspection Based                           |
 | **[FIXED PRICE CONFIG]**       | —                  | —           | Only if Price Type = Fixed Price                                      |
-| Residential (BHK Pricing)      | Number             | Conditional | 1BHK, 2BHK, 3BHK, 4BHK+ pricing                                       |
+| Residential (BHK Pricing)      | Number             | Conditional | 1BHK, 2BHK, 3BHK, 4BHK+ pricing; should exceed Chemical Cost/Month  |
 | Custom Property Type           | Text               | No          | Added via [+ Add Custom Property Type]                                |
 | Commercial (Office Pricing)    | Number             | Conditional | Small, Medium, Large Office, Warehouse pricing                        |
 | Custom Commercial Type         | Text               | No          | Added via [+ Add Custom Commercial Type]                              |
 | **[AREA BASED CONFIG]**        | —                  | —           | Only if Price Type = Area Based                                       |
-| Base Price                     | Number             | Conditional | Minimum charge for service                                            |
+| Base Price                     | Number             | Conditional | Minimum charge; recommended ≥ Total Chemical Cost / Visit            |
 | Price per SQFT                 | Number             | Conditional | Charge per specified SQFT area                                        |
 | **[INSPECTION BASED CONFIG]**  | —                  | —           | Only if Price Type = Inspection Based                                 |
-| Inspection Fee                 | Number             | Conditional | Fee charged for visit; final price quoted after inspection           |
+| Inspection Fee                 | Number             | Conditional | Fee charged for visit; final price quoted after inspection            |
 | **[CUSTOM CATEGORY CONFIG]**   | —                  | —           | [+ Add Pricing for Custom Service Category]                           |
 | Category                       | Dropdown           | No          | Selected from Service Categories                                      |
 | Sub Category                   | Dropdown           | No          | Selected from Sub Categories                                          |
 | Field Name                     | Text               | No          | Label for the custom pricing field                                    |
 | Price Type Config              | Text               | No          | Configuration for the custom pricing                                  |
+
+**Pricing Reference Banner** (shown above the price inputs, read-only)
+
+| Reference Item                       | Value                                         |
+| ------------------------------------ | --------------------------------------------- |
+| Total Chemical Cost / Visit (₹)      | Auto-calculated from Section 4 chemicals      |
+| Total Chemical Cost / Month (₹)      | Auto-calculated from Section 4 chemicals      |
+| Recommended Minimum Service Price    | Total Cost / Visit + Labour / Overhead margin |
+
+> Setting the service price **below** the Chemical Cost / Month will trigger a **⚠️ warning** to alert the admin of a potential loss-making configuration.
 
 - For reference check the Preview of Screen Layout (12.2)
 
@@ -3068,13 +3111,26 @@ The form structure remains **same as Add Service**, but fields are **pre-populat
 │  └──────────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                     │
 │  CHEMICALS / PRODUCTS USED                                                         │
+│  (Integrated with Module 10 Product Master — prices auto-fetched on selection)    │
+│                                                                                     │
 │  ┌──────────────────────────────────────────────────────────────────────────────┐  │
+│  │ [🔍 Search Product from Product Master...]                                    │  │
+│  │                                                                              │  │
 │  │ Selected Chemicals                                                           │  │
-│  │ ┌──────────────────────────────────────────────────────────────────────────────────────┐ │
-│  │ │ Product Name │ Product Code │ UOM │ Dilution │ Coverage (SQFT) │ Required Qty │      │ │
-│  │ ├──────────────┼──────────────┼─────┼──────────┼─────────────────┼──────────────┼──────┤ │
-│  │ │ Alpha Cyperm.. │ P-001      │ ml  │ 10 ml    │ 100 SQFT        │ [20  ] ml    │ [🗑] │ │
-│  │ └──────────────────────────────────────────────────────────────────────────────────────┘ │
+│  │                                                                              │  │
+│  │ ┌──────────────┬──────┬──────┬──────────┬──────────────┬────────────┬──────────────┬──────────────────┬──────────────────┬──────┐ │
+│  │ │ Product Name │ Code │ UOM  │ Dilution │Coverage(SQFT)│ Req. Qty   │ Price/UOM(₹) │ Cost/Visit(₹)    │ Est. Cost/Month  │      │ │
+│  │ ├──────────────┼──────┼──────┼──────────┼──────────────┼────────────┼──────────────┼──────────────────┼──────────────────┼──────┤ │
+│  │ │ Alpha Cyperm.│P-001 │ ml   │ 10 ml    │ 100 SQFT     │ [20  ] ml  │ ₹4.20 (Auto) │ ₹84 (Auto)       │ ₹336 (Auto)      │ [🗑] │ │
+│  │ └──────────────┴──────┴──────┴──────────┴──────────────┴────────────┴──────────────┴──────────────────┴──────────────────┴──────┘ │
+│  │                                                                              │
+│  │  Visits/Month (Reference): [Auto from Service Frequency above]               │
+│  │                                                                              │
+│  │  ─── CHEMICAL COST SUMMARY ──────────────────────────────────────────────── │
+│  │  Total Chemical Cost / Visit  : ₹ [Auto-sum of all Cost/Visit rows]          │
+│  │  Total Chemical Cost / Month  : ₹ [Auto-sum of all Est. Cost/Month rows]     │
+│  │  (Based on Visits/Month × Qty × Price/UOM per chemical)                      │
+│  │                                                                              │
 │  │ [+ Add Custom Chemical]                                                      │
 │  └──────────────────────────────────────────────────────────────────────────────┘
 │                                                                                     │
@@ -3126,7 +3182,10 @@ The form structure remains **same as Add Service**, but fields are **pre-populat
 |                           | Service Status        | Yes      | Triggers Inactive Reason if changed to Inactive  |
 | **Pest Species**          | All Fields            | Yes      | Rows can be added/removed                        |
 | **Treatment Methods**     | All Fields            | Yes      | Checkboxes and custom additions                  |
-| **Chemicals / Products**  | All Fields            | Yes      | Items can be added/removed; Qty can be modified  |
+| **Chemicals / Products**  | Product Name          | Yes      | Items can be added/removed; searchable from Product Master |
+|                           | Price / UOM (₹)       | Yes      | Auto-fetched from Module 10; editable override   |
+|                           | Cost / Visit (₹)      | **Auto** | `Required Qty × Price per UOM`                   |
+|                           | Est. Cost / Month (₹) | **Auto** | `Cost per Visit × Visits per Month`              |
 | **Pricing Configuration** | Price Type            | Yes      | —                                                |
 |                           | Pricing Values        | Yes      | BHK rates, Base price, SQFT rates, etc.          |
 |                           | Custom Pricing Config | Yes      | New fields can be added                          |
@@ -3231,9 +3290,11 @@ The **Edit button** redirects to **12.3 Edit Service**.
 │                                                                                     │
 │ CHEMICALS / PRODUCTS USED                                                          │
 │ ┌───────────────────────────────────────────────────────────────────────────────┐  │
-│ │ Product Name │ Product Code │ UOM │ Dilution │ Coverage (SQFT) │ Required Qty      │
-│ │ Alpha Cypermethrin │ P-001 │ ml │ 10 ml    │ 100 SQFT        │ 20 ml            │
-│ │ Chlorpyriphos │ P-002 │ ml │ 20 ml      │ 100 SQFT        │ 30 ml            │
+│ │ Product Name    │ Code  │ UOM │ Dilution │ Coverage │ Req. Qty │ Price/UOM │ Cost/Visit │ Cost/Month │
+│ │ Alpha Cyperm.   │ P-001 │ ml  │ 10 ml    │ 100 SQFT │ 20 ml    │ ₹4.20     │ ₹84        │ ₹336       │
+│ │ Chlorpyriphos   │ P-002 │ ml  │ 20 ml    │ 100 SQFT │ 30 ml    │ ₹3.50     │ ₹105       │ ₹420       │
+│ ├─────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ │ Total Chemical Cost / Visit : ₹189  │  Total Chemical Cost / Month : ₹756                         │
 │ └───────────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                     │
 │ PRICING CONFIGURATION                                                              │
@@ -3322,15 +3383,19 @@ The **Edit button** redirects to **12.3 Edit Service**.
 
 # **Section 4: Chemicals / Products Used Fields**
 
-| Field             | Description                   |
-| ----------------- | ----------------------------- |
-| Product Name      | Chemical/product name         |
-| Product Code      | Product master code           |
-| UOM               | Unit of measurement           |
-| Standard Usage    | Default usage quantity        |
-| Dilution          | Mixing ratio (e.g., 10 ml)    |
-| Coverage          | Area covered (e.g., 100 SQFT) |
-| Required Quantity | Quantity required per service |
+| Field                     | Description                                              |
+| ------------------------- | -------------------------------------------------------- |
+| Product Name              | Chemical/product name (from Product Master)              |
+| Product Code              | Auto-fetched product master code                         |
+| UOM                       | Unit of measurement (ml / Ltr / gm / kg / Nos)          |
+| Dilution                  | Mixing ratio (e.g., 10 ml per treatment)                 |
+| Coverage (SQFT)           | Area covered per dilution dose                           |
+| Required Quantity         | Quantity required per service visit                      |
+| **Price / UOM (₹)**       | Purchase price from Module 10 (read-only in View)        |
+| **Cost / Visit (₹)**      | `Required Qty × Price per UOM` (auto-calculated)         |
+| **Est. Cost / Month (₹)** | `Cost per Visit × Visits per Month` (auto-calculated)    |
+| **Total Cost / Visit**    | Sum of all chemical Cost/Visit rows (Chemical Summary)   |
+| **Total Cost / Month**    | Sum of all chemical Cost/Month rows (Chemical Summary)   |
 
 ---
 
