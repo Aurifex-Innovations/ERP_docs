@@ -6135,7 +6135,7 @@ The Add Quotation form allows sales team members to create new quotations. The f
 | Select Customer | Search Dropdown | Conditional | Active customers from Module 9                                                                            | Required if Source = From Customer |
 | Full Name       | Text            | Conditional | Min 3 characters                                                                                          | Required if Source = Add New       |
 | Phone           | Number          | Conditional | 10-digit Indian mobile                                                                                    | Required if Source = Add New       |
-| Email           | Email           | No          | Valid email format                                                                                        | Optional for Add New               |
+| Email           | Email           | yes          | Valid email format                                                                                        | Optional for Add New               |
 | Company Name    | Text            | No          | Max 100 characters                                                                                        | Optional for Add New               |
 | Address         | Text            | Conditional | Min 10 characters                                                                                         | Required if Source = Add New       |
 | City            | Text            | Conditional | Min 3 characters                                                                                          | Required if Source = Add New       |
@@ -6160,7 +6160,7 @@ The Add Quotation form allows sales team members to create new quotations. The f
 
 | Field         | Type                | Required | Options/Validation                                         | Notes                         |
 | ------------- | ------------------- | -------- | ---------------------------------------------------------- | ----------------------------- |
-| Address       | Text                | Yes      | Min 10 characters                                                                                                        | Service delivery address      |
+| Address       | Text                | Yes      | Min 10 characters                                                                                         | Service delivery address      |
 | City          | Text                | Yes      | Min 3 characters                                                                                                         | City name                     |
 | State         | Dropdown            | Yes      | Indian states list                                                                                                       | State selection               |
 | Category      | Dropdown            | Yes      | Residential / Commercial / Industrial / Warehouse                                                                        | Linked to Module 12 Categories |
