@@ -2659,9 +2659,9 @@ The Service Dashboard displays a list of all configured pest control services in
 │                          SERVICE OVERVIEW TABLE                              │
 │                                                                             │
 │ ┌─────┬────────────┬─────────────────┬──────────┬────────────┬───────────┐ │
-│ │Img  │Service ID  │Service Name     │Category  │Pest Type   │Price Type │ │
+│ │Img  │Service ID  │Service Name     │Category,Sub Category  │Pest Type   │Price Type │ │
 │ ├─────┼────────────┼─────────────────┼──────────┼────────────┼───────────┤ │
-│ │🐜   │SVC-001     │Termite Control  │Res.      │Termite     │Fixed      │ │
+│ │🐜   │SVC-001     │Termite Control  │Res. ,External     │Termite     │Fixed      │ │
 │ │🪳   │SVC-002     │Cockroach Gel    │Comm.     │Cockroach   │Area Based │ │
 │ │🐀   │SVC-003     │Rodent Baiting   │Res.      │Rodent      │Inspection │ │
 │ └─────┴────────────┴─────────────────┴──────────┴────────────┴───────────┘ │
@@ -2690,7 +2690,7 @@ The Service Dashboard displays a list of all configured pest control services in
 | Service Image | Image Thumbnail | Optional | Icon representing pest type       |
 | Service ID    | Text            | Auto     | Unique service identifier         |
 | Service Name  | Text            | Required | Name of pest control service      |
-| Category      | Text            | Required | Residential / Commercial          |
+| Category,Sub Category      | Text,Text            | Required | Residential / Commercial,External/Internal      |
 | Pest Type     | Multi Tag       | Required | Pest category linked with service |
 | Price Type    | Text            | Required | Fixed / Area Based / Inspection   |
 | Duration      | Text            | Required | Service duration                  |
