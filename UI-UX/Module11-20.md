@@ -884,15 +884,15 @@ If stock is damaged, missing, or incorrect, users can **report issues during rec
 
 # Filters
 
-| Filter Name  | Type                | Default      | Options                                                                     | Purpose                          |
-| ------------ | ------------------- | ------------ | --------------------------------------------------------------------------- | -------------------------------- |
-| Request Type | Dropdown            | All          | Stock Request, Transfer Request                                             | Separate stock vs transfer flows |
-| Status       | Multi-Select        | All          | Pending, Approved, Rejected, Dispatch, In Transit, Received, Issue Reported | Track lifecycle stage            |
-| Branch(from - to)       | Searchable Dropdown | User Branch  | All Branches / Specific Branch                                              | Filter by source/destination     |
-| Date Range   | Date Picker         | Last 30 Days | Custom Range                                                                | Filter based on request creation |
-| Priority     | Dropdown            | All          | Low, Normal, High, Urgent                                                   | Focus on critical requests       |
+| Filter Name       | Type                | Default      | Options                                                                     | Purpose                          |
+| ----------------- | ------------------- | ------------ | --------------------------------------------------------------------------- | -------------------------------- |
+| Request Type      | Dropdown            | All          | Stock Request, Transfer Request                                             | Separate stock vs transfer flows |
+| Status            | Multi-Select        | All          | Pending, Approved, Rejected, Dispatch, In Transit, Received, Issue Reported | Track lifecycle stage            |
+| Branch(from - to) | Searchable Dropdown | User Branch  | All Branches / Specific Branch                                              | Filter by source/destination     |
+| Date Range        | Date Picker         | Last 30 Days | Custom Range                                                                | Filter based on request creation |
+| Priority          | Dropdown            | All          | Low, Normal, High, Urgent                                                   | Focus on critical requests       |
 
-### Search -Global 
+### Search -Global
 
 ---
 
@@ -1518,11 +1518,11 @@ When creating or editing a request, the form provides the following options:
 
 # Filters
 
-| Filter       | Type         | Options                                     |
-| ------------ | ------------ | ------------------------------------------- |
-| Request Type | Multi Select | Request for Approval / Receipt Confirmation |
-| From-To Branch  | Dropdown     | List of available branches                  |
-| Date Range   | Date Range   | From – To                                   |
+| Filter         | Type         | Options                                     |
+| -------------- | ------------ | ------------------------------------------- |
+| Request Type   | Multi Select | Request for Approval / Receipt Confirmation |
+| From-To Branch | Dropdown     | List of available branches                  |
+| Date Range     | Date Range   | From – To                                   |
 
 ---
 
@@ -2771,6 +2771,9 @@ The Add Service form allows administrators to create and configure pest control 
 │  │ [☑] Residential  [☑] Commercial  [☑] Industrial  [☑] Warehouse               │  │
 │  │ [+ Add Custom Category]                                                      │  │
 │  │                                                                              │  │
+│  │ Service Sub Category:                                                        │  │
+│  │ [☑] Internal  [☑] External                                                   │  │
+│  │                                                                              │  │
 │  │ Service Code:        [Auto Generated]                                        │  │
 │  │                                                                              │  │
 │  │ Pest Type Covered:                                                           │  │
@@ -2825,12 +2828,12 @@ The Add Service form allows administrators to create and configure pest control 
 │  │                                                                              │  │
 │  │ Selected Chemicals                                                           │  │
 │  │                                                                              │  │
-│  │ ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │ │ Product Name │ Product Code │ UOM │ Standard Usage │ Required Qty │     │ │
-│  │ ├──────────────┼──────────────┼─────┼────────────────┼──────────────┤     │ │
-│  │ │ Alpha Cypermethrin │ P-001 │ ml │ 10 ml │ [____] ml │              │ │
-│  │ │ Chlorpyriphos │ P-002 │ ml │ 20 ml │ [____] ml │                     │ │
-│  │ └─────────────────────────────────────────────────────────────────────────┘ │
+│  │ ┌──────────────────────────────────────────────────────────────────────────────────────┐ │
+│  │ │ Product Name │ Product Code │ UOM │ Dilution │ Coverage (SQFT) │ Required Qty │      │ │
+│  │ ├──────────────┼──────────────┼─────┼──────────┼─────────────────┼──────────────┼──────┤ │
+│  │ │ Alpha Cyperm.. │ P-001      │ ml  │ 10 ml    │ [____] SQFT     │ [____] ml    │ [🗑] │ │
+│  │ │ Chlorpyriphos  │ P-002      │ ml  │ 20 ml    │ [____] SQFT     │ [____] ml    │ [🗑] │ │
+│  │ └──────────────────────────────────────────────────────────────────────────────────────┘ │
 │  │                                                                              │
 │  │ [+ Add Custom Chemical]                                                      │
 │  └──────────────────────────────────────────────────────────────────────────────┘
@@ -2838,20 +2841,35 @@ The Add Service form allows administrators to create and configure pest control 
 │  PRICING CONFIGURATION                                                              │
 │  ┌──────────────────────────────────────────────────────────────────────────────┐  │
 │  │ Price Type                                                                   │  │
-│  │ (•) Fixed Price                                                              │  │
-│  │ ( ) Area Based                                                               │  │
-│  │ ( ) Inspection Based                                                         │  │
+│  │ (•) Fixed Price  ( ) Area Based  ( ) Inspection Based                        │  │
 │  │                                                                              │  │
-│  │ Residential Pricing                                                          │  │
-│  │ 1BHK [₹____] 2BHK [₹____] 3BHK [₹____] 4BHK+ [₹____]                         │  │
-│  │ [+ Add Custom Property Type]                                                 │  │
+│  │ --- Dynamic Form Based on Price Type Selection ---                           │  │
 │  │                                                                              │  │
-│  │ Commercial Pricing                                                           │  │
-│  │ Small Office [₹____]                                                         │  │
-│  │ Medium Office [₹____]                                                        │  │
-│  │ Large Office [₹____]                                                         │  │
-│  │ Warehouse [₹____]                                                            │  │
-│  │ [+ Add Custom Commercial Type]                                               │  │
+│  │ [IF FIXED PRICE SELECTED]                                                    │  │
+│  │ Conditional Pricing (Based on Category & Sub Category)                       │  │
+│  │ ▼ Residential (Internal/External)                                            │  │
+│  │   1BHK [₹____] 2BHK [₹____] 3BHK [₹____] 4BHK+ [₹____]                       │  │
+│  │   [+ Add Custom Property Type]                                               │  │
+│  │                                                                              │  │
+│  │ ▼ Commercial (Internal/External)                                             │  │
+│  │   Small Office [₹____] Medium Office [₹____] Large Office [₹____]            │  │
+│  │   Warehouse [₹____]                                                          │  │
+│  │   [+ Add Custom Commercial Type]                                             │  │
+│  │                                                                              │  │
+│  │ [IF AREA BASED SELECTED]                                                     │  │
+│  │ Conditional Pricing (Based on Category & Sub Category)                       │  │
+│  │ ▼ Residential (Internal/External)                                            │  │
+│  │   Base Price: [₹____] + [₹____] per [___]SQFT                                     │  │
+│  │                                                                              │  │
+│  │ ▼ Commercial (Internal/External)                                             │  │
+│  │   Base Price: [₹____] + [₹____] per [___]SQFT                                     │  │
+│  │                                                                              │  │
+│  │ [IF INSPECTION BASED SELECTED]                                               │  │
+│  │ Inspection Fee: [₹____] (Final price quoted after visit)                     │  │
+│  │                                                                              │  │
+│  │ [+ Add Pricing for Custom Service Category]                                  │  │
+│  │   Category: [________▼] Sub Category: [________▼]                            │  │
+│  │   Field Name: [____________] Price Type Config: [____] [+ Add Field]         │  │
 │  └──────────────────────────────────────────────────────────────────────────────┘
 │                                                                                     │
 │  WARRANTY / SERVICE GUARANTEE                                                      │
@@ -2878,17 +2896,18 @@ The Add Service form allows administrators to create and configure pest control 
 
 ### **Section 1: Basic Service Information**
 
-| Field             | Type                  | Required | Validation                                          |
-| ----------------- | --------------------- | -------- | --------------------------------------------------- |
-| Service Name      | Text                  | Yes      | Minimum 3 characters, must be unique                |
-| Service Category  | Multi Select Checkbox | Yes      | At least one category must be selected              |
-| Custom Category   | Text                  | No       | Appears only if user clicks **Add Custom Category** |
-| Service Code      | Auto Generated        | Yes      | System generated format: `SRV-XXXX`                 |
-| Pest Type Covered | Multi Select Checkbox | Yes      | Minimum one pest must be selected                   |
-| Custom Pest Type  | Text                  | No       | Enabled when **Add Custom Pest Type** selected      |
-| Description       | Text Area             | Yes      | Minimum 10 characters                               |
-| Service Duration  | Number + UOM          | Yes      | Value must be > 0                                   |
-| Service Status    | Radio                 | Yes      | Active / Inactive                                   |
+| Field                | Type                  | Required | Validation                                          |
+| -------------------- | --------------------- | -------- | --------------------------------------------------- |
+| Service Name         | Text                  | Yes      | Minimum 3 characters, must be unique                |
+| Service Category     | Multi Select Checkbox | Yes      | At least one category must be selected              |
+| Custom Category      | Text                  | No       | Appears only if user clicks **Add Custom Category** |
+| Service Sub Category | Multi Select Checkbox | Yes      | Internal / External                                 |
+| Service Code         | Auto Generated        | Yes      | System generated format: `SRV-XXXX`                 |
+| Pest Type Covered    | Multi Select Checkbox | Yes      | Minimum one pest must be selected                   |
+| Custom Pest Type     | Text                  | No       | Enabled when **Add Custom Pest Type** selected      |
+| Description          | Text Area             | Yes      | Minimum 10 characters                               |
+| Service Duration     | Number + UOM          | Yes      | Value must be > 0                                   |
+| Service Status       | Radio                 | Yes      | Active / Inactive                                   |
 
 ---
 
@@ -2921,6 +2940,8 @@ _(Integrated with Module 10 Product Master)_
 | Product Code    | Auto   | Yes      | Auto fetched                     |
 | UOM             | Auto   | Yes      | From product master              |
 | Standard Usage  | Auto   | Yes      | Based on product configuration   |
+| Dilution        | Number | Yes      | E.g., 10 ml                      |
+| Coverage (SQFT) | Number | Yes      | E.g., 100 SQFT                   |
 | Required Qty    | Number | Yes      | Must be ≥ 0                      |
 | Custom Chemical | Text   | No       | Allowed if product not available |
 
@@ -2929,7 +2950,7 @@ _(Integrated with Module 10 Product Master)_
 - When a **product is selected**, the following fields auto populate
   - Product Code
   - UOM
-  - Standard Usage
+  - Standard Usage (can populate Dilution & Coverage by default if set)
 
 - Required Qty must follow **UOM measurement**.
 
@@ -2944,13 +2965,26 @@ Example
 
 ### **Section 5: Pricing Configuration**
 
-| Field                  | Type   | Required    | Validation                                |
-| ---------------------- | ------ | ----------- | ----------------------------------------- |
-| Price Type             | Radio  | Yes         | Fixed / Area Based / Inspection Based     |
-| Residential Pricing    | Number | Conditional | Required if Residential category selected |
-| Commercial Pricing     | Number | Conditional | Required if Commercial category selected  |
-| Custom Property Type   | Text   | No          | Allowed via Add Custom                    |
-| Custom Commercial Type | Text   | No          | Allowed via Add Custom                    |
+| Field                          | Type               | Required    | Validation                                                            |
+| ------------------------------ | ------------------ | ----------- | --------------------------------------------------------------------- |
+| Price Type                     | Radio              | Yes         | Fixed Price / Area Based / Inspection Based                           |
+| **[FIXED PRICE CONFIG]**       | —                  | —           | Only if Price Type = Fixed Price                                      |
+| Residential (BHK Pricing)      | Number             | Conditional | 1BHK, 2BHK, 3BHK, 4BHK+ pricing                                       |
+| Custom Property Type           | Text               | No          | Added via [+ Add Custom Property Type]                                |
+| Commercial (Office Pricing)    | Number             | Conditional | Small, Medium, Large Office, Warehouse pricing                        |
+| Custom Commercial Type         | Text               | No          | Added via [+ Add Custom Commercial Type]                              |
+| **[AREA BASED CONFIG]**        | —                  | —           | Only if Price Type = Area Based                                       |
+| Base Price                     | Number             | Conditional | Minimum charge for service                                            |
+| Price per SQFT                 | Number             | Conditional | Charge per specified SQFT area                                        |
+| **[INSPECTION BASED CONFIG]**  | —                  | —           | Only if Price Type = Inspection Based                                 |
+| Inspection Fee                 | Number             | Conditional | Fee charged for visit; final price quoted after inspection           |
+| **[CUSTOM CATEGORY CONFIG]**   | —                  | —           | [+ Add Pricing for Custom Service Category]                           |
+| Category                       | Dropdown           | No          | Selected from Service Categories                                      |
+| Sub Category                   | Dropdown           | No          | Selected from Sub Categories                                          |
+| Field Name                     | Text               | No          | Label for the custom pricing field                                    |
+| Price Type Config              | Text               | No          | Configuration for the custom pricing                                  |
+
+- For reference check the Preview of Screen Layout (12.2)
 
 ---
 
@@ -2990,37 +3024,118 @@ The form structure remains **same as Add Service**, but fields are **pre-populat
 ## **Screen Layout**
 
 ```
-┌──────────────────────────────────────────────────────────────────────────────┐
-│ [← Back to Services]                 EDIT SERVICE                     [Save] │
-├──────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│ BASIC SERVICE INFORMATION                                                    │
-│                                                                              │
-│ Service Name:        [Pre-filled]                                            │
-│ Service Category:    [Residential] [Commercial]                              │
-│ Service Code:        SRV-0001 (Read Only)                                    │
-│                                                                              │
-│ Pest Types Covered:  Rodent, Cockroach                                       │
-│ Description:         [Pre-filled description]                                │
-│ Service Duration:    [60] Minutes                                            │
-│                                                                              │
-│ Service Status: (•) Active  ( ) Inactive                                     │
-│                                                                              │
-│ If Inactive Selected →                                                        │
-│ Inactive Reason:                                                             │
-│ [________________________________________________________]                   │
-│                                                                              │
-└──────────────────────────────────────────────────────────────────────────────┘
-
-
-Remaining sections remain same as **Add Service**
-
-* Pest Species
-* Treatment Methods
-* Chemicals Used
-* Pricing
-* Warranty
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to Services]                 EDIT SERVICE                           [Save] │
+├─────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                     │
+│  BASIC SERVICE INFORMATION                                                          │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐  │
+│  │ Service Name:        [Rodocon Service                     ] *               │  │
+│  │                                                                              │  │
+│  │ Service Category:                                                            │  │
+│  │ [☑] Residential  [☑] Commercial  [ ] Industrial  [ ] Warehouse               │  │
+│  │ [+ Add Custom Category]                                                      │  │
+│  │                                                                              │  │
+│  │ Service Sub Category:                                                        │  │
+│  │ [☑] Internal  [ ] External                                                   │  │
+│  │                                                                              │  │
+│  │ Service Code:        SRV-0001 (Read Only)                                    │  │
+│  │                                                                              │  │
+│  │ Pest Type Covered:                                                           │  │
+│  │ [☑] Rodent   [☑] Cockroach   [ ] Mosquito                                    │  │
+│  │ [+ Add Custom Pest Type]                                                      │  │
+│  │                                                                              │  │
+│  │ Description:                                                                 │  │
+│  │ [Rodent control treatment using baiting method              ] *             │  │
+│  │                                                                              │  │
+│  │ Service Duration: [60  ] [Minutes         ▼]                                 │  │
+│  │                                                                              │  │
+│  │ Service Status: (•) Active  ( ) Inactive                                     │  │
+│  └──────────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                     │
+│  PEST SPECIES COVERED                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐  │
+│  │ • Roof Rat – Rattus rattus                                   [🗑]             │  │
+│  │ • Norway Rat – Rattus norvegicus                             [🗑]             │  │
+│  │ [+ Add Species]                                                              │  │
+│  └──────────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                     │
+│  METHOD OF CONTROL / TREATMENT                                                     │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐  │
+│  │ [☑] Gel Baiting      [☑] Trapping                                            │  │
+│  │ [☑] Rodent Baiting   [☑] Monitoring                                          │  │
+│  │ [+ Add Custom Treatment Method]                                              │  │
+│  └──────────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                     │
+│  CHEMICALS / PRODUCTS USED                                                         │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐  │
+│  │ Selected Chemicals                                                           │  │
+│  │ ┌──────────────────────────────────────────────────────────────────────────────────────┐ │
+│  │ │ Product Name │ Product Code │ UOM │ Dilution │ Coverage (SQFT) │ Required Qty │      │ │
+│  │ ├──────────────┼──────────────┼─────┼──────────┼─────────────────┼──────────────┼──────┤ │
+│  │ │ Alpha Cyperm.. │ P-001      │ ml  │ 10 ml    │ 100 SQFT        │ [20  ] ml    │ [🗑] │ │
+│  │ └──────────────────────────────────────────────────────────────────────────────────────┘ │
+│  │ [+ Add Custom Chemical]                                                      │
+│  └──────────────────────────────────────────────────────────────────────────────┘
+│                                                                                     │
+│  PRICING CONFIGURATION                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐  │
+│  │ Price Type                                                                   │  │
+│  │ ( ) Fixed Price  (•) Area Based  ( ) Inspection Based                        │  │
+│  │                                                                              │  │
+│  │ [IF AREA BASED SELECTED]                                                     │  │
+│  │ ▼ Residential (Internal)                                                     │  │
+│  │   Base Price: [₹500 ] + [₹2   ] per [100]SQFT                                     │  │
+│  │                                                                              │  │
+│  │ [+ Add Pricing for Custom Service Category]                                  │  │
+│  └──────────────────────────────────────────────────────────────────────────────┘
+│                                                                                     │
+│  WARRANTY / SERVICE GUARANTEE                                                      │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐
+│  │ Warranty Period: [3   ] Months                                                │
+│  │ Free Revisit Included: [☑] Yes  Qty: [2   ]                                   │
+│  └──────────────────────────────────────────────────────────────────────────────┘
+│                                                                                     │
+│  SYSTEM FIELDS                                                                     │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐
+│  │ Service ID: SRV-0001 (Read Only)                                            │
+│  │ Created Date: 02-Feb-2026 (Read Only)                                       │
+│  │ Created By: Admin (Read Only)                                                │
+│  │ Updated Date: [Auto]                                                          │
+│  │ Updated By: [Auto]                                                            │
+│  │ Display Order: [3   ]                                                         │
+│  └──────────────────────────────────────────────────────────────────────────────┘
+│                                                                                     │
+│  [Cancel]                             [Save Draft]                         [Save] │
+└─────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+# **Field Editability Matrix**
+
+| Section                   | Field                 | Editable | Notes                                            |
+| ------------------------- | --------------------- | -------- | ------------------------------------------------ |
+| **Basic Information**     | Service Name          | Yes      | —                                                |
+|                           | Service Category      | Yes      | —                                                |
+|                           | Service Sub Category  | Yes      | —                                                |
+|                           | Service Code          | **No**   | Permanently assigned on creation                 |
+|                           | Pest Type Covered     | Yes      | —                                                |
+|                           | Description           | Yes      | —                                                |
+|                           | Service Duration      | Yes      | —                                                |
+|                           | Service Status        | Yes      | Triggers Inactive Reason if changed to Inactive  |
+| **Pest Species**          | All Fields            | Yes      | Rows can be added/removed                        |
+| **Treatment Methods**     | All Fields            | Yes      | Checkboxes and custom additions                  |
+| **Chemicals / Products**  | All Fields            | Yes      | Items can be added/removed; Qty can be modified  |
+| **Pricing Configuration** | Price Type            | Yes      | —                                                |
+|                           | Pricing Values        | Yes      | BHK rates, Base price, SQFT rates, etc.          |
+|                           | Custom Pricing Config | Yes      | New fields can be added                          |
+| **Warranty**              | All Fields            | Yes      | Period and revisits                              |
+| **System Fields**         | Service ID            | **No**   | Auto-generated                                   |
+|                           | Created Date/By       | **No**   | Fixed upon creation                              |
+|                           | Updated Date/By       | **Auto** | Managed by system on save                        |
+|                           | Display Order         | Yes      | Used for sorting                                 |
+|                           | Inactive Reason       | Yes      | Mandatory only if status becomes Inactive        |
 
 ---
 
@@ -3092,6 +3207,7 @@ The **Edit button** redirects to **12.3 Edit Service**.
 │ │ Service Name: Rodocon Service                                                 │  │
 │ │ Service Code: SRV-0001                                                        │  │
 │ │ Service Category: Residential, Commercial                                     │  │
+│ │ Service Sub Category: Internal                                                │  │
 │ │ Pest Type Covered: Rodent, Cockroach                                          │  │
 │ │ Description: Rodent control treatment using baiting method                    │  │
 │ │ Service Duration: 60 Minutes                                                  │  │
@@ -3115,21 +3231,29 @@ The **Edit button** redirects to **12.3 Edit Service**.
 │                                                                                     │
 │ CHEMICALS / PRODUCTS USED                                                          │
 │ ┌───────────────────────────────────────────────────────────────────────────────┐  │
-│ │ Product Name │ Product Code │ UOM │ Standard Usage │ Required Qty             │
-│ │ Alpha Cypermethrin │ P-001 │ ml │ 10 ml │ 20 ml                                │
-│ │ Chlorpyriphos │ P-002 │ ml │ 20 ml │ 30 ml                                     │
+│ │ Product Name │ Product Code │ UOM │ Dilution │ Coverage (SQFT) │ Required Qty      │
+│ │ Alpha Cypermethrin │ P-001 │ ml │ 10 ml    │ 100 SQFT        │ 20 ml            │
+│ │ Chlorpyriphos │ P-002 │ ml │ 20 ml      │ 100 SQFT        │ 30 ml            │
 │ └───────────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                     │
 │ PRICING CONFIGURATION                                                              │
 │ ┌───────────────────────────────────────────────────────────────────────────────┐
 │ │ Price Type: Fixed Price                                                       │
-│ │ Residential Pricing                                                           │
-│ │ 1BHK: ₹1200   2BHK: ₹1500   3BHK: ₹1800   4BHK+: ₹2200                         │
-│ │ Commercial Pricing                                                            │
-│ │ Small Office: ₹2500                                                           │
-│ │ Medium Office: ₹3500                                                          │
-│ │ Large Office: ₹5000                                                           │
-│ │ Warehouse: ₹7000                                                              │
+│ │                                                                               │
+│ │ Residential Pricing (Internal)                                                │
+│ │ 1BHK: ₹1200 | 2BHK: ₹1800 | 3BHK: ₹2500 | 4BHK+: ₹3200                        │
+│ │                                                                               │
+│ │ Commercial Pricing (Internal)                                                 │
+│ │ Small Office: ₹3000 | Medium Office: ₹5000 | Large Office: ₹8000              │
+│ │ Warehouse: ₹12000                                                             │
+│ │                                                                               │
+│ │ --- Example for Area Based ---                                                │
+│ │ Price Type: Area Based                                                        │
+│ │ Residential: Base ₹500 + ₹2 per 100 SQFT                                      │
+│ │                                                                               │
+│ │ --- Example for Inspection Based ---                                          │
+│ │ Price Type: Inspection Based                                                  │
+│ │ Inspection Fee: ₹500                                                          │
 │ └───────────────────────────────────────────────────────────────────────────────┘
 │                                                                                     │
 │ WARRANTY / SERVICE GUARANTEE                                                       │
@@ -3165,15 +3289,16 @@ The **Edit button** redirects to **12.3 Edit Service**.
 
 # **Section 1: Basic Service Information Fields**
 
-| Field             | Description                                       |
-| ----------------- | ------------------------------------------------- |
-| Service Name      | Name of the service                               |
-| Service Code      | Unique auto-generated code                        |
-| Service Category  | Residential / Commercial / Industrial / Warehouse |
-| Pest Type Covered | Types of pests handled by the service             |
-| Description       | Service description                               |
-| Service Duration  | Estimated duration                                |
-| Service Status    | Active / Inactive                                 |
+| Field                | Description                                       |
+| -------------------- | ------------------------------------------------- |
+| Service Name         | Name of the service                               |
+| Service Code         | Unique auto-generated code                        |
+| Service Category     | Residential / Commercial / Industrial / Warehouse |
+| Service Sub Category | Internal / External                               |
+| Pest Type Covered    | Types of pests handled by the service             |
+| Description          | Service description                               |
+| Service Duration     | Estimated duration                                |
+| Service Status       | Active / Inactive                                 |
 
 ---
 
@@ -3203,17 +3328,23 @@ The **Edit button** redirects to **12.3 Edit Service**.
 | Product Code      | Product master code           |
 | UOM               | Unit of measurement           |
 | Standard Usage    | Default usage quantity        |
+| Dilution          | Mixing ratio (e.g., 10 ml)    |
+| Coverage          | Area covered (e.g., 100 SQFT) |
 | Required Quantity | Quantity required per service |
 
 ---
 
 # **Section 5: Pricing Configuration Fields**
 
-| Field               | Description                           |
-| ------------------- | ------------------------------------- |
-| Price Type          | Fixed / Area Based / Inspection Based |
-| Residential Pricing | Pricing based on property type        |
-| Commercial Pricing  | Pricing for offices and warehouses    |
+| Field                   | Description                                          |
+| ----------------------- | ---------------------------------------------------- |
+| Price Type              | Fixed / Area Based / Inspection Based                |
+| Residential Pricing     | Pricing based on property type (Fixed) or SQFT (Area) |
+| Commercial Pricing      | Pricing for offices (Fixed) or SQFT (Area)           |
+| Base Price              | Minimum charge for area-based services               |
+| Per SQFT Price          | Scaling charge for area-based services               |
+| Inspection Fee          | Fee charged for inspection before final quote        |
+| Custom Category Pricing | Specific pricing rules for custom service categories |
 
 ---
 
