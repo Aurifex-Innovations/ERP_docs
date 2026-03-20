@@ -295,7 +295,7 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 │  │  SITE 1 (Site Name / Location*)                       [Remove Site]     │ │
 │  │  ┌──────────────────────────────────────────────────────────────────┐  │ │
 │  │  │ Address:  [________________________________]                     │  │ │
-│  │  │ City*:    [________________]  State*: [▼ Select State ▼]        │  │ │
+│  │  │ City:    [________________]  State: [▼ Select State ▼]        │  │ │
 │  │  │ Category*:     [▼ Residential / Commercial / Industrial ▼]      │  │ │
 │  │  │ Sub-Category*: [▼ Internal / External ▼]                        │  │ │
 │  │  │ Area (sqft)*: [________]   Visits/Month*: [4] (from Section 2)  │  │ │
@@ -320,27 +320,27 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 │  │  │ MANPOWER COST/MONTH   : ₹ 1,733  (B ÷ 12)                    │   │ │
 │  │  └─────────────────────────────────────────────────────────────────┘   │ │
 │  │                                                                         │ │
-│  │  ─── 3C: CHEMICAL COST (from Products Module – Chemical Input) ────── │ │
-│  │  [+ ADD CHEMICAL]                                                       │ │
-│  │  ┌──────────────────┬───────┬──────────────────────────┬───────┬──────┐│ │
-│  │  │ Chemical Name    │ UOM   │ Monthly Qty (12-Column)  │ Full  │ Cost ││ │
-│  │  │ (Module 10)      │(Auto) │ M1│M2│M3│..│M11│M12      │ Year  │ (₹)  ││ │
-│  │  ├──────────────────┼───────┼──────────────────────────┼───────┼──────┤│ │
-│  │  │ Beta Cyfluthrin  │ 1L    │ 1 │ 0│ 1│..│ 0 │ 1       │  4    │₹4,234││ │
-│  │  │ (Envu Responser) │       │   │  │  │  │   │         │       │      ││ │
-│  │  ├──────────────────┼───────┼──────────────────────────┼───────┼──────┤│ │
-│  │  │ Fipronil 0.05%   │ 30g   │ 1 │ 1│ 1│..│ 1 │ 1       │ 12    │₹9,168││ │
-│  │  │ (Envu Maxforce)  │       │   │  │  │  │   │         │       │      ││ │
-│  │  ├──────────────────┼───────┼──────────────────────────┼───────┼──────┤│ │
-│  │  │ [🔍 Select ▼]    │[Auto] │[__│__│__│..│__ │__ ]      │[Auto] │[Auto]││ │
-│  │  └──────────────────┴───────┴──────────────────────────┴───────┴──────┘│ │
+│  │  ─── 3C: CHEMICAL / PRODUCT COST ─────────────────────────────────── │ │
+│  │  (Auto-fetched from Module 12 based on selected Pest/Service Type)     │ │
+│  │  (Product details & prices auto-fetched from Module 10 Product Master) │ │
 │  │                                                                         │ │
-│  │  Chemical Rate Logic (per product):                                     │ │
-│  │  Price (Base) → +15% Margin → +18% GST = Final Rate per UOM            │ │
-│  │  Cost = Full Year Qty × Final Rate                                      │ │
+│  │  ┌──────────────┬──────┬─────┬─────────┬──────────────┬────────────┬──────────────┬──────────────────┬──────────────────┬──────┐│ │
+│  │  │ Product Name │ Code │ UOM │Dilution │Coverage(SQFT)│ Req. Qty   │ Price/UOM(₹) │ Cost/Visit(₹)    │ Est.Cost/Month   │      ││ │
+│  │  │ (Auto)       │(Auto)│(Auto│ (Auto)  │ [User Entry] │ [User Ent.]│ (Auto-M10)   │ (Auto)           │ (Auto)           │      ││ │
+│  │  ├──────────────┼──────┼─────┼─────────┼──────────────┼────────────┼──────────────┼──────────────────┼──────────────────┼──────┤│ │
+│  │  │Alpha Cyperm. │P-001 │ ml  │ 10 ml   │ [1200] SQFT  │ [120] ml   │ ₹4.20 (Auto) │ ₹504 (Auto)      │ ₹2,016 (Auto)    │ [🗑] ││ │
+│  │  │Chlorpyriphos │P-002 │ ml  │ 20 ml   │ [1200] SQFT  │ [60] ml    │ ₹3.50 (Auto) │ ₹210 (Auto)      │ ₹840 (Auto)      │ [🗑] ││ │
+│  │  │Fipronil Gel  │P-003 │ tube│ 1 tube  │ [1200] SQFT  │ [2] tubes  │ ₹220 (Auto)  │ ₹440 (Auto)      │ ₹1,760 (Auto)    │ [🗑] ││ │
+│  │  └──────────────┴──────┴─────┴─────────┴──────────────┴────────────┴──────────────┴──────────────────┴──────────────────┴──────┘│ │
 │  │                                                                         │ │
-│  │  CHEMICAL COST/YEAR (C) : ₹ 13,402 (Sum of all chemical row costs)     │ │
-│  │  CHEMICAL COST/MONTH    : ₹ 1,117  (C ÷ 12)                            │ │
+│  │  [+ Add Custom Chemical]  (for items not in service config)             │ │
+│  │                                                                         │ │
+│  │  Visits/Month (Reference): [4] (Auto from Section 2)                    │ │
+│  │                                                                         │ │
+│  │  ─── CHEMICAL COST SUMMARY ─────────────────────────────────────────── │ │
+│  │  Total Chemical Cost / Visit  : ₹ 1,154  (Sum of all Cost/Visit rows)  │ │
+│  │  Total Chemical Cost / Month  : ₹ 4,616  (Sum of all Cost/Month rows)  │ │
+│  │  CHEMICAL COST/YEAR (C)       : ₹ 55,392 (Cost/Month × 12)             │ │
 │  │                                                                         │ │
 │  │  ─── 3D: WEEKENDS / NIGHTS SURCHARGE ──────────────────────────────── │ │
 │  │  ┌─────────────────────────────────────────────────────────────────┐   │ │
@@ -366,19 +366,19 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 │  │  │ ────────────────────────┼────────────────┼─────────────────────│   │ │
 │  │  │ A. Service Visit Cost   │ ₹ 15,600       │ ₹ 1,300             │   │ │
 │  │  │ B. Manpower Cost        │ ₹ 20,800       │ ₹ 1,733             │   │ │
-│  │  │ C. Chemical Cost        │ ₹ 13,402       │ ₹ 1,117             │   │ │
+│  │  │ C. Chemical Cost        │ ₹ 55,392       │ ₹ 4,616             │   │ │
 │  │  │ D. Weekend/Night Surch. │ ₹ 0            │ ₹ 0                 │   │ │
 │  │  │ E. Documentation Cost   │ ₹ 1,200        │ ₹ 100               │   │ │
 │  │  │ ─────────────────────────────────────────────────────────────── │   │ │
-│  │  │ TOTAL COST              │ ₹ 51,002       │ ₹ 4,250             │   │ │
+│  │  │ TOTAL COST              │ ₹ 92,992       │ ₹ 7,749             │   │ │
 │  │  └─────────────────────────────────────────────────────────────────┘   │ │
 │  │                                                                         │ │
-│  │  SITE 1 PROPOSED SALE PRICE/YEAR* : ₹ [ 84,000  ] (Manual Entry)       │ │
-│  │  SITE 1 PROPOSED SALE PRICE/MONTH : ₹ 7,000  (Auto ÷ 12)               │ │
+│  │  SITE 1 PROPOSED SALE PRICE/YEAR* : ₹ [ 1,56,000 ] (Manual Entry)      │ │
+│  │  SITE 1 PROPOSED SALE PRICE/MONTH : ₹ 13,000  (Auto ÷ 12)              │ │
 │  │  ──────────────────────────────────────────────────────────────────     │ │
-│  │  ★ SITE 1 GROSS MARGIN %         : 39.3%  (Auto-calculated)            │ │
+│  │  ★ SITE 1 GROSS MARGIN %         : 40.4%  (Auto-calculated)            │ │
 │  │    Formula: (Sale Price – Total Cost) / Sale Price × 100                │ │
-│  │    = (₹84,000 – ₹51,002) / ₹84,000 × 100 = 39.3%                      │ │
+│  │    = (₹1,56,000 – ₹92,992) / ₹1,56,000 × 100 = 40.4%                  │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  [+ ADD SITE]  (Repeat above block for each additional site)                 │
@@ -388,26 +388,25 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 │  │  ┌─────────────────────────────────────────────────────────────────┐   │ │
 │  │  │ Site                │ Total Cost/Yr │ Sale Price/Yr │ GM %     │   │ │
 │  │  │ ────────────────────┼───────────────┼───────────────┼─────────│   │ │
-│  │  │ Site 1: Mumbai HQ   │ ₹ 51,002      │ ₹ 84,000      │ 39.3%  │   │ │
+│  │  │ Site 1: Mumbai HQ   │ ₹ 92,992      │ ₹ 1,56,000    │ 40.4%  │   │ │
 │  │  │ Site 2: Pune WH     │ ₹ 28,000      │ ₹ 48,000      │ 41.7%  │   │ │
 │  │  │ ─────────────────────────────────────────────────────────────  │   │ │
-│  │  │ TOTAL ANNUAL COST   │ ₹ 79,002                                │   │ │
-│  │  │ TOTAL ANNUAL PRICE  │ ₹ 1,32,000                              │   │ │
+│  │  │ TOTAL ANNUAL COST   │ ₹ 1,20,992                               │   │ │
+│  │  │ TOTAL ANNUAL PRICE  │ ₹ 2,04,000                               │   │ │
 │  │  │ ─────────────────────────────────────────────────────────────  │   │ │
-│  │  │ ★ OVERALL GROSS MARGIN : 40.2%                                │   │ │
+│  │  │ ★ OVERALL GROSS MARGIN : 40.7%                                │   │ │
 │  │  └─────────────────────────────────────────────────────────────────┘   │ │
 │  │                                                                         │ │
-│  │  GM% without Documentation : 41.1%                                      │ │
-│  │  GM% with Documentation    : 40.2%                                      │ │
+│  │  GM% without Documentation : 41.3%                                      │ │
+│  │  GM% with Documentation    : 40.7%                                      │ │
 │  │                                                                         │ │
-│  │  Approval Status (Auto-determined):                                     │ │
+│  │  Approval Status (Manual Selection if < 40%):                           │ │
 │  │  ┌──────────────────────────────────────────────────────────────────┐  │ │
-│  │  │ GM ≥ 35%        → ✅ Auto-Approved       (Immediate)             │  │ │
-│  │  │ GM 10% – 34.99% → 🟡 Requires Sales Manager Approval (24 hrs)   │  │ │
-│  │  │ GM < 10%        → 🔴 Requires CEO/Ops Head Approval (48 hrs)     │  │ │
+│  │  │ GM ≥ 40%        → ✅ Auto-Approved       (Immediate)             │  │ │
+│  │  │ GM < 40%        → 🟡 Requires Manual Approver Selection          │  │ │
 │  │  └──────────────────────────────────────────────────────────────────┘  │ │
 │  │                                                                         │ │
-│  │  CURRENT STATUS: ✅ AUTO-APPROVED (GM 40.2% ≥ 35%)                      │ │
+│  │  CURRENT STATUS: ✅ AUTO-APPROVED (GM 40.7% ≥ 40%)                      │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  Sales Authority Matrix:                                                     │
@@ -419,7 +418,7 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 │  │  CEO / Ops Head       │ GM < 20%         │ GM < 20%        │ [_____]  │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│              [SAVE & SUBMIT]     [SAVE AS DRAFT]     [CANCEL]               │
+│              [SAVE & SUBMIT (Auto)]  [SAVE & REQUEST APPROVAL]  [CANCEL]     │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -501,27 +500,66 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 
 ---
 
-### 3C — Chemical Cost (from Products Module – CHEMICAL INPUT SHEET)
+### 3C — Chemical / Product Cost (Auto-fetched from Module 12 → Module 10)
 
-> Chemicals are sourced from **Module 10 – Product Master** (Consumable type). For each chemical, the user enters quantity needed per month across a **12-month grid**. The system calculates full-year quantity and cost.
+> When a **Pest / Service Type** is selected in Section 2, the system automatically fetches all chemicals/products configured for that service in **Module 12 (Service Management → Section 4: Chemicals/Products Used)**. Product details (Code, UOM, Dilution, Coverage, Price/UOM) are auto-populated from **Module 10 (Product Master)**.
+>
+> The user only needs to enter **SQFT** (coverage area for this site) and **Required Quantity**. All pricing and cost calculations happen dynamically.
 
-| Field                  | Type            | Required | Validation / Notes                                                  |
-| ---------------------- | --------------- | -------- | ------------------------------------------------------------------- |
-| Chemical / Product     | Search Dropdown | Yes      | Pulls from Product Master (Consumable chemicals only)               |
-| UOM                    | Auto-filled     | System   | Base UOM (Ltr / ML / Kg / Nos / Tube / grams) from product master  |
-| Monthly Qty (M1–M12)  | Number (×12)    | Yes      | Quantity used in each month (user enters per month)                 |
-| Full Year Qty          | Auto-calculated | System   | `Sum(M1 to M12)` — Total annual quantity                           |
-| Base Price (₹)         | Auto-filled     | System   | Purchase price from Product Master                                  |
-| Price +15% (₹)         | Auto-calculated | System   | `Base Price × 1.15` — 15% markup on base price                     |
-| Final Rate (₹)         | Auto-calculated | System   | `Price +15% × 1.18` — 18% GST applied on marked-up price           |
-| Total Cost (₹)         | Auto-calculated | System   | `Full Year Qty × Final Rate`                                        |
+| Field                    | Type            | Required | Validation / Notes                                                          |
+| ------------------------ | --------------- | -------- | --------------------------------------------------------------------------- |
+| Product Name             | Auto-filled     | System   | Auto-fetched from Module 12 service config → Module 10 Product Master      |
+| Product Code             | Auto-filled     | System   | Auto-fetched from Module 10 (e.g., P-001)                                  |
+| UOM                      | Auto-filled     | System   | Base UOM from Module 10 (ml / Ltr / gm / kg / Nos / tube)                 |
+| Dilution                 | Auto-filled     | System   | Standard dilution dose from Module 12 config (e.g., 10 ml per 100 SQFT)   |
+| Coverage (SQFT)          | Number          | Yes      | **User enters** — area to be treated (pre-filled from site Area if set)    |
+| Required Qty             | Number          | Yes      | **User enters** — quantity needed per visit; must be > 0                   |
+| Price / UOM (₹)          | Auto-filled     | System   | **Purchase Price from Module 10** Product Master (editable for override)   |
+| Cost / Visit (₹)         | Auto-calculated | System   | `Required Qty × Price per UOM`                                             |
+| Est. Cost / Month (₹)    | Auto-calculated | System   | `Cost per Visit × Visits per Month`                                        |
+| Custom Chemical          | Text            | No       | Allowed via [+ Add Custom Chemical] if not in service config               |
+
+**System Behavior — On Service Selection (Section 2):**
+
+When a Pest / Service Type is selected, the system:
+
+| Auto-Action                        | Source                                                     |
+| ---------------------------------- | ---------------------------------------------------------- |
+| Pre-populate chemical rows         | Module 12 → Service → Chemicals/Products Used              |
+| Fill Product Name, Code            | Module 10 → Product Master record                          |
+| Fill UOM                           | Module 10 → Base UOM                                       |
+| Fill Dilution                      | Module 12 → Standard Usage (if configured)                 |
+| Fill Price / UOM (₹)               | Module 10 → Purchase Price                                 |
+| Pre-fill Coverage (SQFT)           | From Site's Area (sqft) field (user can adjust)            |
+
+> The **Price / UOM** is editable — the sales person can override the fetched price if a negotiated rate applies.
+
+**Calculation Rules:**
+
+| Calculation                  | Formula                                          |
+| ---------------------------- | ------------------------------------------------ |
+| Cost per Visit (₹)           | `Required Qty × Price per UOM`                   |
+| Est. Cost / Month (₹)        | `Cost per Visit × Visits per Month`              |
+| Total Chemical Cost / Visit  | Sum of all chemical rows' Cost/Visit             |
+| Total Chemical Cost / Month  | Sum of all chemical rows' Est. Cost/Month        |
+| Chemical Cost / Year (C)     | `Total Chemical Cost / Month × 12`               |
+
+**UOM-Based Dynamic Calculation Examples:**
+
+| UOM    | Scenario                                                              | Calculation                                           |
+| ------ | --------------------------------------------------------------------- | ----------------------------------------------------- |
+| ml     | Alpha Cypermethrin, 1200 SQFT, 10ml/100SQFT dilution → 120ml needed  | 120 ml × ₹4.20/ml = ₹504/visit                       |
+| tube   | Fipronil Gel, 1200 SQFT, 1 tube/600SQFT → 2 tubes needed            | 2 tubes × ₹220/tube = ₹440/visit                     |
+| grams  | Bromadiolone, 1200 SQFT, 100g/site → 100g needed                    | 100 g × ₹0.25/g = ₹25/visit                          |
+| Ltr    | Chlorpyriphos 20% EC, 1200 SQFT, 1L/1000SQFT → 1.2L needed         | 1.2 L × ₹290/L = ₹348/visit                          |
+| Nos    | Glue Trap, 1200 SQFT, 1 per 200SQFT → 6 needed                     | 6 Nos × ₹15/No = ₹90/visit                           |
 
 **Rules:**
+- Chemicals are auto-populated when service is selected; user can remove unwanted items.
 - At least one chemical row is required per site.
-- Multiple chemicals can be added using **[+ Add Chemical]**, each with its own 12-month grid.
-- Chemical Cost/Year (C) = Sum of all chemical row total costs for that site.
-- Chemical Cost/Month = `C ÷ 12`.
-- User can override the `Final Rate` for custom pricing; system retains overridden value.
+- Additional chemicals can be added via **[+ Add Custom Chemical]** for items not in the service config.
+- Chemical Cost/Year (C) = Total Chemical Cost / Month × 12.
+- User can override `Price / UOM` for custom pricing; system retains overridden value.
 
 ---
 
@@ -552,7 +590,7 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 | -------------------------- | ---------------------------------------------------------------------- |
 | A. Service Visit Cost/Year | `Rate per Visit × Annual Frequency`                                    |
 | B. Manpower Cost/Year      | `Hours per Visit × Annual Frequency × Rate per Hour`                   |
-| C. Chemical Cost/Year      | `Σ (Full Year Qty × Final Rate)` for all chemicals                     |
+| C. Chemical Cost/Year      | `Σ (Req Qty × Price/UOM × Visits/Month) × 12` for all chemicals       |
 | D. Weekend/Night Surcharge | `IF Applicable → (A + B) × 25%  ELSE → 0`                             |
 | E. Documentation Cost/Year | `IF Applicable → Cost/Doc × Docs/Month × 12  ELSE → 0`               |
 | **Site Total Cost/Year**   | **A + B + C + D + E**                                                  |
@@ -578,16 +616,7 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 ## Approval Matrix
 
 | Gross Margin %  | Approver               | Timeline  | Outcome                               |
-| --------------- | ---------------------- | --------- | ------------------------------------- |
-| ≥ 35%           | Auto-Approved (System) | Immediate | Proceeds to contract creation         |
-| 10% – 34.99%    | Sales Manager          | 24 hours  | Sent to Sales Manager for review      |
-| < 10%           | CEO / Operations Head  | 48 hours  | Sent to CEO/Ops Head for review       |
-
-> The GMA sheet status is updated automatically based on the calculated GM%. No manual selection of approver is required.
-
----
-
-## Sales Authority Matrix (from PESTMED Template)
+## Approval Matrix
 
 | Authorizer         | Contracts        | Jobs / Products  | Signature Required |
 | ------------------ | ---------------- | ---------------- | ------------------ |
@@ -595,15 +624,38 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 | Sales Manager      | GM 20% – 39.99%  | GM 20% – 39.99%  | Required           |
 | CEO / Ops Head     | GM < 20%         | GM < 20%         | Required           |
 
+> If the calculated GM% is ≥ 40%, the GMA sheet will be auto-approved. If the GM% is < 40%, the user must manually select an approver from a popup list to route the request successfully.
+
 ---
 
 ## Form Actions
 
-| Button            | Description                                                                  |
-| ----------------- | ---------------------------------------------------------------------------- |
-| **Save & Submit** | Validates all fields, calculates final GM%, applies approval matrix, submits |
-| **Save as Draft** | Saves the sheet without submitting; not sent for approval                    |
-| **Cancel**        | Discards all entries and returns to My Requests table                        |
+| Button                       | Description                                                                  |
+| ---------------------------- | ---------------------------------------------------------------------------- |
+| **Save & Submit (Auto)**     | Appears if GM ≥ 40%. Validates, saves, and Auto-Approves the GMA.              |
+| **Save & Request Approval**  | Appears if GM < 40%. Validates data and triggers the "Select Approver" popup.  |
+| **Cancel**                   | Discards all entries and returns to My Requests table.                         |
+
+---
+
+## Select Approver Popup (If GM < 40%)
+
+When the user clicks **Save & Request Approval**, this popup overlay appears:
+
+```
+┌────────────────────────────────────────────────────────┐
+│  SELECT APPROVER                                       │
+│                                                        │
+│  Overall GM% is 23%. This requires approval.           │
+│  Please select the appropriate authority based on      │
+│  the Sales Authority Matrix.                           │
+│                                                        │
+│  Approver*: [ ▼ Select User (Sales Mgr, CEO) ▼ ]       │
+│                                                        │
+│             [SEND REQUEST]     [CANCEL]                │
+└────────────────────────────────────────────────────────┘
+```
+- Clicking **Send Request** routes the GMA to the selected user's *Received Requests* tab and changes status to *Pending*.
 
 ---
 
@@ -616,22 +668,21 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 | Service Type Required              | Must select a pest / service type                             |
 | At Least 1 Site Required           | Minimum one site must be added                                |
 | At Least 1 Chemical per Site       | Minimum one chemical row per site                             |
+| Coverage (SQFT) > 0               | Each chemical row must have SQFT > 0                          |
+| Required Qty > 0                   | Each chemical row must have Required Qty > 0                  |
 | Proposed Sale Price > 0            | Each site must have a proposed price greater than 0           |
-| Chemical Qty > 0 per active month  | All non-zero month columns must have quantity > 0             |
 | Rate per Visit > 0                 | Service visit rate cannot be zero                             |
 | Hours per Visit ≥ 1               | Must have at least 1 hour per visit                           |
 | Rate per Hour > 0                  | Manpower hourly rate cannot be zero                           |
 
 ---
 
-## System Behaviors on Save & Submit
+## System Behaviors on Submission
 
 | Trigger                     | System Action                                                         |
 | --------------------------- | --------------------------------------------------------------------- |
-| GM ≥ 35%                    | Status → Auto-Approved; no approval routing needed                    |
-| GM 10–34.99%                | Status → Pending Manager; Sales Manager notified                      |
-| GM < 10%                    | Status → Pending CEO; CEO/Ops Head notified                           |
-| Save as Draft               | Status → Draft; no notifications sent                                 |
+| GM ≥ 40%                    | Status → Auto-Approved; no approval routing needed                    |
+| GM < 40% + Approver Picked  | Status → Pending; Notification sent to selected Approver              |
 | Chemical selected           | Auto-fill UOM, Base Price, +15%, +18% GST from Product Master         |
 | Rate overridden by user     | System retains overridden value; does not reset on re-selection       |
 | Source = From Lead          | Auto-populate lead details; link GMA to lead record                   |
@@ -645,7 +696,9 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 # 17.2.2 View GMA Sheet (My Requests)
 
 **Description:**
-Read-only view of a GMA sheet submitted by the logged-in user. Displays all service information, site-wise cost breakdowns, chemical details, labor and revisit costs, and the final gross margin summary with approval status and timeline.
+Read-only view of a GMA sheet submitted by the logged-in user. Displays source information, service & contract configuration, site-wise cost breakdowns (Service Visit, Manpower, Chemical/Product, Surcharges, Documentation), and the final gross margin summary with approval status and timeline.
+
+> All fields are displayed in **READ-ONLY** mode. Structure mirrors the Add GMA Sheet form (17.2.1) with identical sections.
 
 ---
 
@@ -656,53 +709,108 @@ Read-only view of a GMA sheet submitted by the logged-in user. Displays all serv
 │                       VIEW GMA SHEET  –  GMA-00091                          │
 │  [← Back to My Requests]                                                     │
 │                                                                              │
-│  ─── HEADER INFORMATION ──────────────────────────────────────────────────  │
+│  ─── HEADER ──────────────────────────────────────────────────────────────  │
 │  GMA ID          : GMA-00091         Status     : ✅ AUTO-APPROVED           │
-│  Customer        : XYZ Hotel Chain   Service    : Cockroach AMC              │
-│  Branch          : Mumbai            Created By : Ravi Sharma                │
+│  Created By      : Ravi Sharma       Created On : 18 Mar 2026               │
 │  Submitted On    : 18 Mar 2026       Approved On: 18 Mar 2026 (Immediate)   │
 │                                                                              │
-│  ─── PART 1: SERVICE INFORMATION ─────────────────────────────────────────  │
-│  Duration: 12 Months   Start: 01 Apr 2026   Frequency: Monthly   Visits: 4  │
-│  Contact: Ramesh Shah   Phone: +91 98765 00001   Email: ramesh@xyz.com       │
+│  ─── SECTION 1: SOURCE INFORMATION ──────────────────────────────────────  │
+│  Source Type     : From Customer                                             │
+│  Customer ID     : CUST-4021         Customer Name : XYZ Hotel Chain         │
+│  Phone           : +91 98765 00001   Email : ramesh@xyz.com                  │
+│  Customer Type   : Commercial        Address : Andheri East, Mumbai          │
 │                                                                              │
-│  ─── PART 2: SITE-WISE BREAKDOWN ─────────────────────────────────────────  │
+│  ─── SECTION 2: SERVICE & CONTRACT CONFIGURATION ────────────────────────  │
+│  Pest Type       : Cockroach                                                 │
+│  Service Mode    : Contract base     Contract Duration : 1 Year              │
+│  Proposed Start  : 01 Apr 2026       Frequency : Weekly (52 visits/year)     │
+│  Branch          : Mumbai            Prepared By : Ravi Sharma               │
+│  Prepared Date   : 18 Mar 2026                                               │
+│  Remarks         : Annual pest control for hotel chain                       │
 │                                                                              │
-│  SITE 1: Mumbai HQ (5,000 sq ft) — 4 Visits/Month                           │
+│  ─── SECTION 3: SITE-WISE COST BREAKDOWN ────────────────────────────────  │
+│                                                                              │
+│  SITE 1: Mumbai HQ                                                           │
 │  ┌────────────────────────────────────────────────────────────────────────┐ │
-│  │  2A — CHEMICALS:                                                        │ │
-│  │  Ficam 80WP   │ 200 g  │ ₹8/g   │ 4 visits → ₹6,400                   │ │
-│  │  Biflex SC    │ 100 ml │ ₹4/ml  │ 4 visits → ₹1,600                   │ │
-│  │  Chemical Sub-total (A)                         : ₹1,600 /month         │ │
+│  │  City: Mumbai   State: Maharashtra   Category: Commercial              │ │
+│  │  Sub-Category: Internal   Area: 1200 sqft   Visits/Month: 4           │ │
 │  │                                                                         │ │
-│  │  2B — LABOR:  2 Technicians × ₹400/visit × 4   : ₹3,200 /month        │ │
-│  │  2C — REVISIT: 1 revisit × ₹0                  : ₹0                    │ │
-│  │  2D — OTHER:   —                                : ₹0                    │ │
+│  │  ─── 3A: SERVICE VISIT COST ──────────────────────────────────────── │ │
+│  │  Rate per Visit : ₹300   Annual Frequency : 52                         │ │
+│  │  Cost/Year (A)  : ₹15,600   Cost/Month : ₹1,300                       │ │
 │  │                                                                         │ │
-│  │  SITE 1 TOTAL COST     : ₹4,800 /month                                  │ │
-│  │  SITE 1 PROPOSED PRICE : ₹8,000 /month                                  │ │
-│  │  SITE 1 GROSS MARGIN   : 40%                                             │ │
+│  │  ─── 3B: MANPOWER / LABOR COST ──────────────────────────────────── │ │
+│  │  Hours/Visit : 4   Annual Frequency : 52   Rate/Hour : ₹100            │ │
+│  │  Cost/Year (B)  : ₹20,800   Cost/Month : ₹1,733                       │ │
+│  │                                                                         │ │
+│  │  ─── 3C: CHEMICAL / PRODUCT COST ────────────────────────────────── │ │
+│  │  (Auto-fetched from Module 12 → Module 10)                              │ │
+│  │  ┌──────────────┬──────┬─────┬─────────┬──────┬────────┬──────────┬──────────┐│
+│  │  │ Product Name │ Code │ UOM │Dilution │ SQFT │Req.Qty │Price/UOM │Cost/Visit││
+│  │  ├──────────────┼──────┼─────┼─────────┼──────┼────────┼──────────┼──────────┤│
+│  │  │Alpha Cyperm. │P-001 │ ml  │ 10 ml   │ 1200 │ 120 ml │ ₹4.20   │ ₹504     ││
+│  │  │Chlorpyriphos │P-002 │ ml  │ 20 ml   │ 1200 │ 60 ml  │ ₹3.50   │ ₹210     ││
+│  │  │Fipronil Gel  │P-003 │ tube│ 1 tube  │ 1200 │ 2 tubes│ ₹220    │ ₹440     ││
+│  │  └──────────────┴──────┴─────┴─────────┴──────┴────────┴──────────┴──────────┘│
+│  │  Total Chemical Cost/Visit : ₹1,154   Cost/Month : ₹4,616              │ │
+│  │  Chemical Cost/Year (C)    : ₹55,392                                    │ │
+│  │                                                                         │ │
+│  │  ─── 3D: WEEKENDS/NIGHTS SURCHARGE ──────────────────────────────── │ │
+│  │  Applicable : No   Surcharge Cost (D) : ₹0                             │ │
+│  │                                                                         │ │
+│  │  ─── 3E: DOCUMENTATION COST ─────────────────────────────────────── │ │
+│  │  Applicable : Yes   ₹100/doc × 1 doc/month × 12                        │ │
+│  │  Documentation Cost/Year (E) : ₹1,200                                  │ │
+│  │                                                                         │ │
+│  │  ═══ SITE 1 COST SUMMARY ════════════════════════════════════════    │ │
+│  │  ┌─────────────────────────┬──────────────┬──────────────┐            │ │
+│  │  │ Cost Component          │ Annual (₹)   │ Monthly (₹)  │            │ │
+│  │  │ ────────────────────────┼──────────────┼──────────────│            │ │
+│  │  │ A. Service Visit Cost   │ ₹15,600      │ ₹1,300       │            │ │
+│  │  │ B. Manpower Cost        │ ₹20,800      │ ₹1,733       │            │ │
+│  │  │ C. Chemical Cost        │ ₹55,392      │ ₹4,616       │            │ │
+│  │  │ D. Weekend/Night Surch. │ ₹0           │ ₹0           │            │ │
+│  │  │ E. Documentation Cost   │ ₹1,200       │ ₹100         │            │ │
+│  │  │ ───────────────────────────────────────────────────────│            │ │
+│  │  │ TOTAL COST              │ ₹92,992      │ ₹7,749       │            │ │
+│  │  └─────────────────────────┴──────────────┴──────────────┘            │ │
+│  │                                                                         │ │
+│  │  Proposed Sale Price/Year  : ₹1,56,000                                 │ │
+│  │  Proposed Sale Price/Month : ₹13,000                                   │ │
+│  │  ★ SITE 1 GROSS MARGIN %  : 40.4%                                     │ │
 │  └────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  SITE 2: Pune Warehouse (10,000 sq ft) — 2 Visits/Month                     │
-│  [Collapsed – Click to expand]                                               │
+│  SITE 2: Pune WH  [▸ Click to Expand]                                       │
+│  SITE 3: Delhi Office  [▸ Click to Expand]                                   │
 │                                                                              │
-│  SITE 3: Delhi Office (3,000 sq ft) — 4 Visits/Month                        │
-│  [Collapsed – Click to expand]                                               │
-│                                                                              │
-│  ─── PART 3: OVERALL SUMMARY ─────────────────────────────────────────────  │
+│  ─── SECTION 4: OVERALL GM SUMMARY ──────────────────────────────────────  │
 │  ┌──────────────────┬──────────────┬──────────────┬──────┐                  │
-│  │ Site             │ Total Cost   │ Sale Price   │  GM% │                  │
-│  │ Mumbai HQ        │ ₹4,800       │ ₹8,000       │  40% │                  │
-│  │ Pune Warehouse   │ ₹2,800       │ ₹5,000       │  44% │                  │
-│  │ Delhi Office     │ ₹3,400       │ ₹6,000       │  43% │                  │
-│  │ ─────────────────────────────────────────────────────  │                  │
-│  │ TOTAL            │ ₹11,000      │ ₹19,000      │  42% │                  │
-│  └──────────────────┴──────────────┴──────────────┴──────┘                  │
+│  │ Site             │ Total Cost/Yr│ Sale Price/Yr│  GM% │                  │
+│  │──────────────────┼──────────────┼──────────────┼──────│                  │
+│  │ Site 1: Mumbai HQ│ ₹92,992      │ ₹1,56,000    │ 40.4%│                  │
+│  │ Site 2: Pune WH  │ ₹28,000      │ ₹48,000      │ 41.7%│                  │
+│  │ ──────────────────────────────────────────────────────  │                  │
+│  │ TOTAL ANNUAL COST  │ ₹1,20,992                          │                  │
+│  │ TOTAL ANNUAL PRICE │ ₹2,04,000                          │                  │
+│  │ ──────────────────────────────────────────────────────  │                  │
+│  │ ★ OVERALL GROSS MARGIN : 40.7%                          │                  │
+│  └────────────────────────────────────────────────────────┘                  │
 │                                                                              │
-│  APPROVAL STATUS  : ✅ Auto-Approved (GM 42% ≥ 35%)                         │
+│  GM% without Documentation : 41.3%                                           │
+│  GM% with Documentation    : 40.7%                                           │
+│                                                                              │
+│  APPROVAL STATUS  : ✅ Auto-Approved (GM 40.7% ≥ 35%)                       │
 │  APPROVED ON      : 18 Mar 2026 (Immediate)                                 │
 │  APPROVER         : System (Auto)                                            │
+│                                                                              │
+│  Sales Authority Matrix:                                                      │
+│  ┌──────────────────────┬──────────────────┬─────────────────┬──────────┐    │
+│  │ Authorizer           │ Contracts        │ Jobs/Products   │ Signature│    │
+│  │──────────────────────┼──────────────────┼─────────────────┼──────────│    │
+│  │ Auto (System)        │ GM ≥ 40%         │ GM ≥ 40%        │ [Auto]  │    │
+│  │ Sales Manager        │ GM 20% – 39.99%  │ GM 20% – 39.99% │ [_____]│    │
+│  │ CEO / Ops Head       │ GM < 20%         │ GM < 20%        │ [_____] │    │
+│  └──────────────────────┴──────────────────┴─────────────────┴──────────┘    │
 │                                                                              │
 │  ─── AUDIT TRAIL ──────────────────────────────────────────────────────────  │
 │  ┌──────────────────┬─────────────────────┬──────────────┬──────────────┐   │
@@ -710,10 +818,10 @@ Read-only view of a GMA sheet submitted by the logged-in user. Displays all serv
 │  │──────────────────┼─────────────────────┼──────────────┼──────────────│   │
 │  │ 18 Mar 09:30 AM  │ Draft Created       │ Ravi Sharma  │ —            │   │
 │  │ 18 Mar 10:00 AM  │ Submitted           │ Ravi Sharma  │ —            │   │
-│  │ 18 Mar 10:00 AM  │ Auto-Approved       │ System       │ GM 42% ≥ 35% │   │
+│  │ 18 Mar 10:00 AM  │ Auto-Approved       │ System       │ GM 40.7%≥35% │   │
 │  └──────────────────┴─────────────────────┴──────────────┴──────────────┘   │
 │                                                                              │
-│                    [BACK]   [DOWNLOAD PDF]                                  │
+│              [BACK]   [EDIT] (if Draft)   [DOWNLOAD PDF]                   │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -722,23 +830,28 @@ Read-only view of a GMA sheet submitted by the logged-in user. Displays all serv
 
 ## Fields Displayed
 
-| Section               | Field                                                               | Display Type   |
-| --------------------- | ------------------------------------------------------------------- | -------------- |
-| **Header**            | GMA ID, Customer, Service Type, Branch, Status, Created By, Date   | Static Display |
-| **Part 1**            | Duration, Start Date, Frequency, Visits/Month, Contact, Phone, Email | Static Display |
-| **Part 2 (per site)** | Site Name, Area, Chemicals Table, Labor, Revisit, Other Costs, Site Totals, Site GM% | Read-only |
-| **Part 3**            | Site-wise summary table, Total Cost, Total Price, Overall GM%       | Auto / Read-only |
-| **Approval**          | Status, Approval Type, Approver, Approved/Rejected Date, Remarks   | Read-only      |
-| **Audit Trail**       | Timestamp, Action, User, Remarks                                    | Read-only      |
+| Section                  | Field                                                                                      | Display Type     |
+| ------------------------ | ------------------------------------------------------------------------------------------ | ---------------- |
+| **Header**               | GMA ID, Status, Created By, Created On, Submitted On, Approved On                         | Static Display   |
+| **Section 1 (Source)**   | Source Type, Customer/Lead ID, Name, Phone, Email, Type, Address                           | Read-only        |
+| **Section 2 (Config)**   | Pest Type, Service Mode, Contract Duration, Start Date, Frequency, Branch, Prepared By/Date | Read-only       |
+| **Section 3A (per site)**| Rate per Visit, Annual Frequency, Cost/Year (A), Cost/Month                                | Read-only        |
+| **Section 3B (per site)**| Hours/Visit, Annual Frequency, Rate/Hour, Cost/Year (B), Cost/Month                       | Read-only        |
+| **Section 3C (per site)**| Chemical Table: Product Name, Code, UOM, Dilution, SQFT, Req.Qty, Price/UOM, Cost/Visit   | Read-only        |
+| **Section 3D (per site)**| Applicable flag, Surcharge Cost (D)                                                         | Read-only        |
+| **Section 3E (per site)**| Applicable flag, Cost/Doc, Docs/Month, Doc Cost/Year (E)                                   | Read-only        |
+| **Site Summary**         | Cost breakdown table (A+B+C+D+E), Total Cost, Proposed Price, Site GM%                     | Read-only        |
+| **Section 4 (Overall)**  | Site-wise summary, Total Annual Cost/Price, Overall GM%, GM with/without Documentation     | Auto / Read-only |
+| **Approval**             | Status, Approval Type, Approver, Approved/Rejected Date, Remarks, Authority Matrix         | Read-only        |
+| **Audit Trail**          | Timestamp, Action, User, Remarks                                                            | Read-only        |
 
 ---
 
 ## Actions
 
-| Button           | Description                                       |
-| ---------------- | ------------------------------------------------- |
-| **Back**         | Returns to My Requests tab                        |
-| **Download PDF** | Exports the GMA sheet as a formatted PDF document |
+| Button           | Condition              | Description                                              |
+| **Back**         | Always                 | Returns to My Requests tab                               |
+| **Download PDF** | Status ≠ Draft         | Exports the GMA sheet as a formatted PDF document        |
 
 ---
 
@@ -749,9 +862,7 @@ Read-only view of a GMA sheet submitted by the logged-in user. Displays all serv
 **Description:**
 Displays GMA sheets received by the logged-in manager or approver (Sales Manager or CEO/Ops Head) for review. Users can view full sheet details and approve or reject based on the margin analysis.
 
-> **Visibility Rule:**
-> - Sales Manager sees: GM sheets with 10% – 34.99% margin
-> - CEO / Ops Head sees: GM sheets with < 10% margin
+> **Visibility Rule:** Appears only for users with approval authority (Sales Managers, CEO / Ops Head). Users will only see the requests explicitly routed to them.
 
 ---
 
@@ -828,7 +939,7 @@ Displays GMA sheets received by the logged-in manager or approver (Sales Manager
 # 17.3.1 View Received GMA Sheet
 
 **Description:**
-Full read-only view of a received GMA sheet for the approver to review all details — service info, site costs, chemicals used, labor breakdown, and margin summary — before taking an approval or rejection action.
+Full read-only view of a received GMA sheet for the approver to review all details — source info, service config, site-wise cost breakdown (Service Visit, Manpower, Chemical/Product, Surcharges, Documentation), and margin summary — before taking an approval or rejection action.
 
 The layout is **identical to Screen 17.2.2 (View GMA Sheet)** with an additional **Approval Decision** section appended at the bottom.
 
@@ -875,8 +986,8 @@ A focused action screen where the approver confirms their decision to approve or
 │  Deadline      : 18 Mar 2026 10:00 AM                                        │
 │                                                                              │
 │  ─── QUICK SUMMARY ─────────────────────────────────────────────────────── │
-│  Total Monthly Cost   : ₹8,500                                               │
-│  Total Monthly Price  : ₹11,000                                              │
+│  Total Annual Cost    : ₹1,02,000                                            │
+│  Total Annual Price   : ₹1,32,000                                            │
 │  Overall GM %         : 23%                                                  │
 │                                                                              │
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
@@ -928,7 +1039,7 @@ A focused action screen where the approver confirms their decision to approve or
 
 ================================================================================
 
-# 17.4 System Behavior & Business Rules
+## System Behavior & Business Rules
 
 ## 1. Gross Margin Calculation Formula
 
@@ -936,51 +1047,71 @@ A focused action screen where the approver confirms their decision to approve or
 Gross Margin % = ( Sale Price – Total Cost ) / Sale Price × 100
 
 Where:
-  Total Cost  = Σ (Chemical Costs + Labor Costs + Revisit Costs + Other Costs) per site
-  Sale Price  = Σ (Proposed Prices entered by sales person) per site
+  Total Cost  = Σ (A + B + C + D + E) per site
+  A = Service Visit Cost / Year  (Rate per Visit × Annual Frequency)
+  B = Manpower Cost / Year       (Hours × Annual Frequency × Rate/Hour)
+  C = Chemical Cost / Year       (Σ Chemical Cost/Month × 12)
+  D = Weekend/Night Surcharge    (IF Applicable → (A + B) × 25%)
+  E = Documentation Cost / Year  (IF Applicable → Cost/Doc × Docs/Month × 12)
+  Sale Price  = Σ (Proposed Sale Prices entered by sales person) per site
 ```
 
-## 2. Chemical Cost Calculation (per Site per Month)
+## 2. Chemical Cost Calculation (per Site per Visit)
 
 ```
-Chemical Cost/Month = Quantity per Visit × Rate per UOM × Visits per Month
+Chemical Cost / Visit = Required Qty × Price per UOM  (per chemical row)
+Chemical Cost / Month = Cost per Visit × Visits per Month
+Chemical Cost / Year (C) = Chemical Cost / Month × 12
 ```
-Applied per chemical row; summed for the site's total chemical cost.
+- Chemicals are auto-fetched from **Module 12** (Service Config → Section 4: Chemicals/Products Used)
+- Product Name, Code, UOM, Dilution, Price/UOM are auto-filled from **Module 10** (Product Master)
+- User enters **Coverage (SQFT)** and **Required Qty**
+- Applied per chemical row; summed for the site's total chemical cost.
 
-## 3. Labor Cost Calculation
-
-```
-Labor Cost/Month = No. of Technicians × Rate per Visit × Visits per Month
-```
-
-## 4. Site Total Cost Calculation
-
-```
-Site Total Cost = Chemical Sub-total (A) + Labor Cost (B) + Revisit Cost (C) + Other Costs (D)
-```
-
-## 5. Approval Matrix
-
-| GM %           | Approver               | Timeline  | Post-Action                                |
-| -------------- | ---------------------- | --------- | ------------------------------------------ |
-| ≥ 35%          | Auto-Approved (System) | Immediate | Available for Contract module immediately  |
-| 10% – 34.99%   | Sales Manager          | 24 hours  | Sheet visible in Sales Manager's Tab 3     |
-| < 10%          | CEO / Ops Head         | 48 hours  | Sheet visible in CEO's Received Requests   |
-
-## 6. Status Lifecycle
+## 3. Service Visit Cost Calculation
 
 ```
-Draft → Submitted → Pending Approval → Approved / Rejected
-                       (Auto-Approved if GM ≥ 35%)
+Service Visit Cost / Year (A) = Rate per Visit × Annual Frequency
+Service Visit Cost / Month = A ÷ 12
 ```
 
-## 7. Revoke Rules
+## 4. Manpower / Labor Cost Calculation
 
-- Sales person can **Revoke** only when status = **Pending** (not yet actioned by approver)
-- Revoked sheets return to **Draft** status and can be edited and re-submitted
-- Revoke is **not available** for Auto-Approved, Approved, or Rejected sheets
+```
+Manpower Cost / Year (B) = Hours per Visit × Annual Frequency × Rate per Hour
+Manpower Cost / Month = B ÷ 12
+```
 
-## 8. Notifications
+## 5. Site Total Cost Calculation
+
+```
+Site Total Cost = A (Service Visit) + B (Manpower) + C (Chemical) + D (Surcharge) + E (Documentation)
+```
+
+## 6. Sales Authority & Approval Matrix
+
+| Authorizer         | Margin Rule      | Approval Routing                         |
+| ------------------ | ---------------- | ---------------------------------------- |
+| Auto (System)      | GM ≥ 40%         | **Automatic**: No manual routing needed |
+| Sales Manager      | GM 20% – 39.99%  | **Manual Selection**: User must select  |
+| CEO / Ops Head     | GM < 20%         | **Manual Selection**: User must select  |
+
+> If GM% < 40%, the user is required to select the appropriate approver from a popup list and send the request manually.
+
+## 7. Status Lifecycle
+
+```
+Submitted → Pending Approval → Approved / Rejected
+               (Auto-Approved if GM ≥ 40%)
+```
+
+## 8. Revoke Rules
+
+- Sales person can **Revoke** only when status = **Pending** (not yet actioned by approver).
+- Revoked sheets are cancelled and must be recreated if needed.
+- Revoke is **not available** for Auto-Approved, Approved, or Rejected sheets.
+
+## 10. Notifications
 
 | Event              | Recipient        | Channel                  |
 | ------------------ | ---------------- | ------------------------ |
@@ -990,36 +1121,54 @@ Draft → Submitted → Pending Approval → Approved / Rejected
 | Rejected           | Sales Person     | In-app + Email + Remarks |
 | Deadline Reminder  | Approver         | Auto-reminder at 50% of timeline |
 
-## 9. PDF Export
+## 11. PDF Export
 
-- Approved GMA sheets can be exported as a PDF summarizing service info, site-wise costs, chemicals used, labor breakdown, and the overall margin analysis.
+- Approved GMA sheets can be exported as a PDF summarizing source info, service config, site-wise costs (A through E), chemicals used, and the overall margin analysis.
 - PDF is suitable for internal review or management records.
 
-## 10. Module Dependencies
+## 12. Module Dependencies
 
-- **GMA Approval is a prerequisite for Contract Creation** (Module 18)
-- Products / Chemicals are pulled from **Module 10 – Product Master** (Consumable type)
-- Customer and Contact info pulled from **Module 4 – Customer Management**
-- Service templates and visit frequency pulled from **Module 5 – Service Management**
+| Dependency Module                            | What It Provides to GMA                                                   |
+| -------------------------------------------- | ------------------------------------------------------------------------- |
+| **Module 4** – Customer Management           | Customer data for "From Customer" source selection                        |
+| **Module 7** – Branch Management             | Branch selection dropdown                                                  |
+| **Module 10** – Product Master (Inventory)   | Chemical/product details: Name, Code, UOM, Purchase Price                 |
+| **Module 12** – Service Management           | Service-to-chemical mapping; pest types; treatment methods; dilution data |
+| **Module 15** – Lead Management              | Lead data for "From Lead" source selection                                |
+| **Module 18** – Contract Management          | GMA Approval is a **prerequisite** for Contract Creation                  |
+
+## 11. System Behaviors on Submission
+
+| Trigger                     | System Action                                                                   |
+| --------------------------- | ------------------------------------------------------------------------------- |
+| GM ≥ 40%                    | Status → Auto-Approved; no approval routing needed                              |
+| GM < 40% + Approver Picked  | Status → Pending; Notification sent to selected Approver                        |
+| Service Type selected       | Auto-fetch chemicals from Module 12 → Module 10; populate chemical rows         |
+| Chemical SQFT/Qty changed   | Cost/Visit, Cost/Month, Cost/Year recalculated dynamically                      |
+| Price/UOM overridden        | System retains overridden value; does not reset on re-selection                 |
+| Frequency changed           | Annual Frequency updated; cascades to all site cost calculations (A, B)         |
+| Source = From Lead          | Auto-populate lead details; link GMA to lead record                             |
+| Source = From Customer      | Auto-populate customer details; link GMA to customer record                     |
+| Weekend/Night = Yes         | Automatically add 25% surcharge to Service Visit + Manpower costs               |
 
 ---
 
 ================================================================================
 
-# 17.5 RBAC – Role-Based Access Control
+## RBAC – Role-Based Access Control
 
 | Role              | Tab 1 (GMA Entries) | Tab 2 (My Requests)    | Tab 3 (Received Requests) | Add GMA | Approve/Reject   |
 | ----------------- | ------------------- | ---------------------- | ------------------------- | ------- | ---------------- |
 | Sales Person      | View (own)          | View / Add / Revoke    | —                         | ✅       | ❌               |
-| Sales Manager     | View (team)         | View (own)             | View / Approve / Reject   | ✅       | ✅ (10–34.99%)   |
-| CEO / Ops Head    | View (all)          | View (own)             | View / Approve / Reject   | ✅       | ✅ (< 10%)       |
+| Sales Manager     | View (team)         | View (own)             | View / Approve / Reject   | ✅       | ✅ (Route explicitly)  |
+| CEO / Ops Head    | View (all)          | View (own)             | View / Approve / Reject   | ✅       | ✅ (Route explicitly)  |
 | Admin             | View (all)          | View (all)             | View (all)                | ✅       | ❌               |
 
 ---
 
 ================================================================================
 
-# 17.6 Navigation Flow Summary
+## Navigation Flow Summary
 
 ```
 MODULE 17: GMA MANAGEMENT
@@ -1029,13 +1178,10 @@ MODULE 17: GMA MANAGEMENT
 │
 ├── Tab 2: My Requests
 │   ├── [+ Add GMA Sheet] → 17.2.1 Add GMA Sheet Form
-│   │     ├── [Save & Submit] → GM Calculated
-│   │     │       ├── GM ≥ 35%       → ✅ Auto-Approved → Contract Creation Unlocked
-│   │     │       ├── GM 10–34.99%   → 🟡 Sent to Sales Manager (Tab 3 of Manager)
-│   │     │       └── GM < 10%       → 🔴 Sent to CEO/Ops Head (Tab 3 of CEO)
-│   │     └── [Save as Draft] → Status = Draft (no notification)
+│   │     ├── GM ≥ 40% → [Save & Submit (Auto)] → ✅ Auto-Approved → Contract unlocking
+│   │     └── GM < 40% → [Save & Request] → [Manual Select] → � Sent to selected Approver
 │   ├── [View] → 17.2.2 View My GMA Sheet (Read-only + PDF Download)
-│   └── [Revoke] → Resets sheet to Draft (if Pending only)
+│   └── [Revoke] → Cancels the pending sheet (if not yet approved)
 │
 └── Tab 3: Received Requests (Approvers only)
     ├── [View] → 17.3.1 View Received GMA Sheet (Full detail + Approval section)
@@ -1047,24 +1193,204 @@ MODULE 17: GMA MANAGEMENT
 ---
 
 ================================================================================
+================================================================================
 
-# 17.7 Audit Trail
+# Complete Data Flow — Module 17 GMA Management
 
-Every GMA sheet action is tracked for compliance and operational transparency.
+## ASCII: Module-to-Module Data Flow
 
-| Field      | Description                     |
-| ---------- | ------------------------------- |
-| Date & Time | Timestamp of the action         |
-| Action     | Status change / event           |
-| User       | Person who performed the action |
-| Remarks    | Optional comment or reason      |
+```
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│                     MODULE 17: GMA MANAGEMENT — COMPLETE DATA FLOW                    │
+│                                                                                       │
+│  ╔═══════════════════╗                                                                │
+│  ║  ENTRY POINTS     ║                                                                │
+│  ╚═══════════════════╝                                                                │
+│                                                                                       │
+│  ┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐                  │
+│  │  FROM LEAD       │   │  FROM CUSTOMER   │   │  ADD NEW         │                  │
+│  │  (Module 15)     │   │  (Module 4)      │   │  (Manual Entry)  │                  │
+│  │                  │   │                  │   │                  │                  │
+│  │  Lead ID, Name,  │   │  Cust ID, Name,  │   │  Full Name,      │                  │
+│  │  Phone, Email,   │   │  Phone, Email,   │   │  Phone, Email,   │                  │
+│  │  Lead Type,      │   │  Customer Type,  │   │  Address, City,  │                  │
+│  │  Lead Status     │   │  Address         │   │  State, Pincode  │                  │
+│  └────────┬─────────┘   └────────┬─────────┘   └────────┬─────────┘                  │
+│           │                      │                      │                             │
+│           └──────────────────────┼──────────────────────┘                             │
+│                                  ▼                                                    │
+│  ╔═══════════════════════════════════════════════════════════════════════════╗         │
+│  ║                    17.2.1 ADD GMA SHEET FORM                             ║         │
+│  ╚═══════════════════════════════════════════════════════════════════════════╝         │
+│                                                                                       │
+│  ┌────────────────────────────────────────────────────────────────────────────────┐   │
+│  │  SECTION 1: SOURCE SELECTION                                                    │   │
+│  │  ┌─────────────────┐                                                            │   │
+│  │  │ Source radio     │──────► Auto-fill fields from Module 15 / Module 4          │   │
+│  │  └─────────────────┘                                                            │   │
+│  │                                                                                  │   │
+│  │  SECTION 2: SERVICE & CONTRACT CONFIGURATION                                     │   │
+│  │  ┌─────────────────┐     ┌──────────────────────────────────────┐               │   │
+│  │  │ Pest Type*      │────►│ MODULE 12: SERVICE MANAGEMENT       │               │   │
+│  │  │ dropdown        │     │ Fetches: Service config,             │               │   │
+│  │  └─────────────────┘     │ treatment methods, chemicals linked, │               │   │
+│  │                          │ dilution rates, coverage standards    │               │   │
+│  │  ┌─────────────────┐     └──────────────────────────────────────┘               │   │
+│  │  │ Branch*         │────► MODULE 7: BRANCH MANAGEMENT                            │   │
+│  │  │ dropdown        │     (Active branches list)                                  │   │
+│  │  └─────────────────┘                                                            │   │
+│  │                                                                                  │   │
+│  │  Frequency → Annual Frequency auto-calc:                                         │   │
+│  │  Weekly=52, Fortnightly=26, Monthly=12, Quarterly=4, Custom=editable            │   │
+│  │                                                                                  │   │
+│  │  SECTION 3: COST BREAKDOWN (Per Site)                                            │   │
+│  │  ┌───────────────────────────────────────────────────────────────────────────┐   │   │
+│  │  │  SITE n                                                                    │   │   │
+│  │  │  ┌────────────────────────────────────────────────────────────────────┐   │   │   │
+│  │  │  │ 3A: SERVICE VISIT COST                                             │   │   │   │
+│  │  │  │ Rate/Visit × Annual Freq = Cost/Year (A)                           │   │   │   │
+│  │  │  ├────────────────────────────────────────────────────────────────────┤   │   │   │
+│  │  │  │ 3B: MANPOWER / LABOR COST                                          │   │   │   │
+│  │  │  │ Hours × Annual Freq × Rate/Hour = Cost/Year (B)                    │   │   │   │
+│  │  │  ├────────────────────────────────────────────────────────────────────┤   │   │   │
+│  │  │  │ 3C: CHEMICAL / PRODUCT COST                                        │   │   │   │
+│  │  │  │                                                                     │   │   │   │
+│  │  │  │  ┌─────────────────────────┐   ┌──────────────────────────────┐   │   │   │   │
+│  │  │  │  │ MODULE 12               │   │ MODULE 10                    │   │   │   │   │
+│  │  │  │  │ Service Management      │──►│ Product Master               │   │   │   │   │
+│  │  │  │  │                         │   │                              │   │   │   │   │
+│  │  │  │  │ • Chemicals linked to   │   │ • Product Name, Code         │   │   │   │   │
+│  │  │  │  │   selected service      │   │ • Base UOM (ml/Ltr/gm/kg/   │   │   │   │   │
+│  │  │  │  │ • Dilution config       │   │   Nos/tube)                  │   │   │   │   │
+│  │  │  │  │ • Coverage standards    │   │ • Purchase Price (₹/UOM)     │   │   │   │   │
+│  │  │  │  └─────────────────────────┘   │ • HSN Code / Tax Config      │   │   │   │   │
+│  │  │  │                                 └──────────────────────────────┘   │   │   │   │
+│  │  │  │                                                                     │   │   │   │
+│  │  │  │  USER ENTERS: Coverage SQFT + Required Qty                          │   │   │   │
+│  │  │  │  SYSTEM CALCULATES:                                                 │   │   │   │
+│  │  │  │    Cost/Visit = Req Qty × Price/UOM                                 │   │   │   │
+│  │  │  │    Cost/Month = Cost/Visit × Visits/Month                           │   │   │   │
+│  │  │  │    Cost/Year (C) = Cost/Month × 12                                  │   │   │   │
+│  │  │  ├────────────────────────────────────────────────────────────────────┤   │   │   │
+│  │  │  │ 3D: WEEKENDS/NIGHTS SURCHARGE                                      │   │   │   │
+│  │  │  │ IF Yes → (A + B) × 25% = Cost (D)                                 │   │   │   │
+│  │  │  ├────────────────────────────────────────────────────────────────────┤   │   │   │
+│  │  │  │ 3E: DOCUMENTATION COST                                             │   │   │   │
+│  │  │  │ IF Yes → Cost/Doc × Docs/Month × 12 = Cost (E)                    │   │   │   │
+│  │  │  ├────────────────────────────────────────────────────────────────────┤   │   │   │
+│  │  │  │ SITE TOTAL = A + B + C + D + E                                     │   │   │   │
+│  │  │  │ SITE GM% = (Sale Price – Total Cost) / Sale Price × 100            │   │   │   │
+│  │  │  └────────────────────────────────────────────────────────────────────┘   │   │   │
+│  │  └───────────────────────────────────────────────────────────────────────────┘   │   │
+│  │                                                                                  │   │
+│  │  SECTION 4: OVERALL GM SUMMARY                                                   │   │
+│  │  Overall GM% = (Σ Sale Prices – Σ Total Costs) / Σ Sale Prices × 100            │   │
+│  └────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                       │
+│  ╔══════════════════════════════════════════════════════════════╗                     │
+│  ║                    APPROVAL ROUTING                          ║                     │
+│  ╚══════════════════════════════════════════════════════════════╝                     │
+│                                                                                       │
+│                         ┌─────────────────────┐                                       │
+│                         │  GM% Calculated      │                                       │
+│                         └──────────┬──────────┘                                       │
+│                                    │                                                   │
+              ┌─────────────────────┼─────────────────────┐                             │
+│              ▼                                         ▼                             │
+│  ┌──────────────────┐                      ┌─────────────────────────┐               │
+│  │ GM ≥ 40%         │                      │ GM < 40%                │               │
+│  │                  │                      │                         │               │
+│  │ ✅ AUTO-APPROVED │                      │ 🟡 REGULAR FLOW         │               │
+│  │ (Immediate)      │                      │ User Manually Selects   │               │
+│  │                  │                      │ Approver (Popup)        │               │
+│  └────────┬─────────┘                      └────────┬────────────────┘               │
+│           │                                         │                                │
+│           │                                         ▼                                │
+│           │                               ┌──────────────────┐                       │
+│           │                               │ Tab 3: Received  │                       │
+│           │                               │ Requests         │                       │
+│           │                               │ (Selected User)  │                       │
+│           │                               └────────┬─────────┘                       │
+│           │                                        │                                 │
+│           │                               ┌────────┴──────────────────────┘          │
+│           │                               ▼                                          │
+│           │                      ┌──────────────────┐                                │
+│           │                      │ APPROVE / REJECT │                                │
+│           │                      │ (17.3.2)         │                                │
+│           │                      └──┬──────────┬────┘                                │
+│           │                         │          │                                     │
+│           │                         ▼          ▼                                     │
+│           │                      ✅ Approved  ❌ Rejected                            │
+│           │                         │          │                                     │
+│           │                         │          └──► Returned to Sender               │
+│           │                         │               (Rejection Remarks)              │
+│           │     │                                                                      │
+│           └─────┤                                                                      │
+│                 ▼                                                                      │
+│  ╔══════════════════════════════════════════════════════════════╗                     │
+│  ║            MODULE 18: CONTRACT MANAGEMENT                    ║                     │
+│  ║            (GMA Approval unlocks contract creation)          ║                     │
+│  ╚══════════════════════════════════════════════════════════════╝                     │
+│                                                                                       │
+└──────────────────────────────────────────────────────────────────────────────────────┘
+```
 
-Tracked events include:
-- Draft Created
-- Submitted
-- Auto-Approved
-- Sent for Approval
-- Approved
-- Rejected (with reason)
-- Revoked
-- PDF Downloaded
+---
+
+## Module Dependency Map (Summary)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                                                                                  │
+│   MODULE 4                MODULE 7              MODULE 10             MODULE 12  │
+│   Customer Mgmt           Branch Mgmt           Product Master       Service Mgmt│
+│   ┌──────────┐           ┌──────────┐          ┌──────────┐        ┌──────────┐ │
+│   │Customer  │           │ Branch   │          │ Product  │        │ Service  │ │
+│   │ID, Name, │           │ list for │          │ Name,    │◄───────│ Chemical │ │
+│   │Phone,    │           │ dropdown │          │ Code,    │  Maps  │ mappings,│ │
+│   │Email,    │           │ selection│          │ UOM,     │  to    │ Dilution,│ │
+│   │Type,     │           │          │          │ Purchase │        │ Coverage │ │
+│   │Address   │           │          │          │ Price,   │        │ config   │ │
+│   └─────┬────┘           └─────┬────┘          │ HSN Code │        └─────┬────┘ │
+│         │                      │               └─────┬────┘              │      │
+│         │                      │                     │                   │      │
+│         │                      │                     │                   │      │
+│         └──────────────┐  ┌────┘          ┌──────────┘    ┌──────────────┘      │
+│                        │  │               │               │                     │
+│                        ▼  ▼               ▼               ▼                     │
+│                 ╔═══════════════════════════════════════════════╗                │
+│                 ║       MODULE 17: GMA MANAGEMENT               ║                │
+│                 ║                                                ║                │
+│                 ║  • Source Selection (M4, M15)                  ║                │
+│                 ║  • Branch (M7)                                 ║                │
+│                 ║  • Chemicals auto-fetch (M12 → M10)           ║                │
+│                 ║  • Cost Calculation (A+B+C+D+E)               ║                │
+│                 ║  • GM% Calculation & Approval Routing          ║                │
+│                 ╚═══════════════════════════════╤═══════════════╝                │
+│                                                 │                                │
+│   MODULE 15                                     │                                │
+│   Lead Mgmt                                     ▼                                │
+│   ┌──────────┐                  ╔═══════════════════════════════╗                │
+│   │ Lead ID, │                  ║  MODULE 18: CONTRACT MGMT     ║                │
+│   │ Name,    │                  ║  (Requires GMA Approval)      ║                │
+│   │ Phone,   │──────────────►   ╚═══════════════════════════════╝                │
+│   │ Email,   │     Source                                                        │
+│   │ Type,    │     Selection                                                     │
+│   │ Status   │     (Add GMA)                                                     │
+│   └──────────┘                                                                   │
+│                                                                                  │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Data Flow Table
+
+| Source Module | Data Provided                                                      | Used In (GMA)                                    |
+| ------------- | ------------------------------------------------------------------ | ------------------------------------------------ |
+| **Module 4**  | Customer ID, Name, Phone, Email, Type, Address                     | Section 1: Source Selection (From Customer)      |
+| **Module 7**  | Branch list (Active branches)                                      | Section 2: Branch dropdown                       |
+| **Module 10** | Product Name, Code, Base UOM, Purchase Price, HSN Code             | Section 3C: Chemical/Product auto-fill via M12   |
+| **Module 12** | Service → Chemical mappings, Dilution, Coverage, Treatment methods | Section 3C: Auto-fetch chemicals on service pick |
+| **Module 15** | Lead ID, Name, Phone, Email, Type, Status                          | Section 1: Source Selection (From Lead)          |
+| **Module 17** | Approved GMA Sheet (GM%, costs, service config)                    | **Module 18**: Contract Creation prerequisite    |
