@@ -5269,7 +5269,8 @@ Initial lead capture form for registering new customer inquiries. Captures essen
 | Lead Description    | Text Area      | Yes         | Min 20 characters                                                              | Detailed requirements                                             |
 | Created By          | Auto           | System      | Current logged-in user                                                         | System field                                                      |
 | Created Date        | Auto           | System      | System timestamp                                                               | System field                                                      |
-| Status              | Auto           | System      | Default: NEW                                                                   | New / Qualified / Quotation send / Negotiation / Lost=" if lost add field 'lost reason/ Converted |
+| Status              | Auto           | System      | Default: NEW                                                                   | New / Qualified / Quotation send / Negotiation /Lost/ Converted |
+Lost Reason	|          Text Area	|Conditional	  |    Required if Status = Lost  ||	Reason for lead loss
 | Next Follow-up Date | Date & Time    | Yes         | Must be today or future date                                                   | Manually entered by user (not auto-calculated)                    |
 
 ---
