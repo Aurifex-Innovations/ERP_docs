@@ -6,9 +6,8 @@ Comprehensive lead lifecycle management module that captures potential customer 
 
 **Module Connections:**
 
-- **Depends on:** Module 8 (Employee Management for lead assignment), Module 10 (Product/Service Master for quotation creation)
-- **Used by:** Module 16 (GMA Management), Module 17 (Quotation Management), Module 18 (Contract Management)
-- **Prerequisites:** Active employees with sales roles configured in Module 8
+- **Depends on:** Module 8 (Employee Management for lead assignment), Module 10 (Product Master for quotation creation)
+- **Used by:** Module 17 (GMA Management), Module 16 (Quotation Management), Module 18 (Contract Management)
 
 ---
 
@@ -34,7 +33,7 @@ Centralized lead management interface displaying all leads with filtering, searc
 │  │                  ☑ Social Media ☑ Exhibition ☑ Partner]               │  │
 │  │ Priority:        [☑ Low ☑ Normal ☑ High ☑ Urgent]                    │  │
 │  │ Assigned To:     [▼ All Sales Reps ▼]                                 │  │
-│  │ Property Type:   [☑ Residential ☑ Commercial ☑ Industrial]           │  │
+│  │ Category:        [☑ Residential ☑ Commercial ☑ Industrial]           │  │
 │  │ Pest Type:       [☑ Termite ☑ Cockroach ☑ Rodent ☑ Bed Bug           │  │
 │  │                  ☑ Mosquito ☑ Ant ☑ Other]                            │  │
 │  │ Date Range:      [📅 From] - [📅 To]                                  │  │
@@ -46,16 +45,12 @@ Centralized lead management interface displaying all leads with filtering, searc
 │                                                                              │
 │  LEAD OVERVIEW TABLE                                                         │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │Lead ID│Lead Name│Contact Info│Property│Pest Type│Status│Priority│Next F/U│ │
-│  │       │         │            │Type    │         │      │        │Date    │ │
-│  │───────┼─────────┼────────────┼────────┼───────────┼──────┼────────┼────────│ │
-│  │LD-001 │Rahul S. │98XXXX1234  │Res.    │Termite   │🟡    │High    │20-Mar  │ │
-│  │       │         │rahul@...   │        │          │Qual. │        │        │ │
-│  │LD-002 │Priya K. │99XXXX5678  │Comm.   │Cockroach │🟢    │Normal  │22-Mar  │ │
-│  │       │         │priya@...   │        │          │Quot. │        │        │ │
-│  │LD-003 │Amit V.  │97XXXX9012  │Ind.    │Rodent    │🔴    │Urgent  │Overdue │ │
-│  │       │         │amit@...    │        │          │New   │        │18-Mar  │ │
-│  └─────────────────────────────────────────────────────────────────────────┘ │
+│  │Lead ID│Lead Name│Contact Info│Pest Type │Status│Priority│Next F/U Date│ │
+│  │───────┼─────────┼────────────┼──────────┼──────┼────────┼─────────────│ │
+│  │LD-001 │Rahul S. │98XXXX1234  │Termite   │🟡 Qual.│High    │20-Mar       │ │
+│  │LD-002 │Priya K. │99XXXX5678  │Cockroach │🟢 Quot.│Normal  │22-Mar       │ │
+│  │LD-003 │Amit V.  │97XXXX9012  │Rodent    │🔴 New  │Urgent  │18-Mar (Ovr) │ │
+│  └────────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
 │  │Source│Created Date│Last F/U Date│Actions         ││
@@ -76,20 +71,20 @@ Centralized lead management interface displaying all leads with filtering, searc
 
 ## Table View Fields
 
-| Field          | Type           | Required | Description                           |
-| -------------- | -------------- | -------- | ------------------------------------- |
-| Lead ID        | Text           | Auto     | Unique lead identifier (LD-YYYY-SEQ)  |
-| Lead Name      | Text           | Yes      | Primary contact person name           |
-| Contact Info   | Text           | Yes      | Mobile number and email (masked)      |
-| Property Type  | Badge          | Yes      | Residential / Commercial / Industrial |
-| Pest Type      | Multi Tag      | Yes      | Pest categories requiring service     |
-| Status         | Status Badge   | Yes      | Current lead lifecycle stage          |
-| Priority       | Priority Badge | Yes      | Low / Normal / High / Urgent          |
-| Next Follow-up | Date           | Auto     | Scheduled next follow-up date         |
-| Lead Source    | Text           | Yes      | Origin of lead inquiry                |
-| Created Date   | Date           | Auto     | Lead creation timestamp               |
-| Last F/U Date  | Date           | Auto     | Most recent follow-up activity        |
-| Actions        | Icon           | —        | View / Edit / Add Follow-up           |
+| Field          | Type           | Required | Description                                                       |
+| -------------- | -------------- | -------- | ----------------------------------------------------------------- |
+| Lead ID        | Text           | Auto     | Unique lead identifier (LD-YYYY-SEQ)                              |
+| Lead Name      | Text           | Yes      | Primary contact person name                                       |
+| Contact Info   | Text           | Yes      | Mobile number and email                                           |
+| Lead Type      | Badge          | Yes      | Product / Service / Both                                          |
+| Status         | Status Badge   | Yes      | New / Qualified / Quotation send / Negotiation / Lost / Converted |
+| GMA Status     | Status Badge   | Yes      | Draft / Under review / Approved / Rejected                        |
+| Priority       | Priority Badge | Yes      | Low / Normal / High / Urgent                                      |
+| Next Follow-up | Date           | Auto     | Scheduled next follow-up date                                     |
+| Lead Source    | Text           | Yes      | Origin of lead inquiry                                            |
+| Created Date   | Date           | Auto     | Lead creation timestamp                                           |
+| Last F/U Date  | Date           | Auto     | Most recent follow-up activity                                    |
+| Actions        | Icon           | —        | View / Edit / Add Follow-up                                       |
 
 ---
 
@@ -112,6 +107,7 @@ Centralized lead management interface displaying all leads with filtering, searc
 | Priority    | Multi-select | Low / Normal / High / Urgent                                                   |
 | Lead Type   | Multi-select | Service / Product                                                              |
 | Date Range  | Date Range   | Created date filter                                                            |
+| Branch Name | Dropdown     | All Branches / Central / BLR / HYD / BOM                                       |
 
 ---
 
@@ -123,7 +119,6 @@ Searchable by:
 - Lead Name
 - Mobile Number
 - Email Address
-- Property Address (partial match)
 
 ---
 
@@ -146,6 +141,7 @@ Initial lead capture form for registering new customer inquiries. Captures essen
 │  Lead Date:            [📅 Auto: Current Date]                              │
 │  Lead Source*:         [▼ Website / Referral / Walk-in / Cold Call           │
 │                         / Social Media / Exhibition / Partner ▼]            │
+│  Branch Name*:         [▼ Select Branch ▼]                                  │
 │  Priority*:            [▼ Low / Normal / High / Urgent ▼]                   │
 │                                                                             │
 │  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │
@@ -187,24 +183,25 @@ Initial lead capture form for registering new customer inquiries. Captures essen
 
 ## Form Fields
 
-| Field               | Type           | Required    | Options/Validation                                                             | Notes                                              |
-| ------------------- | -------------- | ----------- | ------------------------------------------------------------------------------ | -------------------------------------------------- |
-| Lead ID             | Auto Generated | System      | Format: LD-YYYY-XXXXX (e.g., LD-2026-00042)                                    | Read-only, unique sequential                       |
-| Lead Date           | Date           | System      | Current date, editable if needed                                               | Lead creation date                                 |
-| Lead Source         | Dropdown       | Yes         | Website / Referral / Walk-in / Cold Call / Social Media / Exhibition / Partner | Track origin                                       |
-| Priority            | Dropdown       | Yes         | Low / Normal / High / Urgent                                                   | Determines follow-up SLA                           |
-| Lead Name           | Text           | Yes         | Min 3 characters, alphabets and spaces                                         | Primary contact person                             |
-| Mobile Number       | Phone          | Yes         | Exactly 10 digits, unique across leads                                         | Primary contact number                             |
-| Alternate Number    | Phone          | No          | Exactly 10 digits, different from primary                                      | Secondary contact                                  |
-| Email ID            | Email          | No          | Valid email format, unique check                                               | For email communications                           |
-| Lead Type           | Dropdown       | Yes         | Product / Service                                                              | Determines if Service Type dropdown appears        |
-| Service Type        | Dropdown       | Conditional | Contract / Product Purchase / Jobbing                                          | Visible & required only when Lead Type = "Service" |
-| Budget Range        | Dropdown       | No          | <₹5K / ₹5K-10K / ₹10K-25K / ₹25K-50K / ₹50K+ / Not Discussed                   | Qualification data                                 |
-| Lead Description    | Text Area      | Yes         | Min 20 characters                                                              | Detailed requirements                              |
-| Created By          | Auto           | System      | Current logged-in user                                                         | System field                                       |
-| Created Date        | Auto           | System      | System timestamp                                                               | System field                                       |
-| Status              | Auto           | System      | Default: NEW                                                                   | System field                                       |
-| Next Follow-up Date | Date           | Yes         | Must be today or future date                                                   | Manually entered by user (not auto-calculated)     |
+| Field               | Type           | Required    | Options/Validation                                                             | Notes                                                             |
+| ------------------- | -------------- | ----------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| Lead ID             | Auto Generated | System      | Format: LD-YYYY-XXXXX (e.g., LD-2026-00042)                                    | Read-only, unique sequential                                      |
+| Lead Date           | Date           | System      | Current date, editable if needed                                               | Lead creation date                                                |
+| Lead Source         | Dropdown       | Yes         | Website / Referral / Walk-in / Cold Call / Social Media / Exhibition / Partner | Track origin                                                      |
+| Branch Name         | Dropdown       | Yes         | Select from active branches                                                    | Lead assignment branch                                            |
+| Priority            | Dropdown       | Yes         | Low / Normal / High / Urgent                                                   | Determines follow-up SLA                                          |
+| Lead Name           | Text           | Yes         | Min 3 characters, alphabets and spaces                                         | Primary contact person                                            |
+| Mobile Number       | Phone          | Yes         | Exactly 10 digits, unique across leads                                         | Primary contact number                                            |
+| Alternate Number    | Phone          | No          | Exactly 10 digits, different from primary                                      | Secondary contact                                                 |
+| Email ID            | Email          | No          | Valid email format, unique check                                               | For email communications                                          |
+| Lead Type           | Dropdown       | Yes         | Product / Service                                                              | Determines if Service Type dropdown appears                       |
+| Service Type        | Dropdown       | Conditional | Contract / Product Purchase / Jobbing                                          | Visible & required only when Lead Type = "Service"                |
+| Budget Range        | Dropdown       | No          | <₹5K / ₹5K-10K / ₹10K-25K / ₹25K-50K / ₹50K+ / Not Discussed                   | Qualification data                                                |
+| Lead Description    | Text Area      | Yes         | Min 20 characters                                                              | Detailed requirements                                             |
+| Created By          | Auto           | System      | Current logged-in user                                                         | System field                                                      |
+| Created Date        | Auto           | System      | System timestamp                                                               | System field                                                      |
+| Status              | Auto           | System      | Default: NEW                                                                   | New / Qualified / Quotation send / Negotiation / Lost / Converted |
+| Next Follow-up Date | Date & Time    | Yes         | Must be today or future date                                                   | Manually entered by user (not auto-calculated)                    |
 
 ---
 
@@ -256,6 +253,7 @@ Modifies existing lead information with status-aware field editability. Maintain
 │  Lead ID:              [LD-2026-00142 - Read Only]                          │
 │  Lead Date:            [15-Mar-2026 - Read Only]                            │
 │  Lead Source:          [Website - Read Only]                                 │
+│  Branch Name:          [▼ Select Branch ▼] ✅                               │
 │  Priority:             [▼ High / Normal / Low / Urgent ▼] ✅                │
 │  Status:               [▼ Qualified ▼] (Controlled workflow)                │
 │                                                                             │
@@ -316,6 +314,7 @@ Modifies existing lead information with status-aware field editability. Maintain
 | **Basic Info**      | Lead ID             | ❌  | ❌        | ❌             | ❌          | ❌             | System generated, never editable |
 |                     | Lead Date           | ❌  | ❌        | ❌             | ❌          | ❌             | Creation timestamp               |
 |                     | Lead Source         | ❌  | ❌        | ❌             | ❌          | ❌             | Origin tracking, locked          |
+|                     | Branch Name         | ✅  | ✅        | ✅             | ⚠️          | ❌             | Editable until Proposal stage    |
 |                     | Priority            | ✅  | ✅        | ✅             | ⚠️          | ❌             | Editable until Proposal stage    |
 |                     | Status              | ⚠️  | ⚠️        | ⚠️             | ⚠️          | ❌             | Workflow controlled              |
 | **Contact Info**    | Lead Name           | ✅  | ✅        | ⚠️             | ❌          | ❌             | Editable until Qualified         |
@@ -373,17 +372,16 @@ Comprehensive lead detail view with dual-tab interface. Tab 1 displays complete 
 │                                                                              │
 │  ─────────────────────────────────────────────────────────────────────────   │
 │                                                                              │
-│  SECTION 1: LEAD SUMMARY                                                     │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
 │  │  Lead Status:          🟡 Qualified                                     │ │
 │  │  Priority:             🔴 HIGH                                          │ │
 │  │  Lead Source:          Website                                          │ │
+│  │  Branch Name:          Main Branch                                      │ │
 │  │  Created:              15-Mar-2026 by Admin                              │ │
 │  │  Last Updated:         18-Mar-2026 by Rajesh Kumar                       │ │
 │  │  Next Follow-up:       20-Mar-2026 (Due in 2 days)                        │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  SECTION 2: CONTACT INFORMATION                                              │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
 │  │  Lead Name:            Rahul Sharma                                     │ │
 │  │  Mobile Number:        +91 98765 43210                                  │ │
@@ -391,13 +389,11 @@ Comprehensive lead detail view with dual-tab interface. Tab 1 displays complete 
 │  │  Email ID:             rahul.sharma@email.com                           │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  SECTION 3: LEAD TYPE & SERVICE DETAILS                                      │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
 │  │  Lead Type:            Service                                          │ │
 │  │  Service Type:         Contract                                         │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  SECTION 4: ADDITIONAL INFORMATION                                           │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
 │  │  Budget Range:         ₹10,000 - ₹25,000                                  │ │
 │  │                                                                              │
@@ -407,10 +403,9 @@ Comprehensive lead detail view with dual-tab interface. Tab 1 displays complete 
 │  │  Currently using competitor service but dissatisfied with results.        │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  SECTION 5: QUICK ACTIONS & CONVERSION                                         │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
 │  │                                                                              │ │
-│  │  [📋 CREATE GMA SHEET]    [📄 CREATE QUOTATION]    [📞 LOG CALL]        │ │
+│  │  [📋 CREATE GMA SHEET]    [📄 CREATE QUOTATION]                             │ │
 │  │                                                                              │ │
 │  │  GMA Status:           Not Created                                        │ │
 │  │  Quotation Status:     Not Created                                        │ │
@@ -432,6 +427,7 @@ Comprehensive lead detail view with dual-tab interface. Tab 1 displays complete 
 | **Lead Summary**        | Lead Status      | Status Badge   | Current lifecycle stage with visual indicator |
 |                         | Priority         | Priority Badge | Urgency level with color coding               |
 |                         | Lead Source      | Text           | Origin of inquiry                             |
+|                         | Branch Name      | Text           | Lead assignment branch                        |
 |                         | Created          | DateTime       | Creation timestamp with creator name          |
 |                         | Last Updated     | DateTime       | Last modification timestamp                   |
 |                         | Next Follow-up   | Date           | Scheduled next activity with countdown        |
@@ -446,7 +442,7 @@ Comprehensive lead detail view with dual-tab interface. Tab 1 displays complete 
 
 ---
 
-## 15.4.2 Tab 2: Follow-up Log Table
+## 15.4.1Follow-up Log Table
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -457,13 +453,6 @@ Comprehensive lead detail view with dual-tab interface. Tab 1 displays complete 
 │  [TAB 1: Basic Information]  [TAB 2: Follow-up Log] ◄── ACTIVE              │
 │                                                                              │
 │  ─────────────────────────────────────────────────────────────────────────   │
-│                                                                              │
-│  FOLLOW-UP SUMMARY CARDS                                                     │
-│  ┌─────────────────┬─────────────────┬─────────────────┬─────────────────┐    │
-│  │ Total Follow-ups│ Completed       │ Pending         │ Overdue         │    │
-│  │       5         │       3         │       1         │       1         │    │
-│  │                 │                 │ (Due 20-Mar)    │ (Due 18-Mar)    │    │
-│  └─────────────────┴─────────────────┴─────────────────┴─────────────────┘    │
 │                                                                              │
 │  QUICK FILTERS: [All] [Calls] [Meetings] [Site Visits] [Emails] [WhatsApp]   │
 │                                                                              │
@@ -512,17 +501,16 @@ Comprehensive lead detail view with dual-tab interface. Tab 1 displays complete 
 
 ## Follow-up Log Table Fields
 
-| Field        | Type         | Description                                           |
-| ------------ | ------------ | ----------------------------------------------------- |
-| F/U #        | Number       | Sequential follow-up identifier                       |
-| Date         | Date         | When follow-up was conducted or scheduled             |
-| Type         | Badge        | Call / Meeting / Site Visit / Email / WhatsApp / Auto |
-| Contact Mode | Text         | Channel used for communication                        |
-| Outcome      | Text         | Result of the follow-up interaction                   |
-| Next Action  | Text         | Agreed next step from follow-up                       |
-| Status       | Status Badge | Completed / Pending / Overdue / Cancelled             |
-| Assigned To  | Text         | User responsible for this follow-up                   |
-| Action       | Button       | View follow-up details                                |
+| Field        | Type         | Description                                                       |
+| ------------ | ------------ | ----------------------------------------------------------------- |
+| F/U #        | Number       | Sequential follow-up identifier                                   |
+| Date & Time  | Date & Time  | When follow-up was conducted or scheduled                         |
+| Contact Type | Badge        | Call / Meeting / Site Visit / Email / WhatsApp / Other            |
+| Lead Type    | Badge        | Product / Service / Both                                          |
+| Outcome      | Text         | Result of the follow-up interaction                               |
+| Next Action  | Text         | Agreed next step from follow-up                                   |
+| Status       | Status Badge | New / Qualified / Quotation send / Negotiation / Lost / Converted |
+| Action       | Button       | View follow-up details                                            |
 
 ---
 
@@ -531,8 +519,8 @@ Comprehensive lead detail view with dual-tab interface. Tab 1 displays complete 
 | Button              | Action                                             | Redirects To                  | Condition                         |
 | ------------------- | -------------------------------------------------- | ----------------------------- | --------------------------------- |
 | ➕ New Follow-up    | Opens Add Follow-up Form                           | 15.5 Add Follow-up Form       | Always available                  |
-| 📋 Create GMA Sheet | Opens GMA creation with lead data pre-filled       | Module 16: Add GMA Form       | Lead status = Qualified or higher |
-| 📄 Create Quotation | Opens Quotation creation with lead data pre-filled | Module 17: Add Quotation Form | Lead status = Qualified or higher |
+| 📋 Create GMA Sheet | Opens GMA creation with lead data pre-filled       | Module 17: Add GMA Form       | Lead status = Qualified or higher |
+| 📄 Create Quotation | Opens Quotation creation with lead data pre-filled | Module 16: Add Quotation Form | Lead status = Qualified or higher |
 
 ---
 
@@ -542,8 +530,8 @@ Comprehensive lead detail view with dual-tab interface. Tab 1 displays complete 
 | -------------- | ----------------------------- | -------------------------- | ------------------------ |
 | New            | ⚠️ Manager approval           | ❌ Not allowed             | ❌ Not allowed           |
 | Qualified      | ✅ Allowed                    | ✅ Allowed                 | ❌ Not allowed           |
-| Quotation send | ✅ Allowed                    | ✅ Allowed (edit existing) | ⚠️ Requires approval     |
-| Negotiation    | ✅ Allowed (re-GMA if needed) | ✅ Allowed (revised quote) | ✅ Allowed               |
+| Quotation send | ✅ Allowed                    | ✅ Allowed (edit existing) | ❌ Not allowed           |
+| Negotiation    | ✅ Allowed (re-GMA if needed) | ✅ Allowed (revised quote) | ❌ Not allowed           |
 | Converted      | ❌ Not applicable             | ❌ Not applicable          | ✅ Auto-trigger Contract |
 | Lost           | ❌ Not applicable             | ❌ Not applicable          | ❌ Not applicable        |
 
@@ -563,16 +551,16 @@ Captures a brief summary of the interaction, allows the user to update the Lead'
 │                           ADD FOLLOW-UP                                     │
 │                                                                             │
 │  [← Back]                   Lead: Rahul Sharma | Current Status: New        │
-│                                                                             │
+│                             Lead Type : Service  | Branch Name: Main Branch │
 │  ─────────────────────────────────────────────────────────────────────────  │
 │                                                                             │
 │  Interaction Summary*:  [________________________________________]          │
 │                         (Details of the conversation or action taken)       │
 │                                                                             │
-│  Update Lead Status*:   [▼ New / Qualified / Quotation send              │
+│  Update Status*:   [▼ New / Qualified / Quotation send              │
 │                          / Negotiation / Converted / Lost ▼]                │
 │                         (Changes the overall status of this lead)           │
-│                                                                             │
+│                          (if Lost then Loast reason field will appear)      │
 │  ─────────────────────────────────────────────────────────────────────────  │
 │  NEXT FOLLOW-UP PLANNING                                                    │
 │                                                                             │
@@ -595,8 +583,13 @@ Captures a brief summary of the interaction, allows the user to update the Lead'
 
 | Field                | Type      | Required    | Options/Validation                                           | Notes                                  |
 | -------------------- | --------- | ----------- | ------------------------------------------------------------ | -------------------------------------- |
+| Lead Name            | Text      | Auto        |                                                              |                                        |
+| Lead Type            | Dropdown  | Auto        | Service, Product, AMC                                        |                                        |
+| Branch Name          | Dropdown  | Auto        |                                                              |                                        |
+| Current Status       | Badge     | Auto        | New, Qualified, Quotation send, Negotiation, Converted, Lost | Updates the main lead status           |
 | Interaction Summary  | Text Area | Yes         | Min 10 characters                                            | Details of the current interaction     |
-| Update Lead Status   | Dropdown  | Yes         | New, Qualified, Quotation send, Negotiation, Converted, Lost | Updates the main lead status           |
+| Update Status        | Dropdown  | Yes         | New, Qualified, Quotation send, Negotiation, Converted, Lost | Updates the main lead status           |
+| Lost Reason          | Text Area | Conditional | Required if Status = Lost                                    | Reason for lead loss                   |
 | Schedule Next Action | Checkbox  | Yes         | Yes/No toggle                                                | Determines if a future task is created |
 | Next Follow-up Date  | Date      | Conditional | Must be a future date (Required if Yes)                      | When to follow up                      |
 | Next Follow-up Time  | Time      | No          | 24-hour format                                               | Time of next follow up                 |
@@ -632,7 +625,7 @@ Read-only detailed view of a specific follow-up interaction showing complete con
 │                                                                             │
 │  ─────────────────────────────────────────────────────────────────────────  │
 │                                                                             │
-│  FOLLOW-UP HEADER                                                           │
+│  FOLLOW-UP HEADER (auto-filled)                                             │
 │  ┌─────────────────────────────────────────────────────────────────────────┐│
 │  │  Follow-up Number:     #5                                               ││
 │  │  Date Executed:          18-Mar-2026, 15:30 IST                         ││
@@ -681,6 +674,7 @@ Read-only detailed view of a specific follow-up interaction showing complete con
 | Section                 | Field               | Type            | Description                                  |
 | ----------------------- | ------------------- | --------------- | -------------------------------------------- |
 | **Header**              | Follow-up Number    | Text            | Sequential identifier                        |
+|                         | Lead Name           | Text            | Name of the associated lead                  |
 |                         | Date Executed       | DateTime        | When follow-up was submitted                 |
 |                         | Conducted By        | Text            | User who logged the follow-up                |
 | **Interaction Details** | Interaction Summary | Text Area       | Full conversation notes from the interaction |
@@ -696,11 +690,9 @@ Read-only detailed view of a specific follow-up interaction showing complete con
 
 ## Actions
 
-| Action | Behavior                                    |
-| ------ | ------------------------------------------- |
-| Close  | Returns to lead detail view (Tab 2)         |
-| Print  | Generates printable PDF of follow-up record |
-
+| Action | Behavior                            |
+| ------ | ----------------------------------- |
+| Close  | Returns to lead detail view (Tab 2) |
 
 ---
 
@@ -715,7 +707,7 @@ Quotation Management handles the creation, tracking, and lifecycle of quotations
 **Module Connections:**
 
 - Depends on: Module 12 (Service Catalog & Pricing), Module 10 (Product Master & Tax), Module 9 (Tax Management)
-- Uses: Module 15 (Lead Data), Module 9 (Customer Data), Module 7 (Branch Management)
+- Uses: Module 15 (Lead Data)
 - Triggers: Module 18 (Contract Creation on Acceptance)
 
 ---
@@ -784,19 +776,19 @@ The Quotation Dashboard displays all quotations with filtering, searching, and q
 
 # Table View Fields
 
-| Field               | Type     | Required | Description                                                     |
-| ------------------- | -------- | -------- | --------------------------------------------------------------- |
-| Quotation ID        | Text     | Auto     | Unique identifier (QT-YYYY-SEQ format)                          |
-| Source              | Badge    | Yes      | From Lead / From Customer / New Prospect                        |
-| Client Name         | Text     | Yes      | Lead name, customer name, or new prospect name                  |
-| Quotation Type      | Badge    | Yes      | Service / Product / Combined                                    |
-| Branch              | Text     | Yes      | Assigned branch for quotation                                   |
-| Total Amount (₹)    | Currency | Auto     | Grand total including tax                                       |
-| Status              | Badge    | Auto     | Draft / Sent / Viewed / Accepted / Rejected / Expired / Revised |
-| Valid Till          | Date     | Yes      | Quotation expiry date                                           |
-| Created Date & Time | DateTime | Auto     | Timestamp of quotation creation                                 |
-| Created By          | Text     | Auto     | User who created the quotation                                  |
-| Actions             | Buttons  | —        | View / Delete (Revoke) / Download                               |
+| Field               | Type     | Required | Description                                    |
+| ------------------- | -------- | -------- | ---------------------------------------------- |
+| Quotation ID        | Text     | Auto     | Unique identifier (QT-YYYY-SEQ format)         |
+| Source              | Badge    | Yes      | From Lead / From Customer / New Prospect       |
+| Client Name         | Text     | Yes      | Lead name, customer name, or new prospect name |
+| Quotation Type      | Badge    | Yes      | Service / Product / Combined                   |
+| Branch              | Text     | Yes      | Assigned branch for quotation                  |
+| Total Amount (₹)    | Currency | Auto     | Grand total including tax                      |
+| Status              | Badge    | Auto     | Draft / Sent / Accepted / Rejected / Expired   |
+| Valid Till          | Date     | Yes      | Quotation expiry date                          |
+| Created Date & Time | DateTime | Auto     | Timestamp of quotation creation                |
+| Created By          | Text     | Auto     | User who created the quotation                 |
+| Actions             | Buttons  | —        | View / Delete (Revoke) / Download              |
 
 ---
 
@@ -818,7 +810,6 @@ The Quotation Dashboard displays all quotations with filtering, searching, and q
 | -------------- | ------------------- | ------------ | --------------------------------------------------------------- |
 | Status         | Multi-select        | All          | Draft / Sent / Viewed / Accepted / Rejected / Expired / Revised |
 | Quotation Type | Multi-select        | All          | Service / Product / Combined                                    |
-| Source         | Multi-select        | All          | From Lead / From Customer / New Prospect                        |
 | Branch         | Searchable Dropdown | All          | All branches from Module 7                                      |
 | Created By     | Searchable Dropdown | All          | Sales team members                                              |
 | Created Date   | Date Range          | Last 30 Days | Custom range                                                    |
@@ -830,19 +821,17 @@ The Quotation Dashboard displays all quotations with filtering, searching, and q
 
 Global search supports:
 
-| Search Field | Type    |
-| ------------ | ------- |
-| Quotation ID | Text    |
-| Client Name  | Text    |
-| Phone Number | Numeric |
-| Lead ID      | Text    |
+| Search Field | Type |
+| ------------ | ---- |
+| Quotation ID | Text |
+| Client Name  | Text |
 
 ---
 
 # 16.2 Add Quotation Form
 
 **Description:**
-The Add Quotation form allows sales team members to create new quotations. The form dynamically adjusts based on the selected source (Lead / Customer / New Prospect) and quotation type (Service / Product / Combined). Pricing is dynamically fetched from Module 12 (Services) and Module 10 (Products) based on selected items and property type. Multiple service locations can be added with per-location pricing.
+The Add Quotation form allows sales team members to create new quotations. The form dynamically adjusts based on the selected source (Lead / Customer / New Prospect) and quotation type (Service / Product / Combined). Pricing is dynamically fetched from Module 12 (Services) and Module 10 (Products) based on selected items and dynamic pricing selection. Multiple service locations can be added with per-location pricing.
 
 ---
 
@@ -867,8 +856,8 @@ The Add Quotation form allows sales team members to create new quotations. The f
 │  │  Contact Person:      Rahul Sharma (Read-only)                          │ │
 │  │  Phone:               +91 98765 43210 (Read-only)                       │ │
 │  │  Email:               rahul@example.com (Read-only)                     │ │
-│  │  Property Type:       3BHK Apartment (Read-only)                        │ │
-│  │  Address:             HSR Layout, Bengaluru (Read-only)                  │ │
+│  │  Lead Type:           Service/Product/Both (Read-only)                    │ │
+│  │                       *based on lead type below options enable           │ │
 │  │  Lead Status:         QUALIFIED ✅ (Read-only)                          │ │
 │  │                                                                         │ │
 │  │  IF "FROM CUSTOMER" SELECTED:                                           │ │
@@ -887,9 +876,6 @@ The Add Quotation form allows sales team members to create new quotations. The f
 │  │  Phone*:              [________________________________]                │ │
 │  │  Email:               [________________________________]                │ │
 │  │  Company Name:        [________________________________]                │ │
-│  │  Property Type*:      [▼ 1BHK / 2BHK / 3BHK / 4BHK+ / Villa /         │ │
-│  │                        Small Office / Medium Office / Large Office /     │ │
-│  │                        Warehouse / Industrial ▼]                        │ │
 │  │  Address*:            [________________________________]                │ │
 │  │  City*:               [________________________________]                │ │
 │  │  State*:              [▼ Select State ▼]                                │ │
@@ -919,9 +905,8 @@ The Add Quotation form allows sales team members to create new quotations. The f
 │  │  │ Address*:        [HSR Layout, Sector 2, Bengaluru]               │  │ │
 │  │  │ City*:           [Bengaluru]                                     │  │ │
 │  │  │ State*:          [Karnataka]                                     │  │ │
-│  │  │ Property Type*:  [▼ 1BHK / 2BHK / 3BHK / 4BHK+ / Villa /       │  │ │
-│  │  │                   Small Office / Medium Office / Large Office /   │  │ │
-│  │  │                   Warehouse / Industrial ▼]                      │  │ │
+│  │  │ Category*:       [▼ Residential ▼]                               │  │ │
+│  │  │ Sub-Category*:   [▼ Internal ▼]                                  │  │ │
 │  │  │ Area (sqft)*:    [1200]                                          │  │ │
 │  │  │ Assign Branch*:  [▼ BLR-HSR Branch ▼]                           │  │ │
 │  │  │                  (Nearest branch auto-suggested)                  │  │ │
@@ -932,7 +917,8 @@ The Add Quotation form allows sales team members to create new quotations. The f
 │  │  │ Address*:        [________________________________]              │  │ │
 │  │  │ City*:           [________________________________]              │  │ │
 │  │  │ State*:          [▼ Select State ▼]                              │  │ │
-│  │  │ Property Type*:  [▼ Select Property Type ▼]                      │  │ │
+│  │  │ Category*:       [▼ Select Category ▼]                           │  │ │
+│  │  │ Sub-Category*:   [▼ Select Sub-Category ▼]                       │  │ │
 │  │  │ Area (sqft)*:    [________]                                      │  │ │
 │  │  │ Assign Branch*:  [▼ Select Branch ▼]                             │  │ │
 │  │  │ [Remove Location]                                                │  │ │
@@ -944,18 +930,60 @@ The Add Quotation form allows sales team members to create new quotations. The f
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
 │  │  PER LOCATION SERVICE ASSIGNMENT                                        │ │
 │  │                                                                         │ │
-│  │  ── LOCATION 1: HSR Layout, Bengaluru (3BHK) ──                        │ │
+│  │  ── LOCATION 1: HSR Layout, Bengaluru ──                               │ │
 │  │  [🔍 Search Service from Service Master...]                             │ │
 │  │                                                                         │ │
-│  │  ┌────────────┬──────────┬─────────┬──────────┬─────────┬────────────┐│ │
-│  │  │Service Name│Pest Type │Category │Price Type│Rate (₹) │Warranty    ││ │
-│  │  │────────────┼──────────┼─────────┼──────────┼─────────┼────────────││ │
-│  │  │Termite Ctrl│Termite   │Resident.│Fixed     │₹1,800   │6Mo (2 Rev) ││ │
-│  │  │  (SVC-001) │          │3BHK     │         │(Auto)   │(Auto)      ││ │
-│  │  │────────────┼──────────┼─────────┼──────────┼─────────┼────────────││ │
-│  │  │Cockroach   │Cockroach │Resident.│Fixed     │₹1,200   │3Mo (1 Rev) ││ │
-│  │  │Gel (SVC-002│          │3BHK     │         │(Auto)   │(Auto)      ││ │
-│  │  └────────────┴──────────┴─────────┴──────────┴─────────┴────────────┘│ │
+│  │  ┌────────────┬──────────┬──────────┬──────────┬─────────┬────────────┐│ │
+│  │  │Service Name│Pest Type │Price Type│Rate (₹)   │Qty      │Total (₹)   ││ │
+│  │  │────────────┼──────────┼──────────┼──────────┼─────────┼────────────││ │
+│  │  │Termite Ctrl│Termite   │Fixed     │₹1,800    │ 1       │₹1,800      ││ │
+│  │  │  (SVC-001) │          │          │(Fetched) │         │            ││ │
+│  │  └────────────┴──────────┴──────────┴──────────┴─────────┴────────────┘│ │
+│  │                                                                         │ │
+│  │  DYNAMIC PRICING CONDITIONS (FETCHED FROM MODULE 12)                    │ │
+│  │  (Displays only one block based on Service Price Type)                  │ │
+│  │                                                                         │ │
+│  │  [OPTION 1: FIXED PRICE]                                                │ │
+│  │  ┌─────────────────────────────────────────────────────────────┐        │ │
+│  │  │ SERVICE: Termite Control (SVC-001)                          │        │ │
+│  │  │ LOCATION: HSR Layout, BLR | Category: Residential           │        │ │
+│  │  ├─────────────────────────────────────────────────────────────┤        │ │
+│  │  │ SELECT PROPERTY SIZE / TYPE:                                │        │ │
+│  │  │                                                             │        │ │
+│  │  │ IF RESIDENTIAL:           IF COMMERCIAL:                    │        │ │
+│  │  │ ( ) 1 BHK    (₹ 1,200)    ( ) Small Office  (₹ 2,500)       │        │ │
+│  │  │ ( ) 2 BHK    (₹ 1,500)    ( ) Medium Office (₹ 4,500)       │        │ │
+│  │  │ (●) 3 BHK    (₹ 1,800)    ( ) Large Office  (₹ 7,000)       │        │ │
+│  │  │ ( ) 4 BHK+   (₹ 2,200)    ( ) Warehouse     (₹ 12,000)      │        │ │
+│  │  │ ( ) Villa    (₹ 3,500)                                      │        │ │
+│  │  │                                                             │        │ │
+│  │  │ *Selection fetches rate automatically from Module 12.       │        │ │
+│  │  └─────────────────────────────────────────────────────────────┘        │ │
+│  │                                                                         │ │
+│  │  [OPTION 2: AREA BASED]                                                 │ │
+│  │  ┌─────────────────────────────────────────────────────────────┐        │ │
+│  │  │ SERVICE: Cockroach Gel (SVC-002)                             │        │ │
+│  │  ├─────────────────────────────────────────────────────────────┤        │ │
+│  │  │ PRICING LOGIC: Base Price + (Rate per SQFT × Total Area)     │        │ │
+│  │  ├─────────────────────────────────────────────────────────────┤        │ │
+│  │  │ - Base Price: ₹500                                          │        │ │
+│  │  │ - Rate/SQFT:  ₹2.00                                         │        │ │
+│  │  │ - Total Area: 1200 sqft (from Location details)             │        │ │
+│  │  ├─────────────────────────────────────────────────────────────┤        │ │
+│  │  │ CALCULATION: 500 + (2.00 × 1200)                            │        │ │
+│  │  │ RESULT:      ₹2,900                                         │        │ │
+│  │  └─────────────────────────────────────────────────────────────┘        │ │
+│  │                                                                         │ │
+│  │  [OPTION 3: INSPECTION BASED]                                           │ │
+│  │  ┌─────────────────────────────────────────────────────────────┐        │ │
+│  │  │ SERVICE: Rodent Baiting (SVC-003)                            │        │ │
+│  │  ├─────────────────────────────────────────────────────────────┤        │ │
+│  │  │ - Inspection Fee: ₹300                                      │        │ │
+│  │  │ - Note: The final service quotation will be generated and   │        │ │
+│  │  │   shared with the client ONLY after the on-site physical    │        │ │
+│  │  │   inspection visit is completed.                            │        │ │
+│  │  └─────────────────────────────────────────────────────────────┘        │ │
+│  │                                                                         │ │
 │  │                                                                         │ │
 │  │  ┌────────────────────┬────────────┬──────────┬───────────────────────┐│ │
 │  │  │Frequency           │Qty/Visits  │Total (₹) │Action                 ││ │
@@ -967,7 +995,7 @@ The Add Quotation form allows sales team members to create new quotations. The f
 │  │                                                                         │ │
 │  │  Location 1 Service Subtotal: ₹16,200                                   │ │
 │  │                                                                         │ │
-│  │  ── LOCATION 2: Whitefield, Bengaluru (Small Office) ──                 │ │
+│  │  ── LOCATION 2: Whitefield, Bengaluru ──                                │ │
 │  │  [🔍 Search Service...]                                                 │ │
 │  │  (Same table structure as Location 1)                                   │ │
 │  │                                                                         │ │
@@ -1065,7 +1093,6 @@ The Add Quotation form allows sales team members to create new quotations. The f
 | Phone           | Number          | Conditional | 10-digit Indian mobile                                                                                    | Required if Source = Add New       |
 | Email           | Email           | No          | Valid email format                                                                                        | Optional for Add New               |
 | Company Name    | Text            | No          | Max 100 characters                                                                                        | Optional for Add New               |
-| Property Type   | Dropdown        | Conditional | 1BHK / 2BHK / 3BHK / 4BHK+ / Villa / Small Office / Medium Office / Large Office / Warehouse / Industrial | Required if Source = Add New       |
 | Address         | Text            | Conditional | Min 10 characters                                                                                         | Required if Source = Add New       |
 | City            | Text            | Conditional | Min 3 characters                                                                                          | Required if Source = Add New       |
 | State           | Dropdown        | Conditional | Indian states list                                                                                        | Required if Source = Add New       |
@@ -1089,12 +1116,13 @@ The Add Quotation form allows sales team members to create new quotations. The f
 
 | Field         | Type                | Required | Options/Validation                                         | Notes                         |
 | ------------- | ------------------- | -------- | ---------------------------------------------------------- | ----------------------------- |
-| Address       | Text                | Yes      | Min 10 characters                                          | Service delivery address      |
-| City          | Text                | Yes      | Min 3 characters                                           | City name                     |
-| State         | Dropdown            | Yes      | Indian states list                                         | State selection               |
-| Property Type | Dropdown            | Yes      | Residential / Commercial types (same as Module 12 pricing) | Determines service pricing    |
-| Area (sqft)   | Number              | Yes      | Must be > 0                                                | Used for area-based pricing   |
-| Assign Branch | Searchable Dropdown | Yes      | Active branches from Module 7                              | Nearest branch auto-suggested |
+| Address       | Text                | Yes      | Min 10 characters                                                                                                        | Service delivery address      |
+| City          | Text                | Yes      | Min 3 characters                                                                                                         | City name                     |
+| State         | Dropdown            | Yes      | Indian states list                                                                                                       | State selection               |
+| Category      | Dropdown            | Yes      | Residential / Commercial / Industrial / Warehouse                                                                        | Linked to Module 12 Categories |
+| Sub-Category  | Dropdown            | Yes      | Internal / External                                                                                                      | Linked to Module 12           |
+| Area (sqft)   | Number              | Yes      | Must be > 0                                                                                                              | Used for area-based pricing   |
+| Assign Branch | Searchable Dropdown | Yes      | Active branches from Module 7                                                                                            | Nearest branch auto-suggested |
 
 **Business Rules:**
 
@@ -1109,26 +1137,27 @@ The Add Quotation form allows sales team members to create new quotations. The f
 
 _(Integrated with Module 12 – Service Management)_
 
-| Field        | Type            | Required | Validation                                            | Notes                                   |
-| ------------ | --------------- | -------- | ----------------------------------------------------- | --------------------------------------- |
-| Service Name | Search Dropdown | Yes      | Active services from Module 12                        | Fetches service configuration           |
-| Pest Type    | Auto-filled     | System   | From service master                                   | Read-only                               |
-| Category     | Auto-filled     | System   | Residential / Commercial matched to location          | Read-only                               |
-| Price Type   | Auto-filled     | System   | Fixed / Area Based / Inspection                       | From service master                     |
-| Rate (₹)     | Auto-calculated | System   | Based on Property Type from Module 12 pricing         | E.g., 3BHK = ₹1,800 for Termite Control |
-| Warranty     | Auto-filled     | System   | Period + revisit count from service config            | Read-only                               |
-| Frequency    | Dropdown        | Yes      | One-Time / Monthly / Quarterly / Half-Yearly / Yearly | Overrides global if needed              |
-| Qty / Visits | Auto-calculated | System   | Based on frequency × duration                         | E.g., Monthly × 1 Year = 12             |
-| Total (₹)    | Auto-calculated | System   | Rate × Qty/Visits                                     | Per-service total                       |
+| Field               | Type                | Required | Options/Validation                                                                                                       | Notes                                   |
+| ------------------- | ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- |
+| Service Name        | Search Dropdown     | Yes      | Active services from Module 12                                                                                           | Fetches service configuration           |
+| Pest Type           | Auto-filled         | System   | From service master                                                                                                      | Read-only                               |
+| Dynamic Pricing     | ASCII Block         | Auto     | Displays options based on Price Type (Fixed / Area / Inspection)                                                         | Per-service selection/calc              |
+| Rate (₹)            | Auto-calculated     | System   | Based on Dynamic Selection (Fixed) or Area (Area-Based)                                                                 | Dynamic fetch from Module 12            |
+| Warranty            | Auto-filled         | System   | Period + revisit count from service config                                                                               | Read-only                               |
+| Frequency           | Dropdown            | Yes      | Single / Monthly / Quarterly / AMC                                                                                       | Determines revisit cycle                |
+| Qty/Visits          | Number              | Yes      | Number of visits required                                                                                                | Default 1                               |
+| Total (₹)           | Number              | Auto     | `Rate × Qty`                                                                                                             | Auto-calculated                         |
+| Action              | Button              | —        | Add / Remove Service Row                                                                                                 | —                                       |
 
 **Business Rules:**
 
-- When service is selected, pricing auto-populates based on **Property Type of the location**
-  - Residential: 1BHK / 2BHK / 3BHK / 4BHK+ pricing from Module 12
-  - Commercial: Small Office / Medium Office / Large Office / Warehouse pricing from Module 12
-- If Price Type = "Area Based", rate = per sqft rate × area
-- For AMC, total = rate × number of visits in contract duration
-- Multiple services can be added per location
+- When service is selected, pricing auto-populates based on the **Selection at Service level or Area calculation**:
+  - **Fixed Price**: Matches BHK/Office size pricing from Module 12 based on selection in the Dynamic Pricing block.
+  - **Area Based**: Calculates `Base Price + (Rate per SQFT × Total SQFT)` from location details.
+  - **Inspection Based**: Sets initial price to `Inspection Fee`. Final quotation updated post-visit.
+- Warranty/Revisits: Inherited from Module 12 config for the selected service.
+- If AMC is selected: Total = Rate × Number of visits in contract duration.
+- Multiple services can be added per location, each following its own pricing model.
 
 ---
 
@@ -1211,9 +1240,8 @@ _(Integrated with Module 10 – Product Master)_
 | ------------------------- | ------------------------------------------------------------------ |
 | Source = From Lead        | Auto-populate lead details, link quotation to lead record          |
 | Source = From Customer    | Auto-populate customer details, link quotation to customer record  |
-| Service Selected          | Auto-fetch pricing from Module 12 based on property type           |
-| Product Selected          | Auto-fetch pricing, UOM, HSN from Module 10; tax from Module 9     |
-| Property Type Changed     | Recalculate service pricing for affected location                  |
+| Service Selected          | Auto-fetch pricing from Module 12 based on selection in Dynamic Pricing block |
+| Dynamic Selection Changed | Recalculate service pricing for affected location                  |
 | Quantity / Visits Changed | Recalculate line totals and grand total                            |
 | Discount Applied          | Recalculate grand total                                            |
 | Send Quotation            | Generate PDF, send notification, update lead status to PROPOSAL    |
@@ -1251,7 +1279,6 @@ Read-only detailed view of a quotation showing complete pricing breakdown, servi
 │  │  Client Name:         Rahul Sharma                                      │ │
 │  │  Phone:               +91 98765 43210                                   │ │
 │  │  Email:               rahul@example.com                                 │ │
-│  │  Property Type:       3BHK Apartment                                    │ │
 │  │  Address:             HSR Layout, Sector 2, Bengaluru, Karnataka        │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
@@ -1266,7 +1293,7 @@ Read-only detailed view of a quotation showing complete pricing breakdown, servi
 │                                                                              │
 │  SERVICE DETAILS BY LOCATION                                                 │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  📍 LOCATION 1: HSR Layout, Bengaluru | 3BHK | 1200 sqft               │ │
+│  │  📍 LOCATION 1: HSR Layout, Bengaluru | 1200 sqft                       │ │
 │  │     Assigned Branch: BLR-HSR Branch                                     │ │
 │  │                                                                         │ │
 │  │  ┌────────────┬──────────┬─────────┬─────────┬────────┬────────────┐  │ │
@@ -1329,7 +1356,6 @@ Read-only detailed view of a quotation showing complete pricing breakdown, servi
 |                     | Client Name        | Text            | Full name of client                        |
 |                     | Phone              | Text            | Contact number                             |
 |                     | Email              | Text            | Email address                              |
-|                     | Property Type      | Text            | Type of property                           |
 |                     | Address            | Text            | Full address                               |
 | **Configuration**   | Quotation Type     | Text            | Service / Product / Combined               |
 |                     | Service Mode       | Text            | One-Time / AMC                             |
