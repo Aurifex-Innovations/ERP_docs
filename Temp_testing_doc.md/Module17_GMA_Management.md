@@ -100,11 +100,9 @@ A consolidated view displaying all GMA sheets accessible to the user, filtered b
 
 | Filter       | Type            | Options                                               |
 | ------------ | --------------- | ----------------------------------------------------- |
-| Customer     | Search/Dropdown | Search by name or select from Customer Master         |
-| Service Type | Dropdown        | All / AMC / One-Time / Quarterly / Fogging / etc.     |
+| Service Type | Dropdown        | Contract / One-Time   |
 | Status       | Multi-select    | Draft / Approved / Pending / Rejected         |
-| Branch       | Dropdown        | All Branches / Specific Branch                        |
-| Created By   | Dropdown        | All / My Entries                                      |
+| Branch name  | Dropdown        | All Branches / Specific Branch                        |
 | Date Range   | Date Range      | From – To (GMA creation date)                         |
 
 ---
@@ -113,9 +111,8 @@ A consolidated view displaying all GMA sheets accessible to the user, filtered b
 
 Searchable by:
 - GMA ID
-- Customer Name
 - Service Type
-
+- Customer/lead name
 ---
 
 ## Actions (Table Row)
@@ -125,18 +122,6 @@ Searchable by:
 | **View** | Opens the GMA sheet in read-only mode (Screen 17.1.1) |
 
 ---
-
-================================================================================
-
-# 17.1.1 View GMA Sheet (Tab 1 — Read Only)
-
-**Description:**
-Full read-only view of any GMA sheet accessible to the logged-in user. Identical to Screen 17.2.2 but without the Revoke option. Used for auditing, reference, and management review.
-
-> Layout is identical to **17.2.2 View GMA Sheet (My Requests)**. Refer to that section for the full screen layout and field tables.
-
----
-
 ================================================================================
 
 # 17.2 Tab 2: My Requests
@@ -208,10 +193,87 @@ Displays all GMA sheets created by the currently logged-in sales person. Include
 | **+ Add GMA Sheet** | Opens the **Add GMA Sheet Form** (Screen 17.2.1) to create a new sheet |
 
 ---
+=====================================================================================
+# 17.3 Tab 3: Received Requests
+
+**Description:**
+Displays GMA sheets received by the logged-in manager or approver (Sales Manager or CEO/Ops Head) for review. Users can view full sheet details and approve or reject based on the margin analysis.
+
+> **Visibility Rule:** Appears only for users with approval authority (Sales Managers, CEO / Ops Head). Users will only see the requests explicitly routed to them.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      RECEIVED REQUESTS                                       │
+│                                                                              │
+│  [Tab 1: GMA Entries]  [Tab 2: My Requests]  [Tab 3: Received Requests ●]   │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Search: [________________________]     Status: [▼ Pending / All ▼]    │  │
+│  │ Date Range: [📅 From] – [📅 To]                                        │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  RECEIVED REQUESTS TABLE                                                     │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │GMA ID    │Customer   │Submitted By│GM%│Submitted On  │Deadline │Actions  ││
+│  │──────────┼───────────┼────────────┼───┼──────────────┼─────────┼─────────││
+│  │GMA-00088 │ABC Pharma │Ravi Sharma │23%│ 17 Mar 2026  │18 Mar   │[V][Appr]││
+│  │GMA-00085 │DEF Mall   │Anjali M.   │6% │ 15 Mar 2026  │17 Mar   │[V][Appr]││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Status    │                                                                ││
+│  │──────────│                                                                ││
+│  │🟡 Pending│                                                                ││
+│  │� Pending│                                                                ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  Pagination:  Previous   1   2   3   ...   Next                              │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Table Fields
+
+| Field          | Description                                                    |
+| -------------- | -------------------------------------------------------------- |
+| GMA ID         | System-generated reference                                     |
+| Customer       | Customer name linked to the GMA sheet                          |
+| Submitted By   | Sales person who created this GMA sheet                        |
+| GM %           | Overall gross margin (auto-calculated)                         |
+| Submitted On   | Date the sheet was submitted for approval                      |
+| Deadline       | Approval deadline (24 hrs for Manager, 48 hrs for CEO)        |
+| Status         | Pending / Approved / Rejected                                  |
+| Actions        | View / Approve                                                 |
+
+---
+
+## Filters
+
+| Filter     | Type       | Options                       |
+| ---------- | ---------- | ----------------------------- |
+| Status     | Dropdown   | Pending / Approved / Rejected / All |
+| Date Range | Date Range | From – To (submission date)   |
+
+---
+
+## Actions
+
+| Action      | Condition         | Description                                      |
+| ----------- | ----------------- | ------------------------------------------------ |
+| **View**    | All statuses      | Opens the GMA sheet in read-only review mode     |
+| **Approve** | Status = Pending  | Opens the approval / rejection form (Screen 17.3.2) |
+
+---
 
 ================================================================================
 
-# 17.2.1 Add GMA Sheet
+# 17.1.1 Add GMA Sheet
 
 **Description:**
 A multi-part form that allows a sales person to build a complete Gross Margin Analysis sheet for a service proposal. The form mirrors Module 16's source selection pattern (From Lead / From Customer / Add New) and calculates GM% using the PESTMED GMA template structure:
@@ -458,6 +520,12 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 | Prepared Date      | Auto-filled | System      | Today's date                                                  | Read-only                                |
 | Remarks / Notes    | Text Area   | No          | Max 500 characters                                            | Free-text for special instructions       |
 
+**Conditional Form Behavior (If Service Mode = One-Time):**
+* **Frequency:** Hidden / Not Required
+* **Annual Frequency:** Hidden / Not Required 
+* **Contract Duration:** Hidden / Not Required
+* **Proposed Start Date:** Relabeled to **Service Date** (Required)
+
 ---
 
 ## Section 3: Cost Breakdown (Per Site)
@@ -486,6 +554,11 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 | Cost/Year (A)      | Auto-calculated | System   | `Rate per Visit × Annual Frequency`                               |
 | Cost/Month         | Auto-calculated | System   | `A ÷ 12`                                                         |
 
+**Conditional Form Behavior (If Service Mode = One-Time):**
+* **Annual Frequency:** Hidden / Not Required
+* **Cost/Month:** Hidden / Not Required
+* **Cost/Year (A):** Relabeled to **Total Service Cost (A)** (Equals `Rate per Visit`)
+
 ---
 
 ### 3B — Manpower / Labor Cost
@@ -497,6 +570,11 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 | Rate per Hour (₹)      | Currency        | Yes      | Hourly rate for technician labor (e.g., ₹100)                 |
 | Cost/Year (B)          | Auto-calculated | System   | `Hours × Annual Frequency × Rate/Hour`                        |
 | Cost/Month             | Auto-calculated | System   | `B ÷ 12`                                                     |
+
+**Conditional Form Behavior (If Service Mode = One-Time):**
+* **Annual Frequency:** Hidden / Not Required
+* **Cost/Month:** Hidden / Not Required
+* **Cost/Year (B):** Relabeled to **Total Manpower Cost (B)** (Equals `Hours × Rate/Hour`)
 
 ---
 
@@ -691,10 +769,164 @@ When the user clicks **Save & Request Approval**, this popup overlay appears:
 | Weekend/Night = Yes         | Automatically add 25% surcharge to Service Visit + Manpower costs     |
 
 ---
+====================================================================================================
+# 17.1.2 View GMA Sheet (Tab 1 — Read Only)
+
+**Description:**
+Full read-only view of any GMA sheet accessible to the logged-in user. Used for auditing, reference, and management review.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       VIEW GMA SHEET  –  GMA-00091                          │
+│  [← Back]                                                                    │
+│                                                                              │
+│  ─── HEADER ──────────────────────────────────────────────────────────────  │
+│  GMA ID          : GMA-00091         Status     : ✅ APPROVED                │
+│  Created By      : Ravi Sharma       Created On : 18 Mar 2026               │
+│  Submitted On    : 18 Mar 2026       Approved On: 18 Mar 2026 (Immediate)   │
+│                                                                              │
+│  ─── SECTION 1: SOURCE INFORMATION ──────────────────────────────────────  │
+│  Source Type     : From Customer                                             │
+│  Customer ID     : CUST-4021         Customer Name : XYZ Hotel Chain         │
+│  Phone           : +91 98765 00001   Email : ramesh@xyz.com                  │
+│  Customer Type   : Commercial        Address : Andheri East, Mumbai          │
+│                                                                              │
+│  ─── SECTION 2: SERVICE & CONTRACT CONFIGURATION ────────────────────────  │
+│  Pest Type       : Cockroach                                                 │
+│  Service Mode    : Contract base     Contract Duration : 1 Year              │
+│  Proposed Start  : 01 Apr 2026       Frequency : Weekly (52 visits/year)     │
+│  Branch          : Mumbai            Prepared By : Ravi Sharma               │
+│  Prepared Date   : 18 Mar 2026                                               │
+│  Remarks         : Annual pest control for hotel chain                       │
+│                                                                              │
+│  ─── SECTION 3: SITE-WISE COST BREAKDOWN ────────────────────────────────  │
+│                                                                              │
+│  SITE 1: Mumbai HQ                                                           │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  City: Mumbai   State: Maharashtra   Category: Commercial              │ │
+│  │  Sub-Category: Internal   Area: 1200 sqft   Visits/Month: 4           │ │
+│  │                                                                         │ │
+│  │  ─── 3A: SERVICE VISIT COST ──────────────────────────────────────── │ │
+│  │  Rate per Visit : ₹300   Annual Frequency : 52                         │ │
+│  │  Cost/Year (A)  : ₹15,600   Cost/Month : ₹1,300                       │ │
+│  │                                                                         │ │
+│  │  ─── 3B: MANPOWER / LABOR COST ──────────────────────────────────── │ │
+│  │  Hours/Visit : 4   Annual Frequency : 52   Rate/Hour : ₹100            │ │
+│  │  Cost/Year (B)  : ₹20,800   Cost/Month : ₹1,733                       │ │
+│  │                                                                         │ │
+│  │  ─── 3C: CHEMICAL / PRODUCT COST ────────────────────────────────── │ │
+│  │  (Auto-fetched from Module 12 → Module 10)                              │ │
+│  │  ┌──────────────┬──────┬─────┬─────────┬──────┬────────┬──────────┬──────────┐│
+│  │  │ Product Name │ Code │ UOM │Dilution │ SQFT │Req.Qty │Price/UOM │Cost/Visit││
+│  │  ├──────────────┼──────┼─────┼─────────┼──────┼────────┼──────────┼──────────┤│
+│  │  │Alpha Cyperm. │P-001 │ ml  │ 10 ml   │ 1200 │ 120 ml │ ₹4.20   │ ₹504     ││
+│  │  │Chlorpyriphos │P-002 │ ml  │ 20 ml   │ 1200 │ 60 ml  │ ₹3.50   │ ₹210     ││
+│  │  │Fipronil Gel  │P-003 │ tube│ 1 tube  │ 1200 │ 2 tubes│ ₹220    │ ₹440     ││
+│  │  └──────────────┴──────┴─────┴─────────┴──────┴────────┴──────────┴──────────┘│
+│  │  Total Chemical Cost/Visit : ₹1,154   Cost/Month : ₹4,616              │ │
+│  │  Chemical Cost/Year (C)    : ₹55,392                                    │ │
+│  │                                                                         │ │
+│  │  ─── 3D: WEEKENDS/NIGHTS SURCHARGE ──────────────────────────────── │ │
+│  │  Applicable : No   Surcharge Cost (D) : ₹0                             │ │
+│  │                                                                         │ │
+│  │  ─── 3E: DOCUMENTATION COST ─────────────────────────────────────── │ │
+│  │  Applicable : Yes   ₹100/doc × 1 doc/month × 12                        │ │
+│  │  Documentation Cost/Year (E) : ₹1,200                                  │ │
+│  │                                                                         │ │
+│  │  ═══ SITE 1 COST SUMMARY ════════════════════════════════════════    │ │
+│  │  ┌─────────────────────────┬──────────────┬──────────────┐            │ │
+│  │  │ Cost Component          │ Annual (₹)   │ Monthly (₹)  │            │ │
+│  │  │ ────────────────────────┼──────────────┼──────────────│            │ │
+│  │  │ A. Service Visit Cost   │ ₹15,600      │ ₹1,300       │            │ │
+│  │  │ B. Manpower Cost        │ ₹20,800      │ ₹1,733       │            │ │
+│  │  │ C. Chemical Cost        │ ₹55,392      │ ₹4,616       │            │ │
+│  │  │ D. Weekend/Night Surch. │ ₹0           │ ₹0           │            │ │
+│  │  │ E. Documentation Cost   │ ₹1,200       │ ₹100         │            │ │
+│  │  │ ───────────────────────────────────────────────────────│            │ │
+│  │  │ TOTAL COST              │ ₹92,992      │ ₹7,749       │            │ │
+│  │  └─────────────────────────┴──────────────┴──────────────┘            │ │
+│  │                                                                         │ │
+│  │  Proposed Sale Price/Year  : ₹1,56,000                                 │ │
+│  │  Proposed Sale Price/Month : ₹13,000                                   │ │
+│  │  ★ SITE 1 GROSS MARGIN %  : 40.4%                                     │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  SITE 2: Pune WH  [▸ Click to Expand]                                       │
+│  SITE 3: Delhi Office  [▸ Click to Expand]                                   │
+│                                                                              │
+│  ─── SECTION 4: OVERALL GM SUMMARY ──────────────────────────────────────  │
+│  ┌──────────────────┬──────────────┬──────────────┬──────┐                  │
+│  │ Site             │ Total Cost/Yr│ Sale Price/Yr│  GM% │                  │
+│  │──────────────────┼──────────────┼──────────────┼──────│                  │
+│  │ Site 1: Mumbai HQ│ ₹92,992      │ ₹1,56,000    │ 40.4%│                  │
+│  │ Site 2: Pune WH  │ ₹28,000      │ ₹48,000      │ 41.7%│                  │
+│  │ ──────────────────────────────────────────────────────  │                  │
+│  │ TOTAL ANNUAL COST  │ ₹1,20,992                          │                  │
+│  │ TOTAL ANNUAL PRICE │ ₹2,04,000                          │                  │
+│  │ ──────────────────────────────────────────────────────  │                  │
+│  │ ★ OVERALL GROSS MARGIN : 40.7%                          │                  │
+│  └────────────────────────────────────────────────────────┘                  │
+│                                                                              │
+│  GM% without Documentation : 41.3%                                           │
+│  GM% with Documentation    : 40.7%                                           │
+│                                                                              │
+│  APPROVAL STATUS  : ✅ Approved (GM 40.7% ≥ 40%)                            │
+│  APPROVED ON      : 18 Mar 2026 (Immediate)                                 │
+│  APPROVER         : System (Auto)                                            │
+│                                                                              │
+│  Sales Authority Matrix:                                                      │
+│  ┌──────────────────────┬──────────────────┬─────────────────┬──────────┐    │
+│  │ Authorizer           │ Contracts        │ Jobs/Products   │ Signature│    │
+│  │──────────────────────┼──────────────────┼─────────────────┼──────────│    │
+│  │ Auto (System)        │ GM ≥ 40%         │ GM ≥ 40%        │ [Auto]  │    │
+│  │ Sales Manager        │ GM 20% – 39.99%  │ GM 20% – 39.99% │ [_____]│    │
+│  │ CEO / Ops Head       │ GM < 20%         │ GM < 20%        │ [_____] │    │
+│  └──────────────────────┴──────────────────┴─────────────────┴──────────┘    │
+│                                                                              │
+│  ─── AUDIT TRAIL ──────────────────────────────────────────────────────────  │
+│  ┌──────────────────┬─────────────────────┬──────────────┬──────────────┐   │
+│  │ Date & Time      │ Action              │ User         │ Remarks      │   │
+│  │──────────────────┼─────────────────────┼──────────────┼──────────────│   │
+│  │ 18 Mar 09:30 AM  │ Draft Created       │ Ravi Sharma  │ —            │   │
+│  │ 18 Mar 10:00 AM  │ Submitted           │ Ravi Sharma  │ —            │   │
+│  │ 18 Mar 10:00 AM  │ Approved            │ System       │ GM 40.7%≥40% │   │
+│  └──────────────────┴─────────────────────┴──────────────┴──────────────┘   │
+│                                                                              │
+│              [BACK]   [DOWNLOAD PDF]                                       │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Fields Displayed
+
+| Section                  | Field                                                                                      | Display Type     |
+| ------------------------ | ------------------------------------------------------------------------------------------ | ---------------- |
+| **Header**               | GMA ID, Status, Created By, Created On, Submitted On, Approved On                         | Static Display   |
+| **Section 1 (Source)**   | Source Type, Customer/Lead ID, Name, Phone, Email, Type, Address                           | Read-only        |
+| **Section 2 (Config)**   | Pest Type, Service Mode, Contract Duration, Start Date, Frequency, Branch, Prepared By/Date | Read-only       |
+| **Section 3A (per site)**| Rate per Visit, Annual Frequency, Cost/Year (A), Cost/Month                                | Read-only        |
+| **Section 3B (per site)**| Hours/Visit, Annual Frequency, Rate/Hour, Cost/Year (B), Cost/Month                       | Read-only        |
+| **Section 3C (per site)**| Chemical Table: Product Name, Code, UOM, Dilution, SQFT, Req.Qty, Price/UOM, Cost/Visit   | Read-only        |
+| **Section 3D (per site)**| Applicable flag, Surcharge Cost (D)                                                         | Read-only        |
+| **Section 3E (per site)**| Applicable flag, Cost/Doc, Docs/Month, Doc Cost/Year (E)                                   | Read-only        |
+| **Site Summary**         | Cost breakdown table (A+B+C+D+E), Total Cost, Proposed Price, Site GM%                     | Read-only        |
+| **Section 4 (Overall)**  | Site-wise summary, Total Annual Cost/Price, Overall GM%, GM with/without Documentation     | Auto / Read-only |
+| **Approval**             | Status, Approval Type, Approver, Approved/Rejected Date, Remarks, Authority Matrix         | Read-only        |
+| **Audit Trail**          | Timestamp, Action, User, Remarks                                                            | Read-only        |
+
+---
+
+
 
 ================================================================================
 
-# 17.2.2 View GMA Sheet (My Requests)
+# 17.2.1 View GMA Sheet (My Requests)
 
 **Description:**
 Read-only view of a GMA sheet submitted by the logged-in user. Displays source information, service & contract configuration, site-wise cost breakdowns (Service Visit, Manpower, Chemical/Product, Surcharges, Documentation), and the final gross margin summary with approval status and timeline.
@@ -858,83 +1090,6 @@ Read-only view of a GMA sheet submitted by the logged-in user. Displays source i
 
 ================================================================================
 
-# 17.3 Tab 3: Received Requests
-
-**Description:**
-Displays GMA sheets received by the logged-in manager or approver (Sales Manager or CEO/Ops Head) for review. Users can view full sheet details and approve or reject based on the margin analysis.
-
-> **Visibility Rule:** Appears only for users with approval authority (Sales Managers, CEO / Ops Head). Users will only see the requests explicitly routed to them.
-
----
-
-## Screen Layout
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                      RECEIVED REQUESTS                                       │
-│                                                                              │
-│  [Tab 1: GMA Entries]  [Tab 2: My Requests]  [Tab 3: Received Requests ●]   │
-│                                                                              │
-│  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │ Search: [________________________]     Status: [▼ Pending / All ▼]    │  │
-│  │ Date Range: [📅 From] – [📅 To]                                        │  │
-│  └───────────────────────────────────────────────────────────────────────┘  │
-│                                                                              │
-│  RECEIVED REQUESTS TABLE                                                     │
-│  ┌──────────────────────────────────────────────────────────────────────────┐│
-│  │GMA ID    │Customer   │Submitted By│GM%│Submitted On  │Deadline │Actions  ││
-│  │──────────┼───────────┼────────────┼───┼──────────────┼─────────┼─────────││
-│  │GMA-00088 │ABC Pharma │Ravi Sharma │23%│ 17 Mar 2026  │18 Mar   │[V][Appr]││
-│  │GMA-00085 │DEF Mall   │Anjali M.   │6% │ 15 Mar 2026  │17 Mar   │[V][Appr]││
-│  └──────────────────────────────────────────────────────────────────────────┘│
-│                                                                              │
-│  ┌──────────────────────────────────────────────────────────────────────────┐│
-│  │Status    │                                                                ││
-│  │──────────│                                                                ││
-│  │🟡 Pending│                                                                ││
-│  │� Pending│                                                                ││
-│  └──────────────────────────────────────────────────────────────────────────┘│
-│                                                                              │
-│  Pagination:  Previous   1   2   3   ...   Next                              │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Table Fields
-
-| Field          | Description                                                    |
-| -------------- | -------------------------------------------------------------- |
-| GMA ID         | System-generated reference                                     |
-| Customer       | Customer name linked to the GMA sheet                          |
-| Submitted By   | Sales person who created this GMA sheet                        |
-| GM %           | Overall gross margin (auto-calculated)                         |
-| Submitted On   | Date the sheet was submitted for approval                      |
-| Deadline       | Approval deadline (24 hrs for Manager, 48 hrs for CEO)        |
-| Status         | Pending / Approved / Rejected                                  |
-| Actions        | View / Approve                                                 |
-
----
-
-## Filters
-
-| Filter     | Type       | Options                       |
-| ---------- | ---------- | ----------------------------- |
-| Status     | Dropdown   | Pending / Approved / Rejected / All |
-| Date Range | Date Range | From – To (submission date)   |
-
----
-
-## Actions
-
-| Action      | Condition         | Description                                      |
-| ----------- | ----------------- | ------------------------------------------------ |
-| **View**    | All statuses      | Opens the GMA sheet in read-only review mode     |
-| **Approve** | Status = Pending  | Opens the approval / rejection form (Screen 17.3.2) |
-
----
-
 ================================================================================
 
 # 17.3.1 View Received GMA Sheet
@@ -979,17 +1134,63 @@ A focused action screen where the approver confirms their decision to approve or
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                    APPROVE / REJECT GMA SHEET – GMA-00088                   │
 │                                                                              │
-│  Customer      : ABC Pharma                                                  │
-│  Service Type  : Rodent AMC                                                  │
-│  Branch        : Bangalore                                                   │
-│  Submitted By  : Ravi Sharma (17 Mar 2026)                                   │
-│  Overall GM%   : 23%  🟡 Pending                                             │
-│  Deadline      : 18 Mar 2026 10:00 AM                                        │
+│  ─── HEADER ──────────────────────────────────────────────────────────────  │
+│  GMA ID          : GMA-00088         Status     : 🟡 PENDING                 │
+│  Created By      : Ravi Sharma       Created On : 17 Mar 2026               │
+│  Submitted On    : 17 Mar 2026       Deadline   : 18 Mar 2026 10:00 AM      │
 │                                                                              │
-│  ─── QUICK SUMMARY ─────────────────────────────────────────────────────── │
-│  Total Annual Cost    : ₹1,02,000                                            │
-│  Total Annual Price   : ₹1,32,000                                            │
-│  Overall GM %         : 23%                                                  │
+│  ─── SECTION 1: SOURCE INFORMATION ──────────────────────────────────────  │
+│  Source Type     : From Customer                                             │
+│  Customer ID     : CUST-4021         Customer Name : ABC Pharma              │
+│  Phone           : +91 98765 00001   Email : facilities@abcpharma.com        │
+│  Customer Type   : Commercial        Address : Peenya, Bangalore             │
+│                                                                              │
+│  ─── SECTION 2: SERVICE & CONTRACT CONFIGURATION ────────────────────────  │
+│  Pest Type       : Rodent AMC                                                │
+│  Service Mode    : Contract base     Contract Duration : 1 Year              │
+│  Proposed Start  : 01 Apr 2026       Frequency : Weekly (52 visits/year)     │
+│  Branch          : Bangalore         Prepared By : Ravi Sharma               │
+│  Prepared Date   : 17 Mar 2026                                               │
+│                                                                              │
+│  ─── SECTION 3: SITE-WISE COST BREAKDOWN ────────────────────────────────  │
+│                                                                              │
+│  SITE 1: Bangalore Plant                                                     │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  City: Bangalore   State: Karnataka   Category: Commercial             │ │
+│  │  Sub-Category: Internal   Area: 5000 sqft   Visits/Month: 4           │ │
+│  │                                                                         │ │
+│  │  ─── 3A: SERVICE VISIT COST ──────────────────────────────────────── │ │
+│  │  Rate per Visit : ₹384.6 Annual Frequency : 52   Cost/Year: ₹20,000    │ │
+│  │                                                                         │ │
+│  │  ─── 3B: MANPOWER / LABOR COST ──────────────────────────────────── │ │
+│  │  Hours/Visit : 4   Rate/Hour : ₹144.2   Cost/Year (B) : ₹30,000         │ │
+│  │                                                                         │ │
+│  │  ─── 3C: CHEMICAL / PRODUCT COST ────────────────────────────────── │ │
+│  │  Total Chemical Cost/Visit : ₹923     Cost/Month : ₹3,692              │ │
+│  │  Chemical Cost/Year (C)    : ₹44,300                                    │ │
+│  │                                                                         │ │
+│  │  ─── 3D: WEEKENDS/NIGHTS SURCHARGE ──────────────────────────────── │ │
+│  │  Applicable : No   Surcharge Cost (D) : ₹0                             │ │
+│  │                                                                         │ │
+│  │  ─── 3E: DOCUMENTATION COST ─────────────────────────────────────── │ │
+│  │  Documentation Cost/Year (E) : ₹7,700                                  │ │
+│  │                                                                         │ │
+│  │  ═══ SITE 1 COST SUMMARY ════════════════════════════════════════    │ │
+│  │  TOTAL ANNUAL COST (A+B+C+D+E) : ₹1,02,000                             │ │
+│  │  Proposed Sale Price/Year      : ₹1,32,000                             │ │
+│  │  ★ SITE 1 GROSS MARGIN %      : 22.7%                                 │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ─── SECTION 4: OVERALL GM SUMMARY ──────────────────────────────────────  │
+│  ┌──────────────────┬──────────────┬──────────────┬──────┐                  │
+│  │ Site             │ Total Cost/Yr│ Sale Price/Yr│  GM% │                  │
+│  │──────────────────┼──────────────┼──────────────┼──────│                  │
+│  │ Site 1: Bangalore│ ₹1,02,000    │ ₹1,32,000    │ 22.7%│                  │
+│  │ ──────────────────────────────────────────────────────  │                  │
+│  │ TOTAL ANNUAL COST  │ ₹1,02,000                          │                  │
+│  │ TOTAL ANNUAL PRICE │ ₹1,32,000                          │                  │
+│  │ ★ OVERALL GROSS MARGIN : 23%                            │                  │
+│  └────────────────────────────────────────────────────────┘                  │
 │                                                                              │
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
 │  │  YOUR DECISION                                                         │  │
@@ -1011,7 +1212,24 @@ A focused action screen where the approver confirms their decision to approve or
 
 ---
 
-## Fields
+## Fields Displayed (Read-Only)
+
+| Section                  | Field                                                                                      | Display Type     |
+| ------------------------ | ------------------------------------------------------------------------------------------ | ---------------- |
+| **Header**               | GMA ID, Status, Created By, Created On, Submitted On, Deadline                            | Static Display   |
+| **Section 1 (Source)**   | Source Type, Customer/Lead ID, Name, Phone, Email, Type, Address                           | Read-only        |
+| **Section 2 (Config)**   | Pest Type, Service Mode, Contract Duration, Start Date, Frequency, Branch, Prepared By/Date | Read-only       |
+| **Section 3A (per site)**| Rate per Visit, Annual Frequency, Cost/Year (A), Cost/Month                                | Read-only        |
+| **Section 3B (per site)**| Hours/Visit, Annual Frequency, Rate/Hour, Cost/Year (B), Cost/Month                       | Read-only        |
+| **Section 3C (per site)**| Chemical Table: Product Name, Code, UOM, Dilution, SQFT, Req.Qty, Price/UOM, Cost/Visit   | Read-only        |
+| **Section 3D (per site)**| Applicable flag, Surcharge Cost (D)                                                         | Read-only        |
+| **Section 3E (per site)**| Applicable flag, Cost/Doc, Docs/Month, Doc Cost/Year (E)                                   | Read-only        |
+| **Site Summary**         | Cost breakdown table (A+B+C+D+E), Total Cost, Proposed Price, Site GM%                     | Read-only        |
+| **Section 4 (Overall)**  | Site-wise summary, Total Annual Cost/Price, Overall GM%                                    | Read-only        |
+
+---
+
+## Action Fields
 
 | Field     | Type      | Required           | Validation                            |
 | --------- | --------- | ------------------ | ------------------------------------- |
