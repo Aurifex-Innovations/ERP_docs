@@ -1776,3 +1776,471 @@ MODULE 11: STOCK MANAGEMENT
 | **Module 5 (Roles)**    | Used By         | RBAC controls access to stock functions       |
 | **Billing Module**      | Consumer        | Resell stock used for invoicing               |
 | **Service Module**      | Consumer        | Consumable stock used for service delivery    |
+
+========================================================================================================================================================================================
+
+
+
+12.1 Service Dashboard – Table View
+Description: The Service Dashboard displays a list of all configured pest control services including their category, pest type, pricing model, service duration, warranty details, and operational status. The dashboard enables administrators to quickly manage services and view service configuration details.
+
+Screen Layout
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           SERVICE DASHBOARD                                  │
+│                                                                             │
+│  ┌──────────────────────────────── FILTERS ──────────────────────────────┐  │
+│  │                                                                       │  │
+│  │ Category: [☑ Residential ☑ Commercial]                                │  │
+│  │ Pest Type: [☑ Termite ☑ Cockroach ☑ Rodent ☑ Bed Bug ☑ Mosquito]     │  │
+│  │ Price Type: [☑ Fixed ☑ Area Based ☑ Inspection]                       │  │
+│  │ Status: [☑ Active ☑ Inactive]                                         │  │
+│  │                                                                       │  │
+│  │ Created Date: [📅 From] - [📅 To]                                      │  │
+│  │                                                                       │  │
+│  │ Search: [________________________]                                     │  │
+│  │        (Service Name / Pest Type / Service ID)                         │  │
+│  │                                                                       │  │
+│  │ [Reset Filters]                                   [+ ADD SERVICE]     │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│                          SERVICE OVERVIEW TABLE                              │
+│                                                                             │
+│ ┌─────┬────────────┬─────────────────┬──────────┬────────────┬───────────┐ │
+│ │Img  │Service ID  │Service Name     │Category  │Pest Type   │Price Type │ │
+│ ├─────┼────────────┼─────────────────┼──────────┼────────────┼───────────┤ │
+│ │🐜   │SVC-001     │Termite Control  │Res.      │Termite     │Fixed      │ │
+│ │🪳   │SVC-002     │Cockroach Gel    │Comm.     │Cockroach   │Area Based │ │
+│ │🐀   │SVC-003     │Rodent Baiting   │Res.      │Rodent      │Inspection │ │
+│ └─────┴────────────┴─────────────────┴──────────┴────────────┴───────────┘ │
+│                                                                             │
+│ ┌──────────┬──────────────┬────────┬──────────────────────────────────────┐ │
+│ │Duration  │Warranty      │Status  │Actions                               │ │
+│ ├──────────┼──────────────┼────────┼──────────────────────────────────────┤ │
+│ │2 Hrs     │6 Mo (2R)     │🟢      │[View] [Edit]                          │ │
+│ │1 Hr      │No Warranty   │🟢      │[View] [Edit]                          │ │
+│ │3 Hrs     │3 Mo (1R)     │🔴      │[View] [Edit]                          │ │
+│ └──────────┴──────────────┴────────┴──────────────────────────────────────┘ │
+│                                                                             │
+│ Pagination: Previous   1   2   3   ...   10   Next                          │
+│                                                                             │
+│ Legend: 🟢 Active   🔴 Inactive                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+Table View Fields
+Field	Type	Required	Description
+Service Image	Image Thumbnail	Optional	Icon representing pest type
+Service ID	Text	Auto	Unique service identifier
+Service Name	Text	Required	Name of pest control service
+Category	Text	Required	Residential / Commercial
+Pest Type	Multi Tag	Required	Pest category linked with service
+Price Type	Text	Required	Fixed / Area Based / Inspection
+Duration	Text	Required	Service duration
+Warranty	Text	Optional	Warranty with revisit count
+Status	Badge	Auto	Active / Inactive
+Actions	Button Group	—	View / Edit
+Actions
+Action	Description
+View	Opens full service details
+Edit	Allows authorized users to modify service configuration
+Actions (Table Row)
+Action	Type	Description
+View	Button	Opens service information in read-only mode
+Edit	Button	Allows editing of service configuration
+Form Actions
+Action	Description
+Add Service	Opens the Add Service Form to create a new pest control service
+Filters
+Filter	Type	Options
+Category	Multi-select	Residential / Commercial
+Pest Type	Multi-select	Termite / Cockroach / Rodent / Bed Bug / Mosquito / Ants
+Price Type	Multi-select	Fixed Price / Area Based / Inspection
+Status	Multi-select	Active / Inactive
+Created Date	Date Range	From – To
+Search
+Searchable by:
+
+Service ID
+Service Name
+Pest Type
+12.2 Add Service Form
+Description: The Add Service form allows administrators to create and configure pest control services. The form captures service information, pest categories, treatment methods, chemicals used, pricing configuration, and warranty policies. The service configuration integrates with the Product Master (Module 10) to automatically fetch chemicals, product codes, and units of measure (UOM).
+
+Screen Layout
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to Services]                 ADD NEW SERVICE                        [Save] │
+├─────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                     │
+│  BASIC SERVICE INFORMATION                                                          │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐  │
+│  │ Service Name:        [____________________________________] *               │  │
+│  │ Example: Rodocon Service, Roachcon Service                                  │  │
+│  │                                                                              │  │
+│  │ Service Category:                                                            │  │
+│  │ [☑] Residential  [☑] Commercial  [☑] Industrial  [☑] Warehouse               │  │
+│  │ [+ Add Custom Category]                                                      │  │
+│  │                                                                              │  │
+│  │ Service Code:        [Auto Generated]                                        │  │
+│  │                                                                              │  │
+│  │ Pest Type Covered:                                                           │  │
+│  │ [☑] Rodent   [☑] Cockroach   [☑] Mosquito                                    │  │
+│  │ [☑] Termite  [☑] Fly        [☑] Ant                                           │  │
+│  │ [☑] Bed Bug  [☑] Spider     [☑] Lizard                                        │  │
+│  │ [+ Add Custom Pest Type]                                                      │  │
+│  │                                                                              │  │
+│  │ Description:                                                                 │  │
+│  │ [____________________________________________________________] *             │  │
+│  │                                                                              │  │
+│  │ Service Duration: [____] [Minutes / Hours ▼]                                 │  │
+│  │                                                                              │  │
+│  │ Service Status: (•) Active  ( ) Inactive                                     │  │
+│  └──────────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                     │
+│  PEST SPECIES COVERED                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐  │
+│  │ Add Specific Pest Species                                                     │  │
+│  │                                                                              │  │
+│  │ Example:                                                                     │  │
+│  │ • Roof Rat – Rattus                                                           │  │
+│  │ • Norway Rat – Rattus Norvegicus                                             │  │
+│  │ • German Cockroach – Blatella Germanica                                      │  │
+│  │                                                                              │  │
+│  │ [+ Add Species]                                                              │  │
+│  └──────────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                     │
+│  METHOD OF CONTROL / TREATMENT                                                     │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐  │
+│  │ Available Treatment Methods                                                  │  │
+│  │                                                                              │  │
+│  │ [☑] Gel Baiting                                                              │  │
+│  │ [☑] Rodent Baiting                                                           │  │
+│  │ [☑] Residual Spray                                                           │  │
+│  │ [☑] Dusting Cracks & Crevices                                                │  │
+│  │ [☑] Trapping                                                                 │  │
+│  │ [☑] Monitoring                                                               │  │
+│  │ [☑] Fogging (Thermal / Cold)                                                 │  │
+│  │ [☑] Foam Treatment                                                           │  │
+│  │ [☑] Soil Treatment                                                           │  │
+│  │ [☑] Sticky Pad Trapping                                                      │  │
+│  │ [☑] Disinfection                                                             │  │
+│  │ [+ Add Custom Treatment Method]                                              │  │
+│  └──────────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                     │
+│  CHEMICALS / PRODUCTS USED                                                         │
+│  (Integrated with Module 10 Product Master)                                       │
+│                                                                                     │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐  │
+│  │ [Search Product from Product Master...]                                       │  │
+│  │                                                                              │  │
+│  │ Selected Chemicals                                                           │  │
+│  │                                                                              │  │
+│  │ ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │ │ Product Name │ Product Code │ UOM │ Standard Usage │ Required Qty │     │ │
+│  │ ├──────────────┼──────────────┼─────┼────────────────┼──────────────┤     │ │
+│  │ │ Alpha Cypermethrin │ P-001 │ ml │ 10 ml │ [____] ml │              │ │
+│  │ │ Chlorpyriphos │ P-002 │ ml │ 20 ml │ [____] ml │                     │ │
+│  │ └─────────────────────────────────────────────────────────────────────────┘ │
+│  │                                                                              │
+│  │ [+ Add Custom Chemical]                                                      │
+│  └──────────────────────────────────────────────────────────────────────────────┘
+│                                                                                     │
+│  PRICING CONFIGURATION                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐  │
+│  │ Price Type                                                                   │  │
+│  │ (•) Fixed Price                                                              │  │
+│  │ ( ) Area Based                                                               │  │
+│  │ ( ) Inspection Based                                                         │  │
+│  │                                                                              │  │
+│  │ Residential Pricing                                                          │  │
+│  │ 1BHK [₹____] 2BHK [₹____] 3BHK [₹____] 4BHK+ [₹____]                         │  │
+│  │ [+ Add Custom Property Type]                                                 │  │
+│  │                                                                              │  │
+│  │ Commercial Pricing                                                           │  │
+│  │ Small Office [₹____]                                                         │  │
+│  │ Medium Office [₹____]                                                        │  │
+│  │ Large Office [₹____]                                                         │  │
+│  │ Warehouse [₹____]                                                            │  │
+│  │ [+ Add Custom Commercial Type]                                               │  │
+│  └──────────────────────────────────────────────────────────────────────────────┘
+│                                                                                     │
+│  WARRANTY / SERVICE GUARANTEE                                                      │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐
+│  │ Warranty Period: [____] Months                                                │
+│  │ Free Revisit Included: [☑] Yes  Qty: [____]                                   │
+│  └──────────────────────────────────────────────────────────────────────────────┘
+│                                                                                     │
+│  SYSTEM FIELDS                                                                     │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐
+│  │ Service ID: [Auto Generated]                                                  │
+│  │ Created Date: [Auto]                                                          │
+│  │ Created By: [Admin]                                                           │
+│  │ Updated Date: [Auto]                                                          │
+│  │ Updated By: [Auto]                                                            │
+│  │ Display Order: [____]                                                         │
+│  └──────────────────────────────────────────────────────────────────────────────┘
+│                                                                                     │
+│  [Cancel]                             [Save Draft]                         [Save] │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+Section 1: Basic Service Information
+Field	Type	Required	Validation
+Service Name	Text	Yes	Minimum 3 characters, must be unique
+Service Category	Multi Select Checkbox	Yes	At least one category must be selected
+Custom Category	Text	No	Appears only if user clicks Add Custom Category
+Service Code	Auto Generated	Yes	System generated format: SRV-XXXX
+Pest Type Covered	Multi Select Checkbox	Yes	Minimum one pest must be selected
+Custom Pest Type	Text	No	Enabled when Add Custom Pest Type selected
+Description	Text Area	Yes	Minimum 10 characters
+Service Duration	Number + UOM	Yes	Value must be > 0
+Service Status	Radio	Yes	Active / Inactive
+Section 2: Pest Species Covered
+Field	Type	Required	Validation
+Pest Species Name	Text	No	Must allow multiple entries
+Scientific Name	Text	No	Optional scientific classification
+Add Species	Button	No	Adds row dynamically
+Section 3: Method of Control / Treatment
+Field	Type	Required	Validation
+Treatment Method	Checkbox	Yes	At least one treatment method required
+Custom Treatment	Text	No	Allowed when user clicks Add Custom Method
+Section 4: Chemicals / Products Used
+(Integrated with Module 10 Product Master)
+
+Field	Type	Required	Validation
+Product Name	Lookup	Yes	Must exist in Product Master
+Product Code	Auto	Yes	Auto fetched
+UOM	Auto	Yes	From product master
+Standard Usage	Auto	Yes	Based on product configuration
+Required Qty	Number	Yes	Must be ≥ 0
+Custom Chemical	Text	No	Allowed if product not available
+Business Rule
+
+When a product is selected, the following fields auto populate
+
+Product Code
+UOM
+Standard Usage
+Required Qty must follow UOM measurement.
+
+Example
+
+Product	UOM	Required Qty
+Chemical A	ml	50 ml
+Powder B	gm	100 gm
+Section 5: Pricing Configuration
+Field	Type	Required	Validation
+Price Type	Radio	Yes	Fixed / Area Based / Inspection Based
+Residential Pricing	Number	Conditional	Required if Residential category selected
+Commercial Pricing	Number	Conditional	Required if Commercial category selected
+Custom Property Type	Text	No	Allowed via Add Custom
+Custom Commercial Type	Text	No	Allowed via Add Custom
+Section 6: Warranty / Service Guarantee
+Field	Type	Required	Validation
+Warranty Period	Number	No	Value must be ≥ 0
+Free Revisit Included	Checkbox	No	If checked quantity must be provided
+Free Revisit Quantity	Number	Conditional	Required when revisit enabled
+Section 7: System Fields
+Field	Type	Required	Validation
+Service ID	Auto	Yes	System generated
+Created Date	Auto	Yes	System timestamp
+Created By	Auto	Yes	Logged user
+Updated Date	Auto	Yes	Updated automatically
+Updated By	Auto	Yes	Logged user
+Display Order	Number	No	Used for service listing priority
+12.3 Edit Service
+Description
+Allows administrators to modify existing services, including pricing, chemicals used, pest types, and treatment methods.
+
+The form structure remains same as Add Service, but fields are pre-populated with existing data.
+
+Screen Layout
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ [← Back to Services]                 EDIT SERVICE                     [Save] │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ BASIC SERVICE INFORMATION                                                    │
+│                                                                              │
+│ Service Name:        [Pre-filled]                                            │
+│ Service Category:    [Residential] [Commercial]                              │
+│ Service Code:        SRV-0001 (Read Only)                                    │
+│                                                                              │
+│ Pest Types Covered:  Rodent, Cockroach                                       │
+│ Description:         [Pre-filled description]                                │
+│ Service Duration:    [60] Minutes                                            │
+│                                                                              │
+│ Service Status: (•) Active  ( ) Inactive                                     │
+│                                                                              │
+│ If Inactive Selected →                                                        │
+│ Inactive Reason:                                                             │
+│ [________________________________________________________]                   │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+Remaining sections remain same as **Add Service**
+
+* Pest Species
+* Treatment Methods
+* Chemicals Used
+* Pricing
+* Warranty
+Inactive Reason Rules
+Field	Type	Required	Validation
+Service Status	Radio	Yes	Active / Inactive
+Inactive Reason	Text Area	Conditional	Mandatory when status = Inactive
+Inactive Date	Auto	Yes	System timestamp
+Inactivated By	Auto	Yes	Logged user
+Audit Log Tracking
+Every modification to the service must be recorded.
+
+Audit Fields
+Field	Description
+Created By	User who created service
+Created Date	Creation timestamp
+Last Updated By	Last editor
+Last Updated Date	Last modification time
+Change Type	Create / Update / Deactivate
+Change Notes	Optional admin comment
+Audit Log Example
+Date	User	Action	Field Changed
+02-Feb-2026	Admin	Created	New Service Added
+10-Feb-2026	Admin	Updated	Price Updated
+15-Feb-2026	Admin	Deactivated	Service marked inactive
+12.4 View Service
+Description
+The View Service page displays complete details of a configured service in read-only mode.
+
+All information entered in Add Service (12.2) is shown section-wise for easy review.
+
+Users can:
+
+Review service configuration
+Check chemicals used
+Review pricing structure
+View treatment methods
+Check audit history
+The Edit button redirects to 12.3 Edit Service.
+
+Screen Layout
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│ [← Back to Services]                    VIEW SERVICE                         [Edit] │
+├─────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                     │
+│ BASIC SERVICE INFORMATION                                                           │
+│ ┌───────────────────────────────────────────────────────────────────────────────┐  │
+│ │ Service Name: Rodocon Service                                                 │  │
+│ │ Service Code: SRV-0001                                                        │  │
+│ │ Service Category: Residential, Commercial                                     │  │
+│ │ Pest Type Covered: Rodent, Cockroach                                          │  │
+│ │ Description: Rodent control treatment using baiting method                    │  │
+│ │ Service Duration: 60 Minutes                                                  │  │
+│ │ Service Status: Active                                                        │  │
+│ └───────────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                     │
+│ PEST SPECIES COVERED                                                               │
+│ ┌───────────────────────────────────────────────────────────────────────────────┐  │
+│ │ Roof Rat – Rattus rattus                                                      │  │
+│ │ Norway Rat – Rattus norvegicus                                                │  │
+│ │ German Cockroach – Blattella germanica                                        │  │
+│ └───────────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                     │
+│ METHOD OF CONTROL / TREATMENT                                                      │
+│ ┌───────────────────────────────────────────────────────────────────────────────┐  │
+│ │ Gel Baiting                                                                   │  │
+│ │ Rodent Baiting                                                                │  │
+│ │ Trapping                                                                      │  │
+│ │ Monitoring                                                                    │  │
+│ └───────────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                     │
+│ CHEMICALS / PRODUCTS USED                                                          │
+│ ┌───────────────────────────────────────────────────────────────────────────────┐  │
+│ │ Product Name │ Product Code │ UOM │ Standard Usage │ Required Qty             │
+│ │ Alpha Cypermethrin │ P-001 │ ml │ 10 ml │ 20 ml                                │
+│ │ Chlorpyriphos │ P-002 │ ml │ 20 ml │ 30 ml                                     │
+│ └───────────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                     │
+│ PRICING CONFIGURATION                                                              │
+│ ┌───────────────────────────────────────────────────────────────────────────────┐
+│ │ Price Type: Fixed Price                                                       │
+│ │ Residential Pricing                                                           │
+│ │ 1BHK: ₹1200   2BHK: ₹1500   3BHK: ₹1800   4BHK+: ₹2200                         │
+│ │ Commercial Pricing                                                            │
+│ │ Small Office: ₹2500                                                           │
+│ │ Medium Office: ₹3500                                                          │
+│ │ Large Office: ₹5000                                                           │
+│ │ Warehouse: ₹7000                                                              │
+│ └───────────────────────────────────────────────────────────────────────────────┘
+│                                                                                     │
+│ WARRANTY / SERVICE GUARANTEE                                                       │
+│ ┌───────────────────────────────────────────────────────────────────────────────┐
+│ │ Warranty Period: 3 Months                                                     │
+│ │ Free Revisit Included: Yes                                                    │
+│ │ Number of Revisits: 2                                                         │
+│ └───────────────────────────────────────────────────────────────────────────────┘
+│                                                                                     │
+│ SYSTEM INFORMATION                                                                 │
+│ ┌───────────────────────────────────────────────────────────────────────────────┐
+│ │ Service ID: SRV-0001                                                          │
+│ │ Created Date: 02-Feb-2026                                                     │
+│ │ Created By: Admin                                                             │
+│ │ Updated Date: 10-Feb-2026                                                     │
+│ │ Updated By: Admin                                                             │
+│ │ Display Order: 3                                                              │
+│ └───────────────────────────────────────────────────────────────────────────────┘
+│                                                                                     │
+│ AUDIT HISTORY                                                                      │
+│ ┌───────────────────────────────────────────────────────────────────────────────┐
+│ │ Date │ User │ Action │ Notes                                                   │
+│ │ 02-Feb-2026 │ Admin │ Created │ New Service Added                              │
+│ │ 10-Feb-2026 │ Admin │ Updated │ Pricing Updated                                │
+│ │ 15-Feb-2026 │ Admin │ Deactivated │ Service Temporarily Stopped                │
+│ └───────────────────────────────────────────────────────────────────────────────┘
+│                                                                                     │
+│ [Close]                              [Edit Service]                               │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+Section 1: Basic Service Information Fields
+Field	Description
+Service Name	Name of the service
+Service Code	Unique auto-generated code
+Service Category	Residential / Commercial / Industrial / Warehouse
+Pest Type Covered	Types of pests handled by the service
+Description	Service description
+Service Duration	Estimated duration
+Service Status	Active / Inactive
+Section 2: Pest Species Covered Fields
+Field	Description
+Species Name	Name of pest species
+Scientific Name	Scientific classification
+Section 3: Method of Control / Treatment Fields
+Field	Description
+Treatment Method	Methods used to control pests
+Custom Method	Additional treatment methods added manually
+Section 4: Chemicals / Products Used Fields
+Field	Description
+Product Name	Chemical/product name
+Product Code	Product master code
+UOM	Unit of measurement
+Standard Usage	Default usage quantity
+Required Quantity	Quantity required per service
+Section 5: Pricing Configuration Fields
+Field	Description
+Price Type	Fixed / Area Based / Inspection Based
+Residential Pricing	Pricing based on property type
+Commercial Pricing	Pricing for offices and warehouses
+Section 6: Warranty / Service Guarantee Fields
+Field	Description
+Warranty Period	Service guarantee duration
+Free Revisit Included	Whether revisit is included
+Number of Revisits	Allowed free revisits
+Section 7: System Information Fields
+Field	Description
+Service ID	Unique service identifier
+Created Date	Service creation date
+Created By	User who created service
+Updated Date	Last update timestamp
+Updated By	User who updated service
+Display Order	Order for listing
+Section 8: Audit History Fields
+Field	Description
+Date	Action timestamp
+User	User who performed action
+Action	Created / Updated / Deactivated
+Notes	Admin notes
+=============================================
