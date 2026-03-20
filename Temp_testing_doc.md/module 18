@@ -1,0 +1,774 @@
+# 🎯 MODULE 18: CUSTOMER MANAGEMENT
+
+## Overview
+
+Customer Management is the master module acting as the central repository for all onboarded clients. It converts approved leads into revenue-generating entities and provides a **360-degree view** of a customer's lifetime relationship — spanning contracts, active sites, and service history.
+
+**Module Connections:**
+
+- **Depends on:** Module 15 (Lead Management — for lead-to-customer conversion), Module 16 (Quotation Management — accepted quotations trigger contract creation)
+- **Used by:** Module 19 (Contract Management), Module 20 (Sales Orders & Service Execution), Module 9 (Tax & Billing)
+- **Triggers:** Module 19 (Contract creation on customer onboarding), Module 20 (Service orders linked to customer sites)
+- **Prerequisites:** Module 15 must exist for lead-import flow; manual entry is always available as fallback
+
+---
+
+# 18.1 Customer Master List View
+
+**Description:**
+A data table displaying all registered customers. This is the primary landing screen for the Customer Management module. Users can filter, search, and take quick actions on any customer record from here.
+
+---
+
+## Screen Layout
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                          CUSTOMER MANAGEMENT                                  │
+│                                                                               │
+│  ┌──────────────────────────────── FILTERS ───────────────────────────────┐  │
+│  │                                                                         │  │
+│  │ Customer Type:  [☑ Commercial  ☑ Residential]                          │  │
+│  │ Status:         [☑ Active  ☑ Inactive]                                  │  │
+│  │ Branch:         [🔍 Search Dropdown ▼]                                  │  │
+│  │ Industry:       [🔍 Search Dropdown ▼]                                  │  │
+│  │ Created Date:   [📅 From] - [📅 To]                                     │  │
+│  │                                                                         │  │
+│  │ Search: [__________________________________________________]            │  │
+│  │        (Customer ID / Name / PAN / GST / Primary Contact)              │  │
+│  │                                                                         │  │
+│  │ [Reset Filters]                                 [+ ADD CUSTOMER]        │  │
+│  └─────────────────────────────────────────────────────────────────────────┘  │
+│                                                                               │
+│                           CUSTOMER TABLE                                      │
+│                                                                               │
+│ ┌────────────┬──────────────────┬───────────────┬───────────┬──────────────┐ │
+│ │Customer ID │Name              │Primary Contact│Total Sites│Active Contr. │ │
+│ ├────────────┼──────────────────┼───────────────┼───────────┼──────────────┤ │
+│ │CUST-2026-001│Tata Consultancy │Ramesh Iyer    │     4     │      2       │ │
+│ │CUST-2026-002│Green Valley Apt │Priya Sharma   │     1     │      1       │ │
+│ │CUST-2026-003│Infosys Ltd       │Ankit Mehta   │     6     │      3       │ │
+│ │CUST-2026-004│Sunrise Residency│Sunita Rao     │     2     │      0       │ │
+│ │CUST-2026-005│HCL Technologies │Manoj Patel    │     3     │      2       │ │
+│ └────────────┴──────────────────┴───────────────┴───────────┴──────────────┘ │
+│                                                                               │
+│ ┌────────────────────┬────────────────────────────────────────────────────┐  │
+│ │Status              │Actions                                              │  │
+│ │────────────────────┼────────────────────────────────────────────────────│  │
+│ │🟢 Active           │[👁 View] [✏ Edit] [🚫 Deactivate]                  │  │
+│ │🟢 Active           │[👁 View] [✏ Edit] [🚫 Deactivate]                  │  │
+│ │🟢 Active           │[👁 View] [✏ Edit] [🚫 Deactivate]                  │  │
+│ │🔴 Inactive         │[👁 View] [✏ Edit] [🔄 Reactivate]                  │  │
+│ │🟢 Active           │[👁 View] [✏ Edit] [🚫 Deactivate]                  │  │
+│ └────────────────────┴────────────────────────────────────────────────────┘  │
+│                                                                               │
+│ Pagination:  Previous   1   2   3   ...   10   Next                           │
+│                                                                               │
+│ Status Legend: 🟢 Active   🔴 Inactive                                        │
+│                                                                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Table View Fields
+
+| Field            | Type         | Required | Description                                              |
+| ---------------- | ------------ | -------- | -------------------------------------------------------- |
+| Customer ID      | Text         | Auto     | Unique identifier (CUST-YYYY-SEQ format)                 |
+| Name             | Text         | Yes      | Company name or individual's full name                   |
+| Primary Contact  | Text         | Yes      | Name of the principal billing/operations contact person  |
+| Total Sites      | Number       | Auto     | Count of all physical service locations linked           |
+| Active Contracts | Number       | Auto     | Count of contracts in "Active" status                    |
+| Status           | Badge        | Auto     | Active / Inactive                                        |
+| Actions          | Button Group | —        | View / Edit / Deactivate (or Reactivate for Inactive)    |
+
+---
+
+## Filter Fields
+
+| Filter        | Type              | Options                                    |
+| ------------- | ----------------- | ------------------------------------------ |
+| Customer Type | Multi-Checkbox    | Commercial / Residential                   |
+| Status        | Multi-Checkbox    | Active / Inactive                          |
+| Branch        | Search Dropdown   | All accessible branches per user role      |
+| Industry      | Search Dropdown   | Pest Control / Facility Mgmt / Others etc. |
+| Created Date  | Date Range Picker | From – To                                  |
+| Search        | Text              | Customer ID / Name / PAN / GST / Contact   |
+
+---
+
+## Actions
+
+| Action      | Available When        | Behavior                                          |
+| ----------- | --------------------- | ------------------------------------------------- |
+| View        | Always                | Opens read-only Customer Detail screen (18.3)     |
+| Edit        | Always (Active only)  | Opens pre-filled Edit Customer form (18.4)        |
+| Deactivate  | Status = Active       | Triggers soft-delete confirmation popup (18.5)    |
+| Reactivate  | Status = Inactive     | Restores customer to Active status                |
+| Add Customer| Top button            | Opens blank Add Customer form (18.2)              |
+
+---
+
+# 18.2 Add Customer Form
+
+**Description:**
+A multi-section form to register a new customer — either manually or by importing data from an existing Lead record. This form is divided into four logical sections for a guided onboarding experience.
+
+---
+
+## Screen Layout
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                           ADD CUSTOMER                                        │
+│  ──────────────────────────────────────────────────────────────────────────  │
+│                                                                               │
+│  ┌──────────────── SECTION 1: SOURCE ────────────────────────────────────┐   │
+│  │                                                                         │   │
+│  │  How would you like to create this customer?                           │   │
+│  │                                                                         │   │
+│  │  (●) Import from Lead      Lead ID: [🔍 Search Lead ▼]  [AUTO-FILL]   │   │
+│  │  ( ) Manual Entry                                                       │   │
+│  │                                                                         │   │
+│  │  ✅ If Lead selected: all available fields are pre-populated           │   │
+│  │  ✅ Linked Lead ID is stored for cross-reference in Module 15          │   │
+│  └─────────────────────────────────────────────────────────────────────────┘  │
+│                                                                               │
+│  ┌──────────────── SECTION 2: ENTITY INFORMATION ────────────────────────┐   │
+│  │                                                                         │   │
+│  │  Customer Type*:     (●) Commercial    ( ) Residential                 │   │
+│  │                                                                         │   │
+│  │  Company / Individual Name*:  [_________________________________]      │   │
+│  │  Industry Type*:              [🔍 Search / Select ▼]                   │   │
+│  │                               (Pest Control / Facility Mgmt / Other)   │   │
+│  │  PAN Number:                  [__________]  (10-character alphanumeric)│   │
+│  │  GST Number:                  [__________________]  (15-character)     │   │
+│  │  GST State Code:              [▼]                                       │   │
+│  │  Company Registration No.:    [_________________________________]      │   │
+│  │                                                                         │   │
+│  └─────────────────────────────────────────────────────────────────────────┘  │
+│                                                                               │
+│  ┌──────────────── SECTION 3: BILLING & CONTACT ─────────────────────────┐   │
+│  │                                                                         │   │
+│  │  --- Billing Address ---                                                │   │
+│  │  Address Line 1*:  [_____________________________________________]      │   │
+│  │  Address Line 2:   [_____________________________________________]      │   │
+│  │  City*:            [_________________]                                  │   │
+│  │  State*:           [▼ Select State]                                     │   │
+│  │  PIN Code*:        [______]                                             │   │
+│  │                                                                         │   │
+│  │  --- Finance / Accounts Point of Contact ---                            │   │
+│  │  Contact Name*:    [_______________________]                            │   │
+│  │  Designation:      [_______________________]                            │   │
+│  │  Phone Number*:    [+91 __________]                                     │   │
+│  │  Email ID*:        [_______________________]                            │   │
+│  │                                                                         │   │
+│  │  [+ Add Another Contact Person]                                         │   │
+│  │                                                                         │   │
+│  └─────────────────────────────────────────────────────────────────────────┘  │
+│                                                                               │
+│  ┌──────────────── SECTION 4: PRIMARY SITE ──────────────────────────────┐   │
+│  │                                                                         │   │
+│  │  (First physical service location for this customer)                   │   │
+│  │                                                                         │   │
+│  │  Site Name / Label*:  [________________________]  e.g. Head Office     │   │
+│  │  Site Address*:       [_____________________________________________]   │   │
+│  │  City*:               [_________________]                               │   │
+│  │  State*:              [▼ Select State]                                  │   │
+│  │  PIN Code*:           [______]                                          │   │
+│  │  Area (SQFT)*:        [________]                                        │   │
+│  │  Site Category*:      [▼ Commercial / Residential / Industrial]         │   │
+│  │  Sub-Category*:       [▼ Office / Warehouse / Retail / Villa / Other]   │   │
+│  │                                                                         │   │
+│  │  NOTE: Additional sites can be added later via Edit Customer (18.4).   │   │
+│  │                                                                         │   │
+│  └─────────────────────────────────────────────────────────────────────────┘  │
+│                                                                               │
+│                    [CANCEL]          [SAVE CUSTOMER]                          │
+│                                                                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Form Fields
+
+### Section 1 — Source
+
+| Field          | Type            | Required    | Description                                           |
+| -------------- | --------------- | ----------- | ----------------------------------------------------- |
+| Source Mode    | Radio Button    | Yes         | "Import from Lead" or "Manual Entry"                  |
+| Lead ID        | Search Dropdown | Conditional | Required when "Import from Lead" selected             |
+| Auto-Fill      | Button          | Conditional | Pulls lead data into Sections 2, 3 on click           |
+
+### Section 2 — Entity Information
+
+| Field                     | Type     | Required | Validation                                  |
+| ------------------------- | -------- | -------- | ------------------------------------------- |
+| Customer Type             | Radio    | Yes      | Commercial / Residential                    |
+| Company / Individual Name | Text     | Yes      | Min 2 chars, max 150 chars                  |
+| Industry Type             | Dropdown | Yes      | Pre-defined list from Master Data           |
+| PAN Number                | Text     | Optional | 10-char alphanumeric; format: AAAAA0000A    |
+| GST Number                | Text     | Optional | 15-char alphanumeric; validated checksum    |
+| GST State Code            | Dropdown | Optional | Required if GST Number is entered           |
+| Company Registration No.  | Text     | Optional | Free text                                   |
+
+### Section 3 — Billing & Contact
+
+| Field            | Type   | Required | Validation                                  |
+| ---------------- | ------ | -------- | ------------------------------------------- |
+| Address Line 1   | Text   | Yes      | Max 200 chars                               |
+| Address Line 2   | Text   | No       | Max 200 chars                               |
+| City             | Text   | Yes      | Max 50 chars                                |
+| State            | Select | Yes      | Standard state list                         |
+| PIN Code         | Text   | Yes      | 6-digit numeric                             |
+| Contact Name     | Text   | Yes      | Finance/Accounts POC full name              |
+| Designation      | Text   | No       | Free text                                   |
+| Phone Number     | Text   | Yes      | 10-digit mobile; +91 prefix                 |
+| Email ID         | Email  | Yes      | Valid email format                          |
+
+### Section 4 — Primary Site
+
+| Field          | Type     | Required | Validation                                           |
+| -------------- | -------- | -------- | ---------------------------------------------------- |
+| Site Name/Label| Text     | Yes      | e.g. "Head Office", "Warehouse A"                    |
+| Site Address   | Text     | Yes      | Max 200 chars                                        |
+| City           | Text     | Yes      | Max 50 chars                                         |
+| State          | Select   | Yes      | Standard state list                                  |
+| PIN Code       | Text     | Yes      | 6-digit numeric                                      |
+| Area (SQFT)    | Number   | Yes      | Positive integer                                     |
+| Site Category  | Dropdown | Yes      | Commercial / Residential / Industrial                |
+| Sub-Category   | Dropdown | Yes      | Depends on Category selected (cascading dropdown)    |
+
+---
+
+## Validation Rules
+
+| Rule                     | Condition                                              | Error Message                                             |
+| ------------------------ | ------------------------------------------------------ | --------------------------------------------------------- |
+| Duplicate PAN            | Same PAN already exists in system                      | "A customer with this PAN already exists."                |
+| Duplicate GST            | Same GST already exists in system                      | "A customer with this GST already exists."                |
+| GST State Code required  | GST Number entered but GST State Code is blank         | "Please select the GST state code."                       |
+| Lead already converted   | Selected Lead ID is already linked to a Customer       | "This lead has already been converted to a customer."     |
+| Mandatory fields blank   | Any field marked * is empty on Save                    | Inline red error below each field                         |
+
+---
+
+## Post-Save System Behaviors
+
+| Trigger                | System Action                                                           |
+| ---------------------- | ----------------------------------------------------------------------- |
+| Customer Saved         | Auto-generates Customer ID (CUST-YYYY-SEQ)                              |
+| Imported from Lead     | Lead status updated to "Converted"; linked Lead ID stored on customer   |
+| Primary Site           | Site record created and linked to customer (Site ID auto-generated)     |
+| Audit Log              | Records creation timestamp, user, and source (Lead import / Manual)     |
+
+---
+
+# 18.3 View Customer Details
+
+**Description:**
+A unified, read-only dashboard for a specific customer record, organized into three logical tabs for easy navigation. Accessed via the [View] action from the Customer Master List (18.1).
+
+---
+
+## Screen Header Layout
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  ← Back to Customer List                                                      │
+│                                                                               │
+│  👤  TATA CONSULTANCY SERVICES LTD.                       🟢 Active           │
+│      CUST-2026-001  │  Commercial  │  IT Services                             │
+│      PAN: AABCT1332L  │  GST: 27AABCT1332L1ZX                                │
+│      Primary Contact: Ramesh Iyer  │  📞 9876543210  │  ✉ ramesh@tcs.com     │
+│      Branch: Bengaluru  │  Created: 12-Jan-2026  │  LTV: ₹12,45,000          │
+│                                                                               │
+│  ┌───────────────────────────────────────────────────────────────────────┐   │
+│  │  [Basic Details & Sites]   [Contract Logs]   [Sales Orders & Service] │   │
+│  └───────────────────────────────────────────────────────────────────────┘   │
+│                                                                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 18.3.1 Tab 1: Basic Details & Sites
+
+**Description:**
+Displays the core entity profile and all physical locations linked to this customer.
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  TAB: Basic Details & Sites                                                   │
+│                                                                               │
+│  ┌──────────────────────────────── PROFILE ──────────────────────────────┐   │
+│  │                                                                         │   │
+│  │  Company Name:         Tata Consultancy Services Ltd.                  │   │
+│  │  Customer Type:        Commercial                                       │   │
+│  │  Industry:             IT Services                                      │   │
+│  │  PAN Number:           AABCT1332L                                       │   │
+│  │  GST Number:           27AABCT1332L1ZX  (State: Maharashtra)           │   │
+│  │  Company Reg. No.:     U72200MH1995PTC084781                            │   │
+│  │                                                                         │   │
+│  │  --- Billing Address ---                                                │   │
+│  │  TCS House, Raveline Street, Fort, Mumbai – 400001, Maharashtra         │   │
+│  │                                                                         │   │
+│  │  --- Finance / Accounts Contact ---                                     │   │
+│  │  Name: Ramesh Iyer  │  Designation: Finance Manager                     │   │
+│  │  Phone: 9876543210  │  Email: ramesh@tcs.com                            │   │
+│  │                                                                         │   │
+│  │  Lifetime Value (LTV):  ₹12,45,000                                      │   │
+│  │  Source:                Converted from Lead  [→ View Lead: LD-2026-018] │   │
+│  │  Created By:            Rajesh Kumar  │  12-Jan-2026 10:30 AM           │   │
+│  │  Last Modified By:      Anita Sharma  │  15-Mar-2026 02:00 PM           │   │
+│  │                                                                         │   │
+│  └─────────────────────────────────────────────────────────────────────────┘  │
+│                                                                               │
+│  ┌────────────────────────── SITES GRID ─────────────────────────────────┐   │
+│  │                                                                         │   │
+│  │  All physical locations linked to this customer                        │   │
+│  │                                                                         │   │
+│  │ ┌──────────┬────────────────────┬──────────────────────┬───────┬──────┐│   │
+│  │ │Site ID   │Site Name / Label   │Address               │SQFT   │Catg. ││   │
+│  │ ├──────────┼────────────────────┼──────────────────────┼───────┼──────┤│   │
+│  │ │SITE-0001 │Head Office - BLR   │MG Road, Bengaluru    │18,000 │Comm. ││   │
+│  │ │SITE-0002 │Data Centre - HYD   │HITEC City, Hyderabad │22,500 │Ind.  ││   │
+│  │ │SITE-0003 │Warehouse - PNE     │Hinjewadi, Pune       │35,000 │Ind.  ││   │
+│  │ │SITE-0004 │Regional Off. - MUM │BKC, Mumbai           │8,200  │Comm. ││   │
+│  │ └──────────┴────────────────────┴──────────────────────┴───────┴──────┘│   │
+│  │                                                                         │   │
+│  │ Sub-Category: Office / Data Centre / Warehouse / Office                │   │
+│  │                                                                         │   │
+│  └─────────────────────────────────────────────────────────────────────────┘  │
+│                                                                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Tab 1 — Basic Details Fields
+
+| Section              | Field                   | Type            | Description                                        |
+| -------------------- | ----------------------- | --------------- | -------------------------------------------------- |
+| **Profile**          | Company Name            | Text            | Full registered entity name                        |
+|                      | Customer Type           | Badge           | Commercial / Residential                           |
+|                      | Industry                | Text            | Industry classification                            |
+|                      | PAN Number              | Text            | Permanent Account Number                          |
+|                      | GST Number              | Text            | GST registration number with state code            |
+|                      | Company Reg. No.        | Text            | Corporate registration number (if entered)         |
+|                      | Billing Address         | Text            | Full billing address                               |
+|                      | Finance Contact         | Text            | Name, designation, phone, email of billing POC    |
+|                      | Lifetime Value (LTV)    | Currency        | Auto-calculated sum of all completed contract values|
+|                      | Source                  | Text + Link     | Manual / Converted from Lead (with clickable link) |
+|                      | Created By              | Text + DateTime | User name and timestamp                            |
+|                      | Last Modified By        | Text + DateTime | User name and timestamp                            |
+| **Sites Grid**       | Site ID                 | Text            | Auto-generated site identifier                     |
+|                      | Site Name / Label       | Text            | Descriptive label for the location                 |
+|                      | Address                 | Text            | Full physical address                              |
+|                      | Area (SQFT)             | Number          | Total carpet area of the site                      |
+|                      | Category                | Badge           | Commercial / Residential / Industrial              |
+|                      | Sub-Category            | Text            | Office / Warehouse / Retail / Villa etc.           |
+
+---
+
+## 18.3.2 Tab 2: Contract Logs
+
+**Description:**
+Lists all historical and currently active contracts associated with this customer across all sites.
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  TAB: Contract Logs                                                           │
+│                                                                               │
+│  ┌────────────── FILTERS ─────────────────────────────────────────────────┐  │
+│  │ Status: [☑ Active  ☑ Expired  ☑ Terminated]   Site: [▼ All Sites]      │  │
+│  │ Date Range: [📅 From] - [📅 To]               [Reset]                   │  │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                               │
+│                          CONTRACTS GRID                                       │
+│                                                                               │
+│ ┌────────────┬──────────┬────────────┬─────────────┬──────────────┬────────┐ │
+│ │Contract ID │Start Date│End Date    │Linked Site  │ Value (₹)    │Status  │ │
+│ ├────────────┼──────────┼────────────┼─────────────┼──────────────┼────────┤ │
+│ │CON-2026-001│01-Jan-26 │31-Dec-26   │SITE-0001    │  ₹3,60,000   │🟢Active│ │
+│ │CON-2026-002│01-Feb-26 │31-Jan-27   │SITE-0002    │  ₹5,40,000   │🟢Active│ │
+│ │CON-2025-009│01-Mar-25 │28-Feb-26   │SITE-0003    │  ₹2,80,000   │⚪Expired│ │
+│ │CON-2025-003│01-Jul-25 │31-Dec-25   │SITE-0004    │  ₹1,65,000   │🔴Termntd│ │
+│ └────────────┴──────────┴────────────┴─────────────┴──────────────┴────────┘ │
+│                                                                               │
+│ ┌─────────────────────────────────────────────────────────────────────────┐  │
+│ │ Created By            │ Created Date          │ Actions                  │  │
+│ │───────────────────────┼───────────────────────┼──────────────────────── │  │
+│ │ Rajesh Kumar          │ 28-Dec-2025           │ [👁 View Contract]       │  │
+│ │ Anita Sharma          │ 25-Jan-2026           │ [👁 View Contract]       │  │
+│ │ Rohit Mehta           │ 15-Feb-2025           │ [👁 View Contract]       │  │
+│ │ Rajesh Kumar          │ 20-Jun-2025           │ [👁 View Contract]       │  │
+│ └─────────────────────────────────────────────────────────────────────────┘  │
+│                                                                               │
+│ Pagination:  Previous   1   2   ...   Next                                    │
+│                                                                               │
+│ Status Legend: 🟢 Active   ⚪ Expired   🔴 Terminated                         │
+│                                                                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Tab 2 — Contract Logs Fields
+
+| Field        | Type     | Description                                                       |
+| ------------ | -------- | ----------------------------------------------------------------- |
+| Contract ID  | Text     | Unique contract identifier; clickable link to Module 19           |
+| Start Date   | Date     | Contract commencement date                                        |
+| End Date     | Date     | Contract expiry date                                              |
+| Linked Site  | Text     | Site ID of the location covered by this contract                  |
+| Value (₹)    | Currency | Total contract value                                              |
+| Status       | Badge    | Active / Expired / Terminated                                     |
+| Created By   | Text     | User who created the contract                                     |
+| Created Date | Date     | Date the contract record was registered                           |
+| Actions      | Button   | [View Contract] — opens contract detail in Module 19 (read-only) |
+
+---
+
+## 18.3.3 Tab 3: Sales Orders & Service History
+
+**Description:**
+Displays all Sales Orders issued under this customer along with the real-time service execution status for each order.
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  TAB: Sales Orders & Service History                                          │
+│                                                                               │
+│  ┌────────────── FILTERS ─────────────────────────────────────────────────┐  │
+│  │ SO Status: [☑ Draft ☑ Active ☑ Closed ☑ Cancelled]                     │  │
+│  │ Service Status: [☑ Scheduled ☑ In Progress ☑ Completed ☑ Pending]      │  │
+│  │ Site: [▼ All Sites]    Date Range: [📅 From] - [📅 To]    [Reset]       │  │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                               │
+│                       SALES ORDERS & SERVICE GRID                             │
+│                                                                               │
+│ ┌──────────┬──────────┬───────────────┬──────────────┬──────────┬──────────┐ │
+│ │SO Number │SO Date   │Linked Contract│Total Value(₹)│SO Status │Svc Status│ │
+│ ├──────────┼──────────┼───────────────┼──────────────┼──────────┼──────────┤ │
+│ │SO-2026-01│10-Jan-26 │CON-2026-001   │  ₹30,000     │🟢 Active │🔵In Prog.│ │
+│ │SO-2026-02│15-Jan-26 │CON-2026-002   │  ₹45,000     │🟢 Active │🟡Scheduled│ │
+│ │SO-2026-03│20-Jan-26 │CON-2026-001   │  ₹15,000     │✅ Closed │✅Complete│ │
+│ │SO-2025-09│05-Dec-25 │CON-2025-009   │  ₹25,000     │✅ Closed │✅Complete│ │
+│ │SO-2026-04│01-Feb-26 │CON-2026-002   │  ₹60,000     │🟡 Draft  │⏳ Pending│ │
+│ └──────────┴──────────┴───────────────┴──────────────┴──────────┴──────────┘ │
+│                                                                               │
+│ ┌───────────────────────────────────────────────────────────────────────────┐ │
+│ │ Linked Site   │ Created By     │ Actions                                   │ │
+│ │───────────────┼────────────────┼─────────────────────────────────────────  │ │
+│ │ SITE-0001     │ Rajesh Kumar   │ [👁 View SO] [📋 Service Tracker]          │ │
+│ │ SITE-0002     │ Anita Sharma   │ [👁 View SO] [📋 Service Tracker]          │ │
+│ │ SITE-0001     │ Rohit Mehta    │ [👁 View SO] [📋 Service Tracker]          │ │
+│ │ SITE-0003     │ Rajesh Kumar   │ [👁 View SO] [📋 Service Tracker]          │ │
+│ │ SITE-0002     │ Anita Sharma   │ [👁 View SO] [📋 Service Tracker]          │ │
+│ └───────────────────────────────────────────────────────────────────────────┘ │
+│                                                                               │
+│ Pagination:  Previous   1   2   ...   Next                                    │
+│                                                                               │
+│ SO Status Legend: 🟡 Draft  🟢 Active  ✅ Closed  🔴 Cancelled                │
+│ Service Status:   ⏳ Pending  🟡 Scheduled  🔵 In Progress  ✅ Completed       │
+│                                                                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Tab 3 — Sales Orders & Service Fields
+
+| Field            | Type     | Description                                                          |
+| ---------------- | -------- | -------------------------------------------------------------------- |
+| SO Number        | Text     | Unique Sales Order identifier; links to Module 20                    |
+| SO Date          | Date     | Date the sales order was raised                                      |
+| Linked Contract  | Text     | Contract ID under which this SO was raised; links to Module 19       |
+| Total Value (₹)  | Currency | Total monetary value of the sales order                              |
+| SO Status        | Badge    | Draft / Active / Closed / Cancelled                                  |
+| Service Status   | Badge    | Pending / Scheduled / In Progress / Completed                        |
+| Linked Site      | Text     | Site ID where service is to be executed                              |
+| Created By       | Text     | User who created the sales order                                     |
+| Actions          | Buttons  | [View SO] — opens SO detail in Module 20; [Service Tracker] — opens real-time service timeline |
+
+---
+
+# 18.4 Edit Customer Form
+
+**Description:**
+Interface to update master data for an existing customer. Opens pre-filled with all data from the Add Customer form (18.2). Users may modify billing addresses, contact persons, and add new service sites. All changes generate an immutable audit log entry.
+
+---
+
+## Screen Layout
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  ← Back to Customer Detail                                                    │
+│                                                                               │
+│                           EDIT CUSTOMER                                       │
+│         CUST-2026-001  │  Tata Consultancy Services Ltd.                      │
+│                                                                               │
+│  ┌──────────────── SECTION 1: ENTITY INFORMATION ────────────────────────┐   │
+│  │  (Same fields as 18.2 Section 2 — pre-populated and editable)          │   │
+│  │                                                                         │   │
+│  │  Customer Type:      [● Commercial  ○ Residential]  (not editable)     │   │
+│  │  Company Name*:      [Tata Consultancy Services Ltd.        ]           │   │
+│  │  Industry Type*:     [IT Services ▼]                                    │   │
+│  │  PAN Number:         [AABCT1332L   ]                                    │   │
+│  │  GST Number:         [27AABCT1332L1ZX                ]                  │   │
+│  │  GST State Code:     [Maharashtra ▼]                                    │   │
+│  │  Company Reg. No.:   [U72200MH1995PTC084781          ]                  │   │
+│  └─────────────────────────────────────────────────────────────────────────┘  │
+│                                                                               │
+│  ┌──────────────── SECTION 2: BILLING & CONTACT ─────────────────────────┐   │
+│  │  (Same fields as 18.2 Section 3 — pre-populated and editable)          │   │
+│  │                                                                         │   │
+│  │  Address Line 1*: [TCS House, Raveline Street          ]               │   │
+│  │  City*:           [Mumbai          ]                                    │   │
+│  │  State*:          [Maharashtra ▼]    PIN*: [400001]                     │   │
+│  │                                                                         │   │
+│  │  Contact Name*:   [Ramesh Iyer      ]  Designation: [Finance Manager]  │   │
+│  │  Phone*:          [+91 9876543210   ]  Email*: [ramesh@tcs.com       ]  │   │
+│  │                                                                         │   │
+│  │  [+ Add Another Contact Person]  [✕ Remove Contact]                    │   │
+│  └─────────────────────────────────────────────────────────────────────────┘  │
+│                                                                               │
+│  ┌──────────────── SECTION 3: MANAGE SITES ──────────────────────────────┐   │
+│  │                                                                         │   │
+│  │  EXISTING SITES (read-only list — click [Edit Site] to modify)         │   │
+│  │                                                                         │   │
+│  │ ┌──────────┬────────────────────┬──────────────────────┬─────────────┐ │   │
+│  │ │Site ID   │Site Name           │Address               │ Actions     │ │   │
+│  │ ├──────────┼────────────────────┼──────────────────────┼─────────────┤ │   │
+│  │ │SITE-0001 │Head Office - BLR   │MG Road, Bengaluru    │[Edit Site]  │ │   │
+│  │ │SITE-0002 │Data Centre - HYD   │HITEC City, Hyderabad │[Edit Site]  │ │   │
+│  │ │SITE-0003 │Warehouse - PNE     │Hinjewadi, Pune       │[Edit Site]  │ │   │
+│  │ │SITE-0004 │Regional Off. - MUM │BKC, Mumbai           │[Edit Site]  │ │   │
+│  │ └──────────┴────────────────────┴──────────────────────┴─────────────┘ │   │
+│  │                                                                         │   │
+│  │  [+ ADD NEW SITE]                                                       │   │
+│  │                                                                         │   │
+│  │  ► New Site Fields (same as 18.2 Section 4) appear inline on click     │   │
+│  └─────────────────────────────────────────────────────────────────────────┘  │
+│                                                                               │
+│                    [CANCEL]          [SAVE CHANGES]                           │
+│                                                                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Edit Restrictions
+
+| Field              | Editable? | Notes                                                                      |
+| ------------------ | --------- | -------------------------------------------------------------------------- |
+| Customer Type      | ❌ No     | Set at creation; cannot be changed to preserve contract and billing logic  |
+| Customer ID        | ❌ No     | System-generated, immutable                                                |
+| Company Name       | ✅ Yes    | Requires audit log reason if changed                                       |
+| PAN Number         | ✅ Yes    | New PAN must pass duplicate check                                          |
+| GST Number         | ✅ Yes    | New GST must pass duplicate check                                          |
+| Billing Address    | ✅ Yes    | Change logged in audit                                                     |
+| Contact Persons    | ✅ Yes    | Add, edit, or remove contact persons                                       |
+| Existing Site Data | ✅ Yes    | Via [Edit Site] inline form for each site                                  |
+| Add New Sites      | ✅ Yes    | Via [+ Add New Site] with same fields as Section 4 in 18.2                 |
+
+---
+
+## Audit Rule
+
+Every save on the Edit Customer Form triggers an automatic entry in the **Master Data Audit Log** capturing:
+
+| Audit Field     | Value                                              |
+| --------------- | -------------------------------------------------- |
+| Entity          | Customer ID + Customer Name                        |
+| Changed Fields  | Field name, old value → new value                  |
+| Changed By      | User ID + Name                                     |
+| Changed At      | Date and Timestamp                                 |
+| Change Source   | Module 18 – Edit Customer                          |
+
+---
+
+# 18.5 Delete (Deactivate) Customer
+
+**Description:**
+A soft-delete mechanism to remove a customer from active operations without permanently erasing historical data. Triggered via the [Deactivate] button in the Customer Master List (18.1). Hard deletion is strictly prohibited.
+
+---
+
+## Deactivation Popup Layout
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                                                                               │
+│  ┌──────────────────────────────────────────────────────────────────────┐    │
+│  │                                                                        │    │
+│  │  ⚠️  DEACTIVATE CUSTOMER                                              │    │
+│  │                                                                        │    │
+│  │  You are about to deactivate:                                          │    │
+│  │                                                                        │    │
+│  │  Customer:   Tata Consultancy Services Ltd.  (CUST-2026-001)          │    │
+│  │  Sites:      4 active locations                                        │    │
+│  │  Contracts:  2 active contracts                                        │    │
+│  │                                                                        │    │
+│  │  ─────────────────────────────────────────────────────────────────    │    │
+│  │                                                                        │    │
+│  │  ❌ VALIDATION FAILED — Cannot Deactivate:                             │    │
+│  │                                                                        │    │
+│  │    • This customer has 2 Active Contract(s).                           │    │
+│  │      Please terminate or expire all active contracts before            │    │
+│  │      deactivating this customer.                                       │    │
+│  │                                                                        │    │
+│  │    • This customer has 1 Open Sales Order(s).                          │    │
+│  │      Please close or cancel all open orders first.                     │    │
+│  │                                                                        │    │
+│  │                            [CLOSE]                                     │    │
+│  │                                                                        │    │
+│  └────────────────────────────────────────────────────────────────────────┘   │
+│                                                                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+*If validation passes (no active contracts, no open orders):*
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                                                                               │
+│  ┌──────────────────────────────────────────────────────────────────────┐    │
+│  │                                                                        │    │
+│  │  ⚠️  DEACTIVATE CUSTOMER                                              │    │
+│  │                                                                        │    │
+│  │  You are about to deactivate:                                          │    │
+│  │  Customer:   Sunrise Residency  (CUST-2026-004)                        │    │
+│  │  Sites:      2 locations  │  Active Contracts: 0  │  Open Orders: 0   │    │
+│  │                                                                        │    │
+│  │  This action will mark the customer as Inactive. The customer          │    │
+│  │  record and all associated history will be preserved for audit         │    │
+│  │  and reporting purposes but the customer will no longer appear          │    │
+│  │  in active operational workflows.                                       │    │
+│  │                                                                        │    │
+│  │  Reason for Deactivation*:                                             │    │
+│  │  [▼ Select Reason                                           ]          │    │
+│  │       • Contract Concluded / Business Ended                            │    │
+│  │       • Customer Request                                                │    │
+│  │       • Non-Payment / Bad Debt                                          │    │
+│  │       • Duplicate Entry                                                 │    │
+│  │       • Other                                                           │    │
+│  │                                                                        │    │
+│  │  IF "Other" SELECTED:                                                   │    │
+│  │  Specify Reason*:  [________________________________________]           │    │
+│  │                    (Minimum 10 characters)                              │    │
+│  │                                                                        │    │
+│  │          [CANCEL]                  [CONFIRM DEACTIVATION]              │    │
+│  │                                                                        │    │
+│  └────────────────────────────────────────────────────────────────────────┘   │
+│                                                                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Deactivation Popup Fields
+
+| Field             | Type      | Required    | Options / Validation                                                                               |
+| ----------------- | --------- | ----------- | -------------------------------------------------------------------------------------------------- |
+| Reason Dropdown   | Dropdown  | Yes         | Contract Concluded / Customer Request / Non-Payment / Bad Debt / Duplicate Entry / Other          |
+| Specify Reason    | Text Area | Conditional | Required if "Other" selected; minimum 10 characters                                                |
+
+---
+
+## Validation Rules
+
+| Check                    | Condition                                                   | Outcome                                              |
+| ------------------------ | ----------------------------------------------------------- | ---------------------------------------------------- |
+| Active Contract Block    | Customer has one or more contracts in "Active" status        | ❌ Block deactivation; show error message             |
+| Open Sales Order Block   | Customer has one or more SOs in "Draft" or "Active" status  | ❌ Block deactivation; show error message             |
+| Reason Mandatory         | Confirm Deactivation clicked without selecting a reason     | ❌ Inline error: "Please select a reason"             |
+| "Other" Reason Mandatory | "Other" selected but Specify Reason is blank                | ❌ Inline error: "Please specify a reason (min 10 chars)" |
+
+---
+
+## Business Rules
+
+| Rule                   | Detail                                                                                                 |
+| ---------------------- | ------------------------------------------------------------------------------------------------------ |
+| No Hard Delete         | Customer records can never be permanently deleted from the database                                    |
+| Soft-Delete Only       | Deactivation sets customer status to "Inactive" and excludes them from active dropdowns and workflows  |
+| Historical Preservation| All contracts, sites, SOs, and service history remain intact and accessible via the View screen (18.3) |
+| Reactivation           | An Inactive customer can be reactivated by the [Reactivate] action in 18.1 (no remark required)       |
+| Cascading Status       | Deactivation does NOT automatically close or alter linked sites, contracts, or orders                  |
+
+---
+
+## Post-Deactivation System Behaviors
+
+| Trigger                    | System Action                                                                     |
+| -------------------------- | --------------------------------------------------------------------------------- |
+| Customer Deactivated       | Status field updated to "Inactive" across all views                               |
+| Active Dropdown Removal    | Customer removed from all searchable dropdowns in new transactions (SOs, Contracts)|
+| Audit Log                  | Records deactivation: Customer ID, reason, user ID, timestamp                     |
+| Notification               | Notifies Branch Manager and Finance team of customer deactivation                 |
+| Linked Lead (if any)       | Lead record's "Customer Status" field updated to reflect deactivation             |
+
+---
+
+## Module 18 — Cross-Module Data Flow Summary
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        MODULE 18: DATA FLOW                                  │
+│                                                                              │
+│  MODULE 15 (Lead Mgmt)                                                       │
+│       │  Lead Accepted / Quotation Accepted                                  │
+│       │  Lead ID passed as source reference                                  │
+│       ▼                                                                      │
+│  ┌───────────────────────────────────────────────────────────┐               │
+│  │                  MODULE 18: CUSTOMER                       │               │
+│  │                                                           │               │
+│  │  Customer ID ──► Sites (SITE-XXXX)                        │               │
+│  │                        │                                  │               │
+│  │                        ▼                                  │               │
+│  │              MODULE 19 (Contracts) ◄──── CON-XXXX        │               │
+│  │                        │                                  │               │
+│  │                        ▼                                  │               │
+│  │              MODULE 20 (Sales Orders / Service) ◄── SO-XX│               │
+│  │                        │                                  │               │
+│  │                        ▼                                  │               │
+│  │              Billing / Invoicing (Module 9 / Tax)         │               │
+│  │                                                           │               │
+│  └───────────────────────────────────────────────────────────┘               │
+│                                                                              │
+│  LTV = Sum of all Completed Contract Values for this Customer                │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Module 18 — Status Lifecycle
+
+```
+                        ┌───────────────┐
+                        │   LEAD (M15)  │
+                        │  or Manual    │
+                        └──────┬────────┘
+                               │  [Save Customer]
+                               ▼
+                        ┌───────────────┐
+                        │    ACTIVE     │◄────────────────────┐
+                        │  Customer     │                      │
+                        └──────┬────────┘                      │
+                               │                               │
+                  [Deactivate] │ (after all contracts         [Reactivate]
+                      closed   │   & SOs closed)              │
+                               ▼                               │
+                        ┌───────────────┐                      │
+                        │   INACTIVE    │──────────────────────┘
+                        │  (Soft Delete)│
+                        └───────────────┘
+                               │
+                    [No hard delete possible]
+                               │
+                        Data retained permanently
+                        for audit & history
+```
+
+---
+
+*End of Module 18: Customer Management*
