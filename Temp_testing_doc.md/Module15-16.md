@@ -905,11 +905,13 @@ The Add Quotation form allows sales team members to create new quotations. The f
 │  │  │ Address*:        [HSR Layout, Sector 2, Bengaluru]               │  │ │
 │  │  │ City*:           [Bengaluru]                                     │  │ │
 │  │  │ State*:          [Karnataka]                                     │  │ │
-│  │  │ Category*:       [▼ Residential ▼]                               │  │ │
-│  │  │ Sub-Category*:   [▼ Internal ▼]                                  │  │ │
+│  │  │ Category*:       [▼ Residential / Commercial / Industrial ▼]     │  │ │
+│  │  │ Sub-Category*:   [▼ Internal / External ▼]                       │  │ │
 │  │  │ Area (sqft)*:    [1200]                                          │  │ │
 │  │  │ Assign Branch*:  [▼ BLR-HSR Branch ▼]                           │  │ │
-│  │  │                  (Nearest branch auto-suggested)                  │  │ │
+│  │  │                                                                  │  │ │
+│  │  │ *Note: Specific Property Types (like BHK/Office Size) are selected│  │ │
+│  │  │  under Service Selection to allow per-service pricing logic.      │  │ │
 │  │  └──────────────────────────────────────────────────────────────────┘  │ │
 │  │                                                                         │ │
 │  │  LOCATION 2                                                             │ │
@@ -924,85 +926,61 @@ The Add Quotation form allows sales team members to create new quotations. The f
 │  │  │ [Remove Location]                                                │  │ │
 │  │  └──────────────────────────────────────────────────────────────────┘  │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
-│                                                                              │
-│  SECTION 4: SERVICE SELECTION (Visible if Type = Service / Combined)         │
-│  (Integrated with Module 12 – Service Management)                            │
+│  SECTION 4: SERVICE SELECTION                                               │
+│  (DYNAMIC VISIBILITY: Visible if Quotation Type = "Service" or "Combined")   │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  PER LOCATION SERVICE ASSIGNMENT                                        │ │
+│  │  ── LOCATION 1: HSR Layout | Resi | Internal | 1200 SQFT ──              │ │
 │  │                                                                         │ │
-│  │  ── LOCATION 1: HSR Layout, Bengaluru ──                               │ │
-│  │  [🔍 Search Service from Service Master...]                             │ │
+│  │  [🔍 Search and Add Service for this Location...              ] [+ Add] │ │
 │  │                                                                         │ │
-│  │  ┌────────────┬──────────┬──────────┬──────────┬─────────┬────────────┐│ │
-│  │  │Service Name│Pest Type │Price Type│Rate (₹)   │Qty      │Total (₹)   ││ │
-│  │  │────────────┼──────────┼──────────┼──────────┼─────────┼────────────││ │
-│  │  │Termite Ctrl│Termite   │Fixed     │₹1,800    │ 1       │₹1,800      ││ │
-│  │  │  (SVC-001) │          │          │(Fetched) │         │            ││ │
-│  │  └────────────┴──────────┴──────────┴──────────┴─────────┴────────────┘│ │
+│  │  ┌───────────────┬────────────┬────────────┬────────────┬─────────────┐ │ │
+│  │  │ SERVICE NAME  │ PRICE TYPE │ RATE (₹)   │ TOTAL (₹)  │ ACTIONS     │ │ │
+│  │  │ (SVC Code)    │ (Logic)    │ (Per Visit)│ (Line Ttl) │             │ │ │
+│  │  ├───────────────┼────────────┼────────────┼────────────┼─────────────┤ │ │
+│  │  │ Termite Ctrl  │ Fixed      │ ₹ 1,800    │ ₹ 21,600   │ [Edit][Rem] │ │ │
+│  │  │ (SVC-001)     │ (3 BHK)    │            │ (12 Vis)   │             │ │ │
+│  │  ├───────────────┼────────────┼────────────┼────────────┼─────────────┤ │ │
+│  │  │ Cockroach Gel │ Area Based │ ₹ 2,900    │ ₹ 2,900    │ [Edit][Rem] │ │ │
+│  │  │ (SVC-002)     │ (1200 SQFT)│            │ (1 Vis)    │             │ │ │
+│  │  └───────────────┴────────────┴────────────┴────────────┴─────────────┘ │ │
 │  │                                                                         │ │
-│  │  DYNAMIC PRICING CONDITIONS (FETCHED FROM MODULE 12)                    │ │
-│  │  (Displays only one block based on Service Price Type)                  │ │
+│  │  ┌───── DYNAMIC SERVICE CONFIGURATION (Auto-opens on Add/Edit) ─────┐   │ │
+│  │  │                                                                  │   │ │
+│  │  │ SERVICE: [SVC-001] Termite Control (FETCHED FROM MODULE 12)       │   │ │
+│  │  │ ──────────────────────────────────────────────────────────────── │   │ │
+│  │  │                                                                  │   │ │
+│  │  │ [IF FIXED PRICE DETECTED]:                                       │   │ │
+│  │  │ Select Property Size:                                            │   │ │
+│  │  │ ( ) 1 BHK    ( ) 2 BHK    (●) 3 BHK    ( ) 4 BHK+   ( ) Villa    │   │ │
+│  │  │                                                                  │   │ │
+│  │  │ [IF AREA BASED DETECTED]:                                        │   │ │
+│  │  │ Base Price: [₹ 500  ]   Rate/SQFT: [₹ 2.00 ]   Area: [1200 ] SQFT│   │ │
+│  │  │                                                                  │   │ │
+│  │  │ [IF AMC MODE DETECTED (from Section 2)]:                         │   │ │
+│  │  │ Vis. Frequency: [▼ Monthly (12) ▼]  Total Visits: [ 12 ]         │   │ │
+│  │  │                                                                  │   │ │
+│  │  │ ──────────────────────────────────────────────────────────────── │   │ │
+│  │  │ RESULTING LINE TOTAL: ₹ 21,600                                   │   │ │
+│  │  │                   [ UPDATE SERVICE ]    [ CANCEL ]               │   │ │
+│  │  └──────────────────────────────────────────────────────────────────┘   │ │
 │  │                                                                         │ │
-│  │  [OPTION 1: FIXED PRICE]                                                │ │
-│  │  ┌─────────────────────────────────────────────────────────────┐        │ │
-│  │  │ SERVICE: Termite Control (SVC-001)                          │        │ │
-│  │  │ LOCATION: HSR Layout, BLR | Category: Residential           │        │ │
-│  │  ├─────────────────────────────────────────────────────────────┤        │ │
-│  │  │ SELECT PROPERTY SIZE / TYPE:                                │        │ │
-│  │  │                                                             │        │ │
-│  │  │ IF RESIDENTIAL:           IF COMMERCIAL:                    │        │ │
-│  │  │ ( ) 1 BHK    (₹ 1,200)    ( ) Small Office  (₹ 2,500)       │        │ │
-│  │  │ ( ) 2 BHK    (₹ 1,500)    ( ) Medium Office (₹ 4,500)       │        │ │
-│  │  │ (●) 3 BHK    (₹ 1,800)    ( ) Large Office  (₹ 7,000)       │        │ │
-│  │  │ ( ) 4 BHK+   (₹ 2,200)    ( ) Warehouse     (₹ 12,000)      │        │ │
-│  │  │ ( ) Villa    (₹ 3,500)                                      │        │ │
-│  │  │                                                             │        │ │
-│  │  │ *Selection fetches rate automatically from Module 12.       │        │ │
-│  │  └─────────────────────────────────────────────────────────────┘        │ │
+│  │  Location 1 Service Subtotal: ₹ 24,500                                  │ │
 │  │                                                                         │ │
-│  │  [OPTION 2: AREA BASED]                                                 │ │
-│  │  ┌─────────────────────────────────────────────────────────────┐        │ │
-│  │  │ SERVICE: Cockroach Gel (SVC-002)                             │        │ │
-│  │  ├─────────────────────────────────────────────────────────────┤        │ │
-│  │  │ PRICING LOGIC: Base Price + (Rate per SQFT × Total Area)     │        │ │
-│  │  ├─────────────────────────────────────────────────────────────┤        │ │
-│  │  │ - Base Price: ₹500                                          │        │ │
-│  │  │ - Rate/SQFT:  ₹2.00                                         │        │ │
-│  │  │ - Total Area: 1200 sqft (from Location details)             │        │ │
-│  │  ├─────────────────────────────────────────────────────────────┤        │ │
-│  │  │ CALCULATION: 500 + (2.00 × 1200)                            │        │ │
-│  │  │ RESULT:      ₹2,900                                         │        │ │
-│  │  └─────────────────────────────────────────────────────────────┘        │ │
+│  │  ── LOCATION 2: Whitefield | Comm | External | 5000 SQFT ──              │ │
+│  │  [🔍 Search and Add Service for Location 2...                 ] [+ Add] │ │
 │  │                                                                         │ │
-│  │  [OPTION 3: INSPECTION BASED]                                           │ │
-│  │  ┌─────────────────────────────────────────────────────────────┐        │ │
-│  │  │ SERVICE: Rodent Baiting (SVC-003)                            │        │ │
-│  │  ├─────────────────────────────────────────────────────────────┤        │ │
-│  │  │ - Inspection Fee: ₹300                                      │        │ │
-│  │  │ - Note: The final service quotation will be generated and   │        │ │
-│  │  │   shared with the client ONLY after the on-site physical    │        │ │
-│  │  │   inspection visit is completed.                            │        │ │
-│  │  └─────────────────────────────────────────────────────────────┘        │ │
+│  │  ┌───────────────┬────────────┬────────────┬────────────┬─────────────┐ │ │
+│  │  │ SERVICE NAME  │ PRICE TYPE │ RATE (₹)   │ TOTAL (₹)  │ ACTIONS     │ │ │
+│  │  ├───────────────┼────────────┼────────────┼────────────┼─────────────┤ │ │
+│  │  │ Rodent Control│ Area Based │ ₹ 11,200   │ ₹ 11,200   │ [Edit][Rem] │ │ │
+│  │  │ (SVC-003)     │ (5000 SQFT)│            │ (1 Vis)    │             │ │ │
+│  │  └───────────────┴────────────┴────────────┴────────────┴─────────────┘ │ │
 │  │                                                                         │ │
-│  │                                                                         │ │
-│  │  ┌────────────────────┬────────────┬──────────┬───────────────────────┐│ │
-│  │  │Frequency           │Qty/Visits  │Total (₹) │Action                 ││ │
-│  │  │────────────────────┼────────────┼──────────┼───────────────────────││ │
-│  │  │One-Time            │ 1          │₹1,800    │[Remove]               ││ │
-│  │  │────────────────────┼────────────┼──────────┼───────────────────────││ │
-│  │  │Monthly (12 visits) │ 12         │₹14,400   │[Remove]               ││ │
-│  │  └────────────────────┴────────────┴──────────┴───────────────────────┘│ │
-│  │                                                                         │ │
-│  │  Location 1 Service Subtotal: ₹16,200                                   │ │
-│  │                                                                         │ │
-│  │  ── LOCATION 2: Whitefield, Bengaluru ──                                │ │
-│  │  [🔍 Search Service...]                                                 │ │
-│  │  (Same table structure as Location 1)                                   │ │
-│  │                                                                         │ │
-│  │  Location 2 Service Subtotal: ₹8,500                                    │ │
+│  │  Location 2 Service Subtotal: ₹ 11,200                                  │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  SECTION 5: PRODUCT SELECTION (Visible if Type = Product / Combined)         │
+│  SECTION 5: PRODUCT SELECTION                                                │
+│  (DYNAMIC VISIBILITY: Visible if Quotation Type = "Product" or "Combined")   │
 │  (Integrated with Module 10 – Product Master)                                │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
 │  │  [🔍 Search Product from Product Master...]                             │ │
@@ -1010,22 +988,18 @@ The Add Quotation form allows sales team members to create new quotations. The f
 │  │  ┌────────────┬──────────┬─────┬──────────┬─────────┬──────────┬─────┐│ │
 │  │  │Product Name│Prod. Code│UOM  │HSN Code  │Unit ₹   │Qty       │Total││ │
 │  │  │────────────┼──────────┼─────┼──────────┼─────────┼──────────┼─────││ │
-│  │  │Brass Sprayer│BSP3-001 │Nos  │8424      │₹1,200   │[  5  ]   │₹6,000│ │
-│  │  │  (Auto)    │(Auto)    │(Auto│(Auto)    │(Auto)   │          │(Auto)│ │
-│  │  │────────────┼──────────┼─────┼──────────┼─────────┼──────────┼─────││ │
-│  │  │Chemical X  │CH-001    │Ltr  │1234      │₹500     │[ 10  ]   │₹5,000│ │
-│  │  │  (Auto)    │(Auto)    │(Auto│(Auto)    │(Auto)   │          │(Auto)│ │
-│  │  └────────────┴──────────┴─────┴──────────┴─────────┴──────────┴─────┘│ │
+│  │  │Brass Sprayer│BSP3-001 │Nos  │8424      │₹ 1,200  │[  5  ]   │₹ 6k │ │
+│  │  │Chemical X  │CH-001    │Ltr  │1234      │₹ 500    │[ 10  ]   │₹ 5k │ │
+│  │  │└───────────┴──────────┴─────┴──────────┴─────────┴──────────┴─────┘│ │
 │  │                                                                         │ │
 │  │  ┌──────────┬──────────┬──────────┬──────────────────────────────────┐ │ │
 │  │  │CGST (₹)  │SGST (₹)  │IGST (₹)  │Line Total (₹)                   │ │ │
 │  │  │──────────┼──────────┼──────────┼──────────────────────────────────│ │ │
-│  │  │₹540      │₹540      │—         │₹7,080                            │ │ │
-│  │  │──────────┼──────────┼──────────┼──────────────────────────────────│ │ │
-│  │  │₹450      │₹450      │—         │₹5,900                            │ │ │
-│  │  └──────────┴──────────┴──────────┴──────────────────────────────────┘ │ │
+│  │  │₹ 540      │₹ 540      │—         │₹ 7,080                            │ │ │
+│  │  │₹ 450      │₹ 450      │—         │₹ 5,900                            │ │ │
+│  │  │└─────────┴──────────┴──────────┴──────────────────────────────────┘ │ │
 │  │                                                                         │ │
-│  │  Product Subtotal: ₹12,980                                              │ │
+│  │  Product Subtotal: ₹ 12,980                                              │ │
 │  │  [+ Add Product]                                                        │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
@@ -1036,23 +1010,23 @@ The Add Quotation form allows sales team members to create new quotations. The f
 │  │  │                                                                    ││ │
 │  │  │ Location           │ Services (₹) │ Products (₹) │ Subtotal (₹)  ││ │
 │  │  │ ───────────────────┼──────────────┼──────────────┼───────────────││ │
-│  │  │ HSR Layout, BLR    │ ₹16,200      │ —            │ ₹16,200       ││ │
-│  │  │ Whitefield, BLR    │ ₹8,500       │ —            │ ₹8,500        ││ │
-│  │  │ Products (General) │ —            │ ₹12,980      │ ₹12,980       ││ │
-│  │  └────────────────────────────────────────────────────────────────────┘│ │
+│  │  │ HSR Layout, BLR    │ ₹ 24,500     │ —            │ ₹ 24,500      ││ │
+│  │  │ Whitefield, BLR    │ ₹ 11,200     │ —            │ ₹ 11,200      ││ │
+│  │  │ Products (General) │ —            │ ₹ 12,980     │ ₹ 12,980      ││ │
+│  │  │ └──────────────────┴──────────────┴──────────────┴───────────────┘│ │
 │  │                                                                         │ │
-│  │  Services Subtotal         : ₹24,700                                    │ │
-│  │  Products Subtotal         : ₹11,000                                    │ │
+│  │  Services Subtotal         : ₹ 35,700                                    │ │
+│  │  Products Subtotal         : ₹ 12,980                                    │ │
 │  │  ──────────────────────────────────────────────────────────────────     │ │
-│  │  Subtotal (Before Tax)     : ₹35,700                                    │ │
-│  │  Tax (CGST + SGST / IGST)  : ₹1,980                                    │ │
+│  │  Subtotal (Before Tax)     : ₹ 48,680                                    │ │
+│  │  Tax (CGST + SGST / IGST)  : ₹ 8,762                                    │ │
 │  │  ──────────────────────────────────────────────────────────────────     │ │
-│  │  Total Before Discount     : ₹37,680                                    │ │
+│  │  Total Before Discount     : ₹ 57,442                                    │ │
 │  │  Discount Type:            [▼ Percentage / Flat Amount ▼]               │ │
-│  │  Discount Value:           [________]                                   │ │
-│  │  Discount Amount           : - ₹3,768                                   │ │
+│  │  Discount Value:           [ 10 ]%                                      │ │
+│  │  Discount Amount           : - ₹ 5,744                                   │ │
 │  │  ──────────────────────────────────────────────────────────────────     │ │
-│  │  ★ GRAND TOTAL             : ₹33,912                                   │ │
+│  │  ★ GRAND TOTAL             : ₹ 51,698                                   │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  SECTION 7: TERMS & VALIDITY                                                 │
@@ -1139,25 +1113,22 @@ _(Integrated with Module 12 – Service Management)_
 
 | Field               | Type                | Required | Options/Validation                                                                                                       | Notes                                   |
 | ------------------- | ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- |
-| Service Name        | Search Dropdown     | Yes      | Active services from Module 12                                                                                           | Fetches service configuration           |
+| Service Name        | Search Dropdown     | Yes      | Active services from Module 12                                                                                           | Triggers Dynamic Pricing Config         |
 | Pest Type           | Auto-filled         | System   | From service master                                                                                                      | Read-only                               |
-| Dynamic Pricing     | ASCII Block         | Auto     | Displays options based on Price Type (Fixed / Area / Inspection)                                                         | Per-service selection/calc              |
-| Rate (₹)            | Auto-calculated     | System   | Based on Dynamic Selection (Fixed) or Area (Area-Based)                                                                 | Dynamic fetch from Module 12            |
-| Warranty            | Auto-filled         | System   | Period + revisit count from service config                                                                               | Read-only                               |
-| Frequency           | Dropdown            | Yes      | Single / Monthly / Quarterly / AMC                                                                                       | Determines revisit cycle                |
-| Qty/Visits          | Number              | Yes      | Number of visits required                                                                                                | Default 1                               |
-| Total (₹)           | Number              | Auto     | `Rate × Qty`                                                                                                             | Auto-calculated                         |
-| Action              | Button              | —        | Add / Remove Service Row                                                                                                 | —                                       |
+| Pricing Configuration| Modal / Inline Block| Auto     | User enters BHK size or Area SQFT based on fetched logic                                                                 | Per-service selection/calc              |
+| Rate (₹)            | Auto-calculated     | System   | Based on Configuration Selection (BHK) or Area (SQFT)                                                                    | Dynamic fetch from Module 12            |
+| Frequency / Visits  | Dropdown            | Yes      | Single / Monthly / Quarterly / AMC                                                                                       | Determines revisit cycle                |
+| Total (₹)           | Number              | Auto     | `Rate × Total Visits`                                                                                                    | Auto-calculated                         |
+| Actions             | Button(s)           | —        | Edit Pricing / Remove Service                                                                                            | Per service row                         |
 
 **Business Rules:**
 
-- When service is selected, pricing auto-populates based on the **Selection at Service level or Area calculation**:
-  - **Fixed Price**: Matches BHK/Office size pricing from Module 12 based on selection in the Dynamic Pricing block.
-  - **Area Based**: Calculates `Base Price + (Rate per SQFT × Total SQFT)` from location details.
-  - **Inspection Based**: Sets initial price to `Inspection Fee`. Final quotation updated post-visit.
-- Warranty/Revisits: Inherited from Module 12 config for the selected service.
-- If AMC is selected: Total = Rate × Number of visits in contract duration.
-- Multiple services can be added per location, each following its own pricing model.
+- **Service Selection Trigger**: When a service is selected via search, a dynamic configuration block auto-opens to capture pricing inputs (BHK for Fixed, SQFT for Area-Based).
+- **Fixed Price**: Matches BHK/Office size pricing from Module 12 based on selection in the configuration block.
+- **Area Based**: Pulls SQFT from Section 3 but allows user override; calculates `Base Price + (Rate per SQFT × Total SQFT)`.
+- **AMC Mode Multiplier**: If Section 2 is set to AMC, the Line Total is automatically multiplied by the number of visits (e.g., Monthly = Rate x 12).
+- **Multi-Service Support**: Multiple services can be added under a single location; each is independently configured and calculated.
+- **Independence**: Removing a service or location recalculates only the affected subtotal and the global grand total.
 
 ---
 
@@ -1296,13 +1267,23 @@ Read-only detailed view of a quotation showing complete pricing breakdown, servi
 │  │  📍 LOCATION 1: HSR Layout, Bengaluru | 1200 sqft                       │ │
 │  │     Assigned Branch: BLR-HSR Branch                                     │ │
 │  │                                                                         │ │
-│  │  ┌────────────┬──────────┬─────────┬─────────┬────────┬────────────┐  │ │
-│  │  │Service     │Pest Type │Rate (₹) │Frequency│Visits  │Total (₹)   │  │ │
-│  │  │────────────┼──────────┼─────────┼─────────┼────────┼────────────│  │ │
-│  │  │Termite Ctrl│Termite   │₹1,800   │Monthly  │12      │₹21,600     │  │ │
-│  │  │Cockroach   │Cockroach │₹1,200   │Quarterly│4       │₹4,800      │  │ │
-│  │  └────────────┴──────────┴─────────┴─────────┴────────┴────────────┘  │ │
-│  │  Location 1 Subtotal: ₹26,400                                          │ │
+│  │  ┌────────────┬────────────┬─────────┬───────────┬────────┬────────────┐│ │
+│  │  │Service     │Pricing Type│Rate (₹) │Frequency  │Visits  │Total (₹)   ││ │
+│  │  │────────────┼────────────┼─────────┼───────────┼────────┼────────────││ │
+│  │  │Termite Ctrl│Fixed (3BHK)│₹1,800   │Monthly    │12      │₹21,600     ││ │
+│  │  │Cockroach   │Area Based  │₹2,900   │One-Time   │1       │₹2,900      ││ │
+│  │  └────────────┴────────────┴─────────┴───────────┴────────┴────────────┘│ │
+│  │  Location 1 Subtotal: ₹24,500                                          │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  📍 LOCATION 2: Whitefield, Bengaluru | 5000 sqft                          │ │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  ┌────────────┬────────────┬─────────┬───────────┬────────┬────────────┐│ │
+│  │  │Service     │Pricing Type│Rate (₹) │Frequency  │Visits  │Total (₹)   ││ │
+│  │  │────────────┼────────────┼─────────┼───────────┼────────┼────────────││ │
+│  │  │Rodent Ctrl │Area Based  │₹11,200  │One-Time   │1       │₹11,200     ││ │
+│  │  └────────────┴────────────┴─────────┴───────────┴────────┴────────────┘│ │
+│  │  Location 2 Subtotal: ₹11,200                                          │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  PRICING SUMMARY                                                             │
@@ -1403,20 +1384,6 @@ Warning popup displayed when a user attempts to delete (revoke) a quotation. Onl
 ┌─────────────────────────────────────────────────────────────┐
 │                                                              │
 │  ┌─────────────────────────────────────────────────────┐    │
-│  │                                                      │    │
-│  │  ⚠️  DELETE QUOTATION                               │    │
-│  │                                                      │    │
-│  │  ─────────────────────────────────────────────────   │    │
-│  │                                                      │    │
-│  │  Are you sure you want to delete this quotation?    │    │
-│  │                                                      │    │
-│  │  Quotation ID:    QT-2026-00142                     │    │
-│  │  Client Name:     Rahul Sharma                      │    │
-│  │  Type:            Service Quotation                 │    │
-│  │  Amount:          ₹28,037                           │    │
-│  │  Status:          Draft                             │    │
-│  │                                                      │    │
-│  │  ─────────────────────────────────────────────────   │    │
 │  │                                                      │    │
 │  │  ⚠️ This quotation has not been sent to the client  │    │
 │  │  and will be permanently deleted. This action        │    │
