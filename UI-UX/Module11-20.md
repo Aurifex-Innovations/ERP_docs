@@ -8196,3 +8196,782 @@ MODULE 17: GMA MANAGEMENT
 =========================================================================
 
 
+# 🎯 MODULE 18: CUSTOMER MANAGEMENT
+
+## Overview
+
+A master module acting as the central repository for all onboarded clients. Converts approved leads into revenue-generating entities and provides a "360-degree view" of a customer's entire lifetime relationship — spanning active sites, contracts, and service history. Serves as the foundational data source for all downstream commercial and operational modules.
+
+**Module Connections:**
+
+- **Depends on:** Module 15 (Lead Management – for lead-to-customer conversion), Module 7 (Branch Management), Module 9 (Tax Management – for PAN / GST validation)
+- **Used by:** Module 17 (GMA Management – "From Customer" source selection), Module 19 (Contract Management – customer is mandatory prerequisite), Module 20 (Sales Order Management), Module 16 (Quotation Management)
+- **Prerequisites:** Branch must be configured (Module 7) before onboarding a customer. For lead-based conversion, the lead must be in **Qualified** or **Won** status in Module 15.
+
+---
+
+# 18.1 Customer Master List View
+
+**Description:**
+A paginated data table displaying all customers registered in the system. Provides key filters, search, and row-level actions. Acts as the entry point into all customer sub-screens.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         CUSTOMER MANAGEMENT                                  │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Filters                                                                │  │
+│  │                                                                        │  │
+│  │ Customer Type : [▼ All / Contract / One-time / Product ▼]             │  │
+│  │ Status        : [▼ All / Active / Inactive ▼]                         │  │
+│  │ Branch        : [▼ All Branches ▼]                                     │  │
+│  │ Date Range    : [📅 From] – [📅 To]   (Onboarding Date)               │  │
+│  │                                                                        │  │
+│  │ Search: [________________________] (Customer ID / Name / Phone / GST) │  │
+│  │                                                [Reset Filters]         │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│                                                  [+ ADD CUSTOMER]            │
+│                                                                              │
+│  CUSTOMER TABLE                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Cust ID    │Name              │Type        │Primary Contact│Branch│Status  ││
+│  │───────────┼──────────────────┼────────────┼───────────────┼──────┼────────││
+│  │CUST-00245 │ABC Corporation   │Contract    │+91 98765 12345│MUM   │🟢 Active││
+│  │CUST-00244 │Sharma Residence  │One-time    │+91 99001 23456│BLR   │🟢 Active││
+│  │CUST-00243 │XYZ Mall Pvt Ltd  │Product     │+91 98001 34567│HYD   │🔴 Inact.││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Total Sites│Created Date │Created By      │Actions                         ││
+│  │───────────┼─────────────┼────────────────┼────────────────────────────────││
+│  │3          │15 Jan 2026  │System Admin    │[View] [Edit] [Deactivate]      ││
+│  │1          │10 Feb 2026  │Rahul Sharma    │[View] [Edit] [Deactivate]      ││
+│  │2          │05 Mar 2026  │Priya Kumar     │[View] [Edit] [Activate]        ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  Pagination:  Previous   1   2   3   ...   Next                              │
+│                                                                              │
+│  Legend: 🟢 Active   🔴 Inactive                                              │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Table View Fields
+
+| Field             | Type         | Description                                                      |
+| ----------------- | ------------ | ---------------------------------------------------------------- |
+| Customer ID       | Text (Auto)  | System-generated unique ID (e.g., CUST-00245)                    |
+| Name              | Text         | Company name (Contract/Product) or Full name (One-time)          |
+| Customer Type     | Badge        | Contract / One-time / Product                                       |
+| Primary Contact   | Text         | Primary phone number of the account contact                      |
+| Primary Email     | Text         | Primary email address of the account contact                      |
+| Branch Name       | Text         | Servicing branch assigned to this customer                       |
+| Status            | Badge        | Active / Inactive                                                |
+| Total Sites       | Number       | Total number of sites                                            |
+| Created Date      | Date         | Date of customer creation                                        |
+| Created By        | Text         | User who created the customer                                    |
+| Actions           | Button Group | [View] [Edit] [Deactivate / Activate]                            |
+
+---
+
+## Filters
+
+| Filter        | Type       | Options                                          |
+| ------------- | ---------- | ------------------------------------------------ |
+| Customer Type | Dropdown   | All / Contract / One-time / Product              |
+| Status        | Dropdown   | All / Active / Inactive                          |
+| Branch        | Dropdown   | All Branches / Specific Branch (from Module 7)   |
+| Date Range    | Date Range | From – To (Customer onboarding / creation date)  |
+
+---
+
+## Search
+
+Searchable by:
+- Customer ID
+- Customer Name
+- Phone Number
+
+---
+
+## Actions (Table Row)
+
+| Action          | Condition          | Description                                                 |
+| --------------- | ------------------ | ----------------------------------------------------------- |
+| **View**        | All statuses       | Opens the customer detail dashboard (Screen 18.3)           |
+| **Edit**        | Active customers   | Opens the Edit Customer form (Screen 18.4)                  |
+| **Deactivate**  | Status = Active    | Opens the deactivation confirmation dialog (Screen 18.5)    |
+| **Activate**    | Status = Inactive  | Re-activates the customer record, sets status back to Active |
+
+---
+
+## Form Actions
+
+| Action            | Description                                                          |
+| ----------------- | -------------------------------------------------------------------- |
+| **+ Add Customer**| Opens the **Add Customer Form** (Screen 18.2)                        |
+
+---
+
+================================================================================
+
+# 18.2 Add Customer Form
+
+**Description:**
+A multi-section form to register a new customer — either by converting an existing qualified Lead (auto-fill) or by entering details manually. Captures entity information, billing & contact details, and the first physical service site.
+
+> **Note:** This screen is also triggered from the Lead Management module (Module 15) via the **[Convert to Customer]** action on a Qualified lead.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to Customer List]           ADD CUSTOMER                            │
+│                                                                              │
+│  Customer ID: CUST-XXXX (Auto-generated on save)                             │
+│                                                                              │
+│  SECTION 1: SOURCE                                                           │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Entry Mode*:                                                           │ │
+│  │  (•) Import from Lead    ( ) Manual Entry                               │ │
+│  │                                                                         │ │
+│  │  IF "IMPORT FROM LEAD" SELECTED:                                        │ │
+│  │  Select Lead*:    [🔍 Search Lead by Name / ID / Phone ▼]              │ │
+│  │                                                                         │ │
+│  │  AUTO-FILLED FROM LEAD:                                                 │ │
+│  │  Lead ID         : LD-2026-00142  (Read-only)                          │ │
+│  │  Lead Name       : Rahul Sharma   (Read-only)                          │ │
+│  │  Phone           : +91 98765 43210 (Read-only)                         │ │
+│  │  Email           : rahul@example.com (Read-only)                       │ │
+│  │  Lead Type       : Contract  (Read-only)                               │ │
+│  │  Lead Status     : QUALIFIED ✅ (Read-only)                             │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  SECTION 2: ENTITY INFORMATION                                               │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Customer Type*  : (•) Contract    ( ) One-time    ( ) Product         │ │
+│  │                                                                         │ │
+│  │  Entity / Full Name* : [________________________________]              │ │
+│  │  Industry Type   : [▼ Hospitality / Healthcare / Retail / Other ▼]     │ │
+│  │  PAN Number      : [__________] (e.g., AAAAA0000A)                    │ │
+│  │  GST Number      : [__________________] (e.g., 22AAAAA0000A1Z5)       │ │
+│  │  Contact Person* : [________________________________]                  │ │
+│  │  Designation     : [________________________________]                  │ │
+│  │  Phone*          : [__________________]                                │ │
+│  │  Alternate Phone : [__________________]                                │ │
+│  │  Email*          : [________________________________]                  │ │
+│  │  Branch*         : [▼ Select Branch ▼]                                 │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  SECTION 3: BILLING & CONTACT DETAILS                                        │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Billing Address Line 1*  : [________________________________]         │ │
+│  │  Billing Address Line 2   : [________________________________]         │ │
+│  │  City*                    : [________________]                         │ │
+│  │  State*                   : [▼ Select State ▼]                         │ │
+│  │  Pincode*                 : [________]                                 │ │
+│  │                                                                         │ │
+│  │  ── Finance / Accounts Point of Contact ──                             │ │
+│  │  Finance Contact Name*    : [________________________________]         │ │
+│  │  Finance Contact Phone*   : [__________________]                       │ │
+│  │  Finance Contact Email    : [________________________________]         │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│       [SAVE AS DRAFT]         [SAVE & SUBMIT]         [CANCEL]               │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Section 1: Source Fields
+
+| Field       | Type            | Required    | Options / Validation                                                    | Notes                                           |
+| ----------- | --------------- | ----------- | ----------------------------------------------------------------------- | ----------------------------------------------- |
+| Entry Mode  | Radio           | Yes         | Import from Lead / Manual Entry                                         | Determines which sub-fields are shown below     |
+| Select Lead | Search Dropdown | Conditional | Leads with Status = Qualified or Won (from Module 15)                   | Required if Entry Mode = Import from Lead       |
+| Lead ID     | Auto-filled     | System      | Read-only                                                               | Populated on lead selection                     |
+| Lead Name   | Auto-filled     | System      | Read-only                                                               | Populated on lead selection                     |
+| Phone       | Auto-filled     | System      | Read-only                                                               | Populated on lead selection                     |
+| Email       | Auto-filled     | System      | Read-only                                                               | Populated on lead selection                     |
+| Lead Type   | Auto-filled     | System      | Read-only                                                               | Determines default Customer Type in Section 2   |
+| Lead Status | Auto-filled     | System      | Read-only                                                               | Must be Qualified or Won to allow conversion    |
+
+> **Note:** Only leads with status **Qualified** or **Won** appear in the Lead search dropdown. Leads in Pending, New, or Lost status cannot be converted to customers.
+
+---
+
+## Section 2: Entity Information Fields
+
+| Field               | Type      | Required | Validation                                              | Notes                                   |
+| ------------------- | --------- | -------- | ------------------------------------------------------- | --------------------------------------- |
+| Customer Type       | Radio     | Yes      | Contract / One-time / Product                           | Customer categorization metric          |
+| Entity / Full Name  | Text      | Yes      | Min 3 chars, Max 100 chars                              | Legal entity name or individual's name    |
+| Industry Type       | Dropdown  | No       | Hospitality / Healthcare / Education / IT / Other       | Used for segmentation                   |
+| PAN Number          | Text      | No       | Format: 5 alpha + 4 digits + 1 alpha (e.g., AAAAA0000A) | Validated against standard PAN regex    |
+| GST Number          | Text      | No       | Format: 15-char alphanumeric (e.g., 22AAAAA0000A1Z5)  | Optional; validated if provided         |
+| Contact Person      | Text      | Yes      | Min 3 chars, Max 100 chars                              | Primary decision-maker contact          |
+| Designation         | Text      | No       | Max 100 chars                                           | Job title of contact person             |
+| Phone               | Number    | Yes      | 10-digit Indian mobile number                           | Primary contact number                  |
+| Alternate Phone     | Number    | No       | 10-digit Indian mobile number                           | Optional secondary contact              |
+| Email               | Email     | Yes      | Valid email format                                      | Used for all communications & invoices  |
+| Branch              | Dropdown  | Yes      | Active branches from Module 7                           | Servicing branch for this customer      |
+
+---
+
+## Section 3: Billing & Contact Details Fields
+
+| Field                  | Type     | Required | Validation                            | Notes                                       |
+| ---------------------- | -------- | -------- | ------------------------------------- | ------------------------------------------- |
+| Billing Address Line 1 | Text     | Yes      | Min 10 chars, Max 200 chars           | Street, building, locality                  |
+| Billing Address Line 2 | Text     | No       | Max 200 chars                         | Landmark, area                              |
+| City                   | Text     | Yes      | Min 3 chars                           | Billing city                                |
+| State                  | Dropdown | Yes      | Indian states list                    | Billing state                               |
+| Pincode                | Number   | Yes      | 6-digit numeric                       | India PIN code                              |
+| Finance Contact Name   | Text     | Yes      | Min 3 chars, Max 100 chars            | Accounts/Finance department point-of-contact|
+| Finance Contact Phone  | Number   | Yes      | 10-digit Indian mobile number         | Finance contact's phone                     |
+| Finance Contact Email  | Email    | No       | Valid email format                    | Finance contact's email (for invoices)      |
+
+---
+
+## Form Actions
+
+| Button             | Description                                                                  |
+| ------------------ | ---------------------------------------------------------------------------- |
+| **Save as Draft**  | Saves the form without finalising. Customer appears in list with Draft status.|
+| **Save & Submit**  | Validates all required fields and creates the Customer record as Active.      |
+| **Cancel**         | Discards all entries and returns to the Customer Master List.                 |
+
+---
+
+## Validation Rules
+
+| Validation                            | Rule                                                                    |
+| ------------------------------------- | ----------------------------------------------------------------------- |
+| Entry Mode Required                   | Must select Import from Lead or Manual Entry                            |
+| Lead Selection Required               | If Entry Mode = Import from Lead, a valid qualified lead must be chosen |
+| Customer Type Required                | Must select Contract, One-time, or Product                              |
+| PAN Format                            | If provided, must match AAAAA0000A pattern                              |
+| GST Format                            | If provided, must be 15-char alphanumeric starting with valid state code|
+| Duplicate Phone Check                 | System warns if phone number already exists on another customer record  |
+| Duplicate GST Check                   | System blocks creation if GST number already registered                 |
+| Billing Address Required              | At least Line 1, City, State, Pincode must be filled                   |
+| Finance Contact Required              | Name and Phone are mandatory                                            |
+| Branch Required                       | Must select an active branch                                            |
+
+---
+
+## System Behaviors on Save
+
+| Trigger                    | System Action                                                                   |
+| -------------------------- | ------------------------------------------------------------------------------- |
+| Entry Mode = Import Lead   | Auto-populates all lead fields; links created customer back to the Lead record  |
+| Save & Submit              | Customer status set to Active; Customer ID generated (e.g., CUST-00245)          |
+| Duplicate GST detected     | Blocks save and shows error: "GST already registered under another customer"     |
+| Lead converted             | Lead status updated to **Customer** (Won) in Module 15                           |
+
+---
+
+================================================================================
+
+# 18.3 View Customer Details
+
+**Description:**
+A unified, read-only dashboard for a specific customer. Provides a 360-degree view split across three logical tabs — Basic Details & Sites, Contract Logs, and Sales Orders & Service History. All data is display-only; modifications happen via the Edit action.
+
+================================================================================
+
+# 18.3.1 Tab 1: Basic Details
+
+**Description:**
+Displays the full entity profile — entity info and billing address for this customer.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [Tab 1: Basic Details ●]          [Tab 2: Contract Logs]                   │
+│  [Tab 3: Sales Orders & Service History]                                     │
+│                                                                              │
+│  ─── ENTITY INFORMATION ──────────────────────────────────────────────────  │
+│  Entity / Name   : ABC Corporation               Type: Contract              │
+│  Industry        : Hospitality                   PAN : AAAAA0000A            │
+│  GST             : 27AAAAA0000A1Z5               Branch: Mumbai              │
+│  Contact Person  : Rahul Mehta  │  Designation: General Manager            │
+│                                                                              │
+│  ─── BILLING ADDRESS ─────────────────────────────────────────────────────  │
+│  Address         : 4th Floor, Crystal Tower, Andheri East, Mumbai           │
+│  City            : Mumbai    │  State: Maharashtra    │  PIN: 400069         │
+│  Finance Contact : Priya Sharma   │  Phone: +91 99001 23456                 │
+│  Finance Email   : accounts@abccorp.com                                     │
+│                                                                              │
+│  Pagination: Previous  1  2  Next                                            │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Entity Information Fields (Read-Only)
+
+| Field              | Type    | Description                                            |
+| ------------------ | ------- | ------------------------------------------------------ |
+| Entity / Name      | Display | Legal entity name or individual's name                 |
+| Customer Type      | Display | Contract / One-time / Product                          |
+| Industry           | Display | Sector classification (if applicable)                  |
+| PAN Number         | Display | Tax ID                                                 |
+| GST Number         | Display | GST registration (if provided)                         |
+| Branch             | Display | Assigned servicing branch                              |
+| Contact Person     | Display | Primary decision-maker                                 |
+| Designation        | Display | Job title                                              |
+| Phone              | Display | Primary contact number                                 |
+| Alternate Phone    | Display | Secondary contact (if provided)                        |
+| Email              | Display | Email address                                          |
+| LTV                | Currency| Lifetime Value — auto-calculated sum of all SO values   |
+| Onboarded Date     | Date    | Date when customer was created / activated             |
+
+---
+
+## Billing Address Fields (Read-Only)
+
+| Field                | Type    | Description                              |
+| -------------------- | ------- | ---------------------------------------- |
+| Billing Address      | Display | Full billing address                     |
+| City / State / PIN   | Display | Location details                         |
+| Finance Contact Name | Display | Accounts department contact              |
+| Finance Contact Phone| Display | Finance phone                            |
+| Finance Contact Email| Display | Finance email                            |
+
+---
+
+
+
+================================================================================
+
+# 18.3.2 Tab 2: Contract Logs
+
+**Description:**
+A chronological grid listing all agreements (both historical and active) associated with this customer. Provides a snapshot of contract status and links to the full contract record in Module 19.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [Tab 1: Basic Details]          [Tab 2: Contract Logs ●]                   │
+│  [Tab 3: Sales Orders & Service History]                                     │
+│                                                                              │
+│  CONTRACTS GRID                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Contract ID  │Start Date  │End Date    │Contract Value│GMA ID  │Status    ││
+│  │─────────────┼────────────┼────────────┼──────────────┼────────┼──────────││
+│  │CON-2026-0041│01 Jan 2026 │31 Dec 2026 │₹ 1,56,000    │GMA-091 │✅ Active  ││
+│  │CON-2025-0018│01 Jan 2025 │31 Dec 2025 │₹ 1,10,000    │GMA-044 │📁 Expired ││
+│  │CON-2024-0009│01 Jul 2024 │15 Sep 2024 │₹ 45,000      │GMA-021 │❌ Termin. ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  Pagination: Previous  1  2  Next                                            │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Contracts Grid Fields
+
+| Field          | Type    | Description                                                  |
+| -------------- | ------- | ------------------------------------------------------------ |
+| Contract ID    | Link    | System ID; clickable — navigates to Module 19 contract detail|
+| Start Date     | Date    | Contract commencement date                                   |
+| End Date       | Date    | Contract scheduled end date                                  |
+| Contract Value | Currency| Total value of the contract (₹)                             |
+| GMA ID         | Link    | Source GMA sheet; clickable — navigates to Module 17 GMA view|
+| Status         | Badge   | Active / Expired / Terminated / Draft                        |
+
+> **Note:** This tab is **read-only**. To create a new contract for this customer, navigate to **Module 19 (Contract Management)** and select this customer as the source. A valid approved GMA (Module 17) is required before a contract can be created.
+
+---
+
+================================================================================
+
+# 18.3.3 Tab 3: Sales Orders & Service History
+
+**Description:**
+A consolidated grid showing all Sales Orders and their real-time service execution status linked to this customer. Bridges the commercial (sales) and operational (execution) views.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [Tab 1: Basic Details]          [Tab 2: Contract Logs]                     │
+│  [Tab 3: Sales Orders & Service History ●]                                   │
+│                                                                              │
+│  SALES ORDERS & SERVICE HISTORY                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │SO Number   │SO Date    │Linked Contract│Order Type│Total Value│SO Status ││
+│  │────────────┼───────────┼───────────────┼──────────┼───────────┼──────────││
+│  │SO-2026-0112│10 Mar 2026│CON-2026-0041  | Contract      │₹ 13,000   │✅ Open   ││
+│  │SO-2026-0087│10 Feb 2026│CON-2026-0041  | Contract       │₹ 13,000   │✅ Fulfld ││
+│  │SO-2026-0043│15 Jan 2026│—              │One-Time  │₹ 8,500    │✅ Fulfld ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Service Status                                                            ││
+│  │──────────────────────────────────────────────────────────────────────────││
+│  │🕐 Scheduled                                                              ││
+│  │✅ Completed                                                              ││
+│  │✅ Completed                                                              ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  Pagination: Previous  1  2  3  Next                                         │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Sales Orders Grid Fields
+
+| Field            | Type    | Description                                                        |
+| ---------------- | ------- | ------------------------------------------------------------------ |
+| SO Number        | Link    | System ID for the Sales Order; navigates to Module 20 SO detail    |
+| SO Date          | Date    | Date the Sales Order was generated                                 |
+| Linked Contract  | Link    | Contract ID the SO was generated from (blank for standalone SOs)   |
+| Order Type       | Text    |  Contract / One-Time Service / Product Sale                     |
+| Total Value (₹)  | Currency| Total invoiced value of this Sales Order                           |
+| SO Status        | Badge   | Draft / Open / Fulfilled / Billed / Cancelled                      |
+| Service Status   | Badge   | Scheduled / In Progress / Completed / Pending                      |
+
+> **Note:** This tab is **read-only**. Sales Orders are created and managed in **Module 20 (Sales Order Management)**. Service Status is updated by the Operations module once Job Cards are dispatched.
+
+---
+
+================================================================================
+
+# 18.4 Edit Customer Form
+
+**Description:**
+Pre-filled form mirroring the Add Customer form (18.2). Allows authorised users to update master data — billing address, contact persons, entity details. All changes are logged in the Master Data Audit Log.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to Customer Profile]     EDIT CUSTOMER   CUST-00245                │
+│                                                                              │
+│  SECTION 2: ENTITY INFORMATION  (Pre-filled; editable fields below)         │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Customer Type   : Contract  [Locked — cannot change after creation]    │ │
+│  │  Entity / Name*  : [ABC Corporation________________]                    │ │
+│  │  Industry Type   : [▼ Hospitality ▼]                                    │ │
+│  │  PAN Number      : AAAAA0000A  [Locked — audit-sensitive]               │ │
+│  │  GST Number      : [27AAAAA0000A1Z5__________] (Editable)               │ │
+│  │  Contact Person* : [Rahul Mehta__________]                              │ │
+│  │  Designation     : [General Manager________________]                    │ │
+│  │  Phone*          : [+91 98765 12345_______________]                     │ │
+│  │  Alternate Phone : [________________________________]                   │ │
+│  │  Email*          : [rahul@abccorp.com_______________]                   │ │
+│  │  Branch*         : [▼ Mumbai ▼]                                          │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  SECTION 3: BILLING & CONTACT DETAILS (Pre-filled; fully editable)          │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Billing Address Line 1*  : [4th Floor, Crystal Tower______]            │ │
+│  │  Billing Address Line 2   : [Andheri East____________________]          │ │
+│  │  City*                    : [Mumbai______________]                      │ │
+│  │  State*                   : [▼ Maharashtra ▼]                           │ │
+│  │  Pincode*                 : [400069_]                                   │ │
+│  │  Finance Contact Name*    : [Priya Sharma___________]                   │ │
+│  │  Finance Contact Phone*   : [+91 99001 23456________]                   │ │
+│  │  Finance Contact Email    : [accounts@abccorp.com___]                   │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+
+│                                                                              │
+│       [SAVE CHANGES]                                          [CANCEL]      │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Editable vs. Locked Fields
+
+| Field                  | Editable? | Notes                                                          |
+| ---------------------- | --------- | -------------------------------------------------------------- |
+| Customer Type          | ❌ Locked  | Cannot change Contract/Product → One-time or vice versa        |
+| Entity / Name          | ✅ Yes     | Can correct spelling or reflect legal name change              |
+| Industry Type          | ✅ Yes     | Dropdown update allowed                                        |
+| PAN Number             | ❌ Locked  | Tax-sensitive; requires admin override with audit note         |
+| GST Number             | ✅ Yes     | Can be added or updated                                        |
+| Contact Person         | ✅ Yes     | Contact person can change                                      |
+| Designation            | ✅ Yes     | Free text update allowed                                       |
+| Phone / Alternate      | ✅ Yes     | Duplicate phone check applies on save                          |
+| Email                  | ✅ Yes     | Valid email format check                                       |
+| Branch                 | ✅ Yes     | Can reassign to another active branch                          |
+| Billing Address        | ✅ Yes     | Fully editable                                                 |
+| Finance Contact        | ✅ Yes     | Fully editable                                                 |
+
+
+---
+
+## Validation Rules
+
+| Validation                   | Rule                                                              |
+| ---------------------------- | ----------------------------------------------------------------- |
+| Required fields remain filled| All previously required fields must still have valid values       |
+| GST Format (if edited)       | Must be valid 15-char alphanumeric                               |
+| Duplicate Phone Check        | Warns if phone number already exists on another active customer   |
+| Duplicate GST Check          | Blocks save if updated GST matches another registered customer    |
+| Branch Active                | Selected branch must be Active in Module 7                        |
+
+---
+
+## Audit Log Behavior
+
+Every save triggers an **audit log entry** recording:
+
+| Log Field      | Value                              |
+| -------------- | ---------------------------------- |
+| Changed By     | Logged-in user ID and name         |
+| Changed On     | Timestamp                          |
+| Fields Changed | Array of changed field names       |
+| Previous Value | Before-state for each changed field|
+| New Value      | After-state for each changed field |
+
+> **Note:** The customer **Master Data Audit Log** can be viewed by Admin and Finance Auditor roles. It is accessible from the Customer Detail page under the audit trail link.
+
+---
+
+## Form Actions
+
+| Button            | Description                                                                   |
+| ----------------- | ----------------------------------------------------------------------------- |
+| **Save Changes**  | Validates all required fields, saves updates, records audit log entry          |
+| **Cancel**        | Discards all unsaved changes and returns to the Customer Detail view           |
+
+---
+
+================================================================================
+
+# 18.5 Delete (Deactivate) Customer
+
+**Description:**
+A soft-delete mechanism that marks a customer as **Inactive** rather than permanently removing them from the system. All historical data (contracts, sales orders, sites) is preserved for audit and reporting. Hard deletion is not permitted.
+
+---
+
+## Screen Layout
+
+```
+┌───────────────────────────────────────────────────────┐
+│           DEACTIVATE CUSTOMER                          │
+│                                                        │
+│                                                        │
+│  ⚠️  WARNING: This action will deactivate the customer │
+│  record. Active contracts and pending sales orders     │
+│  must be resolved before deactivation.                 │
+│                                                        │
+│  ELIGIBILITY CHECK:                                    │
+│  Active Contracts   : ❌  2 Active Contracts found     │
+│  Open Sales Orders  : ❌  1 Open Sales Order found     │
+│                                                        │
+│  ──  Deactivation is BLOCKED.  ──                      │
+│  Please close or terminate all active contracts        │
+│  and sales orders before deactivating this customer.   │
+│                                                        │
+│              [OK — Go Back]                            │
+└───────────────────────────────────────────────────────┘
+```
+
+*When eligible (no active contracts / open SOs):*
+
+```
+┌───────────────────────────────────────────────────────┐
+│           DEACTIVATE CUSTOMER                          │
+│                                                        │
+│  Customer   : DEF Industries (CUST-00243)              │
+│                                                        │
+│  ELIGIBILITY CHECK:                                    │
+│  Active Contracts   : ✅  None                         │
+│  Open Sales Orders  : ✅  None                         │
+│                                                        │
+│  Reason for Deactivation*:                             │
+│  [▼ Select Reason ▼]                                   │
+│      • Customer Relocated                              │
+│      • Business Closure                               │
+│      • Non-Renewal                                     │
+│      • Payment Default                                 │
+│      • Other                                           │
+│                                                        │
+│  [CONFIRM DEACTIVATE]        [CANCEL]                  │
+└───────────────────────────────────────────────────────┘
+```
+
+---
+
+## Deactivation Prerequisite Check
+
+| Check                   | Condition to Block                                       | Error Message Shown                                       |
+| ----------------------- | -------------------------------------------------------- | --------------------------------------------------------- |
+| Active Contracts        | Customer has ≥ 1 contract with Status = Active           | "X Active Contract(s) must be terminated before deactivation" |
+| Open Sales Orders       | Customer has ≥ 1 SO with Status = Open or Draft          | "X Open Sales Order(s) must be fulfilled or cancelled first" |
+
+---
+
+## Deactivation Form Fields
+
+| Field                | Type     | Required    | Options / Validation                                                                   |
+| -------------------- | -------- | ----------- | -------------------------------------------------------------------------------------- |
+| Reason for Deactivation | Dropdown | Yes      | Customer Relocated / Business Closure / Non-Renewal / Payment Default / Other          |
+
+---
+
+## Validation Rules
+
+| Validation                    | Rule                                                          |
+| ----------------------------- | ------------------------------------------------------------- |
+| No Active Contracts           | Deactivation fails if any contract has Status = Active        |
+| No Open Sales Orders          | Deactivation fails if any SO has Status = Open or Draft       |
+| Reason Required               | A reason must be selected from the dropdown                   |
+| Remarks Required (if Other)   | Free-text remark is mandatory when "Other" reason is selected |
+
+---
+
+## System Behavior on Deactivation
+
+| Trigger                      | System Action                                                             |
+| ---------------------------- | ------------------------------------------------------------------------- |
+| Confirm Deactivate clicked   | Customer status set to **Inactive**                                        |
+| Status change applied        | Customer no longer appears in default Active listing (remains searchable) |
+| Sites linked                 | All linked sites are also flagged Inactive automatically                   |
+| Audit log                    | Deactivation event logged with Reason, Timestamp, and user who acted      |
+| Reactivation possible        | Admin can reactivate the customer from the list by clicking [Activate]    |
+
+---
+
+================================================================================
+
+## RBAC – Role-Based Access Control
+
+| Role              | List View (18.1)          | Add Customer (18.2) | View Details (18.3) | Edit (18.4) | Deactivate (18.5) |
+| ----------------- | ------------------------- | ------------------- | ------------------- | ----------- | ----------------- |
+| Sales Person      | View (own branch)         | ✅                   | ✅                   | ✅           | ❌                 |
+| Sales Manager     | View (own branch / team)  | ✅                   | ✅                   | ✅           | ✅                 |
+| Branch Manager    | View (own branch)         | ✅                   | ✅                   | ✅           | ✅                 |
+| Head Ops / Admin  | View (all branches)       | ✅                   | ✅                   | ✅           | ✅                 |
+| Finance Auditor   | View (all – read-only)    | ❌                   | ✅                   | ❌           | ❌                 |
+
+---
+
+================================================================================
+
+## Navigation Flow Summary
+
+```
+MODULE 18: CUSTOMER MANAGEMENT
+│
+├── 18.1 Customer Master List
+│   ├── [+ Add Customer] → 18.2 Add Customer Form
+│   │     ├── [Save as Draft]   → Customer created (Draft)
+│   │     └── [Save & Submit]   → ✅ Customer created (Active)
+│   │           └── Lead → Customer link established in Module 15
+│   │
+│   ├── [View] → 18.3 View Customer Details
+│   │     ├── Tab 1: Basic Details & Sites
+│   │     │     └── [+ Add Site] → Site sub-form (inline)
+│   │     ├── Tab 2: Contract Logs
+│   │     │     └── [Contract ID link] → Module 19 Contract Detail
+│   │     └── Tab 3: Sales Orders & Service History
+│   │           └── [SO Number link] → Module 20 Sales Order Detail
+│   │
+│   ├── [Edit] → 18.4 Edit Customer Form
+│   │     ├── Modify master data → Audit log recorded
+│   │     └── [+ Add New Site] → New site linked to customer
+│   │
+│   └── [Deactivate] → 18.5 Deactivation Dialog
+│         ├── Eligibility Check → Block if active contracts / SOs
+│         └── Confirm with Reason → Customer set to Inactive
+```
+
+---
+
+================================================================================
+
+## Module Dependency Map
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                                                                                  │
+│   MODULE 15             MODULE 7             MODULE 9                            │
+│   Lead Management       Branch Management    Tax Management                      │
+│   ┌──────────┐         ┌──────────┐         ┌──────────┐                        │
+│   │ Lead ID, │         │ Branch   │         │ PAN /    │                        │
+│   │ Name,    │         │ list for │         │ GST      │                        │
+│   │ Phone,   │         │ dropdown │         │ Validation│                       │
+│   │ Type,    │         │ selection│         │ rules    │                        │
+│   │ Status   │         └─────┬────┘         └─────┬────┘                        │
+│   └─────┬────┘               │                    │                             │
+│         │                    │                    │                             │
+│         └─────────────┐  ┌───┘        ────────────┘                             │
+│                       │  │                                                      │
+│                       ▼  ▼                                                      │
+│               ╔═══════════════════════════════════╗                             │
+│               ║    MODULE 18: CUSTOMER MANAGEMENT  ║                             │
+│               ║                                    ║                             │
+│               ║  • Entity Info (Contract/One-time) ║                             │
+│               ║  • Billing & Contact Details       ║                             │
+│               ║  • Sites Master (Site ID, SQFT)    ║                             │
+│               ║  • LTV Tracking                    ║                             │
+│               ╚══════════╤════════════════╤════════╝                             │
+│                          │                │                                     │
+│              ┌───────────┘        ┌───────┘                                     │
+│              ▼                    ▼                                             │
+│   ╔══════════════════╗  ╔═══════════════════════╗                               │
+│   ║  MODULE 17       ║  ║  MODULE 19             ║                               │
+│   ║  GMA Management  ║  ║  Contract Management   ║                               │
+│   ║  (From Customer  ║  ║  (Customer prerequisite║                               │
+│   ║   source)        ║  ║   for contract)        ║                               │
+│   ╚══════════════════╝  ╚═══════════════════════╝                               │
+│                                   │                                             │
+│                                   ▼                                             │
+│                        ╔═══════════════════════╗                                │
+│                        ║  MODULE 20             ║                                │
+│                        ║  Sales Order Mgmt      ║                                │
+│                        ╚═══════════════════════╝                                │
+│                                                                                  │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Data Flow Table
+
+| Source Module  | Data Provided                                           | Used In (Customer Mgmt)                              |
+| -------------- | ------------------------------------------------------- | ---------------------------------------------------- |
+| **Module 15**  | Lead ID, Name, Phone, Email, Type, Status               | Section 1: Source Selection (Import from Lead)       |
+| **Module 7**   | Branch list (Active branches)                           | Section 2: Branch dropdown                           |
+| **Module 9**   | PAN / GST validation rules                              | Section 2: Entity Information (format validation)    |
+| **Module 18**  | Customer ID, Site IDs, Billing Address                  | Module 17 (GMA), Module 19 (Contract), Module 20 (SO)|
+| **Module 19**  | Contract counts and status per customer                 | 18.3 Tab 2: Contract Logs & LTV calculation          |
+| **Module 20**  | Sales Order counts and service history per customer     | 18.3 Tab 3: Sales Orders & Service History           |
+
+
+
+=======================================================================================
