@@ -928,9 +928,7 @@ A multi-section form to formalize a service agreement. Inherits approximately 80
 │  │  GMA ID            : GMA-00091   (Read-only)                           │ │
 │  │  Customer Name     : ABC Corporation (Read-only)                       │ │
 │  │  Customer ID       : CUST-00245  (Read-only)                           │ │
-│  │  Service Type      : Cockroach Treatment (Read-only)                   │ │
-│  │  Service Mode      : Contract (AMC) (Read-only)                        │ │
-│  │  No. of Sites      : 3 (Read-only)                                     │ │
+│  │  No. of Sites      : 2 (Read-only)                                     │ │
 │  │  Total Cost (₹)    : ₹ 1,20,992 (Read-only from GMA)                  │ │
 │  │  Total Sale Price   : ₹ 2,04,000 (Read-only from GMA)                  │ │
 │  │  Overall GM%       : 40.7% (Read-only)                                 │ │
@@ -942,13 +940,12 @@ A multi-section form to formalize a service agreement. Inherits approximately 80
 │  │  │──────────┼─────────────┼──────────────────┼──────────┼────────────│ │ │
 │  │  │SITE-00312│ Head Office │ Andheri East     │  3,500   │ Commercial │ │ │
 │  │  │SITE-00313│ Warehouse   │ Bhiwandi, Thane  │  8,000   │ Industrial │ │ │
-│  │  │SITE-00314│ Showroom    │ Bandra West      │  1,200   │ Commercial │ │ │
 │  │  └──────────┴─────────────┴──────────────────┴──────────┴────────────┘ │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  SECTION 2: CONTRACT TERMS                                                   │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  Contract Duration*  : [▼ 6 Months / 1 Year / 2 Years / 3 Years / Custom ▼] │ │
+│  │  Contract Duration*  : [▼ 1 Year / 2 Years / 3 Years / Custom ▼]        │ │
 │  │  Start Date*         : [📅 Date Picker]                                │ │
 │  │  End Date*           : [📅 Auto-calculated / Manual if Custom]         │ │
 │  │  Total Sale Value (₹)*: [₹ 2,04,000] (Auto from GMA, editable)        │ │
@@ -959,29 +956,52 @@ A multi-section form to formalize a service agreement. Inherits approximately 80
 │  │                        [___________________________________________]   │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  SECTION 3: SERVICE SCHEDULE                                                 │
+│  SECTION 3: SITE-WISE SERVICE & SCHEDULE CONFIGURATION                       │
+│  (Configured based on inherited properties from GMA, editable for scheduling)│
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  Service Frequency*  : [▼ Weekly / Fortnightly / Monthly / Quarterly / Custom ▼] │ │
-│  │                        (Pre-filled from GMA Section 2)                 │ │
+│  │  SITE 1: Head Office (SITE-00312)                      [Remove Site]    │ │
+│  │  ┌──────────────────────────────────────────────────────────────────┐   │ │
+│  │  │ Address        : Andheri East, Mumbai                            │   │ │
+│  │  │ Area / Category: 3,500 SQFT | Commercial                         │   │ │
+│  │  │                                                                  │   │ │
+│  │  │ [+ ADD SERVICE TO THIS SITE]                                     │   │ │
+│  │  │ ┌──────────────────────────────────────────────────────────────┐ │   │ │
+│  │  │ │ SERVICE 1: [▼ Cockroach Treatment ▼]         [Remove Service]│ │   │ │
+│  │  │ │                                                              │ │   │ │
+│  │  │ │ Contract Mode* : [▼ Contract Base ▼]                           │ │   │ │
+│  │  │ │ Frequency*     : [▼ Weekly ▼] (52 visits/yr)                 │ │   │ │
+│  │  │ │                                                              │ │   │ │
+│  │  │ │ Preferred Days*: [☑ Wed] [☑ Sat] [☐ Mon] [☐ Tue] [☐ Thu]     │ │   │ │
+│  │  │ │ Preferred Time*: [▼ Morning (8-12) ▼]                        │ │   │ │
+│  │  │ │ Assigned Team : [🔍 Quick Response Team A ▼]                 │ │   │ │
+│  │  │ │                                                              │ │   │ │
+│  │  │ │ Service Sale Value: [₹ 55,000] (Editable - Validated vs GMA) │ │   │ │
+│  │  │ └──────────────────────────────────────────────────────────────┘ │   │ │
+│  │  │                                                                  │   │ │
+│  │  │ TOTAL SITE 1 SALE VALUE: ₹ 55,000                                │   │ │
+│  │  └──────────────────────────────────────────────────────────────────┘   │ │
 │  │                                                                         │ │
-│  │  Preferred Service Days:                                                │ │
-│  │  [☐ Mon] [☐ Tue] [☑ Wed] [☐ Thu] [☐ Fri] [☑ Sat] [☐ Sun]            │ │
-│  │                                                                         │ │
-│  │  Preferred Time Slot  : [▼ Morning (8–12) / Afternoon (12–5) /        │ │
-│  │                           Evening (5–8) / Night (8–11) / Any ▼]       │ │
-│  │                                                                         │ │
-│  │  Assigned Technician Group*: [🔍 Search / Select Team ▼]              │ │
-│  │                         (Teams from Module 8 – Employee Management)    │ │
-│  │                                                                         │ │
-│  │  SERVICE SITE SCHEDULE (Per Site):                                      │ │
-│  │  ┌──────────┬─────────────┬───────────┬──────────────┬────────────────┐│ │
-│  │  │ Site ID  │ Site Name   │ Frequency │ Service Days │ Time Slot      ││ │
-│  │  │──────────┼─────────────┼───────────┼──────────────┼────────────────││ │
-│  │  │SITE-00312│ Head Office │ Weekly    │ Wed, Sat     │ Morning (8–12) ││ │
-│  │  │SITE-00313│ Warehouse   │ Monthly   │ 1st Monday   │ Afternoon      ││ │
-│  │  │SITE-00314│ Showroom    │ Weekly    │ Wed          │ Evening (5–8)  ││ │
-│  │  └──────────┴─────────────┴───────────┴──────────────┴────────────────┘│ │
-│  │  (Each site can override the global frequency / days / time)           │ │
+│  │  SITE 2: Warehouse (SITE-00313)                        [Remove Site]    │ │
+│  │  ┌──────────────────────────────────────────────────────────────────┐   │ │
+│  │  │ Address        : Bhiwandi, Thane                                 │   │ │
+│  │  │ Area / Category: 8,000 SQFT | Industrial                         │   │ │
+│  │  │                                                                  │   │ │
+│  │  │ [+ ADD SERVICE TO THIS SITE]                                     │   │ │
+│  │  │ ┌──────────────────────────────────────────────────────────────┐ │   │ │
+│  │  │ │ SERVICE 1: [▼ Rodent Control ▼]              [Remove Service]│ │   │ │
+│  │  │ │                                                              │ │   │ │
+│  │  │ │ Contract Mode* : [▼ Contract Base ▼]                           │ │   │ │
+│  │  │ │ Frequency*     : [▼ Monthly ▼] (12 visits/yr)                │ │   │ │
+│  │  │ │                                                              │ │   │ │
+│  │  │ │ Preferred Days*: [☑ Mon] [☐ Tue] [☐ Wed] [☐ Thu] [☐ Fri]     │ │   │ │
+│  │  │ │ Preferred Time*: [▼ Afternoon (12-5) ▼]                      │ │   │ │
+│  │  │ │ Assigned Team* : [🔍 Quick Response Team B ▼]                 │ │   │ │
+│  │  │ │                                                              │ │   │ │
+│  │  │ │ Service Sale Value: [₹ 1,54,000] (Editable - Validated vs GMA) │ │   │ │
+│  │  │ └──────────────────────────────────────────────────────────────┘ │   │ │
+│  │  │                                                                  │   │ │
+│  │  │ TOTAL SITE 2 SALE VALUE: ₹ 1,54,000                              │   │ │
+│  │  └──────────────────────────────────────────────────────────────────┘   │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  SECTION 4: PAYMENT & COMMERCIAL TERMS                                       │
@@ -993,7 +1013,7 @@ A multi-section form to formalize a service agreement. Inherits approximately 80
 │  │      • Half-Yearly Post-paid                                           │ │
 │  │      • Milestone-based                                                 │ │
 │  │      • Custom                                                          │ │
-│  │                                                                         │ │
+│  │      * For Custom set one more field                                     │ │
 │  │  IF 100% ADVANCE:                                                       │ │
 │  │  Payment Due Date*   : [📅 Date Picker]  (Before or on Start Date)     │ │
 │  │  Amount (₹)          : ₹ 2,04,000 (Full contract value)               │ │
@@ -1008,7 +1028,7 @@ A multi-section form to formalize a service agreement. Inherits approximately 80
 │  │  │ Q4           │ Oct – Dec    │ ₹ 51,000     │ 31 Dec 2026  │         │ │
 │  │  └──────────────┴──────────────┴──────────────┴──────────────┘         │ │
 │  │                                                                         │ │
-│  │  IF MILESTONE-BASED:                                                    │ │
+│  │  IF MILESTONE-BASED(Editable):                                                    │ │
 │  │  [+ Add Milestone]                                                     │ │
 │  │  ┌──────────────┬─────────────────┬──────────┬──────────────┐          │ │
 │  │  │ Milestone    │ Description     │Amount (₹)│ Due Date     │          │ │
@@ -1020,7 +1040,7 @@ A multi-section form to formalize a service agreement. Inherits approximately 80
 │  │  Validation: Sum of milestones = Total Sale Value ✓                    │ │
 │  │                                                                         │ │
 │  │  Invoicing Frequency*  : [▼ Monthly / Quarterly / Half-Yearly /        │ │
-│  │                            Annually / On Milestone ▼]                  │ │
+│  │                            Annually / On Milestone ▼/Service completion]                  │ │
 │  │                                                                         │ │
 │  │  Legal SLA Remarks     : [___________________________________________] │ │
 │  │                          [___________________________________________] │ │
@@ -1042,8 +1062,6 @@ A multi-section form to formalize a service agreement. Inherits approximately 80
 | GMA ID             | Auto-filled     | System   | Read-only                                                                | Linked GMA reference                           |
 | Customer Name      | Auto-filled     | System   | Read-only; populated from GMA → Module 18                                | Customer whose contract is being created       |
 | Customer ID        | Auto-filled     | System   | Read-only                                                                | Unique customer reference                      |
-| Service Type       | Auto-filled     | System   | Read-only; pest / service type from GMA                                  | e.g., Cockroach, Rodent, General Pest          |
-| Service Mode       | Auto-filled     | System   | Read-only; AMC or One-Time from GMA                                      | Determines contract structure                  |
 | No. of Sites       | Auto-filled     | System   | Read-only; count of sites in the GMA sheet                               | Summary count                                  |
 | Total Cost (₹)     | Auto-filled     | System   | Read-only; sum of all site costs from GMA                                | Internal cost reference                        |
 | Total Sale Price (₹)| Auto-filled    | System   | Read-only; sum of all site proposed prices from GMA                      | Commercial price reference                     |
@@ -1071,28 +1089,33 @@ A multi-section form to formalize a service agreement. Inherits approximately 80
 
 ---
 
-## Section 3: Service Schedule Fields
+## Section 3: Site-Wise Service & Schedule Configuration Fields
 
-| Field                    | Type            | Required | Options / Validation                                                 | Notes                                            |
-| ------------------------ | --------------- | -------- | -------------------------------------------------------------------- | ------------------------------------------------ |
-| Service Frequency        | Dropdown        | Yes      | Weekly / Fortnightly / Monthly / Quarterly / Custom                  | Pre-filled from GMA; editable                    |
-| Preferred Service Days   | Multi-checkbox  | No       | Mon / Tue / Wed / Thu / Fri / Sat / Sun                              | Default days for service visits                  |
-| Preferred Time Slot      | Dropdown        | No       | Morning (8–12) / Afternoon (12–5) / Evening (5–8) / Night (8–11) / Any | Default time window for visits                  |
-| Assigned Technician Group| Search Dropdown | Yes      | Active technician teams from Module 8                                | Team assigned for service execution              |
+This section breaks down the contract deliverables on a per-site basis. Each site inherited from the GMA appears as a block, where multiple services can be specifically scheduled.
 
-### Site-Level Schedule Override
-
-Each site within the contract can have its own schedule that overrides the global settings:
+### Site Information
 
 | Field              | Type           | Required | Options / Validation                                 | Notes                                        |
 | ------------------ | -------------- | -------- | ---------------------------------------------------- | -------------------------------------------- |
-| Site ID            | Display        | System   | Read-only; inherited from GMA                        | Site reference                               |
-| Site Name          | Display        | System   | Read-only                                            | Friendly site label                          |
-| Frequency          | Dropdown       | No       | Same as global; defaults to global frequency         | Per-site override                            |
-| Service Days       | Multi-checkbox | No       | Mon – Sun                                            | Specific days for this site                  |
-| Time Slot          | Dropdown       | No       | Same options as global                               | Specific time window for this site           |
+| Site ID & Name     | Display        | System   | Read-only; inherited from GMA                        | Identifies the site block                    |
+| Address & Area     | Display        | System   | Read-only                                            | Context for the service                      |
+| Total Site Sale Value | Calculation   | System   | Sum of all 'Service Sale Values' inside this site    | Displayed at the footer of the site block    |
 
-> **Note:** Technician teams are derived from **Module 8 (Employee Management)**. Only active teams assigned to the contract's branch are shown in the dropdown.
+---
+
+### Service Configuration (Inside Each Site)
+
+> Users click **[+ ADD SERVICE TO THIS SITE]** to nest multiple service configurations within a single physical location block. Each service schedule is managed independently.
+
+| Field              | Type           | Required | Options / Validation                                 | Notes                                        |
+| ------------------ | -------------- | -------- | ---------------------------------------------------- | -------------------------------------------- |
+| Service Type       | Dropdown       | Yes      | Inherited from GMA; editable if multi-service        | The pest control treatment being rendered    |
+| Contract Mode      | Dropdown       | Yes      | Contract Base / One-Time                             | Determines frequency applicability           |
+| Frequency          | Dropdown       | Yes      | Weekly / Fortnightly / Monthly / Quarterly / Custom  | Inherits GMA frequency by default            |
+| Preferred Days     | Multi-checkbox | Yes      | Mon – Sun                                            | Sets the recurring schedule pattern          |
+| Preferred Time     | Dropdown       | Yes      | Morning (8–12) / Afternoon (12–5) / Evening (5–8)    | Time window for visits                       |
+| Assigned Team      | Search Dropdown| Yes      | Active technician teams from Module 8                | Team responsible for this specific treatment |
+| Service Sale Value (₹)| Currency       | Yes      | Inherited from GMA proposed price for this service   | Validated against Total Contract Value       |
 
 ---
 
@@ -1100,10 +1123,10 @@ Each site within the contract can have its own schedule that overrides the globa
 
 | Field                  | Type     | Required | Options / Validation                                                              | Notes                                            |
 | ---------------------- | -------- | -------- | --------------------------------------------------------------------------------- | ------------------------------------------------ |
-| Payment Schedule Type  | Dropdown | Yes      | 100% Advance / Monthly Post-paid / Quarterly Post-paid / Half-Yearly / Milestone-based / Custom | Determines payment grid structure   |
+| Payment Schedule Type  | Dropdown | Yes      | 100% Advance / Monthly Post-paid / Quarterly Post-paid / Half-Yearly / Milestone-based / Custom | Determines payment grid structure; * For Custom set one more field  |
 | Payment Due Date       | Date     | Cond.    | Required if 100% Advance; must be ≤ Start Date                                    | Single payment date                              |
-| Payment Grid           | Table    | Cond.    | Auto-generated for Quarterly/Monthly/Half-Yearly; manual for Milestone/Custom     | Must sum to Total Sale Value                     |
-| Invoicing Frequency    | Dropdown | Yes      | Monthly / Quarterly / Half-Yearly / Annually / On Milestone                       | Determines invoice generation cadence            |
+| Payment Grid           | Table    | Cond.    | Auto-generated for Quarterly/Monthly/Half-Yearly; manual for Milestone(Editable)/Custom     | Must sum to Total Sale Value                     |
+| Invoicing Frequency    | Dropdown | Yes      | Monthly / Quarterly / Half-Yearly / Annually / On Milestone / Service completion      | Determines invoice generation cadence            |
 | Legal SLA Remarks      | Text Area| No       | Max 1000 characters                                                               | Service-level commitments, penalties, terms       |
 
 ### Payment Grid Fields (for Quarterly / Milestone / Custom)
@@ -1137,9 +1160,10 @@ Each site within the contract can have its own schedule that overrides the globa
 | Start Date ≥ Today                  | Contract cannot start in the past                                     |
 | End Date > Start Date               | End date must be after start date                                     |
 | Total Sale Value > 0                | Contract value must be positive                                       |
-| Payment Sum = Total Value            | Sum of all payment amounts must equal the Total Sale Value             |
-| Technician Group Required           | At least one active technician team must be assigned                  |
-| Service Frequency Required          | Must have a valid service frequency                                   |
+| Site Values Equal Total             | Sum of all 'Site Sale Values' must equal 'Total Sale Value'           |
+| Payment Sum = Total Value           | Sum of all payment amounts must equal the Total Sale Value             |
+| Technician Group Required           | Every site/service block must have an assigned Technician Team        |
+| Service Frequency Required          | Every AMC service block must have a valid service frequency           |
 | No Duplicate GMA Contract           | Same GMA cannot be used for more than one Active contract             |
 | Value Variance Check                | If Sale Value differs from GMA by > 10%, triggers re-approval alert   |
 
@@ -1175,7 +1199,7 @@ A read-only dashboard displaying the full breakdown of an active or historical c
 │                                                                              │
 │  CONTRACT: CON-2026-0041                    Status: ✅ ACTIVE                 │
 │  Customer: ABC Corporation (CUST-00245)     │  Branch: Mumbai                │
-│  GMA Ref : GMA-00091                        │  Service: Cockroach Treatment  │
+│  GMA Ref : GMA-00091                        │  No. of Sites: 2               │
 │  Start   : 01 Jan 2026   │  End: 31 Dec 2026  │  Duration: 1 Year           │
 │  Value   : ₹ 2,04,000    │  GM%: 40.7%                                      │
 │                                                                              │
@@ -1201,15 +1225,41 @@ Displays the complete contract configuration — commercial terms, payment sched
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │  [Tab 1: Contract Terms, Scope & Sites ●] [Tab 2: Sales Order Schedule]    │
 │                                                                              │
-│  ─── CONTRACT TERMS ──────────────────────────────────────────────────────  │
+│  ─── SECTION 1: SOURCE INFO (READ-ONLY) ──────────────────────────────────  │
+│  GMA ID         : GMA-00091               Branch      : Mumbai              │
+│  Customer Name  : ABC Corporation         Customer ID : CUST-00245          │
+│  No. of Sites   : 2                       Total Cost  : ₹ 1,20,992          │
+│  Total Sale Price: ₹ 2,04,000              Overall GM% : 40.7%               │
+│                                                                              │
+│  ─── SECTION 2: CONTRACT TERMS (COMMERCIAL) ──────────────────────────────  │
 │  Contract ID    : CON-2026-0041            Duration    : 1 Year             │
 │  Start Date     : 01 Jan 2026             End Date    : 31 Dec 2026         │
 │  Total Value    : ₹ 2,04,000              Renewal Type: Manual              │
-│  Contract Ref   : REF-INT-2026-041        GM%         : 40.7%               │
+│  Contract Ref   : REF-INT-2026-041        Payment Freq: Quarterly Post-paid │
 │                                                                              │
-│  ─── PAYMENT SCHEDULE ────────────────────────────────────────────────────  │
-│  Payment Type: Quarterly Post-paid                                           │
-│  Invoicing Frequency: Quarterly                                              │
+│  ─── SECTION 3: SCOPE OF WORK (SITES & SERVICES) ─────────────────────────  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ ▼ SITE 1: Head Office [SITE-312] | Andheri East, Mumbai | 3,500 SQFT     ││
+│  │   Site Sale Value: ₹ 55,000 | Site Cost: ₹ 29,800 | Site GM%: 45.8%      ││
+│  │                                                                          ││
+│  │   ├─ SERVICE 1: Cockroach Treatment | Contract Base | Sale Val: ₹ 35,000 ││
+│  │   │  Frequency: Weekly (52/yr) | Tech: Team Alpha                        ││
+│  │   │  Schedule : Wed, Sat [Morning (8-12)]                                ││
+│  │   │                                                                      ││
+│  │   └─ SERVICE 2: Termite Control | Contract Base | Sale Val: ₹ 20,000     ││
+│  │      Frequency: Quarterly (4/yr) | Tech: Team Beta                       ││
+│  │      Schedule : 1st Mon [Afternoon (12-5)]                               ││
+│  │                                                                          ││
+│  │ ▼ SITE 2: Warehouse [SITE-313] | Bhiwandi, Thane | 8,000 SQFT            ││
+│  │   Site Sale Value: ₹ 1,54,000 | Site Cost: ₹ 89,782 | Site GM%: 41.7%    ││
+│  │                                                                          ││
+│  │   └─ SERVICE 1: Rodent Control | Contract Base | Sale Val: ₹ 1,54,000    ││
+│  │      Frequency: Monthly (12/yr) | Tech: Team Beta                        ││
+│  │      Schedule : Mon [Afternoon (12-5)]                                   ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  ─── SECTION 4: PAYMENT & COMMERCIAL TERMS ───────────────────────────────  │
+│  Payment Type: Quarterly Post-paid         Invoicing Freq: Quarterly        │
 │  ┌──────────┬──────────────┬──────────────┬──────────────┬──────────┐       │
 │  │ Period   │ Duration     │ Amount (₹)   │ Due Date     │ Status   │       │
 │  │──────────┼──────────────┼──────────────┼──────────────┼──────────│       │
@@ -1217,27 +1267,10 @@ Displays the complete contract configuration — commercial terms, payment sched
 │  │ Q2       │ Apr – Jun    │ ₹ 51,000     │ 30 Jun 2026  │ 🟡 Due   │       │
 │  │ Q3       │ Jul – Sep    │ ₹ 51,000     │ 30 Sep 2026  │ ⏳ Upcoming│     │
 │  │ Q4       │ Oct – Dec    │ ₹ 51,000     │ 31 Dec 2026  │ ⏳ Upcoming│     │
-│  └──────────┴──────────────┴──────────────┴──────────────┴──────────┘       │
+│  │ └────────┴──────────────┴──────────────┴──────────────┴──────────┘       │
 │                                                                              │
 │  Legal SLA Notes: "Response within 4 hours for emergency pest issues.       │
 │   Re-treatment guaranteed within 48 hours if infestation recurrence."       │
-│                                                                              │
-│  ─── SITES & SERVICES GRID ──────────────────────────────────────────────  │
-│  ┌──────────────────────────────────────────────────────────────────────────┐│
-│  │Site ID  │Site Name   │Address           │SQFT │Pest Type  │Frequency    ││
-│  │─────────┼────────────┼──────────────────┼─────┼───────────┼─────────────││
-│  │SITE-312 │Head Office │Andheri E., Mumbai│3,500│Cockroach  │Weekly       ││
-│  │SITE-313 │Warehouse   │Bhiwandi, Thane   │8,000│Cockroach  │Monthly      ││
-│  │SITE-314 │Showroom    │Bandra W., Mumbai │1,200│Cockroach  │Weekly       ││
-│  └──────────────────────────────────────────────────────────────────────────┘│
-│                                                                              │
-│  ┌──────────────────────────────────────────────────────────────────────────┐│
-│  │Service Days   │Time Slot       │Technician Group │Site Cost/Yr│Site GM% ││
-│  │───────────────┼────────────────┼─────────────────┼────────────┼─────────││
-│  │Wed, Sat       │Morning (8–12)  │Team Alpha       │₹ 92,992    │40.4%   ││
-│  │1st Monday     │Afternoon       │Team Beta        │₹ 28,000    │41.7%   ││
-│  │Wednesday      │Evening (5–8)   │Team Alpha       │₹ 15,200    │38.9%   ││
-│  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -1249,13 +1282,16 @@ Displays the complete contract configuration — commercial terms, payment sched
 | Field           | Type     | Description                                              |
 | --------------- | -------- | -------------------------------------------------------- |
 | Contract ID     | Display  | Unique contract identifier                               |
+| GMA Ref         | Display  | Linked GMA ID (Read-only source)                         |
 | Start Date      | Date     | Contract commencement                                    |
 | End Date        | Date     | Contract expiry                                          |
 | Duration        | Display  | e.g., 1 Year, 6 Months                                  |
+| No. of Sites    | Display  | Total physical sites covered                            |
 | Total Value (₹) | Currency | Total agreed sale value                                  |
+| Total Cost (₹)  | Currency | Estimated internal cost from GMA                        |
+| Overall GM%     | Display  | Gross margin percentage                                  |
 | Renewal Type    | Display  | Auto-Renew / Manual / Non-Renewable                      |
 | Contract Ref    | Display  | Optional internal reference number                       |
-| GM%             | Display  | Gross margin from GMA                                    |
 
 ---
 
@@ -1263,8 +1299,8 @@ Displays the complete contract configuration — commercial terms, payment sched
 
 | Field            | Type     | Description                                             |
 | ---------------- | -------- | ------------------------------------------------------- |
-| Payment Type     | Display  | 100% Advance / Quarterly / Monthly / Milestone / Custom |
-| Invoicing Freq.  | Display  | Billing cadence                                         |
+| Payment Type     | Display  | 100% Advance / Monthly / Quarterly / Milestone / Custom |
+| Invoicing Freq.  | Display  | Monthly / Quarterly / Annually / Service Completion     |
 | Period / Label   | Display  | Quarter / Month / Milestone identifier                  |
 | Duration         | Display  | Date range for the period                               |
 | Amount (₹)       | Currency | Installment amount                                      |
@@ -1273,21 +1309,19 @@ Displays the complete contract configuration — commercial terms, payment sched
 
 ---
 
-## Sites & Services Grid Fields (Read-Only)
+## Scope of Work (Sites & Services) Fields (Read-Only)
 
 | Field            | Type     | Description                                              |
 | ---------------- | -------- | -------------------------------------------------------- |
-| Site ID          | Display  | Unique site reference from Module 18                     |
-| Site Name        | Display  | Friendly label                                           |
-| Address          | Display  | Physical service address                                 |
-| Area (SQFT)      | Number   | Service coverage area                                    |
-| Pest Type        | Display  | Pest / service category from GMA                         |
-| Frequency        | Display  | Service visit frequency (site-level)                     |
-| Service Days     | Display  | Specific days of service                                 |
-| Time Slot        | Display  | Preferred time window                                    |
+| Site ID & Name   | Display  | Unique site reference and friendly label                 |
+| Address & Area   | Display  | Physical address and SQFT                                |
+| Site Sale/Cost/GM| Display  | Financial summary rolled up for the entire site          |
+| Service Name     | Display  | Pest / service category mapped under the site            |
+| Contract Mode    | Display  | Contract Base / One-Time                                 |
+| Service Sale Val | Currency | Assigned revenue value for this specific service line    |
+| Frequency        | Display  | Service visit frequency (e.g. Weekly)                    |
 | Technician Group | Display  | Assigned team from Module 8                              |
-| Site Cost/Year   | Currency | Total annual cost for this site (from GMA)               |
-| Site GM%         | Display  | Gross margin for this site                               |
+| Schedule Details | Display  | Preferred days and time slot for this recurring service  |
 
 > **Note:** All data in this tab is derived from the **GMA sheet (Module 17)** and the **contract creation form (19.2)**. Modifications can only be made via the **Edit / Amend** form (19.4).
 
@@ -1295,7 +1329,7 @@ Displays the complete contract configuration — commercial terms, payment sched
 
 ================================================================================
 
-# 19.3.2 Tab 2: Sales Order Schedule (Billing Log)
+# 19.3.2 Tab 2: Sales Order Schedule (Billing Log)-- it is similar to Module 20 table view.
 
 **Description:**
 A chronological grid showing all Sales Orders linked to this contract — both auto-generated (from the payment schedule) and manually created. Tracks fulfilment vs. the original agreement, providing a billing audit trail.
@@ -1376,7 +1410,7 @@ An interface to handle mid-cycle changes to an active contract. Pre-filled with 
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
 │  │  Contract ID    : CON-2026-0041    Status    : ✅ Active                │ │
 │  │  Customer       : ABC Corporation  GMA Ref   : GMA-00091               │ │
-│  │  Service Type   : Cockroach Treatment                                   │ │
+│  │  No. of Sites   : 2                Total Cost: ₹ 1,20,992              │ │
 │  │  Original Value : ₹ 2,04,000      Original Duration: 1 Year            │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
@@ -1391,36 +1425,50 @@ An interface to handle mid-cycle changes to an active contract. Pre-filled with 
 │  │  the amendment will require Sales Manager approval.                     │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  SECTION 3: AMEND SERVICE SCHEDULE (Editable)                                │
+│  SECTION 3: AMEND SCOPE OF WORK (SITES & SERVICES)                           │ │
+│  (Existing sites/services are pre-filled; all scheduling fields are editable)│ │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  Service Frequency   : [▼ Weekly ▼] (Editable)                         │ │
-│  │  Preferred Days      : [☐ Mon][☐ Tue][☑ Wed][☐ Thu][☐ Fri][☑ Sat]     │ │
-│  │  Preferred Time Slot : [▼ Morning ▼]                                    │ │
-│  │  Technician Group    : [🔍 Team Alpha ▼]                               │ │
+│  │  [+ ADD NEW SITE TO CONTRACT]                                         │ │
 │  │                                                                         │ │
-│  │  Site Schedule (site-level overrides editable):                          │ │
-│  │  ┌──────────┬─────────────┬───────────┬──────────────┬──────────┐      │ │
-│  │  │ Site ID  │ Site Name   │ Frequency │ Service Days │ Time     │      │ │
-│  │  │──────────┼─────────────┼───────────┼──────────────┼──────────│      │ │
-│  │  │SITE-00312│ Head Office │ [Weekly ▼]│ [Wed, Sat]   │ [Morning]│      │ │
-│  │  │SITE-00313│ Warehouse   │ [Monthly▼]│ [1st Monday] │ [Afternoon]│    │ │
-│  │  │SITE-00314│ Showroom    │ [Weekly ▼]│ [Wed]        │ [Evening]│      │ │
-│  │  └──────────┴─────────────┴───────────┴──────────────┴──────────┘      │ │
+│  │  SITE 1: Head Office (SITE-00312)                      [Remove Site]    │ │
+│  │  ┌──────────────────────────────────────────────────────────────────┐   │ │
+│  │  │ Address        : Andheri East, Mumbai                            │   │ │
+│  │  │ Area / Category: 3,500 SQFT | Commercial                         │   │ │
+│  │  │                                                                  │   │ │
+│  │  │ [+ ADD SERVICE TO THIS SITE]                                     │   │ │
+│  │  │ ┌──────────────────────────────────────────────────────────────┐ │   │ │
+│  │  │ │ SERVICE 1: [▼ Cockroach Treatment ▼]         [Remove Service]│ │   │ │
+│  │  │ │                                                              │ │   │ │
+│  │  │ │ Contract Mode  : [▼ Contract Base ▼]                           │ │   │ │
+│  │  │ │ Frequency*     : [▼ Weekly ▼] (52 visits/yr)                 │ │   │ │
+│  │  │ │                                                              │ │   │ │
+│  │  │ │ Preferred Days*: [☑ Wed] [☑ Sat] [☐ Mon] [☐ Tue] [☐ Thu]     │ │   │ │
+│  │  │ │ Preferred Time*: [▼ Morning (8-12) ▼]                        │ │   │ │
+│  │  │ │ Assigned Team  : [🔍 Quick Response Team A ▼]                 │ │   │ │
+│  │  │ │                                                              │ │   │ │
+│  │  │ │ Service Sale Value: [₹ 55,000] (Editable)                    │ │   │ │
+│  │  │ └──────────────────────────────────────────────────────────────┘ │   │ │
+│  │  │                                                                  │   │ │
+│  │  │ TOTAL SITE 1 SALE VALUE: ₹ 55,000                                │   │ │
+│  │  └──────────────────────────────────────────────────────────────────┘   │ │
+│  │                                                                         │ │
+│  │  SITE 2: Warehouse (SITE-00313)                        [Remove Site]    │ │
+│  │  ┌──────────────────────────────────────────────────────────────────┐   │ │
+│  │  │ ... (Content follows the same nested structure as above)          │   │ │
+│  │  └──────────────────────────────────────────────────────────────────┘   │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  SECTION 4: ADD NEW SITE TO CONTRACT (Optional)                              │
+│  SECTION 4: AMEND PAYMENT SCHEDULE (Editable if Value Changes)               │ │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  [+ Add Site from Customer Sites]                                       │ │
-│  │                                                                         │ │
-│  │  IF ADDING A SITE:                                                      │ │
-│  │  Select Site*  : [🔍 Search Customer Sites (Module 18) ▼]             │ │
-│  │  Pest Type*    : [▼ Cockroach / Rodent / General Pest ▼]              │ │
-│  │  Frequency*    : [▼ Weekly / Monthly ▼]                                │ │
-│  │  Additional Cost/Year (₹)*: [________]                                 │ │
-│  │  Additional Sale Price/Year (₹)*: [________]                           │ │
-│  │                                                                         │ │
-│  │  ⚠️ Adding a site increases the contract value and may require          │ │
-│  │  re-approval if total change exceeds 10%.                               │ │
+│  │  Revised Payment Type: [▼ Quarterly Post-paid ▼]                        │ │
+│  │  ┌──────────┬──────────────┬──────────────┬──────────────┐              │ │
+│  │  │ Period   │ Duration     │ Amount (₹)   │ Due Date     │              │ │
+│  │  │──────────┼──────────────┼──────────────┼──────────────│              │ │
+│  │  │ Q1       │ Jan – Mar    │ ₹ 51,000     │ 31 Mar 2026  │ (Paid)       │ │
+│  │  │ Q2       │ Apr – Jun    │ [₹ 55,000__] │ [30 Jun 2026]│ (Revised)    │ │
+│  │  │ Q3       │ Jul – Sep    │ [₹ 55,000__] │ [30 Sep 2026]│ (Pending)    │ │
+│  │  │ Q4       │ Oct – Dec    │ [₹ 55,000__] │ [31 Dec 2026]│ (Pending)    │ │
+│  │  └──────────┴──────────────┴──────────────┴──────────────┘              │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  AMENDMENT REASON                                                            │
@@ -1440,24 +1488,33 @@ An interface to handle mid-cycle changes to an active contract. Pre-filled with 
 
 ---
 
+## Amendment Section Details
+
+### Section 4: Amend Payment Schedule
+*   **Recalculation Trigger**: This section becomes mandatory if the **Revised Sale Value** or **End Date** is modified.
+*   **Historical Data**: Installments already marked as **Paid** (e.g., Q1 in the ASCII above) are locked. Only future/unpaid installments can be revised.
+*   **Balance Validation**: The sum of all revised installments plus already paid ones must exactly equal the `Revised Sale Value`.
+
+---
+
 ## Editable vs. Locked Fields
 
-| Field                   | Editable? | Notes                                                            |
-| ----------------------- | --------- | ---------------------------------------------------------------- |
-| Contract ID             | ❌ Locked  | System-generated; immutable                                      |
-| Customer / GMA Ref      | ❌ Locked  | Source data cannot be changed                                    |
-| Service Type            | ❌ Locked  | To change service type, a new GMA/Contract must be created       |
-| Original Value          | ❌ Locked  | Displayed as reference; cannot be changed                        |
-| Start Date              | ❌ Locked  | Cannot modify once contract is Active                            |
-| End Date                | ✅ Yes     | Can be extended (not shortened below today)                      |
-| Revised Sale Value      | ✅ Yes     | Triggers re-approval if variance > 10%                           |
-| Renewal Type            | ✅ Yes     | Can change renewal behavior                                      |
-| Legal Notes / SLA       | ✅ Yes     | Free-text update                                                 |
-| Service Frequency       | ✅ Yes     | Global or site-level frequency change                            |
-| Service Days / Time     | ✅ Yes     | Schedule adjustment                                              |
-| Technician Group        | ✅ Yes     | Can reassign technician team                                     |
-| Add New Site            | ✅ Yes     | Can add from customer's existing sites (Module 18)               |
-| Amendment Reason        | ✅ Required| Mandatory reason and optional remarks                            |
+| Field                   | Editable? | Reason for Lock / Edit                                                                 |
+| ----------------------- | --------- | -------------------------------------------------------------------------------------- |
+| Contract ID             | ❌ Locked  | System-generated; acts as a unique transaction identifier for the entire lifecycle.     |
+| Customer / GMA Ref      | ❌ Locked  | The contract is legally bound to the specific customer and approved GMA source document. |
+| Original Value          | ❌ Locked  | Kept as a baseline reference to calculate variance and trigger approval workflows.      |
+| Start Date              | ❌ Locked  | Contract has already commenced; backdating or shifting start date is not permitted.   |
+| Renewal Type            | ✅ Yes     | Renewal strategy can be adjusted anytime before contract expiry.                        |
+| End Date                | ✅ Yes     | Allows for contract extensions or mid-cycle adjustments to the duration.                |
+| Service Selection       | ✅ Yes     | Dynamic scope management; allows upgrading or downgrading services per site.            |
+| Add/Remove Site         | ✅ Yes     | Accommodates physical expansion or decommissioning of customer locations.             |
+| Revised Sale Value      | ✅ Yes     | Mandatory for financial amendments; must stay positive and align with total scope.      |
+| Service Frequency       | ✅ Yes     | Operational flexibility to change visit cadence (e.g., Monthly to Weekly).              |
+| Service Days / Time     | ✅ Yes     | Client-driven schedule adjustments for technician visits.                              |
+| Technician Group        | ✅ Yes     | Resource management; allows reassignment of teams for better service delivery.         |
+| Payment Schedule        | ✅ Yes     | Must be recalculated if total contract value or duration changes.                      |
+| Amendment Reason        | ✅ Required| Essential for audit trail and tracking the "Why" behind legal/financial changes.       |
 
 ---
 
@@ -1466,10 +1523,10 @@ An interface to handle mid-cycle changes to an active contract. Pre-filled with 
 | Validation                         | Rule                                                              |
 | ---------------------------------- | ----------------------------------------------------------------- |
 | End Date > Today                   | Cannot set End Date to past or today                              |
-| Revised Value > 0                  | Must remain a positive amount                                     |
+| Revised Value > 0                  | Sum of all service sale values must be positive                   |
 | Value Variance Check               | If |Revised – Original| > 10% of Original, triggers re-approval  |
-| Site must exist in Module 18       | New sites must be registered in the customer's record             |
-| Additional Cost/Price > 0          | If adding a site, costs must be positive                          |
+| Site / Service Selection           | Must have at least one active site and service                    |
+| Service Sale Value Alignment        | Individual service values must sum to the revised contract total  |
 | Amendment Reason Required          | Must select a reason from the dropdown                            |
 | Remarks Required (if Other)        | Free-text remark mandatory for "Other" reason                     |
 
