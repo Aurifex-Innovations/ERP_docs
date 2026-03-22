@@ -1584,7 +1584,7 @@ Module 11.3 → Received Requests → Action → Review / Approve
 │  │ Requested Date        : 15 Jan 2024 10:30 AM                            ││
 │  │ Priority              : HIGH                                            ││
 │  │ Required By           : 18 Jan 2024                                     ││
-│  │ Purpose               : Monthly AMC Services                            ││
+│  │ Purpose               : Monthly Contract Services                            ││
 │  └─────────────────────────────────────────────────────────────────────────┘│
 │                                                                             │
 │  ┌─────────────────────────────────────────────────────────────────────────┐│
@@ -2061,7 +2061,7 @@ Module 11.3 → Received Requests → Action → View
 │ Request Type           : Stock Request                                      │
 │ Priority               : High                                               │
 │ Required By            : 05-Jan-2026                                        │
-│ Purpose                : Monthly AMC Services                               │
+│ Purpose                : Monthly Contract Services                               │
 │                                                                             │
 │ ───────────────────────── REQUESTED ITEMS ─────────────────────────────── │
 │                                                                             │
@@ -5719,7 +5719,7 @@ Captures a brief summary of the interaction, allows the user to update the Lead'
 | Field                | Type      | Required    | Options/Validation                                           | Notes                                  |
 | -------------------- | --------- | ----------- | ------------------------------------------------------------ | -------------------------------------- |
 | Lead Name            | Text      | Auto        |                                                              |                                        |
-| Lead Type            | Dropdown  | Auto        | Service, Product, AMC                                        |                                        |
+| Lead Type            | Dropdown  | Auto        | Service, Product, Contract                                        |                                        |
 | Branch Name          | Dropdown  | Auto        |                                                              |                                        |
 | Current Status       | Badge     | Auto        | New, Qualified, Quotation send, Negotiation, Converted, Lost | Updates the main lead status           |
 | Interaction Summary  | Text Area | Yes         | Min 10 characters                                            | Details of the current interaction     |
@@ -5774,7 +5774,7 @@ Read-only detailed view of a specific follow-up interaction showing complete con
 │  │  ─────────────────────────────────────────────────────────────────────  ││
 │  │  Called customer to discuss termite treatment requirements. Customer    ││
 │  │  confirmed infestation in 3 rooms and wooden furniture. Currently using ││
-│  │  PestGuard but unhappy with results. Interested in our AMC package.     ││
+│  │  PestGuard but unhappy with results. Interested in our Contract package.     ││
 │  │  Asked for site visit to assess extent of problem.                      ││
 │  │                                                                         ││
 │  │  LEAD STATUS UPDATED:      New → Qualified                              ││
@@ -6023,9 +6023,9 @@ The Add Quotation form allows sales team members to create new quotations. The f
 │  │  (•) Service Quotation    ( ) Product Quotation    ( ) Combined         │ │
 │  │                                                                         │ │
 │  │  Service Mode (if Service/Combined):                                    │ │
-│  │  (•) One-Time Service    ( ) AMC (Annual Maintenance Contract)          │ │
+│  │  (•) One-Time Service    ( ) Contract (Annual Maintenance Contract)          │ │
 │  │                                                                         │ │
-│  │  IF AMC SELECTED:                                                       │ │
+│  │  IF Contract SELECTED:                                                       │ │
 │  │  Frequency*:          [▼ Monthly / Quarterly / Half-Yearly / Yearly ▼]  │ │
 │  │  Contract Duration*:  [▼ 6 Months / 1 Year / 2 Years / 3 Years ▼]      │ │
 │  │  Proposed Start Date*: [📅 Date Picker]                                 │ │
@@ -6091,7 +6091,7 @@ The Add Quotation form allows sales team members to create new quotations. The f
 │  │  │ [IF AREA BASED DETECTED]:                                        │   │ │
 │  │  │ Base Price: [₹ 500  ]   Rate/SQFT: [₹ 2.00 ]   Area: [1200 ] SQFT│   │ │
 │  │  │                                                                  │   │ │
-│  │  │ [IF AMC MODE DETECTED (from Section 2)]:                         │   │ │
+│  │  │ [IF Contract MODE DETECTED (from Section 2)]:                         │   │ │
 │  │  │ Vis. Frequency: [▼ Monthly (12) ▼]  Total Visits: [ 12 ]         │   │ │
 │  │  │                                                                  │   │ │
 │  │  │ ──────────────────────────────────────────────────────────────── │   │ │
@@ -6214,10 +6214,10 @@ The Add Quotation form allows sales team members to create new quotations. The f
 | Field             | Type     | Required    | Options/Validation                         | Notes                                 |
 | ----------------- | -------- | ----------- | ------------------------------------------ | ------------------------------------- |
 | Quotation Type    | Radio    | Yes         | Service / Product / Combined               | Controls which sections are visible   |
-| Service Mode      | Radio    | Conditional | One-Time / AMC                             | Visible if Type = Service or Combined |
-| AMC Frequency     | Dropdown | Conditional | Monthly / Quarterly / Half-Yearly / Yearly | Required if Mode = AMC                |
-| Contract Duration | Dropdown | Conditional | 6 Months / 1 Year / 2 Years / 3 Years      | Required if Mode = AMC                |
-| Proposed Start    | Date     | Conditional | ≥ Today                                    | Required if Mode = AMC                |
+| Service Mode      | Radio    | Conditional | One-Time / Contract                             | Visible if Type = Service or Combined |
+| Contract Frequency     | Dropdown | Conditional | Monthly / Quarterly / Half-Yearly / Yearly | Required if Mode = Contract                |
+| Contract Duration | Dropdown | Conditional | 6 Months / 1 Year / 2 Years / 3 Years      | Required if Mode = Contract                |
+| Proposed Start    | Date     | Conditional | ≥ Today                                    | Required if Mode = Contract                |
 
 ---
 
@@ -6252,7 +6252,7 @@ _(Integrated with Module 12 – Service Management)_
 | Pest Type           | Auto-filled         | System   | From service master                                                                                                      | Read-only                               |
 | Pricing Configuration| Modal / Inline Block| Auto     | User enters BHK size or Area SQFT based on fetched logic                                                                 | Per-service selection/calc              |
 | Rate (₹)            | Auto-calculated     | System   | Based on Configuration Selection (BHK) or Area (SQFT)                                                                    | Dynamic fetch from Module 12            |
-| Frequency / Visits  | Dropdown            | Yes      | Single / Monthly / Quarterly / AMC                                                                                       | Determines revisit cycle                |
+| Frequency / Visits  | Dropdown            | Yes      | Single / Monthly / Quarterly / Contract                                                                                       | Determines revisit cycle                |
 | Total (₹)           | Number              | Auto     | `Rate × Total Visits`                                                                                                    | Auto-calculated                         |
 | Actions             | Button(s)           | —        | Edit Pricing / Remove Service                                                                                            | Per service row                         |
 
@@ -6261,7 +6261,7 @@ _(Integrated with Module 12 – Service Management)_
 - **Service Selection Trigger**: When a service is selected via search, a dynamic configuration block auto-opens to capture pricing inputs (BHK for Fixed, SQFT for Area-Based).
 - **Fixed Price**: Matches BHK/Office size pricing from Module 12 based on selection in the configuration block.
 - **Area Based**: Pulls SQFT from Section 3 but allows user override; calculates `Base Price + (Rate per SQFT × Total SQFT)`.
-- **AMC Mode Multiplier**: If Section 2 is set to AMC, the Line Total is automatically multiplied by the number of visits (e.g., Monthly = Rate x 12).
+- **Contract Mode Multiplier**: If Section 2 is set to Contract, the Line Total is automatically multiplied by the number of visits (e.g., Monthly = Rate x 12).
 - **Multi-Service Support**: Multiple services can be added under a single location; each is independently configured and calculated.
 - **Independence**: Removing a service or location recalculates only the affected subtotal and the global grand total.
 
@@ -6391,7 +6391,7 @@ Read-only detailed view of a quotation showing complete pricing breakdown, servi
 │  QUOTATION CONFIGURATION                                                     │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
 │  │  Quotation Type:      Service Quotation                                 │ │
-│  │  Service Mode:        AMC (Annual Maintenance Contract)                 │ │
+│  │  Service Mode:        Contract (Annual Maintenance Contract)                 │ │
 │  │  Frequency:           Monthly                                           │ │
 │  │  Contract Duration:   1 Year                                            │ │
 │  │  Proposed Start:      01-Apr-2026                                       │ │
@@ -6474,10 +6474,10 @@ Read-only detailed view of a quotation showing complete pricing breakdown, servi
 |                     | Email              | Text            | Email address                              |
 |                     | Address            | Text            | Full address                               |
 | **Configuration**   | Quotation Type     | Text            | Service / Product / Combined               |
-|                     | Service Mode       | Text            | One-Time / AMC                             |
-|                     | Frequency          | Text            | AMC frequency if applicable                |
-|                     | Contract Duration  | Text            | AMC duration if applicable                 |
-|                     | Proposed Start     | Date            | AMC start date if applicable               |
+|                     | Service Mode       | Text            | One-Time / Contract                             |
+|                     | Frequency          | Text            | Contract frequency if applicable                |
+|                     | Contract Duration  | Text            | Contract duration if applicable                 |
+|                     | Proposed Start     | Date            | Contract start date if applicable               |
 | **Services**        | Per-location table | Table           | Service, rate, frequency, visits, total    |
 |                     | Location Subtotal  | Currency        | Per-location total                         |
 | **Products**        | Product table      | Table           | Product, qty, unit price, tax, line total  |
@@ -6619,7 +6619,7 @@ A consolidated view displaying all GMA sheets accessible to the user, filtered b
 │  │ Filters                                                                │  │
 │  │                                                                        │  │
 │  │ Customer       : [🔍 Search / Select ▼]                                │  │
-│  │ Service Type   : [▼ All / AMC / One-Time / Quarterly / Fogging]        │  │
+│  │ Service Type   : [▼ All / Contract / One-Time / Quarterly / Fogging]        │  │
 │  │ Status         : [☑ Draft ☑ Approved ☑ Pending ☑ Rejected]           │  │
 │  │ Branch         : [▼ All Branches ▼]                                    │  │
 │  │ Created By     : [▼ All / My Entries]                                  │  │
@@ -6634,7 +6634,7 @@ A consolidated view displaying all GMA sheets accessible to the user, filtered b
 │  │GMA ID    │Customer    │Service Type│Branch│Sites│Total Cost│Sale Price│GM%│││
 │  │──────────┼────────────┼────────────┼──────┼─────┼──────────┼──────────┼───││
 │  │GMA-00091 │XYZ Hotel   │Cockroach   │MUM   │  3  │₹11,000   │₹19,000   │42%││
-│  │GMA-00088 │ABC Pharma  │Rodent AMC  │BLR   │  1  │₹8,500    │₹11,000   │23%││
+│  │GMA-00088 │ABC Pharma  │Rodent Contract  │BLR   │  1  │₹8,500    │₹11,000   │23%││
 │  │GMA-00085 │DEF Mall    │General Pest│HYD   │  2  │₹14,200   │₹15,000   │6% ││
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
@@ -6728,9 +6728,9 @@ Displays all GMA sheets created by the currently logged-in sales person. Include
 │  │GMA ID    │Customer   │Service Type│GM%│Submitted Date│Status  │Actions   ││
 │  │──────────┼───────────┼────────────┼───┼──────────────┼────────┼──────────││
 │  │GMA-00091 │XYZ Hotel  │Cockroach   │42%│ 18 Mar 2026  │✅ Apprd │[View]    ││
-│  │GMA-00088 │ABC Pharma │Rodent AMC  │23%│ 17 Mar 2026  │🟡 Pend │[V][Revoke]│
+│  │GMA-00088 │ABC Pharma │Rodent Contract  │23%│ 17 Mar 2026  │🟡 Pend │[V][Revoke]│
 │  │GMA-00085 │DEF Mall   │General Pest│6% │ 15 Mar 2026  │� Draft │[View]    ││
-│  │GMA-00080 │KLM Ind.   │Termite AMC │38%│ 10 Mar 2026  │✅ Apprd │[View]   ││
+│  │GMA-00080 │KLM Ind.   │Termite Contract │38%│ 10 Mar 2026  │✅ Apprd │[View]   ││
 │  │GMA-00077 │PQR Office │Fogging     │8% │ 05 Mar 2026  │❌ Rejct │[View]   ││
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
@@ -6910,26 +6910,17 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 │  │  Pincode:             [________]                                        │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  SECTION 2: SERVICE & CONTRACT CONFIGURATION                                 │
+│  SECTION 2: GENERAL CONFIGURATION                                            │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  Pest Type*:  [▼ Cockroach / Termite / Rodent / General Pest │ │
-│  │                          / Fogging / Fumigation / Mosquito / Other ▼]   │ │
-│  │                                                                         │ │
-│  │  Service Mode*:         (•) Contract base    ( ) One-Time                         │ │
-│  │                                                                         │ │
-│  │  IF AMC SELECTED:                                                       │ │
-│  │  Contract Duration*:   [▼ 6 Months / 1 Year / 2 Years / 3 Years ▼/ custom]     │ │
+│  │  Contract Duration:    [▼ 1 Year / 2 Years / Custom ▼] (Optional)       │ │
 │  │  Proposed Start Date*: [📅 Date Picker]                                 │ │
-│  │  Frequency*:           [▼ Weekly / Fortnightly / Monthly / Quarterly / Custom ▼] │ │
-│  │  Annual Frequency*:    [ 52 ] (Auto-calculated from Frequency/for custom editable)          │ 
-│  │                                                                         │ │
 │  │  Branch*:              [▼ Select Branch ▼]                              │ │
 │  │  Prepared By:          [Auto: Logged-in User] (Read-only)               │ │
 │  │  Prepared Date:        [Auto: Today's Date] (Read-only)                 │ │
 │  │  Remarks / Notes:      [___________________________________________]    │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  SECTION 3: COST BREAKDOWN                                                    │
+│  SECTION 3: COST BREAKDOWN (PER SITE, PER SERVICE)                           │
 │  [+ ADD SITE]                                                                │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
 │  │  SITE 1 (Site Name / Location*)                       [Remove Site]     │ │
@@ -6938,87 +6929,86 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 │  │  │ City:    [________________]  State: [▼ Select State ▼]        │  │ │
 │  │  │ Category*:     [▼ Residential / Commercial / Industrial ▼]      │  │ │
 │  │  │ Sub-Category*: [▼ Internal / External ▼]                        │  │ │
-│  │  │ Area (sqft)*: [________]   Visits/Month*: [4] (from Section 2)  │  │ │
+│  │  │ Area (sqft)*: [________]                                         │  │ │
 │  │  └──────────────────────────────────────────────────────────────────┘  │ │
 │  │                                                                         │ │
-│  │  ─── 3A: SERVICE VISIT COST ────────────────────────────────────────── │ │
-│  │  ┌─────────────────────────────────────────────────────────────────┐   │ │
-│  │  │ Rate per Visit (₹)*:  [ 300   ]                                │   │ │
-│  │  │ Annual Frequency:     [ 52    ] (from Section 2, read-only)    │   │ │
-│  │  │ ─────────────────────────────────────────────────────────────── │   │ │
-│  │  │ SERVICE VISIT COST/YEAR (A) : ₹ 15,600  (Rate × Frequency)    │   │ │
-│  │  │ SERVICE VISIT COST/MONTH    : ₹ 1,300   (A ÷ 12)              │   │ │
-│  │  └─────────────────────────────────────────────────────────────────┘   │ │
+│  │  [+ ADD SERVICE TO THIS SITE]                                           │ │
+│  │  ┌──────────────────────────────────────────────────────────────────┐  │ │
+│  │  │ SERVICE 1: [▼ Cockroach Treatment ▼]             [Remove Service]│  │ │
+│  │  │                                                                  │  │ │
+│  │  │ Service Mode*: [▼ Contract base ▼]                               │  │ │
+│  │  │ Frequency*:    [▼ Monthly ▼]   Annual Frequency*: [ 12 ]         │  │ │
+│  │  │ Visits/Month : [ 1 ] (Auto-calculated from Frequency)            │  │ │
+│  │  │                                                                  │  │ │
+│  │  │ ─── 3A: SERVICE VISIT COST ───────────────────────────────────── │  │ │
+│  │  │ ┌──────────────────────────────────────────────────────────────┐ │  │ │
+│  │  │ │ Rate per Visit (₹)*:  [ 300   ]                              │ │  │ │
+│  │  │ │ Annual Frequency:     [ 12    ] (read-only)                  │ │  │ │
+│  │  │ │ ──────────────────────────────────────────────────────────── │ │  │ │
+│  │  │ │ SERVICE VISIT COST/YEAR (A) : ₹ 3,600  (Rate × Frequency)    │ │  │ │
+│  │  │ │ SERVICE VISIT COST/MONTH    : ₹ 300    (A ÷ 12)              │ │  │ │
+│  │  │ └──────────────────────────────────────────────────────────────┘ │  │ │
+│  │  │                                                                  │  │ │
+│  │  │ ─── 3B: MANPOWER / LABOR COST ────────────────────────────────── │  │ │
+│  │  │ ┌──────────────────────────────────────────────────────────────┐ │  │ │
+│  │  │ │ No. of Hours per Visit*: [ 4     ]                           │ │  │ │
+│  │  │ │ Annual Frequency:        [ 12    ] (read-only)               │ │  │ │
+│  │  │ │ Rate per Hour (₹)*:      [ 100   ]                           │ │  │ │
+│  │  │ │ ──────────────────────────────────────────────────────────── │ │  │ │
+│  │  │ │ MANPOWER COST/YEAR (B): ₹ 4,800  (Hours × Freq × Rate/Hr)    │ │  │ │
+│  │  │ │ MANPOWER COST/MONTH   : ₹ 400    (B ÷ 12)                    │ │  │ │
+│  │  │ └──────────────────────────────────────────────────────────────┘ │  │ │
+│  │  │                                                                  │  │ │
+│  │  │ ─── 3C: CHEMICAL / PRODUCT COST ──────────────────────────────── │  │ │
+│  │  │ (Auto-fetched from Module 12 based on selected Pest/Service Type)│  │ │
+│  │  │ ┌────────────┬─────┬────┬────────┬──────────────┬──────┬───────┐ │  │ │
+│  │  │ │Product Name│Code │UOM │Coverage│ Req. Qty     │Price │Cost/Mo│ │  │ │
+│  │  │ ├────────────┼─────┼────┼────────┼──────────────┼──────┼───────┤ │  │ │
+│  │  │ │Alpha Cyper.│P-001│ ml │ 1200   │ [120] ml     │₹4.20 │₹504   │ │  │ │
+│  │  │ ├────────────┼─────┼────┼────────┼──────────────┼──────┼───────┤ │  │ │
+│  │  │ │Fipronil Gel│P-003│tube│ 1200   │ [2] tubes    │₹220  │₹440   │ │  │ │
+│  │  │ └────────────┴─────┴────┴────────┴──────────────┴──────┴───────┘ │  │ │
+│  │  │ [+ Add Custom Chemical]                                          │  │ │
+│  │  │                                                                  │  │ │
+│  │  │ Total Chemical Cost / Month  : ₹ 944                             │  │ │
+│  │  │ CHEMICAL COST/YEAR (C)       : ₹ 11,328 (Cost/Month × 12)        │  │ │
+│  │  │                                                                  │  │ │
+│  │  │ ─── SERVICE COST TOTAL (A + B + C) ───────────────────────────── │  │ │
+│  │  │ TOTAL SERVICE COST/YEAR      : ₹ 19,728                          │  │ │
+│  │  └──────────────────────────────────────────────────────────────────┘  │ │
 │  │                                                                         │ │
-│  │  ─── 3B: MANPOWER / LABOR COST ────────────────────────────────────── │ │
-│  │  ┌─────────────────────────────────────────────────────────────────┐   │ │
-│  │  │ No. of Hours per Visit*: [ 4     ]                             │   │ │
-│  │  │ Annual Frequency:        [ 52    ] (read-only)                 │   │ │
-│  │  │ Rate per Hour (₹)*:      [ 100   ]                             │   │ │
-│  │  │ ─────────────────────────────────────────────────────────────── │   │ │
-│  │  │ MANPOWER COST/YEAR (B): ₹ 20,800 (Hours × Freq × Rate/Hr)    │   │ │
-│  │  │ MANPOWER COST/MONTH   : ₹ 1,733  (B ÷ 12)                    │   │ │
-│  │  └─────────────────────────────────────────────────────────────────┘   │ │
+│  │  [+ ADD SERVICE TO THIS SITE]                                           │ │
 │  │                                                                         │ │
-│  │  ─── 3C: CHEMICAL / PRODUCT COST ─────────────────────────────────── │ │
-│  │  (Auto-fetched from Module 12 based on selected Pest/Service Type)     │ │
-│  │  (Product details & prices auto-fetched from Module 10 Product Master) │ │
-│  │                                                                         │ │
-│  │  ┌──────────────┬──────┬─────┬─────────┬──────────────┬────────────┬──────────────┬──────────────────┬──────────────────┬──────┐│ │
-│  │  │ Product Name │ Code │ UOM │Dilution │Coverage(SQFT)│ Req. Qty   │ Price/UOM(₹) │ Cost/Visit(₹)    │ Est.Cost/Month   │      ││ │
-│  │  │ (Auto)       │(Auto)│(Auto│ (Auto)  │ [User Entry] │ [User Ent.]│ (Auto-M10)   │ (Auto)           │ (Auto)           │      ││ │
-│  │  ├──────────────┼──────┼─────┼─────────┼──────────────┼────────────┼──────────────┼──────────────────┼──────────────────┼──────┤│ │
-│  │  │Alpha Cyperm. │P-001 │ ml  │ 10 ml   │ [1200] SQFT  │ [120] ml   │ ₹4.20 (Auto) │ ₹504 (Auto)      │ ₹2,016 (Auto)    │ [🗑] ││ │
-│  │  │Chlorpyriphos │P-002 │ ml  │ 20 ml   │ [1200] SQFT  │ [60] ml    │ ₹3.50 (Auto) │ ₹210 (Auto)      │ ₹840 (Auto)      │ [🗑] ││ │
-│  │  │Fipronil Gel  │P-003 │ tube│ 1 tube  │ [1200] SQFT  │ [2] tubes  │ ₹220 (Auto)  │ ₹440 (Auto)      │ ₹1,760 (Auto)    │ [🗑] ││ │
-│  │  └──────────────┴──────┴─────┴─────────┴──────────────┴────────────┴──────────────┴──────────────────┴──────────────────┴──────┘│ │
-│  │                                                                         │ │
-│  │  [+ Add Custom Chemical]  (for items not in service config)             │ │
-│  │                                                                         │ │
-│  │  Visits/Month (Reference): [4] (Auto from Section 2)                    │ │
-│  │                                                                         │ │
-│  │  ─── CHEMICAL COST SUMMARY ─────────────────────────────────────────── │ │
-│  │  Total Chemical Cost / Visit  : ₹ 1,154  (Sum of all Cost/Visit rows)  │ │
-│  │  Total Chemical Cost / Month  : ₹ 4,616  (Sum of all Cost/Month rows)  │ │
-│  │  CHEMICAL COST/YEAR (C)       : ₹ 55,392 (Cost/Month × 12)             │ │
-│  │                                                                         │ │
-│  │  ─── 3D: WEEKENDS / NIGHTS SURCHARGE ──────────────────────────────── │ │
+│  │  ─── 3D: WEEKENDS / NIGHTS SURCHARGE (Site-Level) ─────────────────── │ │
 │  │  ┌─────────────────────────────────────────────────────────────────┐   │ │
 │  │  │ Applicable?        (•) No    ( ) Yes                           │   │ │
-│  │  │                                                                │   │ │
-│  │  │ IF YES: 25% surcharge on (Service Visit + Manpower Costs)      │   │ │
-│  │  │ Surcharge Base     : ₹ 36,400  (A + B)                         │   │ │
-│  │  │ Surcharge Rate     : 25%                                       │   │ │
-│  │  │ SURCHARGE COST (D) : ₹ 0  (Not Applicable)                    │   │ │
+│  │  │ IF YES: 25% surcharge on all Service Visit + Manpower Costs    │   │ │
+│  │  │ SURCHARGE COST (D) : ₹ 0                                      │   │ │
 │  │  └─────────────────────────────────────────────────────────────────┘   │ │
 │  │                                                                         │ │
-│  │  ─── 3E: DOCUMENTATION COST (Optional) ────────────────────────────── │ │
+│  │  ─── 3E: DOCUMENTATION COST (Site-Level) ──────────────────────────── │ │
 │  │  ┌─────────────────────────────────────────────────────────────────┐   │ │
 │  │  │ Applicable?        ( ) No    (•) Yes                           │   │ │
 │  │  │ Cost per Document (₹): [ 100  ]                                │   │ │
-│  │  │ Docs per Month      : [ 1    ] (e.g., monthly service docket)  │   │ │
-│  │  │ DOCUMENTATION COST/YEAR (E): ₹ 1,200 (Cost × Docs × 12)       │   │ │
+│  │  │ Docs per Month      : [ 1    ]                                 │   │ │
+│  │  │ DOCUMENTATION COST/YEAR (E): ₹ 1,200                          │   │ │
 │  │  └─────────────────────────────────────────────────────────────────┘   │ │
 │  │                                                                         │ │
 │  │  ═══ SITE 1 COST SUMMARY ════════════════════════════════════════════ │ │
 │  │  ┌─────────────────────────────────────────────────────────────────┐   │ │
 │  │  │ Cost Component          │ Annual (₹)     │ Monthly (₹)         │   │ │
 │  │  │ ────────────────────────┼────────────────┼─────────────────────│   │ │
-│  │  │ A. Service Visit Cost   │ ₹ 15,600       │ ₹ 1,300             │   │ │
-│  │  │ B. Manpower Cost        │ ₹ 20,800       │ ₹ 1,733             │   │ │
-│  │  │ C. Chemical Cost        │ ₹ 55,392       │ ₹ 4,616             │   │ │
+│  │  │ A+B+C (All Services)    │ ₹ 19,728       │ ₹ 1,644             │   │ │
 │  │  │ D. Weekend/Night Surch. │ ₹ 0            │ ₹ 0                 │   │ │
 │  │  │ E. Documentation Cost   │ ₹ 1,200        │ ₹ 100               │   │ │
 │  │  │ ─────────────────────────────────────────────────────────────── │   │ │
-│  │  │ TOTAL COST              │ ₹ 92,992       │ ₹ 7,749             │   │ │
+│  │  │ TOTAL SITE COST         │ ₹ 20,928       │ ₹ 1,744             │   │ │
 │  │  └─────────────────────────────────────────────────────────────────┘   │ │
 │  │                                                                         │ │
-│  │  SITE 1 PROPOSED SALE PRICE/YEAR* : ₹ [ 1,56,000 ] (Manual Entry)      │ │
-│  │  SITE 1 PROPOSED SALE PRICE/MONTH : ₹ 13,000  (Auto ÷ 12)              │ │
+│  │  SITE 1 PROPOSED SALE PRICE/YEAR* : ₹ [ 50,000 ] (Manual Entry)        │ │
+│  │  SITE 1 PROPOSED SALE PRICE/MONTH : ₹ 4,166   (Auto ÷ 12)              │ │
 │  │  ──────────────────────────────────────────────────────────────────     │ │
-│  │  ★ SITE 1 GROSS MARGIN %         : 40.4%  (Auto-calculated)            │ │
-│  │    Formula: (Sale Price – Total Cost) / Sale Price × 100                │ │
-│  │    = (₹1,56,000 – ₹92,992) / ₹1,56,000 × 100 = 40.4%                  │ │
+│  │  ★ SITE 1 GROSS MARGIN %         : 58.1%  (Auto-calculated)            │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  [+ ADD SITE]  (Repeat above block for each additional site)                 │
@@ -7083,30 +7073,20 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 
 ---
 
-## Section 2: Service & Contract Configuration Fields
+## Section 2: General Configuration Fields
 
 | Field              | Type        | Required    | Options/Validation                                            | Notes                                    |
 | ------------------ | ----------- | ----------- | ------------------------------------------------------------- | ---------------------------------------- |
-| Pest / Service Type| Dropdown    | Yes         | Cockroach / Termite / Rodent / General Pest / Fogging / Fumigation / Mosquito / Other | Linked to Module 12 service list |
-| Service Mode       | Radio       | Yes         | AMC / One-Time                                                | Determines frequency fields              |
-| Frequency          | Dropdown    | Conditional | Weekly / Fortnightly / Monthly / Quarterly                    | Required if Mode = AMC                   |
-| Annual Frequency   | Number      | Auto        | Auto-calculated (Weekly=52, Fortnightly=26, Monthly=12, Quarterly=4) | Read-only                         |
-| Contract Duration  | Dropdown    | Conditional | 6 Months / 1 Year / 2 Years / 3 Years                        | Required if Mode = AMC                   |
-| Proposed Start Date| Date        | Conditional | ≥ Today                                                       | Required if Mode = AMC                   |
+| Contract Duration  | Dropdown    | No          | 6 Months / 1 Year / 2 Years / 3 Years / Custom                 | Optional top-level duration                |
+| Proposed Start Date| Date        | Yes         | ≥ Today                                                       | Earliest service start across all sites  |
 | Branch             | Dropdown    | Yes         | Active branches from Module 7                                 | Nearest branch auto-suggested            |
 | Prepared By        | Auto-filled | System      | Logged-in user                                                | Read-only                                |
 | Prepared Date      | Auto-filled | System      | Today's date                                                  | Read-only                                |
 | Remarks / Notes    | Text Area   | No          | Max 500 characters                                            | Free-text for special instructions       |
 
-**Conditional Form Behavior (If Service Mode = One-Time):**
-* **Frequency:** Hidden / Not Required
-* **Annual Frequency:** Hidden / Not Required 
-* **Contract Duration:** Hidden / Not Required
-* **Proposed Start Date:** Relabeled to **Service Date** (Required)
-
 ---
 
-## Section 3: Cost Breakdown (Per Site)
+## Section 3: Cost Breakdown (Per Site, Per Service)
 
 ### Site Information
 
@@ -7119,7 +7099,20 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 | Category           | Dropdown        | Yes      | Residential / Commercial / Industrial                     | Linked to Module 12 pricing          |
 | Sub-Category       | Dropdown        | Yes      | Internal / External                                       | Linked to Module 12                  |
 | Area (sqft)        | Number          | Yes      | Must be > 0                                               | Used for area-based chemical calc    |
-| Visits/Month       | Number          | Yes      | Inherited from Section 2; site-editable                   | Can be overridden per site           |
+
+---
+
+### Service Configuration (Inside Each Site)
+
+> Users click **[+ ADD SERVICE TO THIS SITE]** to add multiple treatments under one site block.
+
+| Field              | Type        | Required    | Options/Validation                                            | Notes                                    |
+| ------------------ | ----------- | ----------- | ------------------------------------------------------------- | ---------------------------------------- |
+| Service Type       | Dropdown    | Yes         | Cockroach / Termite / Rodent / Fogging / etc.                 | Determines the chemical/costings grid    |
+| Service Mode       | Dropdown    | Yes         |  / One-Time                                                | Determines frequency requirement         |
+| Frequency          | Dropdown    | Conditional | Weekly / Fortnightly / Monthly / Quarterly / Custom           | Required if Mode = Contract                   |
+| Annual Frequency   | Number      | Auto        | Auto-calculated (Weekly=52, Monthly=12, Quarterly=4)          | Derived from Frequency                   |
+| Visits/Month       | Display     | Auto        | Auto-calculated (Annual ÷ 12)                                 | Used for chemical usage calculations     |
 
 ---
 
@@ -7128,14 +7121,9 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 | Field              | Type            | Required | Validation / Notes                                                |
 | ------------------ | --------------- | -------- | ----------------------------------------------------------------- |
 | Rate per Visit (₹) | Currency        | Yes      | Manually entered; cost charged per visit (e.g., ₹300)             |
-| Annual Frequency   | Display         | Auto     | From Section 2 (e.g., Weekly = 52)                                |
+| Annual Frequency   | Display         | Auto     | From Service config (e.g., Monthly = 12)                          |
 | Cost/Year (A)      | Auto-calculated | System   | `Rate per Visit × Annual Frequency`                               |
 | Cost/Month         | Auto-calculated | System   | `A ÷ 12`                                                         |
-
-**Conditional Form Behavior (If Service Mode = One-Time):**
-* **Annual Frequency:** Hidden / Not Required
-* **Cost/Month:** Hidden / Not Required
-* **Cost/Year (A):** Relabeled to **Total Service Cost (A)** (Equals `Rate per Visit`)
 
 ---
 
@@ -7144,99 +7132,37 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 | Field                  | Type            | Required | Validation / Notes                                            |
 | ---------------------- | --------------- | -------- | ------------------------------------------------------------- |
 | No. of Hours per Visit | Number          | Yes      | Hours of technician work per visit (e.g., 4)                  |
-| Annual Frequency       | Display         | Auto     | Same as Section 2 (read-only)                                 |
 | Rate per Hour (₹)      | Currency        | Yes      | Hourly rate for technician labor (e.g., ₹100)                 |
 | Cost/Year (B)          | Auto-calculated | System   | `Hours × Annual Frequency × Rate/Hour`                        |
 | Cost/Month             | Auto-calculated | System   | `B ÷ 12`                                                     |
 
-**Conditional Form Behavior (If Service Mode = One-Time):**
-* **Annual Frequency:** Hidden / Not Required
-* **Cost/Month:** Hidden / Not Required
-* **Cost/Year (B):** Relabeled to **Total Manpower Cost (B)** (Equals `Hours × Rate/Hour`)
-
 ---
 
-### 3C — Chemical / Product Cost (Auto-fetched from Module 12 → Module 10)
+### 3C — Chemical / Product Cost
 
-> When a **Pest / Service Type** is selected in Section 2, the system automatically fetches all chemicals/products configured for that service in **Module 12 (Service Management → Section 4: Chemicals/Products Used)**. Product details (Code, UOM, Dilution, Coverage, Price/UOM) are auto-populated from **Module 10 (Product Master)**.
->
-> The user only needs to enter **SQFT** (coverage area for this site) and **Required Quantity**. All pricing and cost calculations happen dynamically.
+> Automatically fetched from **Module 12** → **Module 10** based on the specific **Service Type** selected for this block.
 
 | Field                    | Type            | Required | Validation / Notes                                                          |
 | ------------------------ | --------------- | -------- | --------------------------------------------------------------------------- |
-| Product Name             | Auto-filled     | System   | Auto-fetched from Module 12 service config → Module 10 Product Master      |
-| Product Code             | Auto-filled     | System   | Auto-fetched from Module 10 (e.g., P-001)                                  |
-| UOM                      | Auto-filled     | System   | Base UOM from Module 10 (ml / Ltr / gm / kg / Nos / tube)                 |
-| Dilution                 | Auto-filled     | System   | Standard dilution dose from Module 12 config (e.g., 10 ml per 100 SQFT)   |
-| Coverage (SQFT)          | Number          | Yes      | **User enters** — area to be treated (pre-filled from site Area if set)    |
+| Product Name             | Auto-filled     | System   | Auto-fetched from Module 12 service config                                |
+| Coverage (SQFT)          | Number          | Yes      | **User enters** — area to be treated (defaults to Site Area)               |
 | Required Qty             | Number          | Yes      | **User enters** — quantity needed per visit; must be > 0                   |
-| Price / UOM (₹)          | Auto-filled     | System   | **Purchase Price from Module 10** Product Master (editable for override)   |
-| Cost / Visit (₹)         | Auto-calculated | System   | `Required Qty × Price per UOM`                                             |
-| Est. Cost / Month (₹)    | Auto-calculated | System   | `Cost per Visit × Visits per Month`                                        |
-| Custom Chemical          | Text            | No       | Allowed via [+ Add Custom Chemical] if not in service config               |
+| Price / UOM (₹)          | Auto-filled     | System   | **Purchase Price from Module 10** (editable override)                      |
+| Est. Cost / Month (₹)    | Auto-calculated | System   | `(Required Qty × Price per UOM) × Visits per Month`                        |
 
-**System Behavior — On Service Selection (Section 2):**
-
-When a Pest / Service Type is selected, the system:
-
-| Auto-Action                        | Source                                                     |
-| ---------------------------------- | ---------------------------------------------------------- |
-| Pre-populate chemical rows         | Module 12 → Service → Chemicals/Products Used              |
-| Fill Product Name, Code            | Module 10 → Product Master record                          |
-| Fill UOM                           | Module 10 → Base UOM                                       |
-| Fill Dilution                      | Module 12 → Standard Usage (if configured)                 |
-| Fill Price / UOM (₹)               | Module 10 → Purchase Price                                 |
-| Pre-fill Coverage (SQFT)           | From Site's Area (sqft) field (user can adjust)            |
-
-> The **Price / UOM** is editable — the sales person can override the fetched price if a negotiated rate applies.
-
-**Calculation Rules:**
-
-| Calculation                  | Formula                                          |
-| ---------------------------- | ------------------------------------------------ |
-| Cost per Visit (₹)           | `Required Qty × Price per UOM`                   |
-| Est. Cost / Month (₹)        | `Cost per Visit × Visits per Month`              |
-| Total Chemical Cost / Visit  | Sum of all chemical rows' Cost/Visit             |
-| Total Chemical Cost / Month  | Sum of all chemical rows' Est. Cost/Month        |
-| Chemical Cost / Year (C)     | `Total Chemical Cost / Month × 12`               |
-
-**UOM-Based Dynamic Calculation Examples:**
-
-| UOM    | Scenario                                                              | Calculation                                           |
-| ------ | --------------------------------------------------------------------- | ----------------------------------------------------- |
-| ml     | Alpha Cypermethrin, 1200 SQFT, 10ml/100SQFT dilution → 120ml needed  | 120 ml × ₹4.20/ml = ₹504/visit                       |
-| tube   | Fipronil Gel, 1200 SQFT, 1 tube/600SQFT → 2 tubes needed            | 2 tubes × ₹220/tube = ₹440/visit                     |
-| grams  | Bromadiolone, 1200 SQFT, 100g/site → 100g needed                    | 100 g × ₹0.25/g = ₹25/visit                          |
-| Ltr    | Chlorpyriphos 20% EC, 1200 SQFT, 1L/1000SQFT → 1.2L needed         | 1.2 L × ₹290/L = ₹348/visit                          |
-| Nos    | Glue Trap, 1200 SQFT, 1 per 200SQFT → 6 needed                     | 6 Nos × ₹15/No = ₹90/visit                           |
-
-**Rules:**
-- Chemicals are auto-populated when service is selected; user can remove unwanted items.
-- At least one chemical row is required per site.
-- Additional chemicals can be added via **[+ Add Custom Chemical]** for items not in the service config.
-- Chemical Cost/Year (C) = Total Chemical Cost / Month × 12.
-- User can override `Price / UOM` for custom pricing; system retains overridden value.
+**Chemical Cost Rules:**
+- Calculated individually per service added.
+- `Total Chemical Cost / Year (C) = Sum of all Chemical Est.Cost/Month × 12` within this service block.
 
 ---
 
-### 3D — Weekends / Nights Surcharge
+### 3D & 3E — Surcharges and Documentation (Site-Level)
+These costs apply to the *entire site* (across all services):
 
-| Field                | Type            | Required | Validation / Notes                                                    |
-| -------------------- | --------------- | -------- | --------------------------------------------------------------------- |
-| Applicable?          | Radio (Yes/No)  | Yes      | If "Yes", a 25% surcharge is applied on `(Service Visit + Manpower)` |
-| Surcharge Percentage | Display         | Auto     | Fixed at 25% (configurable by admin)                                 |
-| Surcharge Cost (D)   | Auto-calculated | System   | `IF Yes → (A + B) × 25%  ELSE → ₹0`                                 |
-
----
-
-### 3E — Documentation Cost (Optional)
-
-| Field                   | Type            | Required | Validation / Notes                                          |
-| ----------------------- | --------------- | -------- | ----------------------------------------------------------- |
-| Applicable?             | Radio (Yes/No)  | No       | If "Yes", documentation cost fields appear                  |
-| Cost per Document (₹)   | Currency        | Cond.    | ₹100 default (e.g., service docket submission cost)         |
-| Documents per Month     | Number          | Cond.    | Number of docs submitted monthly (e.g., 1)                  |
-| Documentation Cost (E)  | Auto-calculated | System   | `Cost per Doc × Docs/Month × 12`                            |
+| Field                     | Validation / Notes                                                              |
+| ------------------------- | ------------------------------------------------------------------------------- |
+| Weekend/Night Surcharge   | If Yes: 25% applied to the SUM of all Service Visit Cost (A) + Manpower Cost (B)  |
+| Documentation Cost        | If Yes: `Cost/Doc × Docs/Month × 12` added to the total site cost               |
 
 ---
 
@@ -7244,12 +7170,10 @@ When a Pest / Service Type is selected, the system:
 
 | Component                  | Formula                                                                |
 | -------------------------- | ---------------------------------------------------------------------- |
-| A. Service Visit Cost/Year | `Rate per Visit × Annual Frequency`                                    |
-| B. Manpower Cost/Year      | `Hours per Visit × Annual Frequency × Rate per Hour`                   |
-| C. Chemical Cost/Year      | `Σ (Req Qty × Price/UOM × Visits/Month) × 12` for all chemicals       |
-| D. Weekend/Night Surcharge | `IF Applicable → (A + B) × 25%  ELSE → 0`                             |
-| E. Documentation Cost/Year | `IF Applicable → Cost/Doc × Docs/Month × 12  ELSE → 0`               |
-| **Site Total Cost/Year**   | **A + B + C + D + E**                                                  |
+| A+B+C (All Services)       | Sum of (`A + B + C`) for every service configured under this site      |
+| D. Surcharge Cost          | Applied globally to A+B per site if applicable                         |
+| E. Documentation Cost      | Flat site-level document cost addition                                 |
+| **Site Total Cost/Year**   | **∑ (All Services A+B+C) + D + E**                                     |
 | Site Proposed Price/Year   | Manually entered by the sales person                                   |
 | **Site Gross Margin %**    | **`(Proposed Price – Total Cost) / Proposed Price × 100`**             |
 
@@ -7322,9 +7246,10 @@ When the user clicks **Save & Request Approval**, this popup overlay appears:
 | ---------------------------------- | ------------------------------------------------------------- |
 | Source Required                    | Must select From Lead, From Customer, or Add New              |
 | Lead/Customer Required             | Must select a valid active lead or customer (if applicable)   |
-| Service Type Required              | Must select a pest / service type                             |
-| At Least 1 Site Required           | Minimum one site must be added                                |
-| At Least 1 Chemical per Site       | Minimum one chemical row per site                             |
+| At Least 1 Site Required           | Minimum one site must be added under Section 3                |
+| At Least 1 Service per Site        | Every site block must have at least one Service configured    |
+| Service Type Required              | Must select a service type inside each Service Block          |
+| At Least 1 Chemical per Service    | Minimum one chemical row per configured service               |
 | Coverage (SQFT) > 0               | Each chemical row must have SQFT > 0                          |
 | Required Qty > 0                   | Each chemical row must have Required Qty > 0                  |
 | Proposed Sale Price > 0            | Each site must have a proposed price greater than 0           |
@@ -7334,17 +7259,25 @@ When the user clicks **Save & Request Approval**, this popup overlay appears:
 
 ---
 
+## 💡 Note: How `[+ Add Site]` and `[+ Add Service]` Works
+
+- **`[+ Add Site]`**: A single GMA record can cover an unlimited number of physical locations (sites) for the customer. Adding a new site creates a new, independent set of `Section 3` blocks. Pricing and Gross Margins are rolled up per-site.
+- **`[+ Add Service to this Site]`**: Within a single Site, a customer may require multiple different treatments (e.g., General Pest Control + Advanced Termite Protection). Adding a service inside a site spins up a fresh cost breakdown (Service Visit Cost, Manpower, and Chemicals) strictly for that specific treatment. The system logically sums the A+B+C expenses of all services placed inside the site block to generate a combined Total Site Cost.
+
+---
+
 ## System Behaviors on Submission
 
 | Trigger                     | System Action                                                         |
 | --------------------------- | --------------------------------------------------------------------- |
 | GM ≥ 40%                    | Status → Approved; no approval routing needed                         |
 | GM < 40% + Approver Picked  | Status → Pending; Notification sent to selected Approver              |
-| Chemical selected           | Auto-fill UOM, Base Price, +15%, +18% GST from Product Master         |
+| Service Type Selected       | Auto-fill applicable chemicals from Module 12 into the Service block  |
+| Chemical auto-added         | Auto-fill UOM, Base Price, +15%, +18% GST from Product Master         |
 | Rate overridden by user     | System retains overridden value; does not reset on re-selection       |
 | Source = From Lead          | Auto-populate lead details; link GMA to lead record                   |
 | Source = From Customer      | Auto-populate customer details; link GMA to customer record           |
-| Weekend/Night = Yes         | Automatically add 25% surcharge to Service Visit + Manpower costs     |
+| Weekend/Night = Yes         | Automatically add 25% surcharge to the sum of all Manpower and Visit costs in that site |
 
 ---
 ====================================================================================================
@@ -7373,11 +7306,9 @@ Full read-only view of any GMA sheet accessible to the logged-in user. Used for 
 │  Phone           : +91 98765 00001   Email : ramesh@xyz.com                  │
 │  Customer Type   : Commercial        Address : Andheri East, Mumbai          │
 │                                                                              │
-│  ─── SECTION 2: SERVICE & CONTRACT CONFIGURATION ────────────────────────  │
-│  Pest Type       : Cockroach                                                 │
-│  Service Mode    : Contract base     Contract Duration : 1 Year              │
-│  Proposed Start  : 01 Apr 2026       Frequency : Weekly (52 visits/year)     │
-│  Branch          : Mumbai            Prepared By : Ravi Sharma               │
+│  ─── SECTION 2: GENERAL CONFIGURATION ───────────────────────────────────  │
+│  Contract Duration : 1 Year          Proposed Start : 01 Apr 2026            │
+│  Branch          : Mumbai            Prepared By    : Ravi Sharma            │
 │  Prepared Date   : 18 Mar 2026                                               │
 │  Remarks         : Annual pest control for hotel chain                       │
 │                                                                              │
@@ -7386,15 +7317,19 @@ Full read-only view of any GMA sheet accessible to the logged-in user. Used for 
 │  SITE 1: Mumbai HQ                                                           │
 │  ┌────────────────────────────────────────────────────────────────────────┐ │
 │  │  City: Mumbai   State: Maharashtra   Category: Commercial              │ │
-│  │  Sub-Category: Internal   Area: 1200 sqft   Visits/Month: 4           │ │
-│  │                                                                         │ │
+│  │  Sub-Category: Internal   Area: 1200 sqft                              │ │
+│  │                                                                        │ │
+│  │  ─── SERVICE 1: Cockroach Treatment ────────────────────────────────── │ │
+│  │  Service Mode   : Contract base     Frequency         : Monthly        │ │
+│  │  Annual Freq.   : 12                Visits/Month      : 1              │ │
+│  │                                                                        │ │
 │  │  ─── 3A: SERVICE VISIT COST ──────────────────────────────────────── │ │
-│  │  Rate per Visit : ₹300   Annual Frequency : 52                         │ │
-│  │  Cost/Year (A)  : ₹15,600   Cost/Month : ₹1,300                       │ │
+│  │  Rate per Visit : ₹300   Annual Frequency : 12                         │ │
+│  │  Cost/Year (A)  : ₹3,600    Cost/Month : ₹300                         │ │
 │  │                                                                         │ │
 │  │  ─── 3B: MANPOWER / LABOR COST ──────────────────────────────────── │ │
-│  │  Hours/Visit : 4   Annual Frequency : 52   Rate/Hour : ₹100            │ │
-│  │  Cost/Year (B)  : ₹20,800   Cost/Month : ₹1,733                       │ │
+│  │  Hours/Visit : 4   Annual Frequency : 12   Rate/Hour : ₹100            │ │
+│  │  Cost/Year (B)  : ₹4,800    Cost/Month : ₹400                         │ │
 │  │                                                                         │ │
 │  │  ─── 3C: CHEMICAL / PRODUCT COST ────────────────────────────────── │ │
 │  │  (Auto-fetched from Module 12 → Module 10)                              │ │
@@ -7405,8 +7340,10 @@ Full read-only view of any GMA sheet accessible to the logged-in user. Used for 
 │  │  │Chlorpyriphos │P-002 │ ml  │ 20 ml   │ 1200 │ 60 ml  │ ₹3.50   │ ₹210     ││
 │  │  │Fipronil Gel  │P-003 │ tube│ 1 tube  │ 1200 │ 2 tubes│ ₹220    │ ₹440     ││
 │  │  └──────────────┴──────┴─────┴─────────┴──────┴────────┴──────────┴──────────┘│
-│  │  Total Chemical Cost/Visit : ₹1,154   Cost/Month : ₹4,616              │ │
-│  │  Chemical Cost/Year (C)    : ₹55,392                                    │ │
+│  │  Total Chemical Cost/Visit : ₹1,154   Cost/Month : ₹1,154              │ │
+│  │  Chemical Cost/Year (C)    : ₹13,848                                    │ │
+│  │                                                                         │ │
+│  │  TOTAL SERVICE 1 COST/YEAR (A+B+C) : ₹22,248                            │ │
 │  │                                                                         │ │
 │  │  ─── 3D: WEEKENDS/NIGHTS SURCHARGE ──────────────────────────────── │ │
 │  │  Applicable : No   Surcharge Cost (D) : ₹0                             │ │
@@ -7724,7 +7661,7 @@ A focused action screen where the approver confirms their decision to approve or
 │  Customer Type   : Commercial        Address : Peenya, Bangalore             │
 │                                                                              │
 │  ─── SECTION 2: SERVICE & CONTRACT CONFIGURATION ────────────────────────  │
-│  Pest Type       : Rodent AMC                                                │
+│  Pest Type       : Rodent Contract                                                │
 │  Service Mode    : Contract base     Contract Duration : 1 Year              │
 │  Proposed Start  : 01 Apr 2026       Frequency : Weekly (52 visits/year)     │
 │  Branch          : Bangalore         Prepared By : Ravi Sharma               │
