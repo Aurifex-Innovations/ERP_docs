@@ -10847,3 +10847,387 @@ MODULE 20: SALES ORDER MANAGEMENT
 | **Module 20**  | SO Number, Status, Line Items, Execution Status               | Operations (Job Cards), Invoicing, Module 18 Tab 3, Module 19 Tab 2 |
 
 
+================================================================================================
+
+
+
+# 📊 COMPLETE DATA FLOW DIAGRAM — MODULE 1 TO MODULE 20
+
+> This diagram maps the **entire data lifecycle** across all 20 modules, organized by functional layer. Arrows show data direction. Conditional branches are marked with `[IF condition]`.
+
+---
+
+## LAYER 1: PLATFORM & AUTHENTICATION (Module 1 – 4)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                              LAYER 1: PLATFORM & ACCESS CONTROL                              │
+│                                                                                              │
+│   ┌──────────────────────────────┐                                                           │
+│   │     MODULE 1: AUTHENTICATION │                                                           │
+│   │  (Entry Point for ALL users) │                                                           │
+│   └──────────┬───────────────────┘                                                           │
+│              │                                                                               │
+│     ┌────────┼────────────────────────┐                                                      │
+│     ▼        ▼                        ▼                                                      │
+│  ┌─────────────┐  ┌───────────────┐  ┌──────────────┐                                       │
+│  │ Super Admin │  │ Company Admin │  │ IAM User     │                                       │
+│  │ (Seravion)  │  │ (Client)      │  │ (Employee)   │                                       │
+│  └──────┬──────┘  └───────┬───────┘  └──────┬───────┘                                       │
+│         │                 │                  │                                                │
+│         │    [IF New]─────┤                  │                                                │
+│         │        ▼        │[IF Existing]     │                                                │
+│         │  ┌──────────┐   │                  │                                                │
+│         │  │M2: ONBOARD│  │                  │                                                │
+│         │  │Company    │  │                  │                                                │
+│         │  │Info+Docs  │  │                  │                                                │
+│         │  └─────┬─────┘  │                  │                                                │
+│         │        │        │                  │                                                │
+│         │  [IF Docs Approved by Seravion]    │                                                │
+│         │        │        │                  │                                                │
+│         │        ▼        │                  │                                                │
+│         │  ┌──────────┐   │                  │                                                │
+│         │  │M2.8: Sub-│   │                  │                                                │
+│         │  │scription │   │                  │                                                │
+│         │  │Purchase  │◄──┼──── M4: Subscription Plans (Seravion-created)                    │
+│         │  └─────┬─────┘  │                  │                                                │
+│         │        │        │                  │                                                │
+│         │  [IF Payment Success]              │                                                │
+│         │        │        │                  │                                                │
+│         │        ▼        ▼                  ▼                                                │
+│         │     Company Dashboard ──────►  Role-Based Module Access                            │
+│         │                                                                                    │
+│         ▼                                                                                    │
+│  ┌──────────────────┐                                                                        │
+│  │M3: SUPER ADMIN   │                                                                        │
+│  │• Company Approval│──► Approves/Rejects company docs (M2)                                  │
+│  │• Plan Management │──► Creates plans used in M2.8                                          │
+│  │• Role Templates  │──► Base templates for M5 (Client)                                      │
+│  └──────────────────┘                                                                        │
+│                                                                                              │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## LAYER 2: SYSTEM CONFIGURATION (Module 5 – 9)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                         LAYER 2: SYSTEM CONFIGURATION                                        │
+│                                                                                              │
+│  ┌────────────────┐     ┌────────────────┐     ┌────────────────┐                            │
+│  │  M5: ROLE MGMT │     │ M6: ROLE SALARY│     │ M7: BRANCH     │                            │
+│  │  (Permissions) │     │ & LEAVE CONFIG │     │ MANAGEMENT     │                            │
+│  └───────┬────────┘     └───────┬────────┘     └───────┬────────┘                            │
+│          │                      │                      │                                     │
+│          │  Seravion creates    │  Defines salary &    │  Defines physical                   │
+│          │  role templates ──►  │  leave policy per    │  branches, locations                 │
+│          │  Client customizes   │  role ──────────►    │  & contacts ──────►                  │
+│          │         │            │         │            │         │                            │
+│          └─────────┼────────────┘─────────┼────────────┘─────────┤                            │
+│                    │                      │                      │                            │
+│                    ▼                      ▼                      ▼                            │
+│          ┌─────────────────────────────────────────────────────────────────┐                  │
+│          │                  MODULE 8: EMPLOYEE MANAGEMENT                  │                  │
+│          │                                                                 │                  │
+│          │  ┌─ Step 1: Personal Details                                    │                  │
+│          │  ├─ Step 2: Role Assignment ◄──── M5 (permissions auto-load)    │                  │
+│          │  ├─ Step 3: Salary Config  ◄──── M6 (salary/leave auto-load)   │                  │
+│          │  ├─ Step 4: Leave Config   ◄──── M6 (leave balance auto-load)  │                  │
+│          │  ├─ Step 5: Documents                                           │                  │
+│          │  └─ Step 6: Branch Assign  ◄──── M7 (branch list)              │                  │
+│          │                                                                 │                  │
+│          │  OUTPUT: Active employees with roles, branches, permissions     │                  │
+│          └──────────────────────────┬──────────────────────────────────────┘                  │
+│                                     │                                                        │
+│                                     │  Employees used by:                                    │
+│                                     ├──► M15 (Lead assignment)                               │
+│                                     ├──► M17 (GMA prepared by)                               │
+│                                     ├──► M19 (Technician assignment)                         │
+│                                     └──► M20 (Sales person assignment)                       │
+│                                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐                   │
+│  │                    MODULE 9: TAX MANAGEMENT                            │                   │
+│  │                                                                        │                   │
+│  │  Tax Types (CGST, SGST, IGST, CESS)                                    │                   │
+│  │       │                                                                │                   │
+│  │       ▼                                                                │                   │
+│  │  HSN/SAC Codes (linked to tax rates)                                   │                   │
+│  │       │                                                                │                   │
+│  │       │  Tax rates auto-populate to ──►                                │                   │
+│  │       ├──► M10 (Products — purchase/selling price tax calc)            │                   │
+│  │       ├──► M14 (Purchase Orders — PO line item tax)                    │                   │
+│  │       ├──► M16 (Quotations — quoted price tax)                         │                   │
+│  │       ├──► M17 (GMA — chemical cost tax)                               │                   │
+│  │       ├──► M19 (Contracts — contract value tax)                        │                   │
+│  │       └──► M20 (Sales Orders — SO line item tax)                       │                   │
+│  └────────────────────────────────────────────────────────────────────────┘                   │
+│                                                                                              │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## LAYER 3: OPERATIONAL MASTERS (Module 10 – 14)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                         LAYER 3: OPERATIONAL MASTERS                                         │
+│                                                                                              │
+│  ┌─────────────────────────────────────────────────────────────┐                              │
+│  │               MODULE 10: PRODUCT MASTER                      │                              │
+│  │  (Prerequisite: M9 Tax Management)                           │                              │
+│  │                                                              │                              │
+│  │  Product Name, Code, Category, Brand, UOM, HSN              │                              │
+│  │  Purchase Price, Selling Price, Variants                    │                              │
+│  │  Tax Config ◄──── auto-filled from M9 HSN codes            │                              │
+│  └──────────────────────────┬──────────────────────────────────┘                              │
+│                             │                                                                │
+│            ┌────────────────┼────────────────┬──────────────────────┐                         │
+│            ▼                ▼                ▼                      ▼                         │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     ┌──────────────┐                   │
+│  │ M11: STOCK   │  │ M12: SERVICE │  │ M14: PURCHASE│     │ M20: SALES   │                   │
+│  │ MANAGEMENT   │  │ MANAGEMENT   │  │ ORDER (PO)   │     │ ORDER (SO)   │                   │
+│  │              │  │              │  │              │     │ (Product     │                   │
+│  │ Assets,      │  │ Service      │  │ PO creates   │     │  Sale mode)  │                   │
+│  │ Consumables, │  │ Templates,   │  │ stock on     │     │              │                   │
+│  │ Resell stock │  │ Chemicals,   │  │ receipt      │     │ Uses Selling │                   │
+│  │              │  │ Pricing      │  │              │     │ Price from   │                   │
+│  │              │  │              │  │              │     │ Product Mstr │                   │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘     └──────────────┘                   │
+│         │                 │                 │                                                 │
+│         │                 │   ┌─────────────┘                                                │
+│         │                 │   │                                                               │
+│         │                 │   ▼                                                               │
+│         │                 │  ┌──────────────┐                                                │
+│         │                 │  │ M13: VENDOR  │                                                │
+│         │                 │  │ MANAGEMENT   │                                                │
+│         │                 │  │              │                                                │
+│         │                 │  │ Vendor list  │                                                │
+│         │                 │  │ used in PO   │                                                │
+│         │                 │  │ creation     │                                                │
+│         │                 │  └──────────────┘                                                │
+│         │                 │                                                                  │
+│   Stock issuance     Service config                                                          │
+│   for SO execution   used in GMA, Quotation,                                                 │
+│   (chemicals,        Contract, and SO                                                        │
+│    products)                                                                                 │
+│                                                                                              │
+│  ═══ DATA FLOW: PROCUREMENT CHAIN ═══════════════════════════════════════                    │
+│  M10 (Product) ──► M13 (Vendor maps to products) ──► M14 (PO created)                       │
+│       ──► [IF PO Received] ──► M11 (Stock added to Central/Branch)                           │
+│                                                                                              │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## LAYER 4: SALES PIPELINE (Module 15 – 20)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                      LAYER 4: SALES PIPELINE (LEAD → SALES ORDER)                            │
+│                                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────────────────────┐│
+│  │                          MODULE 15: LEAD MANAGEMENT                                      ││
+│  │                                                                                          ││
+│  │  Sources: Website, Referral, Walk-in, Cold Call, Social Media, Exhibition, Partner       ││
+│  │  Lead Status: New → Contacted → Qualified → Negotiation → Won / Lost                    ││
+│  │                                                                                          ││
+│  │  [IF Lead Status = QUALIFIED or WON]:                                                    ││
+│  │       │                                                                                  ││
+│  │       ├──► Route 1: Create Quotation    ──► MODULE 16                                    ││
+│  │       ├──► Route 2: Create GMA Sheet    ──► MODULE 17                                    ││
+│  │       └──► Route 3: Convert to Customer ──► MODULE 18                                    ││
+│  │                                                                                          ││
+│  └──────────────────────────────────────────────────────────────────────────────────────────┘│
+│                    │                    │                    │                                │
+│                    ▼                    ▼                    ▼                                │
+│  ┌──────────────────────┐  ┌──────────────────────┐  ┌──────────────────────┐                │
+│  │ M16: QUOTATION MGMT  │  │ M17: GMA (GROSS      │  │ M18: CUSTOMER MGMT  │                │
+│  │                      │  │ MARGIN ANALYSIS)     │  │                      │                │
+│  │ Source:              │  │                      │  │ Source:              │                │
+│  │ • From Lead (M15)    │  │ Source:              │  │ • From Lead (M15)   │                │
+│  │ • From Customer (M18)│  │ • From Lead (M15)    │  │ • Manual Add        │                │
+│  │ • Add New Prospect   │  │ • From Customer(M18) │  │                      │                │
+│  │                      │  │ • Add New            │  │ 360° view:          │                │
+│  │ Uses:                │  │                      │  │ • Sites             │                │
+│  │ • M12 Service Catalog│  │ Uses:                │  │ • Contracts (M19)   │                │
+│  │ • M10 Product Master │  │ • M10 Chemicals      │  │ • SOs (M20)         │                │
+│  │ • M9  Tax Config     │  │ • M12 Services       │  │ • History           │                │
+│  │                      │  │ • M9  Tax Config     │  │                      │                │
+│  │ Status Flow:         │  │                      │  │ Provides to:        │                │
+│  │ Draft → Sent →       │  │ Approval Matrix:     │  │ • M17 (GMA source)  │                │
+│  │ Viewed → Accepted    │  │ GM ≥ 40% → Auto ✅   │  │ • M19 (Contract     │                │
+│  │ → Rejected/Expired   │  │ GM 20-39% → Mgr 🟡  │  │        prerequisite)│                │
+│  │                      │  │ GM < 20% → CEO 🔴   │  │ • M20 (SO customer) │                │
+│  └──────────┬───────────┘  └──────────┬───────────┘  └──────────┬───────────┘                │
+│             │                         │                         │                            │
+│  [IF Accepted]             [IF Approved]                        │                            │
+│             │                         │                         │                            │
+│             │   ┌─────────────────────┘                         │                            │
+│             │   │                                               │                            │
+│             ▼   ▼                                               │                            │
+│  ╔══════════════════════════════════════════════════════════════╗│                            │
+│  ║              MODULE 19: CONTRACT MANAGEMENT                  ║│                            │
+│  ║                                                              ║│                            │
+│  ║  [PREREQUISITE: Approved GMA (M17) + Active Customer (M18)] ║│                            │
+│  ║                                                              ║│                            │
+│  ║  Auto-inherits 80% data from GMA:                            ║│                            │
+│  ║  • Customer & Sites (from M18 via M17)                       ║│                            │
+│  ║  • Services & Pricing (from M17 GMA)                         ║│                            │
+│  ║  • Chemicals & Quantities (from M17 GMA → M10/M12)          ║│                            │
+│  ║  • Tax Config (from M9)                                      ║│                            │
+│  ║                                                              ║│                            │
+│  ║  Status: Draft → Active → Expiring Soon → Expired/Terminated ║│                            │
+│  ║                                                              ║│                            │
+│  ║  Generates Payment Schedule (Billing Periods)                ║│                            │
+│  ║            │                                                 ║│                            │
+│  ║  [IF Contract Status = ACTIVE]                               ║│                            │
+│  ║            │                                                 ║│                            │
+│  ║            ▼                                                 ║│                            │
+│  ║  AUTO-TRIGGERS: Sales Order generation per billing period    ║│                            │
+│  ╚════════════════════════════════════╦═════════════════════════╝│                            │
+│                                       ║                          │                            │
+│                                       ▼                          │                            │
+│  ╔════════════════════════════════════════════════════════════════════════════╗                │
+│  ║                    MODULE 20: SALES ORDER MANAGEMENT                      ║                │
+│  ║                                                                           ║                │
+│  ║  ORDER TYPE DETERMINES SOURCE & LINE ITEMS:                               ║                │
+│  ║                                                                           ║                │
+│  ║  ┌─────────────────────────────────────────────────────────────────────┐  ║                │
+│  ║  │ [IF Order Type = SERVICE CONTRACT]                                  │  ║                │
+│  ║  │   Source: Active Contract (M19) + Billing Period                    │  ║                │
+│  ║  │   Auto-Generate: System cron creates SO per billing period          │  ║                │
+│  ║  │   Line Items: Site-wise nested services (from Contract)             │  ║                │
+│  ║  │   Chemicals: Read-only (auto-fetched from Contract/GMA)             │  ║                │
+│  ║  │   Pricing: Locked to contract terms                                 │  ║                │
+│  ║  └─────────────────────────────────────────────────────────────────────┘  ║                │
+│  ║                                                                           ║                │
+│  ║  ┌─────────────────────────────────────────────────────────────────────┐  ║                │
+│  ║  │ [IF Order Type = ONE-TIME SERVICE]                                  │  ║                │
+│  ║  │                                                                     │  ║                │
+│  ║  │   [IF Source = Approved Quotation/GMA]                              │  ║                │
+│  ║  │     Auto-populate sites & services from M16/M17                     │  ║                │
+│  ║  │     Chemicals: Read-only (from approved source)                     │  ║                │
+│  ║  │     Pricing: From approved source                                   │  ║                │
+│  ║  │                                                                     │  ║                │
+│  ║  │   [IF Source = Standalone (Customer only)]                          │  ║                │
+│  ║  │     Manual: Add sites & services freely                             │  ║                │
+│  ║  │     Chemicals: N/A (no source to pull from)                         │  ║                │
+│  ║  │     Pricing: Manual entry by sales person                           │  ║                │
+│  ║  └─────────────────────────────────────────────────────────────────────┘  ║                │
+│  ║                                                                           ║                │
+│  ║  ┌─────────────────────────────────────────────────────────────────────┐  ║                │
+│  ║  │ [IF Order Type = PRODUCT SALE]                                      │  ║                │
+│  ║  │   Source: Customer record (M18) — Standalone                        │  ║                │
+│  ║  │   Line Items: Product selection from M10 (Product Master)           │  ║                │
+│  ║  │   Pricing: Defaults to Selling Price from M10                       │  ║                │
+│  ║  │            [IF User overrides] → Custom manual price accepted       │  ║                │
+│  ║  │   Tax: Auto-calculated from HSN (M9)                                │  ║                │
+│  ║  └─────────────────────────────────────────────────────────────────────┘  ║                │
+│  ║                                                                           ║                │
+│  ║  SO Status: Draft → Open → Fulfilled → Billed → Cancelled                ║                │
+│  ║                                                                           ║                │
+│  ║  [IF Status = OPEN] ──► Triggers Operations & Dispatch (Module 21+)       ║                │
+│  ║  [IF Status = FULFILLED] ──► Triggers Invoicing & Billing                 ║                │
+│  ║  [IF Status = CANCELLED] ──► Frees billing period (for Contract SOs)      ║                │
+│  ╚═══════════════════════════════════════════════════════════════════════════╝                │
+│                                                                                              │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## FULL SYSTEM — INTER-MODULE DATA DEPENDENCY MAP
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                         MODULE DEPENDENCY MAP (1 → 20)                                       │
+│                                                                                              │
+│  ┌─────┐                                                                                     │
+│  │ M1  │─── Auth ───► All Modules (session, role, tenant context)                            │
+│  └──┬──┘                                                                                     │
+│     │                                                                                        │
+│     ├──► ┌─────┐──► ┌─────┐──► ┌─────┐                                                      │
+│     │    │ M2  │    │ M4  │    │ M3  │ (Seravion: Plans, Approvals, Role Templates)          │
+│     │    └──┬──┘    └─────┘    └─────┘                                                      │
+│     │       │                                                                                │
+│     │       ▼                                                                                │
+│     │    ┌─────┐    ┌─────┐    ┌─────┐                                                      │
+│     │    │ M5  │──►│ M6  │    │ M7  │                                                      │
+│     │    │Role │    │Sal/ │    │Brch │                                                      │
+│     │    └──┬──┘    │Leav │    └──┬──┘                                                      │
+│     │       │       └──┬──┘       │                                                          │
+│     │       └─────┬────┘──────────┘                                                          │
+│     │             ▼                                                                          │
+│     │          ┌─────┐                                                                       │
+│     │          │ M8  │ Employee Management                                                   │
+│     │          └──┬──┘                                                                       │
+│     │             │                                                                          │
+│     │    ┌────────┼────────┬────────┬────────┐                                               │
+│     │    ▼        ▼        ▼        ▼        ▼                                               │
+│     │  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐                                             │
+│     │  │ M9  │ │ M15 │ │ M17 │ │ M19 │ │ M20 │                                             │
+│     │  │Tax  │ │Lead │ │GMA  │ │Cont.│ │ SO  │                                             │
+│     │  └──┬──┘ └──┬──┘ └─────┘ └─────┘ └─────┘                                             │
+│     │     │       │                                                                          │
+│     │     ▼       │                                                                          │
+│     │  ┌─────┐    │                                                                          │
+│     │  │ M10 │    │  ┌────────────────────────────────────────────────────────┐              │
+│     │  │Prod │    │  │  SALES PIPELINE FLOW:                                  │              │
+│     │  └──┬──┘    │  │                                                        │              │
+│     │     │       │  │  M15 (Lead)                                            │              │
+│     │     ▼       │  │    │                                                   │              │
+│     │  ┌─────┐    │  │    ├─[IF Qualified]──► M16 (Quotation)                 │              │
+│     │  │ M11 │    │  │    ├─[IF Qualified]──► M17 (GMA)                       │              │
+│     │  │Stock│    │  │    └─[IF Won]────────► M18 (Customer)                  │              │
+│     │  └──┬──┘    │  │                             │                          │              │
+│     │     │       │  │  M16 ─[IF Accepted]──► M19 (Contract)                  │              │
+│     │     │       │  │  M17 ─[IF Approved]──► M19 (Contract)  ◄── M18 (Cust) │              │
+│     │     │       │  │                             │                          │              │
+│     │     │       │  │  M19 ─[IF Active]────► M20 (Sales Order)               │              │
+│     │     │       │  │  M16 ─[IF Approved]──► M20 (One-Time SO)               │              │
+│     │     │       │  │  M17 ─[IF Approved]──► M20 (One-Time SO)               │              │
+│     │     │       │  │  M18 ─[Direct]───────► M20 (Product Sale / Standalone) │              │
+│     │     │       │  │  M10 ─[Products]─────► M20 (Product Line Items)        │              │
+│     │     │       │  │                                                        │              │
+│     │     │       │  └────────────────────────────────────────────────────────┘              │
+│     │     │       │                                                                          │
+│  ┌──┴─────┴───────┴──────────────────────────────────────────────────────────┐               │
+│  │   PROCUREMENT CHAIN:                                                       │               │
+│  │   M10 (Products) ──► M13 (Vendor Mapping) ──► M14 (Purchase Order)        │               │
+│  │       ──► [IF PO Received] ──► M11 (Stock Receipt)                         │               │
+│  │   M12 (Services) ──► Links chemicals from M10 to service templates        │               │
+│  └────────────────────────────────────────────────────────────────────────────┘               │
+│                                                                                              │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## CONDITIONAL DATA FLOW SUMMARY TABLE
+
+| Condition                                  | Source Module | Data Sent                                     | Target Module | Action                                          |
+| ------------------------------------------ | ------------ | --------------------------------------------- | ------------- | ----------------------------------------------- |
+| Lead Status = Qualified                    | M15          | Lead details, contact info                    | M16, M17      | Create Quotation or GMA sheet                   |
+| Lead Status = Won                          | M15          | Full lead record                              | M18           | Convert to Customer                             |
+| Quotation Status = Accepted                | M16          | Quoted services, pricing, sites               | M19           | Trigger Contract creation                       |
+| GMA Status = Approved (GM ≥ 40%)          | M17          | Full GMA sheet (auto-approved)                | M19           | Create Contract (80% data auto-inherited)       |
+| GMA Status = Approved (GM < 40%)          | M17          | GMA sheet (manually approved by Mgr/CEO)      | M19           | Create Contract after approval                  |
+| Contract Status = Active                   | M19          | Contract terms, billing periods, sites        | M20           | Auto-generate SO per billing period (cron)      |
+| Contract Billing Period = Unbilled         | M19          | Billing period details                        | M20           | SO created for that specific period             |
+| SO Order Type = Service Contract           | M20          | Uses Contract (M19) as source                 | Operations    | Site-wise service execution                     |
+| SO Order Type = One-Time + Linked          | M20          | Uses Quotation (M16) or GMA (M17) as source   | Operations    | One-time service dispatch                       |
+| SO Order Type = One-Time + Standalone      | M20          | Manual entry, Customer (M18) reference         | Operations    | Standalone service                              |
+| SO Order Type = Product Sale               | M20          | Products from M10, Customer from M18           | Inventory     | Product dispatch from M11 stock                 |
+| SO Status = Open                           | M20          | SO details, line items                        | M21+          | Job Card generation, dispatch                   |
+| SO Status = Fulfilled                      | M20          | Completed SO                                  | Billing       | Invoice generation                              |
+| SO Status = Cancelled                      | M20          | Cancellation record                           | M19           | Free billing period on Contract                 |
+| PO Status = Received                       | M14          | Received items, quantities                    | M11           | Add to Central/Branch stock                     |
+| Product Created/Updated                    | M10          | Product details, HSN, prices                  | M11,M14,M20   | Available for stock, PO, and SO                 |
+| HSN Code Created/Updated                   | M9           | Tax rates, HSN code                           | M10,M16-M20   | Auto-populate tax on all transactions           |
+
+---
+
