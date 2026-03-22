@@ -783,7 +783,7 @@ MODULE 18: CUSTOMER MANAGEMENT
 
 ## Overview
 
-A transactional module handling the legal and service-level agreements (SLA) for recurring (AMC) and one-time services. Uses the approved GMA sheet (Module 17) to lock in commercial terms — auto-inheriting 80% of the contract data — reducing manual entry and ensuring pricing integrity. Manages the full contract lifecycle from Draft through Active, Expiring, Expired, and Terminated statuses.
+A transactional module handling the legal and service-level agreements (SLA) for recurring (Contract) and one-time services. Uses the approved GMA sheet (Module 17) to lock in commercial terms — auto-inheriting 80% of the contract data — reducing manual entry and ensuring pricing integrity. Manages the full contract lifecycle from Draft through Active, Expiring, Expired, and Terminated statuses.
 
 **Module Connections:**
 
@@ -1163,7 +1163,7 @@ This section breaks down the contract deliverables on a per-site basis. Each sit
 | Site Values Equal Total             | Sum of all 'Site Sale Values' must equal 'Total Sale Value'           |
 | Payment Sum = Total Value           | Sum of all payment amounts must equal the Total Sale Value             |
 | Technician Group Required           | Every site/service block must have an assigned Technician Team        |
-| Service Frequency Required          | Every AMC service block must have a valid service frequency           |
+| Service Frequency Required          | Every Contract service block must have a valid service frequency           |
 | No Duplicate GMA Contract           | Same GMA cannot be used for more than one Active contract             |
 | Value Variance Check                | If Sale Value differs from GMA by > 10%, triggers re-approval alert   |
 
@@ -1759,13 +1759,13 @@ MODULE 19: CONTRACT MANAGEMENT
 
 ## Overview
 
-The official financial and operational document that confirms revenue boundaries and acts as a trigger to the Operations team to dispatch technicians or products for a job. Sales Orders can be generated automatically (cron-based for AMC contracts) or manually for one-time services and standalone product sales. Supports three distinct order types — Service AMC, One-Time Service, and Product Sale — each with its own source workflow and line-item structure.
+The official financial and operational document that confirms revenue boundaries and acts as a trigger to the Operations team to dispatch technicians or products for a job. Sales Orders can be generated automatically (cron-based for Contract contracts) or manually for one-time services and standalone product sales. Supports three distinct order types — Service Contract, One-Time Service, and Product Sale — each with its own source workflow and line-item structure.
 
 **Module Connections:**
 
-- **Depends on:** Module 19 (Contract Management – for AMC-based SO auto-generation), Module 17 (GMA Management – for one-time service SO source), Module 18 (Customer Management – customer & site data), Module 16 (Quotation Management – approved quotation for one-time SO), Module 10 (Product Master – for product sale line items), Module 9 (Tax Management – HSN/SAC tax calculation)
+- **Depends on:** Module 19 (Contract Management – for Contract-based SO auto-generation), Module 17 (GMA Management – for one-time service SO source), Module 18 (Customer Management – customer & site data), Module 16 (Quotation Management – approved quotation for one-time SO), Module 10 (Product Master – for product sale line items), Module 9 (Tax Management – HSN/SAC tax calculation)
 - **Used by:** Operations & Dispatch (Job Card generation), Invoicing & Billing, Inventory (chemical/product issuance from Module 11)
-- **Prerequisites:** For AMC SOs, an **Active Contract** (Module 19) must exist. For One-Time Service SOs, an **Approved GMA/Quotation** (Module 17/16) is needed. For Product Sale SOs, the Product Master (Module 10) must be configured.
+- **Prerequisites:** For Contract SOs, an **Active Contract** (Module 19) must exist. For One-Time Service SOs, an **Approved GMA/Quotation** (Module 17/16) or a valid Customer record (for standalone) is needed. For Product Sale SOs, the Product Master (Module 10) must be configured.
 
 ---
 
@@ -1785,7 +1785,7 @@ A comprehensive dashboard displaying all Sales Orders (execution mandates) in th
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
 │  │ Filters                                                                │  │
 │  │                                                                        │  │
-│  │ Order Type : [☑ Service AMC  ☑ One-Time Service  ☑ Product Sale]      │  │
+│  │ Order Type : [☑ Service Contract  ☑ One-Time Service  ☑ Product Sale]      │  │
 │  │ Status     : [☑ Draft ☑ Open ☑ Fulfilled ☑ Billed ☑ Cancelled]      │  │
 │  │ Branch     : [▼ All Branches ▼]                                       │  │
 │  │ Customer   : [🔍 Search / Select ▼]                                   │  │
@@ -1801,11 +1801,11 @@ A comprehensive dashboard displaying all Sales Orders (execution mandates) in th
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
 │  │SO Number    │Customer        │Order Type     │Total Value│SO Date  │Status││
 │  │─────────────┼────────────────┼───────────────┼───────────┼─────────┼──────││
-│  │SO-2026-0112 │ABC Corporation │Service AMC    │₹ 51,000   │01 Apr 26│✅ Open││
-│  │SO-2026-0087 │ABC Corporation │Service AMC    │₹ 51,000   │01 Jan 26│✅ Fulf││
+│  │SO-2026-0112 │ABC Corporation │Svc Contract   │₹ 51,000   │01 Apr 26│✅ Open││
+│  │SO-2026-0087 │ABC Corporation │Svc Contract   │₹ 51,000   │01 Jan 26│✅ Fulf││
 │  │SO-2026-0043 │XYZ Hotel       │One-Time Svc   │₹ 8,500    │15 Jan 26│✅ Fulf││
 │  │SO-2026-0038 │PQR Foods       │Product Sale   │₹ 12,200   │10 Jan 26│💰 Blld││
-│  │SO-2026-0022 │DEF Mall        │Service AMC    │₹ 15,000   │01 Jan 26│❌ Cncl││
+│  │SO-2026-0022 │DEF Mall        │Svc Contract   │₹ 15,000   │01 Jan 26│❌ Cncl││
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
@@ -1832,8 +1832,9 @@ A comprehensive dashboard displaying all Sales Orders (execution mandates) in th
 | Field       | Type         | Description                                                   |
 | ----------- | ------------ | ------------------------------------------------------------- |
 | SO Number   | Text (Auto)  | System-generated unique ID (e.g., SO-2026-0112)               |
-| Customer    | Text         | Customer name from Module 18                                  |
-| Order Type  | Badge        | Service AMC / One-Time Service / Product Sale                 |
+| Customer Name   | Text     | Customer name from Module 18                                  |
+| Branch Name | Text         | Branch name from Module 7                                     |
+| Order Type  | Badge        | Service Contract / One-Time Service / Product Sale                 |
 | Total Value | Currency     | Total SO amount including taxes (₹)                           |
 | SO Date     | Date         | Date the SO was generated                                     |
 | Status      | Badge        | Draft / Open / Fulfilled / Billed / Cancelled                 |
@@ -1845,10 +1846,8 @@ A comprehensive dashboard displaying all Sales Orders (execution mandates) in th
 
 | Filter     | Type         | Options                                                       |
 | ---------- | ------------ | ------------------------------------------------------------- |
-| Order Type | Multi-select | Service AMC / One-Time Service / Product Sale                 |
+| Order Type | Multi-select | Service Contract / One-Time Service / Product Sale                 |
 | Status     | Multi-select | Draft / Open / Fulfilled / Billed / Cancelled                 |
-| Branch     | Dropdown     | All Branches / Specific Branch (from Module 7)                |
-| Customer   | Search       | Search by Customer Name / ID from Module 18                   |
 | Date Range | Date Range   | From – To (SO creation date)                                  |
 
 ---
@@ -1858,7 +1857,7 @@ A comprehensive dashboard displaying all Sales Orders (execution mandates) in th
 Searchable by:
 - SO Number
 - Customer Name
-- Contract ID (for AMC-linked SOs)
+- Branch Name
 
 ---
 
@@ -1885,9 +1884,9 @@ Searchable by:
 # 20.2 Add / Generate Sales Order Form
 
 **Description:**
-A multi-section form to generate a Sales Order. Can be triggered automatically via cron (for AMC contracts based on the payment schedule) or created manually here. Supports three distinct source workflows: from an Active Contract (AMC), from an Approved Quotation/GMA (One-Time), or as a Standalone Product Sale.
+A multi-section form to generate a Sales Order. Can be triggered automatically via cron (for Service Contracts based on the payment schedule) or created manually here. Supports three distinct source workflows: from an Active Contract (Linked), from an Approved Quotation / GMA (Linked), or as an Individual / Standalone Order (Direct entry for One-Time Service or Product Sales).
 
-> **Note:** For AMC contracts, Sales Orders are typically **auto-generated** by the system cron based on the contract's payment schedule (Module 19). This form is primarily used for manual SO creation — one-time services, product sales, or ad-hoc AMC SOs.
+> **Note:** For Service Contracts, Sales Orders are typically **auto-generated** by the system cron based on the contract's payment schedule (Module 19). This form is used for manual/individual SO creation — one-time services, product sales, or ad-hoc Contract SOs.
 
 ---
 
@@ -1902,86 +1901,73 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 │  SECTION 1: ORDER SOURCE & TYPE                                              │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
 │  │  Order Type*:                                                           │ │
-│  │  (•) Service AMC    ( ) One-Time Service    ( ) Product Sale            │ │
+│  │  (•) Service Contract    ( ) One-Time Service    ( ) Product Sale           │ │
 │  │                                                                         │ │
-│  │  ━━━ IF SERVICE AMC ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ │
-│  │  Source*           : From Active Contract                               │ │
-│  │  Select Contract*  : [🔍 Search Contract by ID / Customer ▼]          │ │
+│  │  ━━━ IF SERVICE CONTRACT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ │
+│  │  Source Type*      : From Active Contract (Fixed)                       │ │
+│  │  Select Contract*  : [🔍 Search Contract by ID / Customer ▼]            │ │
 │  │                                                                         │ │
 │  │  AUTO-FILLED FROM CONTRACT:                                             │ │
 │  │  Contract ID       : CON-2026-0041  (Read-only)                        │ │
 │  │  Customer Name     : ABC Corporation (Read-only)                       │ │
-│  │  Customer ID       : CUST-00245  (Read-only)                           │ │
-│  │  Service Type      : Cockroach Treatment (Read-only)                   │ │
-│  │  Contract Value    : ₹ 2,04,000 (Read-only)                           │ │
 │  │  Billing Period*   : [▼ Q2 Apr–Jun 2026 ▼]                            │ │
 │  │                                                                         │ │
-│  │  ━━━ IF ONE-TIME SERVICE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ │
-│  │  Source*           : From Approved Quotation / GMA                      │ │
-│  │  Select Source*    : [🔍 Search Quotation / GMA by ID / Customer ▼]   │ │
+│  │  ━━━ IF ONE-TIME SERVICE ━━━━━━━━━━━━━━━━───────────────────━━━━━━━━━  │ │
+│  │  Source Type*      : ( ) From Quotation/GMA    (•) Standalone (Indiv.)  │ │
 │  │                                                                         │ │
-│  │  AUTO-FILLED FROM QUOTATION / GMA:                                      │ │
-│  │  Reference ID      : QT-2026-00088 / GMA-00091 (Read-only)            │ │
-│  │  Customer Name     : XYZ Hotel (Read-only)                             │ │
-│  │  Service Type      : General Pest Treatment (Read-only)                │ │
-│  │  Quoted Value      : ₹ 8,500 (Read-only)                              │ │
+│  │  IF FROM QUOTATION/GMA:                                                 │ │
+│  │  Select Source*    : [🔍 Search Quotation / GMA by ID / Customer ▼]     │ │
 │  │                                                                         │ │
-│  │  ━━━ IF PRODUCT SALE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ │
-│  │  Source*           : Standalone                                         │ │
-│  │  Select Customer*  : [🔍 Search Customer by Name / ID ▼]              │ │
+│  │  IF STANDALONE:                                                         │ │
+│  │  Select Customer*  : [🔍 Search Customer by Name / ID ▼]                │ │
 │  │                                                                         │ │
-│  │  AUTO-FILLED FROM CUSTOMER:                                             │ │
-│  │  Customer ID       : CUST-00312 (Read-only)                            │ │
-│  │  Customer Name     : PQR Foods (Read-only)                             │ │
-│  │  Billing Address   : Koramangala, Bengaluru (Read-only)                │ │
+│  │  ━━━ IF PRODUCT SALE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ │
+│  │  Source Type*      : Standalone (Fixed)                                 │ │
+│  │  Select Customer*  : [🔍 Search Customer by Name / ID ▼]                │ │
 │  │                                                                         │ │
 │  │  SO Date*          : [📅 Date Picker] (Default: Today)                 │ │
 │  │  Branch*           : [▼ Auto from source / Select ▼]                   │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  SECTION 2: LINE ITEMS                                                       │
+│  SECTION 2: DYNAMIC SCOPE & EXECUTION (SITE-WISE)                            │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  ━━━ FOR SERVICES (Contract / One-Time) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ │
+│  │  (Auto-fetched from source OR manually added for standalone)            │ │
 │  │                                                                         │ │
-│  │  ━━━ FOR SERVICES (AMC / One-Time) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ │
-│  │  (Auto-fetched from Contract / Quotation / GMA source)                 │ │
+│  │  SITE 1: Head Office (SITE-00312)                                       │ │
+│  │  ┌───────────────────────────────────────────────────────────────────┐  │ │
+│  │  │ SERVICE 1: Cockroach Treatment                                    │  │ │
+│  │  │ ┌────────┬──────────┬────────┬───────┬───────┬─────────┬────────┐ │  │ │
+│  │  │ │Visits  │Unit Price│SQFT    │HSN    │Tax %  │Tax Amt  │Total   │ │  │ │
+│  │  │ ├────────┼──────────┼────────┼───────┼───────┼─────────┼────────┤ │  │ │
+│  │  │ │[ 12 ]  │₹ 3,250   │3,500   │996490 │18%    │₹ 7,020  │₹ 46,020│ │  │ │
+│  │  │ └────────┴──────────┴────────┴───────┴───────┴─────────┴────────┘ │  │ │
+│  │  │                                                                  │  │ │
+│  │  │  ─── CONSUMABLE CHEMICALS (Read-only from Source) ─────────────  │  │ │
+│  │  │  ┌────────────────────┬────────┬──────┬─────────┐              │  │ │
+│  │  │  │ Chemical Name      │ HSN    │ UOM  │ Req Qty │              │  │ │
+│  │  │  ├────────────────────┼────────┼──────┼─────────┤              │  │ │
+│  │  │  │ Alpha Cyper.       │ 3808   │ ml   │ 120 ml  │              │  │ │
+│  │  │  │ Fipronil Gel       │ 3808   │ tube │ 2 tubes │              │  │ │
+│  │  │  └────────────────────┴────────┴──────┴─────────┘              │  │ │
+│  │  │                                                                  │  │ │
+│  │  │ [Remove Service]                                                 │  │ │
+│  │  └───────────────────────────────────────────────────────────────────┘  │ │
+│  │  [+ ADD SERVICE TO THIS SITE]                                           │ │
 │  │                                                                         │ │
-│  │  ┌────────────────────────────────────────────────────────────────────┐│ │
-│  │  │#│Service          │Site      │SQFT │Qty   │Unit     │HSN/SAC│Tax% ││ │
-│  │  │ │                 │          │     │(Visits│Price(₹) │       │     ││ │
-│  │  │─┼─────────────────┼──────────┼─────┼──────┼─────────┼───────┼─────││ │
-│  │  │1│Cockroach Treatmt│Head Off. │3,500│ 12   │₹ 3,250  │996490 │18%  ││ │
-│  │  │2│Cockroach Treatmt│Warehouse │8,000│ 3    │₹ 2,333  │996490 │18%  ││ │
-│  │  │3│Cockroach Treatmt│Showroom  │1,200│ 12   │₹ 1,267  │996490 │18%  ││ │
-│  │  └────────────────────────────────────────────────────────────────────┘│ │
+│  │  [+ ADD ANOTHER SITE]                                                    │ │
 │  │                                                                         │ │
-│  │  ┌────────────────────────────────────────────────────────────────────┐│ │
-│  │  │ Tax Amt(₹)│Line Total(₹)│Actions                                  ││ │
-│  │  │───────────┼─────────────┼─────────────────────────────────────────││ │
-│  │  │₹ 7,020    │₹ 46,020     │[Edit Qty] [Remove]                      ││ │
-│  │  │₹ 1,260    │₹ 8,260      │[Edit Qty] [Remove]                      ││ │
-│  │  │₹ 2,736    │₹ 17,936     │[Edit Qty] [Remove]                      ││ │
-│  │  └────────────────────────────────────────────────────────────────────┘│ │
-│  │                                                                         │ │
-│  │  ━━━ FOR PRODUCTS (Product Sale) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ │
-│  │  [+ Add Product Line Item]                                              │ │
-│  │                                                                         │ │
-│  │  ┌────────────────────────────────────────────────────────────────────┐│ │
-│  │  │#│Product          │Code    │UOM │Qty│Unit Price(₹)│HSN  │Tax%│Tax ││ │
-│  │  │─┼─────────────────┼────────┼────┼───┼─────────────┼─────┼────┼────││ │
-│  │  │1│Alpha Cypermethrin│P-001   │Ltr │ 5 │₹ 1,200      │3808 │18% │₹1080│ │
-│  │  │2│Fipronil Gel     │P-003   │Tube│ 20│₹ 220        │3808 │18% │₹ 792│ │
-│  │  └────────────────────────────────────────────────────────────────────┘│ │
-│  │                                                                         │ │
-│  │  ┌────────────────────────────────────────────────────────────────────┐│ │
-│  │  │ Line Total(₹)│Actions                                              ││ │
-│  │  │──────────────┼─────────────────────────────────────────────────────││ │
-│  │  │₹ 7,080       │[Edit] [Remove]                                      ││ │
-│  │  │₹ 5,192       │[Edit] [Remove]                                      ││ │
-│  │  └────────────────────────────────────────────────────────────────────┘│ │
+│  │  ━━━ FOR PRODUCTS (Product Sale) ━━━━━━━━━━━━━━━━───────────────────━  │ │
+│  │  ┌───────────────────────────────────────────────────────────────────┐  │ │
+│  │  │#│Product        │Qty │Unit Pr. (₹)     │HSN  │Tax% │Line Total│  │ │
+│  │  │─┼───────────────┼────┼─────────────────┼─────┼─────┼──────────│  │ │
+│  │  │1│Alpha Cyperm.  │[ 5]│[₹ 1,200] (Edit) │3808 │18%  │₹ 7,080   │  │ │
+│  │  │2│Fipronil Gel   │[20]│[₹ 220]   (Edit) │3808 │18%  │₹ 5,192   │  │ │
+│  │  └───────────────────────────────────────────────────────────────────┘  │ │
 │  │                                                                         │ │
 │  │  ═══ ORDER TOTAL SUMMARY ═══════════════════════════════════════════  │ │
 │  │  Sub-Total (₹)    : ₹ 61,300                                          │ │
-│  │  Discount (₹)     : ₹ 0  [Apply Discount ▼]                           │ │
+│  │  Discount (₹)     : [ 0 ] [▼ Flat ▼]                                  │ │
 │  │  Tax Total (₹)    : ₹ 11,016                                          │ │
 │  │  ─────────────────────────────────────────────────────────────────     │ │
 │  │  GRAND TOTAL (₹)  : ₹ 72,316                                          │ │
@@ -2019,9 +2005,9 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 
 | Field              | Type            | Required    | Options / Validation                                                                | Notes                                          |
 | ------------------ | --------------- | ----------- | ----------------------------------------------------------------------------------- | ---------------------------------------------- |
-| Order Type         | Radio           | Yes         | Service AMC / One-Time Service / Product Sale                                       | Determines which source + line-item fields show|
-| Select Contract    | Search Dropdown | Conditional | Active contracts from Module 19                                                     | Required if Type = Service AMC                 |
-| Billing Period     | Dropdown        | Conditional | Available billing periods from contract's payment schedule                          | Required if Type = Service AMC                 |
+| Order Type         | Radio           | Yes         | Service Contract / One-Time Service / Product Sale                                       | Determines which source + line-item fields show|
+| Select Contract    | Search Dropdown | Conditional | Active contracts from Module 19                                                     | Required if Type = Service Contract                 |
+| Billing Period     | Dropdown        | Conditional | Available billing periods from contract's payment schedule                          | Required if Type = Service Contract                 |
 | Select Quotation/GMA | Search Dropdown | Conditional | Approved Quotations (Module 16) or Approved GMAs (Module 17)                     | Required if Type = One-Time Service            |
 | Select Customer    | Search Dropdown | Conditional | Active customers from Module 18                                                     | Required if Type = Product Sale                |
 | Contract ID        | Auto-filled     | System      | Read-only                                                                           | Populated from contract selection              |
@@ -2032,25 +2018,33 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 | SO Date            | Date            | Yes         | Default: Today; cannot be future > 30 days                                          | Sales Order creation date                      |
 | Branch             | Dropdown        | Yes         | Auto from source; editable — active branches from Module 7                          | Servicing / dispatch branch                    |
 
-> **Note:** For **Service AMC** orders, the system only shows contracts with unused billing periods. If all billing periods already have SOs, the contract will not appear in the search. For **One-Time Service**, only Quotations / GMAs that have not yet been converted to an SO are shown.
+> **Note:** For **Service Contract** orders, the system only shows contracts with unused billing periods. If all billing periods already have SOs, the contract will not appear in the search. For **One-Time Service**, only Quotations / GMAs that have not yet been converted to an SO are shown.
 
 ---
 
 ## Section 2: Line Items Fields
 
-### Service Line Items (AMC / One-Time)
+### Service Line Items (Site-Wise Configuration)
 
 | Field           | Type            | Required | Validation / Notes                                                              |
 | --------------- | --------------- | -------- | ------------------------------------------------------------------------------- |
-| Service Name    | Auto-filled     | System   | Service description from GMA / Contract (e.g., "Cockroach Treatment")           |
-| Site            | Auto-filled     | System   | Site name where service is to be performed                                      |
-| SQFT            | Auto-filled     | System   | Area from customer's site record (Module 18)                                    |
-| Qty (Visits)    | Number          | Yes      | Number of visits for this billing period; editable, must be > 0                 |
-| Unit Price (₹)  | Currency        | Yes      | Price per visit; auto from contract/GMA; editable for overrides                 |
+| Site Name       | Search/Text     | Yes      | Auto-fetched from source OR manually entered for standalone                     |
+| Service Name    | Search Dropdown | Yes      | Select from Module 12 (Services) if standalone; auto-fetched if linked          |
+| Qty (Visits)    | Number          | Yes      | Number of visits for this SO; editable, must be > 0                             |
+| Unit Price (₹)  | Currency        | Yes      | Price per visit; auto from contract/GMA; Read-only for linked; editable for standalone |
 | HSN/SAC Code    | Auto-filled     | System   | Service Accounting Code for tax calculation (from Module 9)                     |
 | Tax %           | Auto-filled     | System   | GST rate from HSN/SAC code (Module 9)                                           |
-| Tax Amount (₹)  | Auto-calculated | System   | `Qty × Unit Price × Tax%`                                                       |
+| Tax Amount (₹)  | Auto-calculated | System   | `Qty × Unit Price × Tax %`                                                      |
 | Line Total (₹)  | Auto-calculated | System   | `(Qty × Unit Price) + Tax Amount`                                               |
+
+### Chemical Line Items (Read-Only from Source)
+
+| Field           | Type            | Required | Validation / Notes                                                              |
+| --------------- | --------------- | -------- | ------------------------------------------------------------------------------- |
+| Chemical Name   | Auto-filled     | System   | Fetched from Module 12 (Service Config) or Source Contract/GMA                  |
+| HSN             | Auto-filled     | System   | From Product Master (Module 10)                                                 |
+| UOM             | Auto-filled     | System   | Base unit (ml, Ltr, tube, etc.) from Module 10                                  |
+| Req Qty         | Auto-filled     | System   | Quantity required per visit as per approved GMA/Contract                        |
 
 ### Product Line Items (Product Sale)
 
@@ -2060,7 +2054,7 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 | Product Code       | Auto-filled     | System   | Read-only; from Module 10                                                |
 | UOM                | Auto-filled     | System   | Base unit of measure from Module 10 (ml / Ltr / gm / kg / Nos / Tube)   |
 | Qty                | Number          | Yes      | Must be > 0                                                              |
-| Unit Price (₹)     | Currency        | Yes      | Auto from Module 10 sale price; editable for custom pricing              |
+| Unit Price (₹)     | Currency        | Yes      | Defaults to **Selling Price** from Module 10; editable for custom manual pricing |
 | HSN Code           | Auto-filled     | System   | From Module 10 product master → Module 9 tax config                      |
 | Tax %              | Auto-filled     | System   | GST rate from HSN code (Module 9)                                        |
 | Tax Amount (₹)     | Auto-calculated | System   | `Qty × Unit Price × Tax%`                                                |
@@ -2075,7 +2069,18 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 | Tax Total (₹)  | Auto-calculated | Sum of all line-item tax amounts                    |
 | Grand Total (₹)| Auto-calculated | `Sub-Total – Discount + Tax Total`                  |
 
-> **Note:** For AMC SOs, line items are auto-fetched from the contract's sites and services. The user can adjust quantities (e.g., visits in the period) but cannot add entirely new service types not covered by the contract. For Product Sale SOs, the user has full control to add/remove products from Module 10.
+---
+
+## 💡 Note: How `[+ Add Site]` and `[+ Add Service]` Works
+
+- **`[+ Add Site]`**: A single Sales Order can cover multiple physical locations for the customer. Adding a new site creates a fresh site-block where specific services can be assigned. 
+- **`[+ Add Service to this Site]`**: Within a single Site, a customer may require multiple different treatments (e.g., Cockroach + Termite). Adding a service inside a site spins up a fresh line item for that specific treatment at that specific location.
+- **Linked Orders**: If the SO is linked to a Contract or GMA, the system auto-populates all Site/Service blocks based on the source record. The user can remove sites/services or adjust quantities but cannot add new service types not present in the source.
+- **Standalone Orders**: The user has full freedom to add any number of sites and select any services from the Service Master (Module 12).
+- **Consumable Chemicals**: These are automatically pulled from the source GMA or Contract and are displayed in read-only mode to ensure the service is executed exactly as scoped and approved.
+- **Product Pricing**: For product-only sales, the system defaults to the **Selling Price** from the Product Master (Module 10). However, the price is editable to allow for ad-hoc custom quotes.
+
+---
 
 ---
 
@@ -2108,13 +2113,13 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 
 | Validation                        | Rule                                                                      |
 | --------------------------------- | ------------------------------------------------------------------------- |
-| Order Type Required               | Must select Service AMC, One-Time, or Product Sale                        |
+| Order Type Required               | Must select Service Contract, One-Time, or Product Sale                        |
 | Source Required                   | Must select a valid contract / quotation / customer based on type         |
 | At Least 1 Line Item              | Minimum one service or product line item required                         |
 | Qty > 0                          | All line item quantities must be positive                                 |
 | Unit Price > 0                   | All line item prices must be positive                                     |
 | Grand Total > 0                  | Final order value must be positive after discounts                        |
-| No Duplicate Billing Period       | For AMC, cannot create two SOs for the same billing period and contract   |
+| No Duplicate Billing Period       | For Contract, cannot create two SOs for the same billing period and contract   |
 | SO Date Required                 | Must have a valid SO date                                                 |
 | Branch Required                  | Must have an assigned branch                                              |
 
@@ -2124,12 +2129,12 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 
 | Trigger                         | System Action                                                                     |
 | ------------------------------- | --------------------------------------------------------------------------------- |
-| Contract selected (AMC)         | Auto-populates customer details, sites, services, and pricing from Module 19      |
+| Contract selected (Contract)         | Auto-populates customer details, sites, services, and pricing from Module 19      |
 | Quotation/GMA selected (One-Time)| Auto-populates service details and pricing from Module 16/17                      |
 | Customer selected (Product)     | Auto-populates billing address from Module 18                                     |
 | Product selected                | Fetches UOM, HSN Code, Sale Price from Module 10 Product Master                   |
 | Save & Open clicked             | Status → Open; SO visible to Operations for dispatch                              |
-| AMC SO created                  | Linked to contract billing log (Module 19 → Tab 2); fulfilment tracker updated   |
+| Contract SO created                  | Linked to contract billing log (Module 19 → Tab 2); fulfilment tracker updated   |
 | One-Time SO created             | Quotation / GMA marked as "SO Generated" to prevent duplicate SOs                |
 | Tax calculation                 | HSN/SAC codes auto-fetch tax rates; tax amounts computed in real-time             |
 
@@ -2152,7 +2157,7 @@ A clear, read-only layout detailing exactly what needs to be billed and executed
 │                                                                              │
 │  SALES ORDER: SO-2026-0112                     Status: ✅ OPEN               │
 │  Customer : ABC Corporation (CUST-00245)       │  Branch: Mumbai             │
-│  Order Type: Service AMC                       │  Contract: CON-2026-0041    │
+│  Order Type: Service Contract                       │  Contract: CON-2026-0041    │
 │  SO Date  : 01 Apr 2026                        │  Period: Q2 Apr–Jun 2026    │
 │  Grand Total: ₹ 72,316                         │  Priority: Normal           │
 │                                                                              │
@@ -2181,25 +2186,37 @@ Displays the complete order breakdown — header details, source reference, and 
 │  ─── ORDER HEADER ────────────────────────────────────────────────────────  │
 │  SO Number     : SO-2026-0112           SO Date      : 01 Apr 2026         │
 │  Customer      : ABC Corporation        Customer ID  : CUST-00245          │
-│  Order Type    : Service AMC            Contract Ref : CON-2026-0041       │
+│  Order Type    : Service Contract            Contract Ref : CON-2026-0041       │
 │  Billing Period: Q2 Apr–Jun 2026        Branch       : Mumbai              │
 │  Priority      : Normal                 Expected Date: 30 Jun 2026         │
 │                                                                              │
-│  ─── LINE ITEMS ──────────────────────────────────────────────────────────  │
+│  ─── LINE ITEMS (SITE-WISE) ────────────────────────────────────────────────  │
+│  SITE 1: Head Office (SITE-00312)                                            │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
-│  │#│Description           │Site      │Qty  │UOM   │Unit Price│HSN/SAC│Tax% ││
-│  │─┼──────────────────────┼──────────┼─────┼──────┼──────────┼───────┼─────││
-│  │1│Cockroach Treatment   │Head Off. │ 12  │Visits│₹ 3,250   │996490 │18%  ││
-│  │2│Cockroach Treatment   │Warehouse │ 3   │Visits│₹ 2,333   │996490 │18%  ││
-│  │3│Cockroach Treatment   │Showroom  │ 12  │Visits│₹ 1,267   │996490 │18%  ││
+│  │ SERVICE 1: Cockroach Treatment                                           ││
+│  │ ┌────────┬──────────┬────────┬───────┬───────┬──────────┬──────────┐     ││
+│  │ │ Qty    │ Unit Pr. │ SQFT   │ HSN   │ Tax%  │ Tax Amt  │ Total    │     ││
+│  │ ├────────┼──────────┼────────┼───────┼───────┼──────────┼──────────┤     ││
+│  │ │ 12     │ ₹ 3,250  │ 3,500  │ 996490│ 18%   │ ₹ 7,020  │ ₹ 46,020 │     ││
+│  │ └────────┴──────────┴────────┴───────┴───────┴──────────┴──────────┘     ││
+│  │                                                                          ││
+│  │ ─── CONSUMABLE CHEMICALS (Read-only) ──────────────────────────────────  ││
+│  │ ┌──────────────────────┬─────────┬────────┬───────────┐                  ││
+│  │ │ Chemical Name        │ HSN     │ UOM    │ Req Qty   │                  ││
+│  │ ├──────────────────────┼─────────┼────────┼───────────┤                  ││
+│  │ │ Alpha Cypermethrin   │ 3808    │ ml     │ 120 ml    │                  ││
+│  │ │ Fipronil Gel         │ 3808    │ tube   │ 2 tubes   │                  ││
+│  │ └──────────────────────┴─────────┴────────┴───────────┘                  ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
+│  SITE 2: Warehouse (SITE-00313) [▸ Click to View]                            │
+│                                                                              │
+│  ━━━ FOR PRODUCTS (Product Sale) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━   │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
-│  │ Tax Amount(₹)│ Line Total(₹)                                             ││
-│  │──────────────┼───────────────────────────────────────────────────────────││
-│  │ ₹ 7,020      │ ₹ 46,020                                                 ││
-│  │ ₹ 1,260      │ ₹ 8,260                                                  ││
-│  │ ₹ 2,736      │ ₹ 17,936                                                 ││
+│  │#│Product        │Qty │Unit Pr. │HSN  │Tax% │Tax Amt │Line Total│           ││
+│  │─┼───────────────┼────┼─────────┼─────┼─────┼────────┼──────────│           ││
+│  │1│Alpha Cyperm.  │ 5  │₹ 1,200  │3808 │18%  │₹ 1,080 │₹ 7,080   │           ││
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
 │  ─── ORDER TOTAL ─────────────────────────────────────────────────────────  │
@@ -2226,9 +2243,9 @@ Displays the complete order breakdown — header details, source reference, and 
 | SO Date        | Date     | Date the SO was generated                                |
 | Customer       | Display  | Customer name from Module 18                             |
 | Customer ID    | Display  | Unique customer reference                                |
-| Order Type     | Display  | Service AMC / One-Time Service / Product Sale            |
-| Contract Ref   | Link     | Contract ID (AMC only); navigates to Module 19           |
-| Billing Period | Display  | Period this SO covers (AMC only)                         |
+| Order Type     | Display  | Service Contract / One-Time Service / Product Sale            |
+| Contract Ref   | Link     | Contract ID (Contract only); navigates to Module 19           |
+| Billing Period | Display  | Period this SO covers (Contract only)                         |
 | Branch         | Display  | Servicing / dispatch branch                              |
 | Priority       | Display  | Normal / Urgent / Critical                               |
 | Expected Date  | Date     | Target completion date                                   |
@@ -2264,7 +2281,7 @@ Displays the complete order breakdown — header details, source reference, and 
 ---
 
 ================================================================================
-
+[Note: It is depends on Module 21 or Task allocation module]
 # 20.3.2 Tab 2: Execution & Delivery Status
 
 **Description:**
@@ -2365,24 +2382,42 @@ Allows modification of a Sales Order before it is released to Operations or whil
 │  SECTION 1: ORDER HEADER (Read-Only)                                         │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
 │  │  SO Number     : SO-2026-0112      Status    : ✅ Open                  │ │
-│  │  Customer      : ABC Corporation   Order Type: Service AMC              │ │
+│  │  Customer      : ABC Corporation   Order Type: Service Contract              │ │
 │  │  Contract Ref  : CON-2026-0041     SO Date   : 01 Apr 2026             │ │
 │  │  Branch        : Mumbai                                                 │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  SECTION 2: LINE ITEMS (Editable)                                            │
+│  SECTION 2: DYNAMIC SCOPE & LINE ITEMS                                       │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  SITE 1: Head Office (SITE-00312)                                       │ │
 │  │  ┌───────────────────────────────────────────────────────────────────┐  │ │
-│  │  │#│Description          │Site     │Qty    │Unit Price│Tax%│Line Tot│  │ │
-│  │  │─┼─────────────────────┼─────────┼───────┼──────────┼────┼────────│  │ │
-│  │  │1│Cockroach Treatment  │Head Off.│[12]   │[₹ 3,250] │18% │₹46,020│  │ │
-│  │  │2│Cockroach Treatment  │Warehouse│[ 3]   │[₹ 2,333] │18% │₹ 8,260│  │ │
-│  │  │3│Cockroach Treatment  │Showroom │[12]   │[₹ 1,267] │18% │₹17,936│  │ │
+│  │  │ SERVICE 1: Cockroach Treatment                                    │  │ │
+│  │  │ ┌────────┬──────────┬────────┬───────┬───────┬─────────┬────────┐ │  │ │
+│  │  │ │Visits  │Unit Price│SQFT    │HSN    │Tax %  │Tax Amt  │Total   │ │  │ │
+│  │  │ ├────────┼──────────┼────────┼───────┼───────┼─────────┼────────┤ │  │ │
+│  │  │ │[ 12 ]  │[₹ 3,250] │3,500   │996490 │18%    │₹ 7,020  │₹ 46,020│ │  │ │
+│  │  │ └────────┴──────────┴────────┴───────┴───────┴─────────┴────────┘ │  │ │
+│  │  │                                                                  │  │ │
+│  │  │  ─── CONSUMABLE CHEMICALS (Read-only from Source) ─────────────  │  │ │
+│  │  │  ┌────────────────────┬────────┬──────┬─────────┐              │  │ │
+│  │  │  │ Chemical Name      │ HSN    │ UOM  │ Req Qty │              │  │ │
+│  │  │  ├────────────────────┼────────┼──────┼─────────┤              │  │ │
+│  │  │  │ Alpha Cyper.       │ 3808   │ ml   │ 120 ml  │              │  │ │
+│  │  │  │ Fipronil Gel       │ 3808   │ tube │ 2 tubes │              │  │ │
+│  │  │  └────────────────────┴────────┴──────┴─────────┘              │  │ │
+│  │  │                                                                  │  │ │
+│  │  │ [Remove Service]                                                 │  │ │
+│  │  └───────────────────────────────────────────────────────────────────┘  │ │
+│  │                                                                         │ │
+│  │  ━━━ FOR PRODUCTS (Product Sale) ━━━━━━━━━━━━━━━━───────────────────━  │ │
+│  │  ┌───────────────────────────────────────────────────────────────────┐  │ │
+│  │  │#│Product        │Qty │Unit Pr. (₹)     │HSN  │Tax% │Line Total│  │ │
+│  │  │─┼───────────────┼────┼─────────────────┼─────┼─────┼──────────│  │ │
+│  │  │1│Alpha Cyperm.  │[ 5]│[₹ 1,200] (Edit) │3808 │18%  │₹ 7,080   │  │ │
 │  │  └───────────────────────────────────────────────────────────────────┘  │ │
 │  │                                                                         │ │
 │  │  Editable Fields: Qty, Unit Price                                       │ │
-│  │  Substitute Chemical: [🔍 Select alternate from approved list ▼]       │ │
-│  │  (Only if chemical substitution is permitted for this service)          │ │
+│  │                                                                         │ │
 │  │                                                                         │ │
 │  │  Discount*         : [▼ None / Flat ₹ / Percentage % ▼]  [________]    │ │
 │  │                                                                         │ │
@@ -2414,9 +2449,10 @@ Allows modification of a Sales Order before it is released to Operations or whil
 | Order Type              | ❌ Locked  | Cannot change the order type after creation                        |
 | SO Date                 | ❌ Locked  | Historical record; cannot be modified                              |
 | Branch                  | ❌ Locked  | Cannot change once created                                         |
-| Line Item Qty           | ✅ Yes     | Can increase or decrease visit counts or product quantities        |
-| Line Item Unit Price    | ✅ Yes     | Can adjust pricing (within approved variance limits)               |
-| Chemical Substitution   | ✅ Yes     | Can swap a chemical if permitted by service configuration          |
+| Line Item Qty           | ✅ Yes     | Can increase/decrease visit counts (if standalone) or product quantities |
+| Line Item Unit Price    | ✅ Yes     | Only for standalone orders OR within approved variance for linked orders |
+| Consumable Chemicals    | ❌ Locked  | Pulled from source GMA/Contract; cannot be edited in SO           |
+| Chemical Substitution   | ❌ Locked  | Substitution must be handled at the source (Contract/GMA)           |
 | Discount                | ✅ Yes     | Can add / modify flat or percentage discount                       |
 | Execution Notes         | ✅ Yes     | Free-text operational instructions                                 |
 | Priority Level          | ✅ Yes     | Can escalate or de-escalate                                        |
@@ -2434,7 +2470,7 @@ Allows modification of a Sales Order before it is released to Operations or whil
 | Qty > 0                            | All line item quantities must remain positive                           |
 | Unit Price > 0                     | All prices must remain positive                                         |
 | Grand Total > 0                    | Order value must remain positive after discounts                        |
-| Chemical substitution allowed       | System checks if substitution is permitted in service config (Module 12)|
+| Chemical substitution      | ❌ Disallowed | Substitution must be handled at the Contract/GMA level, not in SO |
 
 ---
 
@@ -2461,24 +2497,6 @@ A mechanism to void a Sales Order. Cancellation is only possible before executio
 ```
 ┌───────────────────────────────────────────────────────┐
 │           CANCEL SALES ORDER                           │
-│                                                        │
-│  SO Number  : SO-2026-0022                             │
-│  Customer   : DEF Mall (CUST-00189)                    │
-│  Order Type : Service AMC                              │
-│  SO Date    : 01 Jan 2026                              │
-│  Grand Total: ₹ 15,000                                 │
-│  Status     : ✅ Open                                   │
-│                                                        │
-│  ⚠️  WARNING: Cancelling this SO will:                 │
-│  • Remove it from the Operations dispatch queue        │
-│  • Mark it as permanently Cancelled                    │
-│  • Free the billing period for re-generation (AMC)     │
-│                                                        │
-│  ELIGIBILITY CHECK:                                    │
-│  Job Cards Generated  : ✅  None                       │
-│  Challans Dispatched  : ✅  None                       │
-│  Pushed to Invoicing  : ✅  No                         │
-│                                                        │
 │  Cancellation Reason*:                                 │
 │  [▼ Select Reason ▼]                                   │
 │      • Customer Request                                │
@@ -2520,7 +2538,7 @@ A mechanism to void a Sales Order. Cancellation is only possible before executio
 
 ---
 
-## Cancellation Prerequisite Check
+## Cancellation Prerequisite Check for backend and frontend
 
 | Check                   | Condition to Block                                          | Error Message                                               |
 | ----------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
@@ -2558,7 +2576,7 @@ A mechanism to void a Sales Order. Cancellation is only possible before executio
 | Trigger                         | System Action                                                                |
 | ------------------------------- | ---------------------------------------------------------------------------- |
 | Confirm Cancellation clicked    | SO status set to **Cancelled**                                                |
-| AMC billing period freed        | For AMC SOs, the billing period becomes available for re-generation          |
+| Svc Contract billing period freed   | For Service Contract SOs, the billing period becomes available for re-generation |
 | Operations notified             | SO removed from dispatch queue; no future Job Cards generated                |
 | Contract billing log updated    | Module 19 → Tab 2 reflects the cancelled SO with updated fulfilment tracker  |
 | Customer history updated        | Module 18 → Tab 3 reflects the cancelled status                              |
@@ -2577,7 +2595,7 @@ A mechanism to void a Sales Order. Cancellation is only possible before executio
 | Branch Manager    | View (own branch)        | ✅                  | ✅                   | ✅               | ✅                 |
 | Head Ops / Admin  | View (all branches)      | ✅                  | ✅                   | ✅               | ✅                 |
 | Finance Auditor   | View (all – read-only)   | ❌                  | ✅                   | ❌               | ❌                 |
-| System (Cron)     | —                        | ✅ (Auto AMC)       | —                   | —               | —                 |
+| System (Cron)     | —                        | ✅ (Auto Svc Contract)   | —                   | —               | —                 |
 
 ---
 
@@ -2590,7 +2608,7 @@ MODULE 20: SALES ORDER MANAGEMENT
 │
 ├── 20.1 Sales Order Master List
 │   ├── [+ Generate Sales Order] → 20.2 Add / Generate SO Form
-│   │     ├── Service AMC → Select Active Contract (Module 19)
+│   │     ├── Service Contract → Select Active Contract (Module 19)
 │   │     │     └── Auto-fetch customer, sites, services, pricing
 │   │     ├── One-Time Service → Select Approved Quotation/GMA (Module 16/17)
 │   │     │     └── Auto-fetch service details and pricing
@@ -2617,7 +2635,7 @@ MODULE 20: SALES ORDER MANAGEMENT
 │   └── [Cancel] → 20.5 Cancellation Dialog
 │         ├── Blocked if: Job Cards exist, Challans dispatched, Invoiced
 │         ├── Reason Code + Remarks
-│         └── SO status → Cancelled; billing period freed (AMC)
+│         └── SO status → Cancelled; billing period freed (Contract)
 │
 │  ═══ DOWNSTREAM HANDOFF ═══════════════════════════════════════════
 │  Once SO reaches "Open" status, the baton is passed to:
@@ -2640,7 +2658,7 @@ MODULE 20: SALES ORDER MANAGEMENT
 │   ┌──────────┐       ┌──────────┐      ┌──────────┐     ┌──────────┐           │
 │   │ Active   │       │ Approved │      │ Approved │     │ Customer │           │
 │   │ Contract │       │ GMA      │      │ Quotation│     │ ID, Name,│           │
-│   │ (AMC SO  │       │ (One-Time│      │ (One-Time│     │ Sites,   │           │
+│   │ (Svc Contract SO │       │ (One-Time│      │ (One-Time│     │ Sites,   │           │
 │   │  source) │       │  source) │      │  source) │     │ Billing  │           │
 │   └─────┬────┘       └─────┬────┘      └─────┬────┘     └─────┬────┘           │
 │         │                  │                  │               │                 │
@@ -2650,7 +2668,7 @@ MODULE 20: SALES ORDER MANAGEMENT
 │             ╔═══════════════════════════════════════════════════╗               │
 │             ║       MODULE 20: SALES ORDER MANAGEMENT          ║               │
 │             ║                                                    ║               │
-│             ║  • AMC Source: Active Contract (M19)               ║               │
+│             ║  • Svc Contract Source: Active Contract (M19)            ║               │
 │             ║  • One-Time Source: Approved GMA/Quotation (M17/16)║               │
 │             ║  • Product Source: Product Master (M10)            ║               │
 │             ║  • Customer & Sites (M18)                         ║               │
@@ -2682,7 +2700,7 @@ MODULE 20: SALES ORDER MANAGEMENT
 
 | Source Module  | Data Provided                                                 | Used In (SO Management)                                      |
 | -------------- | ------------------------------------------------------------- | ------------------------------------------------------------ |
-| **Module 19**  | Active Contract (customer, sites, services, payment schedule) | Section 1: AMC source; auto-generates SOs per billing period |
+| **Module 19**  | Active Contract (customer, sites, services, payment schedule) | Section 1: Svc Contract source; auto-generates SOs per billing period |
 | **Module 17**  | Approved GMA (services, costs, sites, GM%)                    | Section 1: One-Time Service source                           |
 | **Module 16**  | Approved Quotation (services, pricing)                        | Section 1: One-Time Service source                           |
 | **Module 18**  | Customer ID, Name, Sites, Billing Address                     | Section 1: Customer details; Section 3: Delivery address     |
