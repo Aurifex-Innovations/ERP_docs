@@ -28,7 +28,7 @@ A paginated data table displaying all customers registered in the system. Provid
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
 │  │ Filters                                                                │  │
 │  │                                                                        │  │
-│  │ Customer Type : [▼ All / Commercial / Residential ▼]                  │  │
+│  │ Customer Type : [▼ All / Contract / One-time / Product ▼]             │  │
 │  │ Status        : [▼ All / Active / Inactive ▼]                         │  │
 │  │ Branch        : [▼ All Branches ▼]                                     │  │
 │  │ Date Range    : [📅 From] – [📅 To]   (Onboarding Date)               │  │
@@ -43,17 +43,17 @@ A paginated data table displaying all customers registered in the system. Provid
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
 │  │Cust ID    │Name              │Type        │Primary Contact│Branch│Status  ││
 │  │───────────┼──────────────────┼────────────┼───────────────┼──────┼────────││
-│  │CUST-00245 │ABC Corporation   │Commercial  │+91 98765 12345│MUM   │🟢 Active││
-│  │CUST-00244 │Sharma Residence  │Residential │+91 99001 23456│BLR   │🟢 Active││
-│  │CUST-00243 │XYZ Mall Pvt Ltd  │Commercial  │+91 98001 34567│HYD   │🔴 Inact.││
+│  │CUST-00245 │ABC Corporation   │Contract    │+91 98765 12345│MUM   │🟢 Active││
+│  │CUST-00244 │Sharma Residence  │One-time    │+91 99001 23456│BLR   │🟢 Active││
+│  │CUST-00243 │XYZ Mall Pvt Ltd  │Product     │+91 98001 34567│HYD   │🔴 Inact.││
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
-│  │Total Sites│Active Contracts│Actions                                      ││
-│  │───────────┼────────────────┼─────────────────────────────────────────────││
-│  │3          │2               │[View] [Edit] [Deactivate]                   ││
-│  │1          │1               │[View] [Edit] [Deactivate]                   ││
-│  │2          │0               │[View] [Edit] [Activate]                     ││
+│  │Total Sites│Created Date │Created By      │Actions                         ││
+│  │───────────┼─────────────┼────────────────┼────────────────────────────────││
+│  │3          │15 Jan 2026  │System Admin    │[View] [Edit] [Deactivate]      ││
+│  │1          │10 Feb 2026  │Rahul Sharma    │[View] [Edit] [Deactivate]      ││
+│  │2          │05 Mar 2026  │Priya Kumar     │[View] [Edit] [Activate]        ││
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
 │  Pagination:  Previous   1   2   3   ...   Next                              │
@@ -70,13 +70,15 @@ A paginated data table displaying all customers registered in the system. Provid
 | Field             | Type         | Description                                                      |
 | ----------------- | ------------ | ---------------------------------------------------------------- |
 | Customer ID       | Text (Auto)  | System-generated unique ID (e.g., CUST-00245)                    |
-| Name              | Text         | Company name (Commercial) or Full name (Residential)             |
-| Customer Type     | Badge        | Commercial / Residential                                         |
+| Name              | Text         | Company name (Contract/Product) or Full name (One-time)          |
+| Customer Type     | Badge        | Contract / One-time / Product                                       |
 | Primary Contact   | Text         | Primary phone number of the account contact                      |
-| Branch            | Text         | Servicing branch assigned to this customer                       |
+| Primary Email     | Text         | Primary email address of the account contact                      |
+| Branch Name       | Text         | Servicing branch assigned to this customer                       |
 | Status            | Badge        | Active / Inactive                                                |
-| Total Sites       | Number       | Count of all site locations registered under this customer        |
-| Active Contracts  | Number       | Count of contracts with status = Active                          |
+| Total Sites       | Number       | Total number of sites                                            |
+| Created Date      | Date         | Date of customer creation                                        |
+| Created By        | Text         | User who created the customer                                    |
 | Actions           | Button Group | [View] [Edit] [Deactivate / Activate]                            |
 
 ---
@@ -85,7 +87,7 @@ A paginated data table displaying all customers registered in the system. Provid
 
 | Filter        | Type       | Options                                          |
 | ------------- | ---------- | ------------------------------------------------ |
-| Customer Type | Dropdown   | All / Commercial / Residential                   |
+| Customer Type | Dropdown   | All / Contract / One-time / Product              |
 | Status        | Dropdown   | All / Active / Inactive                          |
 | Branch        | Dropdown   | All Branches / Specific Branch (from Module 7)   |
 | Date Range    | Date Range | From – To (Customer onboarding / creation date)  |
@@ -98,7 +100,6 @@ Searchable by:
 - Customer ID
 - Customer Name
 - Phone Number
-- GST Number
 
 ---
 
@@ -153,27 +154,20 @@ A multi-section form to register a new customer — either by converting an exis
 │  │  Lead Name       : Rahul Sharma   (Read-only)                          │ │
 │  │  Phone           : +91 98765 43210 (Read-only)                         │ │
 │  │  Email           : rahul@example.com (Read-only)                       │ │
-│  │  Lead Type       : Commercial  (Read-only)                             │ │
+│  │  Lead Type       : Contract  (Read-only)                               │ │
 │  │  Lead Status     : QUALIFIED ✅ (Read-only)                             │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  SECTION 2: ENTITY INFORMATION                                               │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  Customer Type*  : (•) Commercial    ( ) Residential                   │ │
+│  │  Customer Type*  : (•) Contract    ( ) One-time    ( ) Product         │ │
 │  │                                                                         │ │
-│  │  IF COMMERCIAL:                                                         │ │
-│  │  Company Name*   : [________________________________]                  │ │
-│  │  Industry Type*  : [▼ Hospitality / Healthcare / Education /           │ │
-│  │                       Manufacturing / Retail / IT / Other ▼]           │ │
-│  │  PAN Number*     : [__________] (e.g., AAAAA0000A)                    │ │
+│  │  Entity / Full Name* : [________________________________]              │ │
+│  │  Industry Type   : [▼ Hospitality / Healthcare / Retail / Other ▼]     │ │
+│  │  PAN Number      : [__________] (e.g., AAAAA0000A)                    │ │
 │  │  GST Number      : [__________________] (e.g., 22AAAAA0000A1Z5)       │ │
-│  │  Authorised Person Name* : [________________________________]          │ │
+│  │  Contact Person* : [________________________________]                  │ │
 │  │  Designation     : [________________________________]                  │ │
-│  │                                                                         │ │
-│  │  IF RESIDENTIAL:                                                        │ │
-│  │  Full Name*      : [________________________________]                  │ │
-│  │  PAN Number      : [__________] (Optional for residential)             │ │
-│  │                                                                         │ │
 │  │  Phone*          : [__________________]                                │ │
 │  │  Alternate Phone : [__________________]                                │ │
 │  │  Email*          : [________________________________]                  │ │
@@ -187,26 +181,11 @@ A multi-section form to register a new customer — either by converting an exis
 │  │  City*                    : [________________]                         │ │
 │  │  State*                   : [▼ Select State ▼]                         │ │
 │  │  Pincode*                 : [________]                                 │ │
-│  │                            [ ] Same as Site Address                    │ │
 │  │                                                                         │ │
 │  │  ── Finance / Accounts Point of Contact ──                             │ │
 │  │  Finance Contact Name*    : [________________________________]         │ │
 │  │  Finance Contact Phone*   : [__________________]                       │ │
 │  │  Finance Contact Email    : [________________________________]         │ │
-│  └─────────────────────────────────────────────────────────────────────────┘ │
-│                                                                              │
-│  SECTION 4: PRIMARY SITE                                                     │
-│  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  Site Name / Label*       : [________________________________]         │ │
-│  │                             (e.g., "Head Office", "Shop 1")            │ │
-│  │  Site Address Line 1*     : [________________________________]         │ │
-│  │  Site Address Line 2      : [________________________________]         │ │
-│  │  City*                    : [________________]                         │ │
-│  │  State*                   : [▼ Select State ▼]                         │ │
-│  │  Pincode                  : [________]                                 │ │
-│  │  Area (SQFT)*             : [________]                                 │ │
-│  │  Site Category*           : [▼ Residential / Commercial / Industrial ▼]│ │
-│  │  Sub-Category*            : [▼ Internal / External ▼]                  │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │       [SAVE AS DRAFT]         [SAVE & SUBMIT]         [CANCEL]               │
@@ -235,33 +214,19 @@ A multi-section form to register a new customer — either by converting an exis
 
 ## Section 2: Entity Information Fields
 
-### Commercial Customer
-
-| Field                  | Type      | Required | Validation                                              | Notes                                   |
-| ---------------------- | --------- | -------- | ------------------------------------------------------- | --------------------------------------- |
-| Customer Type          | Radio     | Yes      | Commercial / Residential                                | Controls which fields appear below      |
-| Company Name           | Text      | Yes      | Min 3 chars, Max 100 chars                              | Legal entity name                       |
-| Industry Type          | Dropdown  | Yes      | Hospitality / Healthcare / Education / Manufacturing / Retail / IT / Other | Used for segmentation |
-| PAN Number             | Text      | Yes      | Format: 5 alpha + 4 digits + 1 alpha (e.g., AAAAA0000A) | Validated against standard PAN regex   |
-| GST Number             | Text      | No       | Format: 15-char alphanumeric (e.g., 22AAAAA0000A1Z5)  | Optional; validated if provided         |
-| Authorised Person Name | Text      | Yes      | Min 3 chars, Max 100 chars                              | Primary decision-maker contact          |
-| Designation            | Text      | No       | Max 100 chars                                           | Job title of authorised person          |
-| Phone                  | Number    | Yes      | 10-digit Indian mobile number                           | Primary contact number                  |
-| Alternate Phone        | Number    | No       | 10-digit Indian mobile number                           | Optional secondary contact              |
-| Email                  | Email     | Yes      | Valid email format                                      | Used for all communications & invoices |
-| Branch                 | Dropdown  | Yes      | Active branches from Module 7                           | Servicing branch for this customer      |
-
-### Residential Customer
-
-| Field           | Type     | Required | Validation                          | Notes                                  |
-| --------------- | -------- | -------- | ----------------------------------- | -------------------------------------- |
-| Customer Type   | Radio    | Yes      | Commercial / Residential            | Controls which fields appear below     |
-| Full Name       | Text     | Yes      | Min 3 chars, Max 100 chars          | Individual's full name                 |
-| PAN Number      | Text     | No       | Format: AAAAA0000A (if provided)    | Optional for residential               |
-| Phone           | Number   | Yes      | 10-digit Indian mobile number       | Primary contact number                 |
-| Alternate Phone | Number   | No       | 10-digit Indian mobile number       | Optional secondary contact             |
-| Email           | Email    | Yes      | Valid email format                  | Used for communications & invoices     |
-| Branch          | Dropdown | Yes      | Active branches from Module 7       | Servicing branch for this customer     |
+| Field               | Type      | Required | Validation                                              | Notes                                   |
+| ------------------- | --------- | -------- | ------------------------------------------------------- | --------------------------------------- |
+| Customer Type       | Radio     | Yes      | Contract / One-time / Product                           | Customer categorization metric          |
+| Entity / Full Name  | Text      | Yes      | Min 3 chars, Max 100 chars                              | Legal entity name or individual's name    |
+| Industry Type       | Dropdown  | No       | Hospitality / Healthcare / Education / IT / Other       | Used for segmentation                   |
+| PAN Number          | Text      | No       | Format: 5 alpha + 4 digits + 1 alpha (e.g., AAAAA0000A) | Validated against standard PAN regex    |
+| GST Number          | Text      | No       | Format: 15-char alphanumeric (e.g., 22AAAAA0000A1Z5)  | Optional; validated if provided         |
+| Contact Person      | Text      | Yes      | Min 3 chars, Max 100 chars                              | Primary decision-maker contact          |
+| Designation         | Text      | No       | Max 100 chars                                           | Job title of contact person             |
+| Phone               | Number    | Yes      | 10-digit Indian mobile number                           | Primary contact number                  |
+| Alternate Phone     | Number    | No       | 10-digit Indian mobile number                           | Optional secondary contact              |
+| Email               | Email     | Yes      | Valid email format                                      | Used for all communications & invoices  |
+| Branch              | Dropdown  | Yes      | Active branches from Module 7                           | Servicing branch for this customer      |
 
 ---
 
@@ -274,28 +239,9 @@ A multi-section form to register a new customer — either by converting an exis
 | City                   | Text     | Yes      | Min 3 chars                           | Billing city                                |
 | State                  | Dropdown | Yes      | Indian states list                    | Billing state                               |
 | Pincode                | Number   | Yes      | 6-digit numeric                       | India PIN code                              |
-| Same as Site Address   | Checkbox | No       | When checked, auto-fills from Section 4 | Shortcut to copy site address into billing |
 | Finance Contact Name   | Text     | Yes      | Min 3 chars, Max 100 chars            | Accounts/Finance department point-of-contact|
 | Finance Contact Phone  | Number   | Yes      | 10-digit Indian mobile number         | Finance contact's phone                     |
 | Finance Contact Email  | Email    | No       | Valid email format                    | Finance contact's email (for invoices)      |
-
----
-
-## Section 4: Primary Site Fields
-
-| Field             | Type     | Required | Validation                                         | Notes                                     |
-| ----------------- | -------- | -------- | -------------------------------------------------- | ----------------------------------------- |
-| Site Name / Label | Text     | Yes      | Min 3 chars, Max 50 chars                          | User-friendly label (e.g., "Head Office") |
-| Site Address Line 1 | Text   | Yes      | Min 10 chars, Max 200 chars                        | Physical service location address         |
-| Site Address Line 2 | Text   | No       | Max 200 chars                                      | Landmark, area                            |
-| City              | Text     | Yes      | Min 3 chars                                        | Site city                                 |
-| State             | Dropdown | Yes      | Indian states list                                 | Site state                                |
-| Pincode           | Number   | No       | 6-digit numeric                                    | Optional                                  |
-| Area (SQFT)       | Number   | Yes      | Must be > 0                                        | Used in GMA chemical cost calculations    |
-| Site Category     | Dropdown | Yes      | Residential / Commercial / Industrial              | Linked to service pricing in Module 12    |
-| Sub-Category      | Dropdown | Yes      | Internal / External                                | Further classification for service scope  |
-
-> **Note:** The Primary Site captured here is automatically linked to the customer record. Additional sites can be added later via the Edit Customer form (Section 18.4) or directly from the Customer Detail screen (Section 18.3.1). Site data flows into **Module 17 (GMA)** and **Module 19 (Contract)** for cost calculations and scope definitions.
 
 ---
 
@@ -315,14 +261,13 @@ A multi-section form to register a new customer — either by converting an exis
 | ------------------------------------- | ----------------------------------------------------------------------- |
 | Entry Mode Required                   | Must select Import from Lead or Manual Entry                            |
 | Lead Selection Required               | If Entry Mode = Import from Lead, a valid qualified lead must be chosen |
-| Customer Type Required                | Must select Commercial or Residential                                   |
-| PAN Format                            | Must match AAAAA0000A pattern (strictly enforced for Commercial)         |
+| Customer Type Required                | Must select Contract, One-time, or Product                              |
+| PAN Format                            | If provided, must match AAAAA0000A pattern                              |
 | GST Format                            | If provided, must be 15-char alphanumeric starting with valid state code|
 | Duplicate Phone Check                 | System warns if phone number already exists on another customer record  |
 | Duplicate GST Check                   | System blocks creation if GST number already registered                 |
 | Billing Address Required              | At least Line 1, City, State, Pincode must be filled                   |
 | Finance Contact Required              | Name and Phone are mandatory                                            |
-| Site Area > 0                         | SQFT must be a positive number                                          |
 | Branch Required                       | Must select an active branch                                            |
 
 ---
@@ -333,7 +278,6 @@ A multi-section form to register a new customer — either by converting an exis
 | -------------------------- | ------------------------------------------------------------------------------- |
 | Entry Mode = Import Lead   | Auto-populates all lead fields; links created customer back to the Lead record  |
 | Save & Submit              | Customer status set to Active; Customer ID generated (e.g., CUST-00245)          |
-| Primary Site saved         | Site record created and linked with a unique Site ID (e.g., SITE-00312)          |
 | Duplicate GST detected     | Blocks save and shows error: "GST already registered under another customer"     |
 | Lead converted             | Lead status updated to **Customer** (Won) in Module 15                           |
 
@@ -346,37 +290,12 @@ A multi-section form to register a new customer — either by converting an exis
 **Description:**
 A unified, read-only dashboard for a specific customer. Provides a 360-degree view split across three logical tabs — Basic Details & Sites, Contract Logs, and Sales Orders & Service History. All data is display-only; modifications happen via the Edit action.
 
----
-
-## Screen Layout (Header)
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  [← Back to Customer List]                                    [Edit Customer]│
-│                                                                              │
-│  CUSTOMER: ABC CORPORATION                      Status: 🟢 ACTIVE            │
-│  Customer ID: CUST-00245    │  Branch: Mumbai   │  Type: Commercial          │
-│  Onboarded: 15 Jan 2026     │  LTV: ₹ 4,20,000 │  Total Sites: 3            │
-│                                                                              │
-│  ─── QUICK CONTACTS ──────────────────────────────────────────────────────  │
-│  Authorised Person  : Rahul Mehta   │  Phone: +91 98765 12345               │
-│  Finance Contact    : Priya Sharma  │  Phone: +91 99001 23456               │
-│  Email              : rahul@abccorp.com  │  GST: 27AAAAA0000A1Z5            │
-│                                                                              │
-│  [Tab 1: Basic Details & Sites ●]  [Tab 2: Contract Logs]                   │
-│  [Tab 3: Sales Orders & Service History]                                     │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
 ================================================================================
 
-# 18.3.1 Tab 1: Basic Details & Sites
+# 18.3.1 Tab 1: Basic Details
 
 **Description:**
-Displays the full entity profile — entity info, billing address, and a grid of all registered service sites for this customer.
+Displays the full entity profile — entity info and billing address for this customer.
 
 ---
 
@@ -384,29 +303,20 @@ Displays the full entity profile — entity info, billing address, and a grid of
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  [Tab 1: Basic Details & Sites ●]  [Tab 2: Contract Logs]                   │
-│  [Tab 3: Sales Orders & Service History]                        [+ Add Site] │
+│  [Tab 1: Basic Details ●]          [Tab 2: Contract Logs]                   │
+│  [Tab 3: Sales Orders & Service History]                                     │
 │                                                                              │
 │  ─── ENTITY INFORMATION ──────────────────────────────────────────────────  │
-│  Company Name    : ABC Corporation               Type: Commercial            │
+│  Entity / Name   : ABC Corporation               Type: Contract              │
 │  Industry        : Hospitality                   PAN : AAAAA0000A            │
 │  GST             : 27AAAAA0000A1Z5               Branch: Mumbai              │
-│  Authorised Person: Rahul Mehta  │  Designation: General Manager            │
+│  Contact Person  : Rahul Mehta  │  Designation: General Manager            │
 │                                                                              │
 │  ─── BILLING ADDRESS ─────────────────────────────────────────────────────  │
 │  Address         : 4th Floor, Crystal Tower, Andheri East, Mumbai           │
 │  City            : Mumbai    │  State: Maharashtra    │  PIN: 400069         │
 │  Finance Contact : Priya Sharma   │  Phone: +91 99001 23456                 │
 │  Finance Email   : accounts@abccorp.com                                     │
-│                                                                              │
-│  ─── SITES GRID ──────────────────────────────────────────────────────────  │
-│  ┌──────────────────────────────────────────────────────────────────────────┐│
-│  │ Site ID  │ Site Name   │ Address              │Area(SQFT)│Category│Status ││
-│  │──────────┼─────────────┼──────────────────────┼──────────┼────────┼───────││
-│  │SITE-00312│ Head Office │ Andheri East, Mumbai │  3,500   │Comm.   │🟢 Actv││
-│  │SITE-00313│ Warehouse   │ Bhiwandi, Thane      │  8,000   │Indus.  │🟢 Actv││
-│  │SITE-00314│ Showroom    │ Bandra West, Mumbai  │  1,200   │Comm.   │🟢 Actv││
-│  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
 │  Pagination: Previous  1  2  Next                                            │
 │                                                                              │
@@ -419,13 +329,13 @@ Displays the full entity profile — entity info, billing address, and a grid of
 
 | Field              | Type    | Description                                            |
 | ------------------ | ------- | ------------------------------------------------------ |
-| Company / Full Name| Display | Legal entity name or individual's name                 |
-| Customer Type      | Display | Commercial / Residential                               |
-| Industry           | Display | Sector classification (Commercial only)                |
+| Entity / Name      | Display | Legal entity name or individual's name                 |
+| Customer Type      | Display | Contract / One-time / Product                          |
+| Industry           | Display | Sector classification (if applicable)                  |
 | PAN Number         | Display | Tax ID                                                 |
-| GST Number         | Display | GST registration (Commercial only, if provided)        |
+| GST Number         | Display | GST registration (if provided)                         |
 | Branch             | Display | Assigned servicing branch                              |
-| Authorised Person  | Display | Primary decision-maker                                 |
+| Contact Person     | Display | Primary decision-maker                                 |
 | Designation        | Display | Job title                                              |
 | Phone              | Display | Primary contact number                                 |
 | Alternate Phone    | Display | Secondary contact (if provided)                        |
@@ -447,31 +357,7 @@ Displays the full entity profile — entity info, billing address, and a grid of
 
 ---
 
-## Sites Grid Fields
 
-| Field        | Type         | Description                                                  |
-| ------------ | ------------ | ------------------------------------------------------------ |
-| Site ID      | Text (Auto)  | System-generated unique site identifier (e.g., SITE-00312)   |
-| Site Name    | Text         | User-friendly label for the location                         |
-| Address      | Text         | Physical address of the site                                 |
-| Area (SQFT)  | Number       | Service area in square feet                                  |
-| Category     | Text         | Residential / Commercial / Industrial                        |
-| Sub-Category | Text         | Internal / External                                          |
-| Status       | Badge        | Active / Inactive                                            |
-| Actions      | Button Group | [View Site] [Edit Site] [Deactivate Site]                    |
-
-## Sites Grid Actions
-
-| Button          | Description                                          |
-| --------------- | ---------------------------------------------------- |
-| **+ Add Site**  | Opens the Add Site sub-form to register a new location for this customer |
-| **View Site**   | Opens the read-only site detail view                 |
-| **Edit Site**   | Opens the site edit form                             |
-| **Deactivate Site** | Marks the site as Inactive (soft delete)         |
-
-> **Note:** A site cannot be deactivated if it is linked to an **Active Contract** in Module 19. The system will block the action and display a warning.
-
----
 
 ================================================================================
 
@@ -486,7 +372,7 @@ A chronological grid listing all agreements (both historical and active) associa
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  [Tab 1: Basic Details & Sites]  [Tab 2: Contract Logs ●]                   │
+│  [Tab 1: Basic Details]          [Tab 2: Contract Logs ●]                   │
 │  [Tab 3: Sales Orders & Service History]                                     │
 │                                                                              │
 │  CONTRACTS GRID                                                              │
@@ -533,15 +419,15 @@ A consolidated grid showing all Sales Orders and their real-time service executi
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  [Tab 1: Basic Details & Sites]  [Tab 2: Contract Logs]                     │
+│  [Tab 1: Basic Details]          [Tab 2: Contract Logs]                     │
 │  [Tab 3: Sales Orders & Service History ●]                                   │
 │                                                                              │
 │  SALES ORDERS & SERVICE HISTORY                                              │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
 │  │SO Number   │SO Date    │Linked Contract│Order Type│Total Value│SO Status ││
 │  │────────────┼───────────┼───────────────┼──────────┼───────────┼──────────││
-│  │SO-2026-0112│10 Mar 2026│CON-2026-0041  │AMC       │₹ 13,000   │✅ Open   ││
-│  │SO-2026-0087│10 Feb 2026│CON-2026-0041  │AMC       │₹ 13,000   │✅ Fulfld ││
+│  │SO-2026-0112│10 Mar 2026│CON-2026-0041  | Contract      │₹ 13,000   │✅ Open   ││
+│  │SO-2026-0087│10 Feb 2026│CON-2026-0041  | Contract       │₹ 13,000   │✅ Fulfld ││
 │  │SO-2026-0043│15 Jan 2026│—              │One-Time  │₹ 8,500    │✅ Fulfld ││
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
@@ -567,7 +453,7 @@ A consolidated grid showing all Sales Orders and their real-time service executi
 | SO Number        | Link    | System ID for the Sales Order; navigates to Module 20 SO detail    |
 | SO Date          | Date    | Date the Sales Order was generated                                 |
 | Linked Contract  | Link    | Contract ID the SO was generated from (blank for standalone SOs)   |
-| Order Type       | Text    | AMC Contract / One-Time Service / Product Sale                     |
+| Order Type       | Text    |  Contract / One-Time Service / Product Sale                     |
 | Total Value (₹)  | Currency| Total invoiced value of this Sales Order                           |
 | SO Status        | Badge   | Draft / Open / Fulfilled / Billed / Cancelled                      |
 | Service Status   | Badge   | Scheduled / In Progress / Completed / Pending                      |
@@ -581,7 +467,7 @@ A consolidated grid showing all Sales Orders and their real-time service executi
 # 18.4 Edit Customer Form
 
 **Description:**
-Pre-filled form mirroring the Add Customer form (18.2). Allows authorised users to update master data — billing address, contact persons, entity details — or add new service sites. All changes are logged in the Master Data Audit Log.
+Pre-filled form mirroring the Add Customer form (18.2). Allows authorised users to update master data — billing address, contact persons, entity details. All changes are logged in the Master Data Audit Log.
 
 ---
 
@@ -593,12 +479,12 @@ Pre-filled form mirroring the Add Customer form (18.2). Allows authorised users 
 │                                                                              │
 │  SECTION 2: ENTITY INFORMATION  (Pre-filled; editable fields below)         │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  Customer Type   : Commercial  [Locked — cannot change after creation]  │ │
-│  │  Company Name*   : [ABC Corporation________________]                    │ │
-│  │  Industry Type*  : [▼ Hospitality ▼]                                    │ │
+│  │  Customer Type   : Contract  [Locked — cannot change after creation]    │ │
+│  │  Entity / Name*  : [ABC Corporation________________]                    │ │
+│  │  Industry Type   : [▼ Hospitality ▼]                                    │ │
 │  │  PAN Number      : AAAAA0000A  [Locked — audit-sensitive]               │ │
 │  │  GST Number      : [27AAAAA0000A1Z5__________] (Editable)               │ │
-│  │  Authorised Person Name*: [Rahul Mehta__________]                       │ │
+│  │  Contact Person* : [Rahul Mehta__________]                              │ │
 │  │  Designation     : [General Manager________________]                    │ │
 │  │  Phone*          : [+91 98765 12345_______________]                     │ │
 │  │  Alternate Phone : [________________________________]                   │ │
@@ -618,16 +504,7 @@ Pre-filled form mirroring the Add Customer form (18.2). Allows authorised users 
 │  │  Finance Contact Email    : [accounts@abccorp.com___]                   │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  SECTION 4: SITES  (Existing sites shown; option to add new)                │
-│  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  ┌───────────┬─────────────┬──────────────────────┬──────────┬────────┐ │ │
-│  │  │ Site ID   │ Site Name   │ Address              │Area(SQFT)│Actions │ │ │
-│  │  │───────────┼─────────────┼──────────────────────┼──────────┼────────│ │ │
-│  │  │ SITE-00312│ Head Office │ Andheri East, Mumbai │  3,500   │[Edit]  │ │ │
-│  │  │ SITE-00313│ Warehouse   │ Bhiwandi, Thane      │  8,000   │[Edit]  │ │ │
-│  │  └───────────┴─────────────┴──────────────────────┴──────────┴────────┘ │ │
-│  │                                                         [+ Add New Site] │ │
-│  └─────────────────────────────────────────────────────────────────────────┘ │
+
 │                                                                              │
 │       [SAVE CHANGES]                                          [CANCEL]      │
 │                                                                              │
@@ -640,20 +517,19 @@ Pre-filled form mirroring the Add Customer form (18.2). Allows authorised users 
 
 | Field                  | Editable? | Notes                                                          |
 | ---------------------- | --------- | -------------------------------------------------------------- |
-| Customer Type          | ❌ Locked  | Cannot change Commercial → Residential or vice versa           |
-| Company / Full Name    | ✅ Yes     | Can correct spelling or reflect legal name change              |
+| Customer Type          | ❌ Locked  | Cannot change Contract/Product → One-time or vice versa        |
+| Entity / Name          | ✅ Yes     | Can correct spelling or reflect legal name change              |
 | Industry Type          | ✅ Yes     | Dropdown update allowed                                        |
 | PAN Number             | ❌ Locked  | Tax-sensitive; requires admin override with audit note         |
 | GST Number             | ✅ Yes     | Can be added or updated                                        |
-| Authorised Person Name | ✅ Yes     | Contact person can change                                      |
+| Contact Person         | ✅ Yes     | Contact person can change                                      |
 | Designation            | ✅ Yes     | Free text update allowed                                       |
 | Phone / Alternate      | ✅ Yes     | Duplicate phone check applies on save                          |
 | Email                  | ✅ Yes     | Valid email format check                                       |
 | Branch                 | ✅ Yes     | Can reassign to another active branch                          |
 | Billing Address        | ✅ Yes     | Fully editable                                                 |
 | Finance Contact        | ✅ Yes     | Fully editable                                                 |
-| Existing Sites         | ✅ Yes     | Edit via [Edit Site] sub-form per row                          |
-| Add New Site           | ✅ Yes     | [+ Add New Site] opens the site sub-form inline               |
+
 
 ---
 
@@ -709,7 +585,6 @@ A soft-delete mechanism that marks a customer as **Inactive** rather than perman
 ┌───────────────────────────────────────────────────────┐
 │           DEACTIVATE CUSTOMER                          │
 │                                                        │
-│  Customer   : ABC Corporation (CUST-00245)             │
 │                                                        │
 │  ⚠️  WARNING: This action will deactivate the customer │
 │  record. Active contracts and pending sales orders     │
@@ -747,9 +622,6 @@ A soft-delete mechanism that marks a customer as **Inactive** rather than perman
 │      • Payment Default                                 │
 │      • Other                                           │
 │                                                        │
-│  Additional Remarks (if Reason = Other)*:              │
-│  [________________________________________]            │
-│                                                        │
 │  [CONFIRM DEACTIVATE]        [CANCEL]                  │
 └───────────────────────────────────────────────────────┘
 ```
@@ -770,7 +642,6 @@ A soft-delete mechanism that marks a customer as **Inactive** rather than perman
 | Field                | Type     | Required    | Options / Validation                                                                   |
 | -------------------- | -------- | ----------- | -------------------------------------------------------------------------------------- |
 | Reason for Deactivation | Dropdown | Yes      | Customer Relocated / Business Closure / Non-Renewal / Payment Default / Other          |
-| Additional Remarks   | Text Area | Conditional | Required if Reason = Other; max 500 characters                                        |
 
 ---
 
@@ -866,7 +737,7 @@ MODULE 18: CUSTOMER MANAGEMENT
 │               ╔═══════════════════════════════════╗                             │
 │               ║    MODULE 18: CUSTOMER MANAGEMENT  ║                             │
 │               ║                                    ║                             │
-│               ║  • Entity Info (Commercial/Resid.) ║                             │
+│               ║  • Entity Info (Contract/One-time) ║                             │
 │               ║  • Billing & Contact Details       ║                             │
 │               ║  • Sites Master (Site ID, SQFT)    ║                             │
 │               ║  • LTV Tracking                    ║                             │
