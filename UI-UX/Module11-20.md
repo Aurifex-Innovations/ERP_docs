@@ -6015,6 +6015,8 @@ The Add Quotation form allows sales team members to create new quotations. The f
 │  │  City*:               [________________________________]                │ │
 │  │  State*:              [▼ Select State ▼]                                │ │
 │  │  Pincode:             [________]                                        │ │
+│  │  Country:             [▼ Select Country ▼] (Default: India)              │ │
+│  │  Google Map URL:      [________________________________]                │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  SECTION 2: QUOTATION TYPE                                                   │
@@ -6206,6 +6208,8 @@ The Add Quotation form allows sales team members to create new quotations. The f
 | City            | Text            | Conditional | Min 3 characters                                                                                          | Required if Source = Add New       |
 | State           | Dropdown        | Conditional | Indian states list                                                                                        | Required if Source = Add New       |
 | Pincode         | Number          | No          | 6-digit                                                                                                   | Optional                           |
+| Country         | Dropdown        | No          | Country list (Default: India)                                                                             | Optional                           |
+| Google Map URL  | URL             | No          | Valid URL format (e.g., https://maps.google.com/...)                                                       | Optional; paste from Google Maps   |
 
 ---
 
@@ -6228,6 +6232,8 @@ The Add Quotation form allows sales team members to create new quotations. The f
 | Address       | Text                | Yes      | Min 10 characters                                                                                         | Service delivery address      |
 | City          | Text                | Yes      | Min 3 characters                                                                                                         | City name                     |
 | State         | Dropdown            | Yes      | Indian states list                                                                                                       | State selection               |
+| Country       | Dropdown            | No       | Country list (Default: India)                                                                                            | Optional                      |
+| Google Map URL| URL                 | No       | Valid URL format (e.g., https://maps.google.com/...)                                                                     | Optional; paste from Google Maps |
 | Category      | Dropdown            | Yes      | Residential / Commercial / Industrial / Warehouse                                                                        | Linked to Module 12 Categories |
 | Sub-Category  | Dropdown            | Yes      | Internal / External                                                                                                      | Linked to Module 12           |
 | Area (sqft)   | Number              | Yes      | Must be > 0                                                                                                              | Used for area-based pricing   |
@@ -6386,6 +6392,8 @@ Read-only detailed view of a quotation showing complete pricing breakdown, servi
 │  │  Phone:               +91 98765 43210                                   │ │
 │  │  Email:               rahul@example.com                                 │ │
 │  │  Address:             HSR Layout, Sector 2, Bengaluru, Karnataka        │ │
+│  │  Country:             India                                              │ │
+│  │  Google Map URL:      🔗 View on Maps                                    │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  QUOTATION CONFIGURATION                                                     │
@@ -6399,8 +6407,8 @@ Read-only detailed view of a quotation showing complete pricing breakdown, servi
 │                                                                              │
 │  SERVICE DETAILS BY LOCATION                                                 │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  📍 LOCATION 1: HSR Layout, Bengaluru | 1200 sqft                       │ │
-│  │     Assigned Branch: BLR-HSR Branch                                     │ │
+│  │  📍 LOCATION 1: HSR Layout, Bengaluru | 1200 sqft | India               │ │
+│  │     Assigned Branch: BLR-HSR Branch   | 🔗 Map URL                       │ │
 │  │                                                                         │ │
 │  │  ┌────────────┬────────────┬─────────┬───────────┬────────┬────────────┐│ │
 │  │  │Service     │Pricing Type│Rate (₹) │Frequency  │Visits  │Total (₹)   ││ │
@@ -6411,7 +6419,8 @@ Read-only detailed view of a quotation showing complete pricing breakdown, servi
 │  │  Location 1 Subtotal: ₹24,500                                          │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  📍 LOCATION 2: Whitefield, Bengaluru | 5000 sqft                          │ │
+│  📍 LOCATION 2: Whitefield, Bengaluru | 5000 sqft | India                  │ │
+│  │     🔗 Map URL                                                           │ │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
 │  │  ┌────────────┬────────────┬─────────┬───────────┬────────┬────────────┐│ │
 │  │  │Service     │Pricing Type│Rate (₹) │Frequency  │Visits  │Total (₹)   ││ │
@@ -6473,12 +6482,16 @@ Read-only detailed view of a quotation showing complete pricing breakdown, servi
 |                     | Phone              | Text            | Contact number                             |
 |                     | Email              | Text            | Email address                              |
 |                     | Address            | Text            | Full address                               |
+|                     | Country            | Text            | Country of the client                      |
+|                     | Google Map URL     | Link            | Clickable Google Maps link                 |
 | **Configuration**   | Quotation Type     | Text            | Service / Product / Combined               |
 |                     | Service Mode       | Text            | One-Time / Contract                             |
 |                     | Frequency          | Text            | Contract frequency if applicable                |
 |                     | Contract Duration  | Text            | Contract duration if applicable                 |
 |                     | Proposed Start     | Date            | Contract start date if applicable               |
 | **Services**        | Per-location table | Table           | Service, rate, frequency, visits, total    |
+|                     | Location Country   | Text            | Country for the location                   |
+|                     | Location Map URL   | Link            | Google Maps link for the location          |
 |                     | Location Subtotal  | Currency        | Per-location total                         |
 | **Products**        | Product table      | Table           | Product, qty, unit price, tax, line total  |
 |                     | Product Subtotal   | Currency        | Total product amount                       |
@@ -6908,6 +6921,8 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 │  │  City*:               [________________________________]                │ │
 │  │  State*:              [▼ Select State ▼]                                │ │
 │  │  Pincode:             [________]                                        │ │
+│  │  Country:             [▼ Select Country ▼] (Default: India)              │ │
+│  │  Google Map URL:      [________________________________]                │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  SECTION 2: GENERAL CONFIGURATION                                            │
@@ -6927,6 +6942,8 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 │  │  ┌──────────────────────────────────────────────────────────────────┐  │ │
 │  │  │ Address:  [________________________________]                     │  │ │
 │  │  │ City:    [________________]  State: [▼ Select State ▼]        │  │ │
+│  │  │ Country: [▼ Select Country ▼] (Default: India)                 │  │ │
+│  │  │ Google Map URL: [________________________________]             │  │ │
 │  │  │ Category*:     [▼ Residential / Commercial / Industrial ▼]      │  │ │
 │  │  │ Sub-Category*: [▼ Internal / External ▼]                        │  │ │
 │  │  │ Area (sqft)*: [________]                                         │  │ │
@@ -7070,8 +7087,8 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 | City            | Text            | Conditional | Min 3 characters                                                                | Required if Source = Add New       |
 | State           | Dropdown        | Conditional | Indian states list                                                              | Required if Source = Add New       |
 | Pincode         | Number          | No          | 6-digit                                                                         | Optional                           |
-
----
+| Country         | Dropdown        | No          | Country list (Default: India)                                                   | Optional                           |
+| Google Map URL  | URL             | No          | Valid URL format (e.g., https://maps.google.com/...)                             | Optional; paste from Google Maps   |
 
 ## Section 2: General Configuration Fields
 
@@ -7096,6 +7113,8 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 | Address            | Text            | No       | Min 10 characters if provided                             | Optional; service delivery address   |
 | City               | Text            | Yes      | Min 3 characters                                          | City name                            |
 | State              | Dropdown        | Yes      | Indian states list                                        | State selection                      |
+| Country            | Dropdown        | No       | Country list (Default: India)                             | Optional                             |
+| Google Map URL     | URL             | No       | Valid URL format (e.g., https://maps.google.com/...)       | Optional; paste from Google Maps     |
 | Category           | Dropdown        | Yes      | Residential / Commercial / Industrial                     | Linked to Module 12 pricing          |
 | Sub-Category       | Dropdown        | Yes      | Internal / External                                       | Linked to Module 12                  |
 | Area (sqft)        | Number          | Yes      | Must be > 0                                               | Used for area-based chemical calc    |
@@ -7318,6 +7337,7 @@ Full read-only view of any GMA sheet accessible to the logged-in user. Used for 
 │  ┌────────────────────────────────────────────────────────────────────────┐ │
 │  │  City: Mumbai   State: Maharashtra   Category: Commercial              │ │
 │  │  Sub-Category: Internal   Area: 1200 sqft                              │ │
+│  │  Country: India   Google Map: 🔗 View on Maps                             │ │
 │  │                                                                        │ │
 │  │  ─── SERVICE 1: Cockroach Treatment ────────────────────────────────── │ │
 │  │  Service Mode   : Contract base     Frequency         : Monthly        │ │
@@ -7482,6 +7502,7 @@ Read-only view of a GMA sheet submitted by the logged-in user. Displays source i
 │  ┌────────────────────────────────────────────────────────────────────────┐ │
 │  │  City: Mumbai   State: Maharashtra   Category: Commercial              │ │
 │  │  Sub-Category: Internal   Area: 1200 sqft   Visits/Month: 4           │ │
+│  │  Country: India   Google Map: 🔗 View on Maps                             │ │
 │  │                                                                         │ │
 │  │  ─── 3A: SERVICE VISIT COST ──────────────────────────────────────── │ │
 │  │  Rate per Visit : ₹300   Annual Frequency : 52                         │ │
@@ -8316,6 +8337,8 @@ A multi-section form to register a new customer — either by converting an exis
 │  │  City*                    : [________________]                         │ │
 │  │  State*                   : [▼ Select State ▼]                         │ │
 │  │  Pincode*                 : [________]                                 │ │
+│  │  Country                  : [▼ Select Country ▼] (Default: India)      │ │
+│  │  Google Map URL            : [________________________________]        │ │
 │  │                                                                         │ │
 │  │  ── Finance / Accounts Point of Contact ──                             │ │
 │  │  Finance Contact Name*    : [________________________________]         │ │
@@ -8374,6 +8397,8 @@ A multi-section form to register a new customer — either by converting an exis
 | City                   | Text     | Yes      | Min 3 chars                           | Billing city                                |
 | State                  | Dropdown | Yes      | Indian states list                    | Billing state                               |
 | Pincode                | Number   | Yes      | 6-digit numeric                       | India PIN code                              |
+| Country                | Dropdown | No       | Country list (Default: India)         | Optional                                    |
+| Google Map URL         | URL      | No       | Valid URL format                      | Optional; paste from Google Maps            |
 | Finance Contact Name   | Text     | Yes      | Min 3 chars, Max 100 chars            | Accounts/Finance department point-of-contact|
 | Finance Contact Phone  | Number   | Yes      | 10-digit Indian mobile number         | Finance contact's phone                     |
 | Finance Contact Email  | Email    | No       | Valid email format                    | Finance contact's email (for invoices)      |
@@ -8486,6 +8511,8 @@ Displays the full entity profile — entity info and billing address for this cu
 | -------------------- | ------- | ---------------------------------------- |
 | Billing Address      | Display | Full billing address                     |
 | City / State / PIN   | Display | Location details                         |
+| Country              | Display | Country (default: India)                 |
+| Google Map URL       | Link    | Clickable Google Maps link               |
 | Finance Contact Name | Display | Accounts department contact              |
 | Finance Contact Phone| Display | Finance phone                            |
 | Finance Contact Email| Display | Finance email                            |
@@ -8557,7 +8584,7 @@ A consolidated grid showing all Sales Orders and their real-time service executi
 │  [Tab 1: Basic Details]          [Tab 2: Contract Logs]                     │
 │  [Tab 3: Sales Orders & Service History ●]                                   │
 │                                                                              │
-│  SALES ORDERS & SERVICE HISTORY                                              │
+│  SALES ORDERS & SERVICE HISTORY               [Download Service History (Excel)]│
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
 │  │SO Number   │SO Date    │Linked Contract│Order Type│Total Value│SO Status ││
 │  │────────────┼───────────┼───────────────┼──────────┼───────────┼──────────││
@@ -8576,6 +8603,9 @@ A consolidated grid showing all Sales Orders and their real-time service executi
 │                                                                              │
 │  Pagination: Previous  1  2  3  Next                                         │
 │                                                                              │
+│  > **Excel Export Includes:** SO Number, Date, Service Type, Site Name,      │
+│  > Technician (Primary), Execution Status, Materials Used, Customer Rating.  │
+│                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -8586,6 +8616,7 @@ A consolidated grid showing all Sales Orders and their real-time service executi
 | Field            | Type    | Description                                                        |
 | ---------------- | ------- | ------------------------------------------------------------------ |
 | SO Number        | Link    | System ID for the Sales Order; navigates to Module 20 SO detail    |
+| Export Action    | Button  | Triggers comprehensive service history download in .xlsx format    |
 | SO Date          | Date    | Date the Sales Order was generated                                 |
 | Linked Contract  | Link    | Contract ID the SO was generated from (blank for standalone SOs)   |
 | Order Type       | Text    |  Contract / One-Time Service / Product Sale                     |
@@ -8634,6 +8665,8 @@ Pre-filled form mirroring the Add Customer form (18.2). Allows authorised users 
 │  │  City*                    : [Mumbai______________]                      │ │
 │  │  State*                   : [▼ Maharashtra ▼]                           │ │
 │  │  Pincode*                 : [400069_]                                   │ │
+│  │  Country                  : [▼ India ▼]                                  │ │
+│  │  Google Map URL            : [https://maps.google.com/...___]             │ │
 │  │  Finance Contact Name*    : [Priya Sharma___________]                   │ │
 │  │  Finance Contact Phone*   : [+91 99001 23456________]                   │ │
 │  │  Finance Contact Email    : [accounts@abccorp.com___]                   │ │
@@ -8663,6 +8696,8 @@ Pre-filled form mirroring the Add Customer form (18.2). Allows authorised users 
 | Email                  | ✅ Yes     | Valid email format check                                       |
 | Branch                 | ✅ Yes     | Can reassign to another active branch                          |
 | Billing Address        | ✅ Yes     | Fully editable                                                 |
+| Country                | ✅ Yes     | Dropdown; default India                                        |
+| Google Map URL         | ✅ Yes     | Editable URL field                                              |
 | Finance Contact        | ✅ Yes     | Fully editable                                                 |
 
 
@@ -8994,7 +9029,7 @@ A paginated ledger displaying all contracts in the system. Provides status-based
 | Start Date     | Date         | Contract commencement date                                           |
 | End Date       | Date         | Contract scheduled end date                                          |
 | Status         | Badge        | Draft / Active / Expiring Soon / Terminated / Expired                |
-| Actions        | Button Group | [View] [Edit / Amend] [Terminate]                                    |
+| Actions        | Button Group | [View] [Edit / Amend] [Terminate]   /[Download PDF]                                 |
 
 ---
 
@@ -9072,12 +9107,12 @@ A multi-section form to formalize a service agreement. Inherits approximately 80
 │  │  Branch            : Mumbai (Read-only)                                │ │
 │  │                                                                         │ │
 │  │  SITES INHERITED FROM GMA:                                              │ │
-│  │  ┌──────────┬─────────────┬──────────────────┬──────────┬────────────┐ │ │
-│  │  │ Site ID  │ Site Name   │ Address          │Area(SQFT)│ Category   │ │ │
-│  │  │──────────┼─────────────┼──────────────────┼──────────┼────────────│ │ │
-│  │  │SITE-00312│ Head Office │ Andheri East     │  3,500   │ Commercial │ │ │
-│  │  │SITE-00313│ Warehouse   │ Bhiwandi, Thane  │  8,000   │ Industrial │ │ │
-│  │  └──────────┴─────────────┴──────────────────┴──────────┴────────────┘ │ │
+│  │  ┌──────────┬─────────────┬──────────────────┬──────────┬─────────┬────────────┐ │ │
+│  │  │ Site ID  │ Site Name   │ Address          │Area(SQFT)│ Country │ Map URL    │ │ │
+│  │  │──────────┼─────────────┼──────────────────┼──────────┼─────────┼────────────│ │ │
+│  │  │SITE-00312│ Head Office │ Andheri East     │  3,500   │ India   │ 📍 Link     │ │ │
+│  │  │SITE-00313│ Warehouse   │ Bhiwandi, Thane  │  8,000   │ India   │ 📍 Link     │ │ │
+│  │  └──────────┴─────────────┴──────────────────┴──────────┴─────────┴────────────┘ │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  SECTION 2: CONTRACT TERMS                                                   │
@@ -9236,6 +9271,8 @@ This section breaks down the contract deliverables on a per-site basis. Each sit
 | ------------------ | -------------- | -------- | ---------------------------------------------------- | -------------------------------------------- |
 | Site ID & Name     | Display        | System   | Read-only; inherited from GMA                        | Identifies the site block                    |
 | Address & Area     | Display        | System   | Read-only                                            | Context for the service                      |
+| Country            | Display        | System   | Read-only; inherited from GMA                        | Country of the site location                 |
+| Google Map URL     | Link           | System   | Read-only; inherited from GMA                        | Clickable Maps link for the site             |
 | Total Site Sale Value | Calculation   | System   | Sum of all 'Service Sale Values' inside this site    | Displayed at the footer of the site block    |
 
 ---
@@ -9377,6 +9414,7 @@ Displays the complete contract configuration — commercial terms, payment sched
 │  ─── SECTION 3: SCOPE OF WORK (SITES & SERVICES) ─────────────────────────  │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
 │  │ ▼ SITE 1: Head Office [SITE-312] | Andheri East, Mumbai | 3,500 SQFT     ││
+│  │   Country: India | 🔗 Google Map URL                                      ││
 │  │   Site Sale Value: ₹ 55,000 | Site Cost: ₹ 29,800 | Site GM%: 45.8%      ││
 │  │                                                                          ││
 │  │   ├─ SERVICE 1: Cockroach Treatment | Contract Base | Sale Val: ₹ 35,000 ││
@@ -9388,6 +9426,7 @@ Displays the complete contract configuration — commercial terms, payment sched
 │  │      Schedule : 1st Mon [Afternoon (12-5)]                               ││
 │  │                                                                          ││
 │  │ ▼ SITE 2: Warehouse [SITE-313] | Bhiwandi, Thane | 8,000 SQFT            ││
+│  │   Country: India | 🔗 Google Map URL                                      ││
 │  │   Site Sale Value: ₹ 1,54,000 | Site Cost: ₹ 89,782 | Site GM%: 41.7%    ││
 │  │                                                                          ││
 │  │   └─ SERVICE 1: Rodent Control | Contract Base | Sale Val: ₹ 1,54,000    ││
@@ -9443,6 +9482,7 @@ Displays the complete contract configuration — commercial terms, payment sched
 | Amount (₹)       | Currency | Installment amount                                      |
 | Due Date         | Date     | Payment due date                                        |
 | Payment Status   | Badge    | Paid / Due / Overdue / Upcoming                          |
+| Export Log       | Button   | Downloads full execution & billing log for this contract (Excel) |
 
 ---
 
@@ -9452,6 +9492,8 @@ Displays the complete contract configuration — commercial terms, payment sched
 | ---------------- | -------- | -------------------------------------------------------- |
 | Site ID & Name   | Display  | Unique site reference and friendly label                 |
 | Address & Area   | Display  | Physical address and SQFT                                |
+| Country          | Display  | Country of the site (from GMA)                           |
+| Google Map URL   | Link     | Clickable Google Maps link (from GMA)                    |
 | Site Sale/Cost/GM| Display  | Financial summary rolled up for the entire site          |
 | Service Name     | Display  | Pest / service category mapped under the site            |
 | Contract Mode    | Display  | Contract Base / One-Time                                 |
@@ -9479,7 +9521,7 @@ A chronological grid showing all Sales Orders linked to this contract — both a
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │  [Tab 1: Contract Terms, Scope & Sites] [Tab 2: Sales Order Schedule ●]    │
 │                                                                              │
-│  SALES ORDER SCHEDULE                                                        │
+│  SALES ORDER SCHEDULE              [Download Contract Service Log (Excel)]│
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
 │  │SO Number    │SO Date    │Period     │SO Value (₹)│SO Status │Svc Status  ││
 │  │─────────────┼───────────┼───────────┼────────────┼──────────┼────────────││
@@ -9506,6 +9548,7 @@ A chronological grid showing all Sales Orders linked to this contract — both a
 
 | Field          | Type    | Description                                                            |
 | -------------- | ------- | ---------------------------------------------------------------------- |
+| Export Action  | Button  | Downloads full execution & billing log for this contract (Excel)        |
 | SO Number      | Link    | Sales Order ID; clickable — navigates to Module 20 SO Detail           |
 | SO Date        | Date    | Date the SO was generated                                              |
 | Period         | Text    | Billing period / milestone label this SO covers                        |
@@ -9571,6 +9614,8 @@ An interface to handle mid-cycle changes to an active contract. Pre-filled with 
 │  │  ┌──────────────────────────────────────────────────────────────────┐   │ │
 │  │  │ Address        : Andheri East, Mumbai                            │   │ │
 │  │  │ Area / Category: 3,500 SQFT | Commercial                         │   │ │
+│  │  │ Country        : India                                          │   │ │
+│  │  │ Google Map URL : 🔗 View on Maps                                  │   │ │
 │  │  │                                                                  │   │ │
 │  │  │ [+ ADD SERVICE TO THIS SITE]                                     │   │ │
 │  │  │ ┌──────────────────────────────────────────────────────────────┐ │   │ │
@@ -9975,7 +10020,7 @@ A comprehensive dashboard displaying all Sales Orders (execution mandates) in th
 | Total Value | Currency     | Total SO amount including taxes (₹)                           |
 | SO Date     | Date         | Date the SO was generated                                     |
 | Status      | Badge        | Draft / Open / Fulfilled / Billed / Cancelled                 |
-| Actions     | Button Group | [View] [Edit] [Cancel]                                        |
+| Actions     | Button Group | [View] [Edit] [Download PDF] [Cancel]                                        |
 
 ---
 
@@ -10126,6 +10171,8 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 │  │  City*            : [________________]                                 │ │
 │  │  State*           : [▼ Select State ▼]                                 │ │
 │  │  Pincode          : [________]                                         │ │
+│  │  Country*         : [▼ Select Country ▼] (Default: India)              │ │
+│  │  Google Map URL*  : [________________________________]                │ │
 │  │                                                                         │ │
 │  │  Priority Level   : [▼ Normal / Urgent / Critical ▼]                   │ │
 │  │  Expected Delivery: [📅 Date Picker]                                   │ │
@@ -10166,6 +10213,8 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 | Field           | Type            | Required | Validation / Notes                                                              |
 | --------------- | --------------- | -------- | ------------------------------------------------------------------------------- |
 | Site Name       | Search/Text     | Yes      | Auto-fetched from source OR manually entered for standalone                     |
+| Country         | Dropdown        | Yes      | Country list (Default: India); auto-fetched from source if available. **Required** |
+| Google Map URL  | URL             | Yes      | Valid URL format; auto-fetched from source if available. **Required for execution** |
 | Service Name    | Search Dropdown | Yes      | Select from Module 12 (Services) if standalone; auto-fetched if linked          |
 | Qty (Visits)    | Number          | Yes      | Number of visits for this SO; editable, must be > 0                             |
 | Unit Price (₹)  | Currency        | Yes      | Price per visit; auto from contract/GMA; Read-only for linked; editable for standalone |
@@ -10231,6 +10280,8 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 | City              | Text      | Cond.    | Required if Custom; min 3 chars                              | Delivery city                                   |
 | State             | Dropdown  | Cond.    | Indian states list                                           | Delivery state                                  |
 | Pincode           | Number    | No       | 6-digit numeric                                              | Optional                                        |
+| Country           | Dropdown  | Yes      | Country list (Default: India)                                | **Required** for delivery/execution              |
+| Google Map URL    | URL       | Yes      | Valid URL format (e.g., https://maps.google.com/...)          | **Required** for execution & dispatch            |
 | Priority Level    | Dropdown  | No       | Normal / Urgent / Critical                                   | Determines dispatch priority in Operations      |
 | Expected Delivery | Date      | No       | Must be ≥ SO Date                                            | Target date for service / product delivery      |
 
@@ -10328,7 +10379,7 @@ Displays the complete order breakdown — header details, source reference, and 
 │  Priority      : Normal                 Expected Date: 30 Jun 2026         │
 │                                                                              │
 │  ─── LINE ITEMS (SITE-WISE) ────────────────────────────────────────────────  │
-│  SITE 1: Head Office (SITE-00312)                                            │
+│  SITE 1: Head Office (SITE-00312) | Country: India | 🔗 Map URL              │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
 │  │ SERVICE 1: Cockroach Treatment                                           ││
 │  │ ┌────────┬──────────┬────────┬───────┬───────┬──────────┬──────────┐     ││
@@ -10347,7 +10398,7 @@ Displays the complete order breakdown — header details, source reference, and 
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
-│  SITE 2: Warehouse (SITE-00313) [▸ Click to View]                            │
+│  SITE 2: Warehouse (SITE-00313) | Country: India | 🔗 Map URL  [▸ Click to View]                            │
 │                                                                              │
 │  ━━━ FOR PRODUCTS (Product Sale) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━   │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
@@ -10396,6 +10447,8 @@ Displays the complete order breakdown — header details, source reference, and 
 | #               | Number   | Line item sequence number                               |
 | Description     | Display  | Service name or Product name                            |
 | Site            | Display  | Site for service delivery (service orders only)         |
+| Country         | Display  | Country of the site                                     |
+| Google Map URL  | Link     | Clickable Google Maps link for the site                 |
 | Qty             | Number   | Visits (service) or units (product)                     |
 | UOM             | Display  | Visits / Ltr / Nos / Tube / kg etc.                     |
 | Unit Price (₹)  | Currency | Per-unit price                                          |
@@ -10526,7 +10579,7 @@ Allows modification of a Sales Order before it is released to Operations or whil
 │                                                                              │
 │  SECTION 2: DYNAMIC SCOPE & LINE ITEMS                                       │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  SITE 1: Head Office (SITE-00312)                                       │ │
+│  │  SITE 1: Head Office (SITE-00312) | Country: India | 🔗 Map URL           │ │
 │  │  ┌───────────────────────────────────────────────────────────────────┐  │ │
 │  │  │ SERVICE 1: Cockroach Treatment                                    │  │ │
 │  │  │ ┌────────┬──────────┬────────┬───────┬───────┬─────────┬────────┐ │  │ │
@@ -10594,6 +10647,8 @@ Allows modification of a Sales Order before it is released to Operations or whil
 | Execution Notes         | ✅ Yes     | Free-text operational instructions                                 |
 | Priority Level          | ✅ Yes     | Can escalate or de-escalate                                        |
 | Expected Delivery Date  | ✅ Yes     | Can adjust target completion date                                  |
+| Country                 | ✅ Yes     | Dropdown; can change country for delivery/execution                |
+| Google Map URL          | ✅ Yes     | Editable URL; required for dispatch                                |
 
 ---
 
