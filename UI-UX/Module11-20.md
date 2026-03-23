@@ -8338,7 +8338,7 @@ A multi-section form to register a new customer — either by converting an exis
 │  │  State*                   : [▼ Select State ▼]                         │ │
 │  │  Pincode*                 : [________]                                 │ │
 │  │  Country                  : [▼ Select Country ▼] (Default: India)      │ │
-│  │  Google Map URL            : [________________________________]        │ │
+│  │  Google Map URL*            : [________________________________]        │ │
 │  │                                                                         │ │
 │  │  ── Finance / Accounts Point of Contact ──                             │ │
 │  │  Finance Contact Name*    : [________________________________]         │ │
@@ -8398,7 +8398,7 @@ A multi-section form to register a new customer — either by converting an exis
 | State                  | Dropdown | Yes      | Indian states list                    | Billing state                               |
 | Pincode                | Number   | Yes      | 6-digit numeric                       | India PIN code                              |
 | Country                | Dropdown | No       | Country list (Default: India)         | Optional                                    |
-| Google Map URL         | URL      | No       | Valid URL format                      | Optional; paste from Google Maps            |
+| Google Map URL         | URL      | Yes       | Valid URL format                      | Optional; paste from Google Maps            |
 | Finance Contact Name   | Text     | Yes      | Min 3 chars, Max 100 chars            | Accounts/Finance department point-of-contact|
 | Finance Contact Phone  | Number   | Yes      | 10-digit Indian mobile number         | Finance contact's phone                     |
 | Finance Contact Email  | Email    | No       | Valid email format                    | Finance contact's email (for invoices)      |
