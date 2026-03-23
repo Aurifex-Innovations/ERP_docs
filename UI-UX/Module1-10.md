@@ -1553,7 +1553,8 @@ The screen displays **plan summary statistics** along with the **plan list table
 │                                                              │
 │  ┌─────────────────────────────────────────────────────┐    │
 │  │  Same fields as Add Plan screen                      │    │
-│  │  Pre-filled with existing data                       │    │
+│  │  Pre-filled with existing data  
+│  │    Status : Active
 │  │                                                      │    │
 │  │  ⚠️ Changes apply only to new subscriptions         │    │
 │  │     (not already purchased ones)                     │    │
@@ -1575,6 +1576,7 @@ The screen displays **plan summary statistics** along with the **plan list table
 | Price Per Technician           | Currency     | Yes      | Pre-filled, editable |
 | **Extra Price Per Technician** | Currency     | Yes      | Pre-filled, editable |
 | Description                    | Textarea     | No       | Pre-filled, editable |
+| Status                         | Badge        |	Auto     |	Active / Inactive   |
 | Duration                       | Multi-select | Yes      | Pre-filled, editable |
 
 
