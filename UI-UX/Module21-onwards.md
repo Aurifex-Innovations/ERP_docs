@@ -97,45 +97,45 @@ The default landing screen for Module 21. Displays a **monthly calendar view** w
 
 ## Calendar Interaction
 
-| Action                   | Result                                                        |
-| ------------------------ | ------------------------------------------------------------- |
-| **Click on a date cell** | Navigates to **Daily Task View (21.2)** for that date        |
-| **Click on overdue alert** | Navigates to the overdue date's Daily Task View             |
-| **Hover on date cell**   | Shows tooltip: task count breakdown by status                |
+| Action                     | Result                                                |
+| -------------------------- | ----------------------------------------------------- |
+| **Click on a date cell**   | Navigates to **Daily Task View (21.2)** for that date |
+| **Click on overdue alert** | Navigates to the overdue date's Daily Task View       |
+| **Hover on date cell**     | Shows tooltip: task count breakdown by status         |
 
 ---
 
 ## Filters
 
-| Filter     | Type         | Options                                                       |
-| ---------- | ------------ | ------------------------------------------------------------- |
-| Branch     | Dropdown     | All Branches / Specific Branch (from Module 7)               |
-| Technician | Search       | Search by technician name (from Module 8)                    |
-| Task Type  | Multi-select | Normal (SO) / Re-Task (Ticket)                               |
-| Status     | Multi-select | Pending / In Progress / Completed / Overdue                  |
-| Search     | Text         | Free text search (Task ID / Customer / SO Number)             |
+| Filter     | Type         | Options                                           |
+| ---------- | ------------ | ------------------------------------------------- |
+| Branch     | Dropdown     | All Branches / Specific Branch (from Module 7)    |
+| Technician | Search       | Search by technician name (from Module 8)         |
+| Task Type  | Multi-select | Normal (SO) / Re-Task (Ticket)                    |
+| Status     | Multi-select | Pending / In Progress / Completed / Overdue       |
+| Search     | Text         | Free text search (Task ID / Customer / SO Number) |
 
 ---
 
 ## Monthly Summary Fields
 
-| Field           | Type    | Description                                          |
-| --------------- | ------- | ---------------------------------------------------- |
-| Total Tasks     | Number  | Count of all tasks in the displayed month            |
-| Completed       | Number  | Tasks with status = Completed                        |
-| In Progress     | Number  | Tasks currently being executed                       |
-| Pending         | Number  | Tasks not yet started                                |
-| Overdue         | Number  | Past-date tasks still not completed                  |
-| Re-Tasks        | Number  | Tasks created from customer complaints/tickets       |
-| Avg Tasks/Day   | Number  | Average daily task load for the month                |
+| Field         | Type   | Description                                    |
+| ------------- | ------ | ---------------------------------------------- |
+| Total Tasks   | Number | Count of all tasks in the displayed month      |
+| Completed     | Number | Tasks with status = Completed                  |
+| In Progress   | Number | Tasks currently being executed                 |
+| Pending       | Number | Tasks not yet started                          |
+| Overdue       | Number | Past-date tasks still not completed            |
+| Re-Tasks      | Number | Tasks created from customer complaints/tickets |
+| Avg Tasks/Day | Number | Average daily task load for the month          |
 
 ---
 
 ## Form Actions
 
-| Action                     | Description                                               |
-| -------------------------- | --------------------------------------------------------- |
-| **+ Add Task**             | Opens the **Add / Create Task Form** (Screen 21.3)        |
+| Action         | Description                                        |
+| -------------- | -------------------------------------------------- |
+| **+ Add Task** | Opens the **Add / Create Task Form** (Screen 21.3) |
 
 ---
 
@@ -196,39 +196,39 @@ When a user clicks on a specific date in the Calendar Dashboard, this screen ope
 
 ## Task Grid Fields
 
-| Field            | Type    | Description                                                        |
-| ---------------- | ------- | ------------------------------------------------------------------ |
-| Task ID          | Link    | System-generated unique ID (e.g., TASK-2026-0201); opens 21.4    |
-| Time Slot        | Display | Scheduled start – end time                                        |
-| Customer         | Display | Customer name from Module 18                                      |
-| Service          | Display | Service type (e.g., Cockroach Treatment)                          |
-| Site             | Display | Site name and location                                            |
-| Primary Tech     | Display | Main responsible technician                                       |
-| Support Techs    | Display | Additional assigned technicians (comma-separated)                 |
-| Type             | Badge   | Normal / Re-Task                                                  |
-| Status           | Badge   | Pending / In Progress / Completed / Overdue                       |
-| Actions          | Buttons | [View] [Edit] [Reschedule] [Complete]                             |
+| Field         | Type    | Description                                                   |
+| ------------- | ------- | ------------------------------------------------------------- |
+| Task ID       | Link    | System-generated unique ID (e.g., TASK-2026-0201); opens 21.4 |
+| Time Slot     | Display | Scheduled start – end time                                    |
+| Customer      | Display | Customer name from Module 18                                  |
+| Service       | Display | Service type (e.g., Cockroach Treatment)                      |
+| Site          | Display | Site name and location                                        |
+| Primary Tech  | Display | Main responsible technician                                   |
+| Support Techs | Display | Additional assigned technicians (comma-separated)             |
+| Type          | Badge   | Normal / Re-Task                                              |
+| Status        | Badge   | Pending / In Progress / Completed / Overdue                   |
+| Actions       | Buttons | [View] [Edit] [Reschedule] [Complete]                         |
 
 ---
 
 ## Actions (Table Row)
 
-| Action           | Condition                          | Description                                       |
-| ---------------- | ---------------------------------- | ------------------------------------------------- |
-| **View**         | All statuses                       | Opens Task Detail (Screen 21.4)                  |
-| **Edit**         | Status = Pending / In Progress     | Opens Edit Task form (Screen 21.5)               |
-| **Reschedule**   | Status = Pending                   | Opens Reschedule / Reassign form (Screen 21.7)   |
-| **Complete**     | Status = In Progress               | Opens Task Completion form (Screen 21.6)         |
+| Action         | Condition                      | Description                                    |
+| -------------- | ------------------------------ | ---------------------------------------------- |
+| **View**       | All statuses                   | Opens Task Detail (Screen 21.4)                |
+| **Edit**       | Status = Pending / In Progress | Opens Edit Task form (Screen 21.5)             |
+| **Reschedule** | Status = Pending               | Opens Reschedule / Reassign form (Screen 21.7) |
+| **Complete**   | Status = In Progress           | Opens Task Completion form (Screen 21.6)       |
 
 ---
 
 ## Conflict Detection
 
-| Rule                                 | Behaviour                                                   |
-| ------------------------------------ | ----------------------------------------------------------- |
-| Overlapping time slots              | System highlights conflict in red; blocks assignment         |
-| Same technician, same time          | Warning: "Ravi S. is already assigned to TASK-2026-0201"    |
-| Tech availability exhausted         | Greyed out in Technician Availability panel                  |
+| Rule                        | Behaviour                                                |
+| --------------------------- | -------------------------------------------------------- |
+| Overlapping time slots      | System highlights conflict in red; blocks assignment     |
+| Same technician, same time  | Warning: "Ravi S. is already assigned to TASK-2026-0201" |
+| Tech availability exhausted | Greyed out in Technician Availability panel              |
 
 ---
 
@@ -387,31 +387,31 @@ A multi-step form to create service tasks. Opens with **two tabs** — tasks sou
 
 ## Step 1: Source & Service Selection
 
-| Field               | Type      | Required | Description                                     |
-| ------------------- | --------- | -------- | ----------------------------------------------- |
-| Branch              | Dropdown  | Yes      | Select servicing branch                         |
-| Search SO           | Search    | Yes      | Search by SO Number or Customer Name            |
-| Service Grid        | Grid      | Yes      | Select line items (SO, Customer, Service, Site, Freq) |
+| Field        | Type     | Required | Description                                           |
+| ------------ | -------- | -------- | ----------------------------------------------------- |
+| Branch       | Dropdown | Yes      | Select servicing branch                               |
+| Search SO    | Search   | Yes      | Search by SO Number or Customer Name                  |
+| Service Grid | Grid     | Yes      | Select line items (SO, Customer, Service, Site, Freq) |
 
 ---
 
 ## Step 2: Schedule & Assignment Fields
 
-| Field               | Type      | Required | Validation                              | Description                                     |
-| ------------------- | --------- | -------- | --------------------------------------- | ----------------------------------------------- |
-| Category            | Display   | Auto     | From GMA/SO service definition          | Service Category (e.g. General Pest Control)    |
-| Sub-category        | Display   | Auto     | From GMA/SO service definition          | Service Sub-category (e.g. Cockroach Mgmt)      |
-| Area (SQFT)         | Display   | Auto     | From GMA/SO service definition          | Total area to be treated (read-only)            |
-| Scheduled Date      | Date      | Yes      | Cannot be past date                     | Task execution date                             |
-| Start Time          | Time      | Yes      | Must be before End Time                 | Task start time                                 |
-| End Time            | Time      | Yes      | Must be after Start Time                | Task end time                                   |
-| Duration            | Display   | Auto     | Auto-calculated                         | End Time – Start Time                           |
-| Role                | Dropdown  | Yes      | From Module 8 role definitions          | Filters the employee list (cascading)           |
-| Available Employees | Multi-sel | Yes      | At least one must be selected           | Cascading from Role; shows only available techs |
-| Primary Technician  | Dropdown  | Yes      | Must be one of selected employees       | Main responsible person for the task            |
-| Conflict Check      | Indicator | Auto     | System checks tech schedules            | Visual indicator (✅ No conflicts / ⚠ Conflict) |
-| Task Notes          | Textarea  | No       | Max 500 chars                           | Additional instructions (Step 3)                |
-| Priority            | Dropdown  | Yes      | Normal / Urgent / Critical              | Task priority level (Step 3)                    |
+| Field               | Type      | Required | Validation                        | Description                                     |
+| ------------------- | --------- | -------- | --------------------------------- | ----------------------------------------------- |
+| Category            | Display   | Auto     | From GMA/SO service definition    | Service Category (e.g. General Pest Control)    |
+| Sub-category        | Display   | Auto     | From GMA/SO service definition    | Service Sub-category (e.g. Cockroach Mgmt)      |
+| Area (SQFT)         | Display   | Auto     | From GMA/SO service definition    | Total area to be treated (read-only)            |
+| Scheduled Date      | Date      | Yes      | Cannot be past date               | Task execution date                             |
+| Start Time          | Time      | Yes      | Must be before End Time           | Task start time                                 |
+| End Time            | Time      | Yes      | Must be after Start Time          | Task end time                                   |
+| Duration            | Display   | Auto     | Auto-calculated                   | End Time – Start Time                           |
+| Role                | Dropdown  | Yes      | From Module 8 role definitions    | Filters the employee list (cascading)           |
+| Available Employees | Multi-sel | Yes      | At least one must be selected     | Cascading from Role; shows only available techs |
+| Primary Technician  | Dropdown  | Yes      | Must be one of selected employees | Main responsible person for the task            |
+| Conflict Check      | Indicator | Auto     | System checks tech schedules      | Visual indicator (✅ No conflicts / ⚠ Conflict) |
+| Task Notes          | Textarea  | No       | Max 500 chars                     | Additional instructions (Step 3)                |
+| Priority            | Dropdown  | Yes      | Normal / Urgent / Critical        | Task priority level (Step 3)                    |
 
 ---
 
@@ -419,57 +419,57 @@ A multi-step form to create service tasks. Opens with **two tabs** — tasks sou
 
 > **Data Source:** When a SO line item is selected (Tab 1) or a service is identified from a ticket (Tab 2), the system auto-fetches the chemical/product list from the **GMA Sheet (Module 17)** and **SO line items (Module 20)**. HSN, UOM, and Standard Qty are pre-filled; the manager can **edit Req Qty, add new rows, or remove rows**.
 
-| Field               | Type      | Required | Validation                             | Description                                     |
-| ------------------- | --------- | -------- | -------------------------------------- | ----------------------------------------------- |
-| Chemical / Product  | Display   | Auto     | From GMA/SO service definition         | Auto-fetched chemical or product name           |
-| HSN                 | Display   | Auto     | From Module 10 master data             | HSN/SAC code (read-only)                        |
-| UOM                 | Display   | Auto     | From Module 10 master data             | Unit of measurement (read-only)                 |
-| Std Qty             | Display   | Auto     | From GMA/SO                            | Standard quantity per service (read-only)       |
-| Req Qty             | Number    | Yes      | Must be ≥ 0; numeric only             | Editable — manager can adjust per task need    |
-| + Add Material      | Button    | —        | Chemical must exist in Module 10/11    | Manually add extra materials not in auto-list   |
-| 🗑 Remove Selected  | Button    | —        | Cannot remove if only 1 row remains    | Remove unnecessary materials from the list      |
+| Field              | Type    | Required | Validation                          | Description                                   |
+| ------------------ | ------- | -------- | ----------------------------------- | --------------------------------------------- |
+| Chemical / Product | Display | Auto     | From GMA/SO service definition      | Auto-fetched chemical or product name         |
+| HSN                | Display | Auto     | From Module 10 master data          | HSN/SAC code (read-only)                      |
+| UOM                | Display | Auto     | From Module 10 master data          | Unit of measurement (read-only)               |
+| Std Qty            | Display | Auto     | From GMA/SO                         | Standard quantity per service (read-only)     |
+| Req Qty            | Number  | Yes      | Must be ≥ 0; numeric only           | Editable — manager can adjust per task need   |
+| + Add Material     | Button  | —        | Chemical must exist in Module 10/11 | Manually add extra materials not in auto-list |
+| 🗑 Remove Selected | Button  | —        | Cannot remove if only 1 row remains | Remove unnecessary materials from the list    |
 
 ---
 
 ## Re-Task Specific Fields
 
-| Field               | Type      | Required | Description                                     |
-| ------------------- | --------- | -------- | ----------------------------------------------- |
-| Source Type         | Radio     | Yes      | Customer Ticket / Manual Entry                  |
-| Ticket ID           | Search    | Cond.    | Required if Source = Customer Ticket            |
-| Linked SO           | Display   | Auto     | Original SO reference (read-only)               |
-| Customer            | Display   | Auto     | Customer Name from linked source                |
-| Category            | Display   | Auto     | Service Category from source service            |
-| Sub-category        | Display   | Auto     | Service Sub-cat from source service             |
-| Original Service    | Display   | Auto     | The service name linked to the ticket           |
-| Site                | Display   | Auto     | Site name linked to the original service        |
-| Complaint Reason    | Display   | Auto     | The reason text from the customer ticket        |
+| Field            | Type    | Required | Description                              |
+| ---------------- | ------- | -------- | ---------------------------------------- |
+| Source Type      | Radio   | Yes      | Customer Ticket / Manual Entry           |
+| Ticket ID        | Search  | Cond.    | Required if Source = Customer Ticket     |
+| Linked SO        | Display | Auto     | Original SO reference (read-only)        |
+| Customer         | Display | Auto     | Customer Name from linked source         |
+| Category         | Display | Auto     | Service Category from source service     |
+| Sub-category     | Display | Auto     | Service Sub-cat from source service      |
+| Original Service | Display | Auto     | The service name linked to the ticket    |
+| Site             | Display | Auto     | Site name linked to the original service |
+| Complaint Reason | Display | Auto     | The reason text from the customer ticket |
 
 ---
 
 ## Validation Rules
 
-| Validation                       | Rule                                                                  |
-| -------------------------------- | --------------------------------------------------------------------- |
-| Time slot overlap                | System checks if selected technician has a conflicting task           |
-| Date validity                    | Cannot be in the past                                                 |
-| Start < End                      | Start time must be before end time                                    |
-| Role → Employee cascade          | Employee list filtered by role; only active employees shown          |
-| At least 1 technician            | Minimum one technician must be assigned                               |
-| Primary in selected list         | Primary must be one of the multi-selected employees                  |
-| SO line not yet tasked           | Warns if service line already has a task for the same date           |
-| Material Qty ≥ 0                 | Required qty cannot be negative                                      |
-| Material from master data        | Added materials must exist in Module 10/11                           |
+| Validation                | Rule                                                        |
+| ------------------------- | ----------------------------------------------------------- |
+| Time slot overlap         | System checks if selected technician has a conflicting task |
+| Date validity             | Cannot be in the past                                       |
+| Start < End               | Start time must be before end time                          |
+| Role → Employee cascade   | Employee list filtered by role; only active employees shown |
+| At least 1 technician     | Minimum one technician must be assigned                     |
+| Primary in selected list  | Primary must be one of the multi-selected employees         |
+| SO line not yet tasked    | Warns if service line already has a task for the same date  |
+| Material Qty ≥ 0          | Required qty cannot be negative                             |
+| Material from master data | Added materials must exist in Module 10/11                  |
 
 ---
 
 ## Form Actions
 
-| Button            | Description                                                                     |
-| ----------------- | ------------------------------------------------------------------------------- |
-| **Create Tasks**  | Validates, checks conflicts, creates task records, returns to Daily Task View   |
-| **Create Re-Task**| Same as above but marks task type as Re-Task                                    |
-| **Cancel**        | Discards form and returns to previous screen                                    |
+| Button             | Description                                                                   |
+| ------------------ | ----------------------------------------------------------------------------- |
+| **Create Tasks**   | Validates, checks conflicts, creates task records, returns to Daily Task View |
+| **Create Re-Task** | Same as above but marks task type as Re-Task                                  |
+| **Cancel**         | Discards form and returns to previous screen                                  |
 
 ---
 
@@ -557,79 +557,79 @@ Read-only screen showing the complete breakdown of a task — customer info, ser
 
 ## Source Information Fields (Read-Only)
 
-| Field           | Type     | Description                                              |
-| --------------- | -------- | -------------------------------------------------------- |
-| SO Number       | Link     | Sales Order reference; navigates to Module 20            |
-| Contract Ref    | Link     | Contract reference; navigates to Module 19               |
-| Customer        | Display  | Customer name (from Module 18)                           |
-| Customer ID     | Display  | Unique ID (e.g. CUST-00245)                              |
-| Site & Site ID  | Display  | Site name and ID (e.g. SITE-00312)                       |
-| Address         | Display  | Site address from source                                 |
-| Country         | Display  | Country of the site                                      |
-| Google Map URL  | Link     | Clickable Google Maps link                               |
-| Branch          | Display  | Servicing branch                                         |
-| Category        | Display  | Service Category (e.g. General Pest Control)             |
-| Subcategory     | Display  | Service Sub-Category (e.g. Cockroach Management)         |
+| Field          | Type    | Description                                      |
+| -------------- | ------- | ------------------------------------------------ |
+| SO Number      | Link    | Sales Order reference; navigates to Module 20    |
+| Contract Ref   | Link    | Contract reference; navigates to Module 19       |
+| Customer       | Display | Customer name (from Module 18)                   |
+| Customer ID    | Display | Unique ID (e.g. CUST-00245)                      |
+| Site & Site ID | Display | Site name and ID (e.g. SITE-00312)               |
+| Address        | Display | Site address from source                         |
+| Country        | Display | Country of the site                              |
+| Google Map URL | Link    | Clickable Google Maps link                       |
+| Branch         | Display | Servicing branch                                 |
+| Category       | Display | Service Category (e.g. General Pest Control)     |
+| Subcategory    | Display | Service Sub-Category (e.g. Cockroach Management) |
 
 ---
 
 ## Task Execution Fields (Read-Only)
 
-| Field           | Type     | Description                                              |
-| --------------- | -------- | -------------------------------------------------------- |
-| Task ID         | Display  | System-generated unique task ID                          |
-| Task Type       | Badge    | Normal / Re-Task                                         |
-| Service Mode    | Badge    | Contract Base / One-Time Service                         |
-| Pest(s) Treated | Display  | Target pests (e.g. Cockroaches, Termites)                |
-| Area (SQFT)     | Display  | Total area covered/treated                               |
-| Status          | Badge    | Pending / In Progress / Completed / Overdue              |
-| Priority        | Badge    | Normal / Urgent / Critical                               |
-| Scheduled Date  | Date     | Planned execution date                                   |
-| Time Slot       | Display  | Start – End time                                         |
-| Primary Tech    | Display  | Main technician + role                                   |
-| Support Techs   | Display  | Additional technicians                                   |
-| Started At      | DateTime | Actual start timestamp                                   |
-| Completed At    | DateTime | Actual completion timestamp                              |
-| Actual Duration | Display  | Real time taken                                          |
-| Completion Note | Text     | Technician's service notes                              |
-| Photos          | Image    | Before/after/treatment images                            |
-| Customer Rating | Display  | Star rating (1–5)                                       |
-| Customer Feedback| Text    | Written feedback                                         |
+| Field             | Type     | Description                                 |
+| ----------------- | -------- | ------------------------------------------- |
+| Task ID           | Display  | System-generated unique task ID             |
+| Task Type         | Badge    | Normal / Re-Task                            |
+| Service Mode      | Badge    | Contract Base / One-Time Service            |
+| Pest(s) Treated   | Display  | Target pests (e.g. Cockroaches, Termites)   |
+| Area (SQFT)       | Display  | Total area covered/treated                  |
+| Status            | Badge    | Pending / In Progress / Completed / Overdue |
+| Priority          | Badge    | Normal / Urgent / Critical                  |
+| Scheduled Date    | Date     | Planned execution date                      |
+| Time Slot         | Display  | Start – End time                            |
+| Primary Tech      | Display  | Main technician + role                      |
+| Support Techs     | Display  | Additional technicians                      |
+| Started At        | DateTime | Actual start timestamp                      |
+| Completed At      | DateTime | Actual completion timestamp                 |
+| Actual Duration   | Display  | Real time taken                             |
+| Completion Note   | Text     | Technician's service notes                  |
+| Photos            | Image    | Before/after/treatment images               |
+| Customer Rating   | Display  | Star rating (1–5)                           |
+| Customer Feedback | Text     | Written feedback                            |
 
 ---
 
 ## Form Actions
 
-| Button            | Condition                     | Description                                        |
-| ----------------- | ----------------------------- | -------------------------------------------------- |
-| **Reschedule**    | Status = Pending              | Opens Reschedule/Reassign form (21.7)             |
-| **Print / PDF**   | All statuses                  | Downloads/prints task detail as PDF                |
+| Button          | Condition        | Description                           |
+| --------------- | ---------------- | ------------------------------------- |
+| **Reschedule**  | Status = Pending | Opens Reschedule/Reassign form (21.7) |
+| **Print / PDF** | All statuses     | Downloads/prints task detail as PDF   |
 
 ---
 
 ## Materials / Chemicals Detail (View)
 
-| Field               | Type      | Description                                     |
-| ------------------- | --------- | ----------------------------------------------- |
-| Chemical Name       | Display   | Name of the material used                       |
-| HSN                 | Display   | HSN code for tax reporting                      |
-| UOM                 | Display   | Unit of measurement                             |
-| Required Qty        | Display   | Planned quantity from task creation             |
-| Used Qty            | Display   | Actual quantity logged by technician            |
+| Field         | Type    | Description                          |
+| ------------- | ------- | ------------------------------------ |
+| Chemical Name | Display | Name of the material used            |
+| HSN           | Display | HSN code for tax reporting           |
+| UOM           | Display | Unit of measurement                  |
+| Required Qty  | Display | Planned quantity from task creation  |
+| Used Qty      | Display | Actual quantity logged by technician |
 
 ---
 
 ## Execution & Audit Log
 
-| Field               | Type      | Description                                     |
-| ------------------- | --------- | ----------------------------------------------- |
-| Started At          | DateTime  | Actual task start time                          |
-| Completed At        | DateTime  | Actual task completion time                     |
-| Actual Duration     | Display   | Time elapsed (Completed At - Started At)        |
-| Photos              | Image     | Click to view Before/After/Area photos          |
-| Audit Timestamp     | DateTime  | When the change occurred                        |
-| Audit Action        | Display   | Created / Assigned / Started / Completed        |
-| Audit By            | Display   | Name of the user who performed the action      |
+| Field           | Type     | Description                               |
+| --------------- | -------- | ----------------------------------------- |
+| Started At      | DateTime | Actual task start time                    |
+| Completed At    | DateTime | Actual task completion time               |
+| Actual Duration | Display  | Time elapsed (Completed At - Started At)  |
+| Photos          | Image    | Click to view Before/After/Area photos    |
+| Audit Timestamp | DateTime | When the change occurred                  |
+| Audit Action    | Display  | Created / Assigned / Started / Completed  |
+| Audit By        | Display  | Name of the user who performed the action |
 
 ---
 
@@ -688,40 +688,40 @@ Editable form for modifying a task that has not yet been completed. Allows chang
 
 ## Source Details (Read-only)
 
-| Field           | Type     | Description                                              |
-| --------------- | -------- | -------------------------------------------------------- |
-| SO Number       | Display  | Original Sales Order reference                           |
-| Customer        | Display  | Customer name                                            |
-| Category        | Display  | Service Category                                         |
-| Subcategory     | Display  | Service Subcategory                                      |
-| Service         | Display  | Specific service name                                    |
-| Site            | Display  | Target site location                                     |
-| Task Type       | Badge    | Normal / Re-Task                                         |
-| Created By      | Display  | User who originally created the task                     |
+| Field       | Type    | Description                          |
+| ----------- | ------- | ------------------------------------ |
+| SO Number   | Display | Original Sales Order reference       |
+| Customer    | Display | Customer name                        |
+| Category    | Display | Service Category                     |
+| Subcategory | Display | Service Subcategory                  |
+| Service     | Display | Specific service name                |
+| Site        | Display | Target site location                 |
+| Task Type   | Badge   | Normal / Re-Task                     |
+| Created By  | Display | User who originally created the task |
 
 ---
 
 ## Editable Fields
 
-| Field               | Type      | Required | Validation                               | Description                          |
-| ------------------- | --------- | -------- | ---------------------------------------- | ------------------------------------ |
-| Scheduled Date      | Date      | Yes      | Cannot be past date                      | Task execution date                  |
-| Start Time          | Time      | Yes      | Must be before End Time                  | Task start time                      |
-| End Time            | Time      | Yes      | Must be after Start Time                 | Task end time                        |
-| Role                | Dropdown  | Yes      | From Module 8 role definitions           | Cascading filter for employee list   |
-| Available Employees | Multi-sel | Yes      | At least one selected                    | Cascading from Role; multi-select    |
-| Primary Technician  | Dropdown  | Yes      | Must be one of selected employees        | Main responsible person              |
-| Priority            | Dropdown  | Yes      | Normal / Urgent / Critical               | Task priority                        |
-| Task Notes          | Textarea  | No       | Max 500 chars                            | Additional instructions              |
+| Field               | Type      | Required | Validation                        | Description                        |
+| ------------------- | --------- | -------- | --------------------------------- | ---------------------------------- |
+| Scheduled Date      | Date      | Yes      | Cannot be past date               | Task execution date                |
+| Start Time          | Time      | Yes      | Must be before End Time           | Task start time                    |
+| End Time            | Time      | Yes      | Must be after Start Time          | Task end time                      |
+| Role                | Dropdown  | Yes      | From Module 8 role definitions    | Cascading filter for employee list |
+| Available Employees | Multi-sel | Yes      | At least one selected             | Cascading from Role; multi-select  |
+| Primary Technician  | Dropdown  | Yes      | Must be one of selected employees | Main responsible person            |
+| Priority            | Dropdown  | Yes      | Normal / Urgent / Critical        | Task priority                      |
+| Task Notes          | Textarea  | No       | Max 500 chars                     | Additional instructions            |
 
 ---
 
 ## Form Actions
 
-| Button            | Description                                                           |
-| ----------------- | --------------------------------------------------------------------- |
-| **Save Changes**  | Validates, checks conflicts, saves, logs change in audit trail       |
-| **Cancel**        | Discards changes and returns to Task Detail                          |
+| Button           | Description                                                    |
+| ---------------- | -------------------------------------------------------------- |
+| **Save Changes** | Validates, checks conflicts, saves, logs change in audit trail |
+| **Cancel**       | Discards changes and returns to Task Detail                    |
 
 ---
 
@@ -794,55 +794,54 @@ Post-service form submitted when a task is marked as completed. Captures actual 
 
 ## Source & Task Summary (Read-only)
 
-| Field           | Type     | Description                                              |
-| --------------- | -------- | -------------------------------------------------------- |
-| Customer / ID   | Display  | Customer Name and unique ID                              |
-| Site / ID       | Display  | Site Name and unique ID                                  |
-| Category        | Display  | Service Category                                         |
-| Subcategory     | Display  | Service Subcategory                                      |
-| Service         | Display  | Specific service name                                    |
-| Service Mode    | Badge    | Contract Base / One-Time                                 |
-| Scheduled Date  | Display  | Planned date                                             |
-| Time Slot       | Display  | Scheduled start – end                                    |
-| Assigned Techs  | Display  | Primary and Support technicians                          |
+| Field          | Type    | Description                     |
+| -------------- | ------- | ------------------------------- |
+| Customer / ID  | Display | Customer Name and unique ID     |
+| Site / ID      | Display | Site Name and unique ID         |
+| Category       | Display | Service Category                |
+| Subcategory    | Display | Service Subcategory             |
+| Service        | Display | Specific service name           |
+| Service Mode   | Badge   | Contract Base / One-Time        |
+| Scheduled Date | Display | Planned date                    |
+| Time Slot      | Display | Scheduled start – end           |
+| Assigned Techs | Display | Primary and Support technicians |
 
 ---
 
 ## Completion Fields
 
-| Field               | Type        | Required | Validation                                | Description                              |
-| ------------------- | ----------- | -------- | ----------------------------------------- | ---------------------------------------- |
-| Actual Start Time   | Time        | Yes      | Must be ≤ Actual End Time                | When the technician started              |
-| Actual End Time     | Time        | Yes      | Must be ≥ Actual Start Time              | When the technician finished             |
-| Actual Duration     | Display     | Auto     | Auto-calculated                           | End – Start                              |
-| Actually Used Qty   | Number      | Yes      | Must be ≥ 0; cannot exceed stock         | Quantity of each chemical actually used  |
-| Before Photo        | File Upload | Yes      | JPG, PNG (Max 5MB)                        | Mandatory photo before service           |
-| After Photo         | File Upload | Yes      | JPG, PNG (Max 5MB)                        | Mandatory photo after service            |
-| Treatment Photo     | File Upload | No       | JPG, PNG (Max 5MB)                        | Optional photo of treated area          |
-| Completion Notes    | Textarea    | Yes      | Min 10 chars, Max 1000 chars              | Technician's summary of work            |
-| Customer Rating     | Rating      | Yes      | 1 to 5 Stars                              | Customer's satisfaction level           |
-| Client Feedback     | Textarea    | No       | Max 500 chars                             | Written feedback from customer          |
-
+| Field             | Type        | Required | Validation                       | Description                             |
+| ----------------- | ----------- | -------- | -------------------------------- | --------------------------------------- |
+| Actual Start Time | Time        | Yes      | Must be ≤ Actual End Time        | When the technician started             |
+| Actual End Time   | Time        | Yes      | Must be ≥ Actual Start Time      | When the technician finished            |
+| Actual Duration   | Display     | Auto     | Auto-calculated                  | End – Start                             |
+| Actually Used Qty | Number      | Yes      | Must be ≥ 0; cannot exceed stock | Quantity of each chemical actually used |
+| Before Photo      | File Upload | Yes      | JPG, PNG (Max 5MB)               | Mandatory photo before service          |
+| After Photo       | File Upload | Yes      | JPG, PNG (Max 5MB)               | Mandatory photo after service           |
+| Treatment Photo   | File Upload | No       | JPG, PNG (Max 5MB)               | Optional photo of treated area          |
+| Completion Notes  | Textarea    | Yes      | Min 10 chars, Max 1000 chars     | Technician's summary of work            |
+| Customer Rating   | Rating      | Yes      | 1 to 5 Stars                     | Customer's satisfaction level           |
+| Client Feedback   | Textarea    | No       | Max 500 chars                    | Written feedback from customer          |
 
 ---
 
 ## Stock Deduction Logic
 
-| Event                     | System Behaviour                                                    |
-| ------------------------- | ------------------------------------------------------------------- |
-| Form submitted            | "Actually Used" quantities deducted from branch stock (Module 11)  |
-| Extra material added      | System checks availability before allowing submission              |
-| Qty exceeds stock         | Warning: "Insufficient stock for Alpha Cypermethrin at Mumbai"     |
-| Qty = 0                   | No deduction; material row kept for record purposes                |
+| Event                | System Behaviour                                                  |
+| -------------------- | ----------------------------------------------------------------- |
+| Form submitted       | "Actually Used" quantities deducted from branch stock (Module 11) |
+| Extra material added | System checks availability before allowing submission             |
+| Qty exceeds stock    | Warning: "Insufficient stock for Alpha Cypermethrin at Mumbai"    |
+| Qty = 0              | No deduction; material row kept for record purposes               |
 
 ---
 
 ## Form Actions
 
-| Button                  | Description                                                             |
-| ----------------------- | ----------------------------------------------------------------------- |
-| **Mark as Completed**   | Validates, deducts stock, updates task status, logs in audit trail     |
-| **Cancel**              | Returns to task detail without changes                                 |
+| Button                | Description                                                        |
+| --------------------- | ------------------------------------------------------------------ |
+| **Mark as Completed** | Validates, deducts stock, updates task status, logs in audit trail |
+| **Cancel**            | Returns to task detail without changes                             |
 
 ---
 
@@ -916,55 +915,55 @@ A dedicated form for rescheduling a task to a different date/time and/or reassig
 
 ## Current Assignment Info (Read-only)
 
-| Field           | Type     | Description                                              |
-| --------------- | -------- | -------------------------------------------------------- |
-| Customer        | Display  | Customer name                                            |
-| Service         | Display  | Service type                                             |
-| Category        | Display  | Service Category                                         |
-| Sub-category    | Display  | Service Sub-Category                                     |
-| Site            | Display  | Site location                                            |
-| Branch          | Display  | Responsible branch                                       |
-| Current Date    | Date     | Existing scheduled date                                  |
-| Time Slot       | Display  | Existing time slot                                       |
-| Primary Tech    | Display  | Existing primary assigned technician                      |
-| Support Techs   | Display  | Existing additional technicians assignments                |
+| Field         | Type    | Description                                 |
+| ------------- | ------- | ------------------------------------------- |
+| Customer      | Display | Customer name                               |
+| Service       | Display | Service type                                |
+| Category      | Display | Service Category                            |
+| Sub-category  | Display | Service Sub-Category                        |
+| Site          | Display | Site location                               |
+| Branch        | Display | Responsible branch                          |
+| Current Date  | Date    | Existing scheduled date                     |
+| Time Slot     | Display | Existing time slot                          |
+| Primary Tech  | Display | Existing primary assigned technician        |
+| Support Techs | Display | Existing additional technicians assignments |
 
 ---
 
 ## Reschedule Fields
 
-| Field               | Type      | Required | Validation                               | Description                               |
-| ------------------- | --------- | -------- | ---------------------------------------- | ----------------------------------------- |
-| New Date            | Date      | Yes      | Cannot be past date                      | Rescheduled execution date               |
-| New Start Time      | Time      | Yes      | Must be before New End Time              | New start time                            |
-| New End Time        | Time      | Yes      | Must be after New Start Time             | New end time                              |
-| Reassign Checkbox   | Checkbox  | No       | Default: unchecked                       | Toggle technician reassignment            |
-| Role                | Dropdown  | Cond.    | Required if Reassign checked             | Cascading filter for employee list        |
-| Available Employees | Multi-sel | Cond.    | Required if Reassign checked             | Filtered by Role + new date/time slot     |
-| Primary Technician  | Dropdown  | Cond.    | Must be one of selected employees        | New primary technician                    |
-| Reason for Change   | Dropdown  | Yes      | Must select from list                    | Categorised reason for change             |
-| Additional Notes    | Textarea  | No       | Max 500 chars                            | Free-text explanation                     |
+| Field               | Type      | Required | Validation                        | Description                           |
+| ------------------- | --------- | -------- | --------------------------------- | ------------------------------------- |
+| New Date            | Date      | Yes      | Cannot be past date               | Rescheduled execution date            |
+| New Start Time      | Time      | Yes      | Must be before New End Time       | New start time                        |
+| New End Time        | Time      | Yes      | Must be after New Start Time      | New end time                          |
+| Reassign Checkbox   | Checkbox  | No       | Default: unchecked                | Toggle technician reassignment        |
+| Role                | Dropdown  | Cond.    | Required if Reassign checked      | Cascading filter for employee list    |
+| Available Employees | Multi-sel | Cond.    | Required if Reassign checked      | Filtered by Role + new date/time slot |
+| Primary Technician  | Dropdown  | Cond.    | Must be one of selected employees | New primary technician                |
+| Reason for Change   | Dropdown  | Yes      | Must select from list             | Categorised reason for change         |
+| Additional Notes    | Textarea  | No       | Max 500 chars                     | Free-text explanation                 |
 
 ---
 
 ## Validation Rules
 
-| Validation                       | Rule                                                                  |
-| -------------------------------- | --------------------------------------------------------------------- |
-| Date validity                    | Cannot be in the past                                                 |
-| Time validity                    | New Start < New End                                                   |
-| Conflict check on new slot       | System validates no overlap for selected technicians on new date/time |
-| Reason required                  | Must select a reason category                                        |
-| Cascade on Reassign              | If Reassign checked, Role + Employees + Primary are all required     |
+| Validation                 | Rule                                                                  |
+| -------------------------- | --------------------------------------------------------------------- |
+| Date validity              | Cannot be in the past                                                 |
+| Time validity              | New Start < New End                                                   |
+| Conflict check on new slot | System validates no overlap for selected technicians on new date/time |
+| Reason required            | Must select a reason category                                         |
+| Cascade on Reassign        | If Reassign checked, Role + Employees + Primary are all required      |
 
 ---
 
 ## Form Actions
 
-| Button                    | Description                                                           |
-| ------------------------- | --------------------------------------------------------------------- |
-| **Confirm Reschedule**    | Validates, updates task, logs old vs new values in audit trail       |
-| **Cancel**                | Returns to task detail without changes                               |
+| Button                 | Description                                                    |
+| ---------------------- | -------------------------------------------------------------- |
+| **Confirm Reschedule** | Validates, updates task, logs old vs new values in audit trail |
+| **Cancel**             | Returns to task detail without changes                         |
 
 ---
 
@@ -972,13 +971,13 @@ A dedicated form for rescheduling a task to a different date/time and/or reassig
 
 # Access Control (RBAC)
 
-| Role                  | Permissions                                                                |
-| --------------------- | -------------------------------------------------------------------------- |
-| **Technician Manager**| Full access: Create, Edit, Reschedule, Assign, Complete, View all tasks   |
-| **Operations Head**   | Full access: Same as Technician Manager + reporting                       |
-| **Senior Technician** | View own tasks, Mark completion, Log materials                            |
-| **Technician**        | View own tasks, Mark completion, Log materials                            |
-| **Company Admin**     | View all tasks, Reports (read-only)                                       |
+| Role                   | Permissions                                                             |
+| ---------------------- | ----------------------------------------------------------------------- |
+| **Technician Manager** | Full access: Create, Edit, Reschedule, Assign, Complete, View all tasks |
+| **Operations Head**    | Full access: Same as Technician Manager + reporting                     |
+| **Senior Technician**  | View own tasks, Mark completion, Log materials                          |
+| **Technician**         | View own tasks, Mark completion, Log materials                          |
+| **Company Admin**      | View all tasks, Reports (read-only)                                     |
 
 > **Note:** No approval workflow is required. Tasks are created and managed directly by the Technician Manager without managerial sign-off.
 
@@ -988,26 +987,26 @@ A dedicated form for rescheduling a task to a different date/time and/or reassig
 
 # Business Rules
 
-| Rule                                  | Description                                                           |
-| ------------------------------------- | --------------------------------------------------------------------- |
-| Task ID Format                        | `TASK-YYYY-NNNN` (auto-generated, sequential per year)               |
-| No scheduling conflicts               | Same technician cannot be double-booked in overlapping time slots     |
-| Stock deduction on completion          | Materials used are deducted from branch stock in Module 11            |
-| Overdue auto-marking                  | Tasks past their scheduled date with status ≠ Completed → Overdue    |
-| Re-Task linkage                       | Re-Tasks maintain link to original SO and Customer Ticket            |
-| Audit trail                           | All create, edit, reschedule, and complete actions are logged         |
-| Role → Employee cascade               | Employee list is always filtered by selected Role (Module 8)         |
-| Primary must be in selected list      | Primary Technician must be one of the multi-selected employees       |
+| Rule                             | Description                                                       |
+| -------------------------------- | ----------------------------------------------------------------- |
+| Task ID Format                   | `TASK-YYYY-NNNN` (auto-generated, sequential per year)            |
+| No scheduling conflicts          | Same technician cannot be double-booked in overlapping time slots |
+| Stock deduction on completion    | Materials used are deducted from branch stock in Module 11        |
+| Overdue auto-marking             | Tasks past their scheduled date with status ≠ Completed → Overdue |
+| Re-Task linkage                  | Re-Tasks maintain link to original SO and Customer Ticket         |
+| Audit trail                      | All create, edit, reschedule, and complete actions are logged     |
+| Role → Employee cascade          | Employee list is always filtered by selected Role (Module 8)      |
+| Primary must be in selected list | Primary Technician must be one of the multi-selected employees    |
 
 ---
 
 > **Future Module:** Customer Support Ticket creation and management module (referenced in Re-Task flow, Tab 2 of Screen 21.3).
 
 ---
+
 ---
 
-================================================================================
-================================================================================
+# ================================================================================
 
 # 🎯 MODULE 22: LIVE LOCATION & TRAVEL TRACKING
 
@@ -1034,7 +1033,7 @@ The module contains the following screens:
 # 22.1 Fleet Tracking Dashboard
 
 **Description:**
-The primary command center for tracking the workforce. By default, it shows **Live Tracking** for Today. Managers can use the Date Calendar to select **any previous date** to view the historical map and routes of all active technicians on that specific day. 
+The primary command center for tracking the workforce. By default, it shows **Live Tracking** for Today. Managers can use the Date Calendar to select **any previous date** to view the historical map and routes of all active technicians on that specific day.
 
 ---
 
@@ -1073,25 +1072,25 @@ The primary command center for tracking the workforce. By default, it shows **Li
 
 ## Dashboard Filters & Feed Fields
 
-| Field              | Type      | Description                                                |
-| ------------------ | --------- | ---------------------------------------------------------- |
-| Date Selector      | Date      | Default: Today (Live). Select past dates for historical Map.|
-| Technician Name    | Link      | Clicks through to Technician Travel Log (22.2).            |
-| Current Location   | Display   | Nearest address or specific Site Name (from Module 21).    |
-| Feed Tabs          | Tab       | Toggle between Active techs map vs Offline techs list      |
-| Current Status     | Badge     | Travelling / On Site / Idle / Offline.                     |
-| Customer & Service | Display   | Linked Customer Name and specific Service Type.            |
-| Active Task        | Link      | Current Module 21 Task ID (if On Site or Travelling to it).|
+| Field              | Type    | Description                                                  |
+| ------------------ | ------- | ------------------------------------------------------------ |
+| Date Selector      | Date    | Default: Today (Live). Select past dates for historical Map. |
+| Technician Name    | Link    | Clicks through to Technician Travel Log (22.2).              |
+| Current Location   | Display | Nearest address or specific Site Name (from Module 21).      |
+| Feed Tabs          | Tab     | Toggle between Active techs map vs Offline techs list        |
+| Current Status     | Badge   | Travelling / On Site / Idle / Offline.                       |
+| Customer & Service | Display | Linked Customer Name and specific Service Type.              |
+| Active Task        | Link    | Current Module 21 Task ID (if On Site or Travelling to it).  |
 
 ---
 
 ## Map Interactions
 
-| Action                        | Result                                                              |
-| ----------------------------- | ------------------------------------------------------------------- |
-| **Select Past Date**          | Updates map to show all drawn routes for selected techs on that day.|
-| **Hover on Map Pin**          | Shows mini-tooltip with Name, Speed/Time, and Assigned Task.        |
-| **Click on Feed Item**        | Pans/Zooms map to the selected technician's specific location.      |
+| Action                 | Result                                                               |
+| ---------------------- | -------------------------------------------------------------------- |
+| **Select Past Date**   | Updates map to show all drawn routes for selected techs on that day. |
+| **Hover on Map Pin**   | Shows mini-tooltip with Name, Speed/Time, and Assigned Task.         |
+| **Click on Feed Item** | Pans/Zooms map to the selected technician's specific location.       |
 
 ---
 
@@ -1100,7 +1099,7 @@ The primary command center for tracking the workforce. By default, it shows **Li
 # 22.2 Technician Logistics & Travel Log
 
 **Description:**
-A unified, comprehensive profile of a specific technician's logistics data. Managers can select the view range (**Daily, Weekly, Monthly**) to see aggregated map routes, an activity timeline, and the full tabular travel log data (previously 22.3) in one organized place. 
+A unified, comprehensive profile of a specific technician's logistics data. Managers can select the view range (**Daily, Weekly, Monthly**) to see aggregated map routes, an activity timeline, and the full tabular travel log data (previously 22.3) in one organized place.
 
 ---
 
@@ -1143,27 +1142,27 @@ A unified, comprehensive profile of a specific technician's logistics data. Mana
 
 ## Profile Filter Fields
 
-| Field            | Type     | Description                                             |
-| ---------------- | -------- | ------------------------------------------------------- |
-| Period Selector  | Dropdown | Select Daily, Weekly, or Monthly view.                  |
-| Date Selector    | Control  | Selects the specific date, week, or month to analyze.   |
-| Summary Stats    | Display  | Aggregated Distance, Time, and Tasks for chosen period. |
+| Field           | Type     | Description                                             |
+| --------------- | -------- | ------------------------------------------------------- |
+| Period Selector | Dropdown | Select Daily, Weekly, or Monthly view.                  |
+| Date Selector   | Control  | Selects the specific date, week, or month to analyze.   |
+| Summary Stats   | Display  | Aggregated Distance, Time, and Tasks for chosen period. |
 
 ---
 
 ## Timeline & Tabular Log Fields
 
-| Field             | Type    | Description                                             |
-| ----------------- | ------- | ------------------------------------------------------- |
-| Date              | Display | Tracking Date.                                          |
-| Departure Point   | Display | Origin site or generic location (e.g., Branch).         |
-| Destination       | Display | Destination Site Name or Geo-location address.          |
-| Customer          | Display | Associated Customer Name and specific Service Type.     |
-| Task ID           | Modal   | Click Task to view details (Status, Category, Techs).   |
-| Distance          | Display | GPS calculated travel distance for that segment.        |
-| Start & End Time  | Display | Timestamps marking the departure and arrival bounds.    |
-| Duration          | Display | Total time computed between Start and End.              |
-| Status            | Badge   | On-Site, Travelling, Idle.                              |
+| Field            | Type    | Description                                           |
+| ---------------- | ------- | ----------------------------------------------------- |
+| Date             | Display | Tracking Date.                                        |
+| Departure Point  | Display | Origin site or generic location (e.g., Branch).       |
+| Destination      | Display | Destination Site Name or Geo-location address.        |
+| Customer         | Display | Associated Customer Name and specific Service Type.   |
+| Task ID          | Modal   | Click Task to view details (Status, Category, Techs). |
+| Distance         | Display | GPS calculated travel distance for that segment.      |
+| Start & End Time | Display | Timestamps marking the departure and arrival bounds.  |
+| Duration         | Display | Total time computed between Start and End.            |
+| Status           | Badge   | On-Site, Travelling, Idle.                            |
 
 ---
 
@@ -1171,13 +1170,13 @@ A unified, comprehensive profile of a specific technician's logistics data. Mana
 
 # Business Rules & Logic (Module 22)
 
-| Rule                          | Description                                                                 |
-| ----------------------------- | --------------------------------------------------------------------------- |
-| **GPS Polling Rate**          | Technician mobile app sends GPS coordinates every X minutes/meters.         |
-| **Task Auto-Arrival**         | Proximity to Module 21 Site Lat/Long automatically logs an 'Arrived' event. |
-| **Idle Alert**                | If GPS is stationary for > Y minutes not near a task site, flag as 'Idle'.  |
-| **Background Tracking**       | GPS tracking must only be active between Clock-in and Clock-out events.     |
-| **Distance Calculation**      | System calculates route segments and aggregates them for Daily/Weekly stats.|
+| Rule                     | Description                                                                  |
+| ------------------------ | ---------------------------------------------------------------------------- |
+| **GPS Polling Rate**     | Technician mobile app sends GPS coordinates every X minutes/meters.          |
+| **Task Auto-Arrival**    | Proximity to Module 21 Site Lat/Long automatically logs an 'Arrived' event.  |
+| **Idle Alert**           | If GPS is stationary for > Y minutes not near a task site, flag as 'Idle'.   |
+| **Background Tracking**  | GPS tracking must only be active between Clock-in and Clock-out events.      |
+| **Distance Calculation** | System calculates route segments and aggregates them for Daily/Weekly stats. |
 
 ---
 
@@ -1248,14 +1247,14 @@ The primary command center for the Support Team. Provides a high-visibility data
 
 ## Filter Fields
 
-| Field            | Type       | Description                                                 |
-| ---------------- | ---------- | ----------------------------------------------------------- |
-| Branch Name      | Dropdown   | Filter by servicing branch: `[All, Head Office, North, South, East, West]`. |
-| Date Range       | Date Range | Filter by Ticket Creation Date.                             |
+| Field            | Type       | Description                                                                    |
+| ---------------- | ---------- | ------------------------------------------------------------------------------ |
+| Branch Name      | Dropdown   | Filter by servicing branch: `[All, Head Office, North, South, East, West]`.    |
+| Date Range       | Date Range | Filter by Ticket Creation Date.                                                |
 | Status           | Dropdown   | Standard lifecycle: `[Open, Assigned, In Progress, Paused, Resolved, Closed]`. |
-| Priority         | Dropdown   | Ticket Priority: `[All, Normal, High, Urgent, Critical]`.   |
-| SLA Status       | Dropdown   | SLA Health: `[Safe (🟢), At Risk (🟡), Breached (🔴)]`.      |
-| Escalation Level | Dropdown   | Triggered SLA: `[None, L1 (Soft), L2 (Manager), L3 (Critical)]`. |
+| Priority         | Dropdown   | Ticket Priority: `[All, Normal, High, Urgent, Critical]`.                      |
+| SLA Status       | Dropdown   | SLA Health: `[Safe (🟢), At Risk (🟡), Breached (🔴)]`.                        |
+| Escalation Level | Dropdown   | Triggered SLA: `[None, L1 (Soft), L2 (Manager), L3 (Critical)]`.               |
 
 ---
 
@@ -1263,25 +1262,24 @@ The primary command center for the Support Team. Provides a high-visibility data
 
 | Field         | Type   | Description                                                                 |
 | ------------- | ------ | --------------------------------------------------------------------------- |
-| Ticket ID     | Search | Direct lookup by `TKT-YYYY-NNNN`. Navigates straight to 23.3 Detail View.  |
+| Ticket ID     | Search | Direct lookup by `TKT-YYYY-NNNN`. Navigates straight to 23.3 Detail View.   |
 | Customer Name | Search | Global free-text search against Customer Master (Module 18).                |
 | SO Number     | Search | Search by linked Sales Order `SO-YYYY-NNNN` to find all associated tickets. |
-
 
 ---
 
 ## Table Columns
 
-| Field          | Type      | Description                                                                 |
-| -------------- | --------- | --------------------------------------------------------------------------- |
-| Ticket ID      | Link      | `TKT-YYYY-NNNN`. Clicks to 23.3 Detail View.                                |
-| Customer Name      | Display   | Name of the Customer.                                                       |
-|Branch Name | Display | Name of Branch     | 
-| SO No          | Display   | Associated Sales Order (if applicable).                                     |
-| Priority       | Display   | Ticket Priority.                                                            |
-| Status         | Display   | Current lifecycle state.                                                    |
-| SLA Stage      | Badge     | Color-coded visual of SLA health (Safe/Risk/Breach).                        |
-| SLA Timer      | Display   | Live countdown (e.g. `22h 10m` remaining, `-02h 15m` overdue).              |
+| Field         | Type    | Description                                                    |
+| ------------- | ------- | -------------------------------------------------------------- |
+| Ticket ID     | Link    | `TKT-YYYY-NNNN`. Clicks to 23.3 Detail View.                   |
+| Customer Name | Display | Name of the Customer.                                          |
+| Branch Name   | Display | Name of Branch                                                 |
+| SO No         | Display | Associated Sales Order (if applicable).                        |
+| Priority      | Display | Ticket Priority.                                               |
+| Status        | Display | Current lifecycle state.                                       |
+| SLA Stage     | Badge   | Color-coded visual of SLA health (Safe/Risk/Breach).           |
+| SLA Timer     | Display | Live countdown (e.g. `22h 10m` remaining, `-02h 15m` overdue). |
 
 ---
 
@@ -1330,19 +1328,19 @@ The data-entry screen for new complaints or service requests. Auto-calculates SL
 
 ## Field Table
 
-| Field          | Type     | Required | Validation                          | Description                                         |
-| -------------- | -------- | -------- | ----------------------------------- | --------------------------------------------------- |
-| Customer       | Search   | Yes      | Must select from Module 18          | Linked Customer Profile.                            |
-| Related SO     | Dropdown | No       | Filtered by selected Customer       | Links ticket to context: `[List of user's active SO-YYYY-NNNN]`. |
-| Reported By    | Text     | Yes      | —                                   | Name of the person reporting the issue.             |
-| Phone Number   | Text     | Yes      | Valid Phone format                  | Contact number for callbacks.                       |
-| Ticket Type    | Dropdown | Yes      | Values from Admin config            | Issue category: `[Complaint - Re-emergence, Complaint - Staff, Query - Billing, Query - Service]`. |
-| Priority       | Dropdown | Yes      | Auto-sets based on Type, editable   | Drives the SLA timer: `[Normal, High, Urgent, Critical]`. |
-| Subject        | Text     | Yes      | Max 100 chars                       | Short summary of the issue.                         |
-| Description    | Textarea | Yes      | Max 1000 chars                      | Full details of the complaint.                      |
-| Expected Date  | Date     | Yes      | Cannot be past date                 | Manager manually asserts proper resolution date.    |
-| Expected Time  | Time     | Yes      | —                                   | Manager manually asserts proper resolution time.    |
-| Attachments    | File     | No       | Max 5 files, 5MB each               | Image/PDF evidence of the issue.                    |
+| Field         | Type     | Required | Validation                        | Description                                                                                        |
+| ------------- | -------- | -------- | --------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Customer      | Search   | Yes      | Must select from Module 18        | Linked Customer Profile.                                                                           |
+| Related SO    | Dropdown | No       | Filtered by selected Customer     | Links ticket to context: `[List of user's active SO-YYYY-NNNN]`.                                   |
+| Reported By   | Text     | Yes      | —                                 | Name of the person reporting the issue.                                                            |
+| Phone Number  | Text     | Yes      | Valid Phone format                | Contact number for callbacks.                                                                      |
+| Ticket Type   | Dropdown | Yes      | Values from Admin config          | Issue category: `[Complaint - Re-emergence, Complaint - Staff, Query - Billing, Query - Service]`. |
+| Priority      | Dropdown | Yes      | Auto-sets based on Type, editable | Drives the SLA timer: `[Normal, High, Urgent, Critical]`.                                          |
+| Subject       | Text     | Yes      | Max 100 chars                     | Short summary of the issue.                                                                        |
+| Description   | Textarea | Yes      | Max 1000 chars                    | Full details of the complaint.                                                                     |
+| Expected Date | Date     | Yes      | Cannot be past date               | Manager manually asserts proper resolution date.                                                   |
+| Expected Time | Time     | Yes      | —                                 | Manager manually asserts proper resolution time.                                                   |
+| Attachments   | File     | No       | Max 5 files, 5MB each             | Image/PDF evidence of the issue.                                                                   |
 
 ---
 
@@ -1390,11 +1388,11 @@ The core workspace for Support Agents. It presents the entire context of the tic
 
 ## Screen Components
 
-| Component         | Description                                                                 |
-| ----------------- | --------------------------------------------------------------------------- |
-| **SLA & Status**  | Live updates of the dual-timers. Flags if the SLA has escalated to L1/L2/L3.|
-| **Actions Menu**  | Direct triggers for popups covering Assignment, Task mapping, and Resolution.|
-| **Activity Line** | Immutable audit log of all status changes, notes, calls, and task creations.|
+| Component         | Description                                                                   |
+| ----------------- | ----------------------------------------------------------------------------- |
+| **SLA & Status**  | Live updates of the dual-timers. Flags if the SLA has escalated to L1/L2/L3.  |
+| **Actions Menu**  | Direct triggers for popups covering Assignment, Task mapping, and Resolution. |
+| **Activity Line** | Immutable audit log of all status changes, notes, calls, and task creations.  |
 
 ---
 
@@ -1423,11 +1421,11 @@ Popup to change the primary Support Agent handling the communication. Note: This
 └─────────────────────────────────────────────────────────┘
 ```
 
-| Field              | Type     | Required | Description                                  |
-| ------------------ | -------- | -------- | -------------------------------------------- |
+| Field              | Type     | Required | Description                                                                                  |
+| ------------------ | -------- | -------- | -------------------------------------------------------------------------------------------- |
 | Assign To (Role)   | Dropdown | Yes      | Destination Role: `[Support Agent, Senior Technician, Operations Manager, Quality Control]`. |
-| Assign To (Person) | Dropdown | Yes      | Cascading list based on Role: `[List of active Employee Names]`. |
-| Assignment Note    | Textarea | No       | Optional handover notes                      |
+| Assign To (Person) | Dropdown | Yes      | Cascading list based on Role: `[List of active Employee Names]`.                             |
+| Assignment Note    | Textarea | No       | Optional handover notes                                                                      |
 
 ---
 
@@ -1439,8 +1437,9 @@ Popup to change the primary Support Agent handling the communication. Note: This
 The crucial bridge between Customer Support and Operations. Converts the complaint into an actionable Re-Task in Module 21.
 
 **SLA Impact:**
+
 - Converting to a task **does not stop** the Ticket's Resolution SLA.
-- The SLA only stops when the Technician *completes* the Re-Task in the field AND the Support Agent *resolves* the ticket.
+- The SLA only stops when the Technician _completes_ the Re-Task in the field AND the Support Agent _resolves_ the ticket.
 
 ---
 
@@ -1461,7 +1460,7 @@ The following fields are **auto-filled** from the active ticket context:
 | Priority            | Inherited from Ticket Priority                   |
 | Materials/Chemicals | Auto-fetched from original SO service (editable) |
 
-> 📌 *For the complete Re-Task form layout, field validations, and technician assignment logic — **see Module 21 → Screen 21.3 → Tab 2**.*
+> 📌 _For the complete Re-Task form layout, field validations, and technician assignment logic — **see Module 21 → Screen 21.3 → Tab 2**._
 
 ---
 
@@ -1470,7 +1469,7 @@ The following fields are **auto-filled** from the active ticket context:
 # 23.6 Ticket Resolution (Modal)
 
 **Description:**
-Fired by the Support Agent once the customer is satisfied and/or the associated field tasks are completed. 
+Fired by the Support Agent once the customer is satisfied and/or the associated field tasks are completed.
 
 ## Screen Layout
 
@@ -1493,15 +1492,16 @@ Fired by the Support Agent once the customer is satisfied and/or the associated 
 ```
 
 ## Screen Logic & Validation
+
 1. **Validation:** System checks Module 21. If any Linked Tasks (`TASK-2026-NNNN`) are NOT marked "Completed", the system **blocks** resolution:
-   > ❌ *Error: Cannot resolve ticket. Linked Task (TASK-2026-0205) is currently 'In Progress'.*
+   > ❌ _Error: Cannot resolve ticket. Linked Task (TASK-2026-0205) is currently 'In Progress'._
 2. **Success:** If no pending tasks, stops the Resolution SLA Timer.
 
-| Field             | Type     | Required | Description                                  |
-| ----------------- | -------- | -------- | -------------------------------------------- |
-| Resolution Code   | Dropdown | Yes      | Reason for closure: `[Service Resolved Success, False Alarm / Not Found, Duplicate Ticket, Unresolved (Closed)]`. |
-| Resolution Notes  | Textarea | Yes      | Detailed explanation of how issue was solved |
-| Attachments       | File     | No       | Sign-offs, final photos, emails              |
+| Field            | Type     | Required | Description                                                                                                       |
+| ---------------- | -------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
+| Resolution Code  | Dropdown | Yes      | Reason for closure: `[Service Resolved Success, False Alarm / Not Found, Duplicate Ticket, Unresolved (Closed)]`. |
+| Resolution Notes | Textarea | Yes      | Detailed explanation of how issue was solved                                                                      |
+| Attachments      | File     | No       | Sign-offs, final photos, emails                                                                                   |
 
 ---
 
@@ -1512,37 +1512,42 @@ Fired by the Support Agent once the customer is satisfied and/or the associated 
 # ⚙️ Dual SLA & Escalation Engine Logic
 
 ### 1. Dual SLA Architecture
+
 The system independently tracks two timers for every ticket:
-*   **Response SLA Timer:** Starts immediately when `Created`. Stops completely the moment an agent triggers `[Add Note / Reply]` or `[Assign]`.
-*   **Resolution SLA Timer:** Starts immediately when `Created`. Does not stop until the ticket is marked `[Resolved]`.
+
+- **Response SLA Timer:** Starts immediately when `Created`. Stops completely the moment an agent triggers `[Add Note / Reply]` or `[Assign]`.
+- **Resolution SLA Timer:** Starts immediately when `Created`. Does not stop until the ticket is marked `[Resolved]`.
 
 ### 2. SLA Pausing
-*   If a ticket requires input from the Customer (e.g., waiting on them to approve a re-visit time), the agent can click `[Pause Ticket]`.
-*   Both SLA timers **pause**.
-*   When the customer replies, or the agent clicks `[Resume]`, timers start from where they left off.
+
+- If a ticket requires input from the Customer (e.g., waiting on them to approve a re-visit time), the agent can click `[Pause Ticket]`.
+- Both SLA timers **pause**.
+- When the customer replies, or the agent clicks `[Resume]`, timers start from where they left off.
 
 ### 3. Automated 3-Level Escalation Engine
+
 A cron/background service constantly checks active timers against the SLA Configuration Matrix (23.7).
 
-*   **Trigger L1 (Soft):** Response SLA breaches (Fixed at 2 hours post-creation with no agent action).
-    *   *Action:* Ticket changes color to 🟡. Email sent to assigning manager.
-*   **Trigger L2 (Manager Alert):** The ticket reaches **80% of the duration** between `Created Date` and the manually entered `Expected Date/Time`.
-    *   *Action:* Email alert sent to Operations Head. Flagged in Dashboards.
-*   **Trigger L3 (Critical Breach):** Current time exceeds the manually entered `Expected Date/Time`.
-    *   *Action:* Ticket status changed to "SLA Breached" 🔴. Alert sent to Company Admin / CEO roles.
+- **Trigger L1 (Soft):** Response SLA breaches (Fixed at 2 hours post-creation with no agent action).
+  - _Action:_ Ticket changes color to 🟡. Email sent to assigning manager.
+- **Trigger L2 (Manager Alert):** The ticket reaches **80% of the duration** between `Created Date` and the manually entered `Expected Date/Time`.
+  - _Action:_ Email alert sent to Operations Head. Flagged in Dashboards.
+- **Trigger L3 (Critical Breach):** Current time exceeds the manually entered `Expected Date/Time`.
+  - _Action:_ Ticket status changed to "SLA Breached" 🔴. Alert sent to Company Admin / CEO roles.
 
 ### 4. SLA Status Conditional Logic
+
 The SLA Status indicator (🟢, 🟡, 🔴) found throughout the ticketing dashboards automatically updates its visual state by evaluating the `Current Time` against the `Expected Date/Time` entered in **Screen 23.2**.
 
-*   **Safe (🟢)**: 
-    *   **Condition:** `Current Time` < `80% of Completion Window`.
-    *   **Definition:** The ticket is comfortably within the resolution timeline set by the manager.
-*   **At Risk (🟡)**: 
-    *   **Condition:** `Current Time` >= `80% of Completion Window` AND `Current Time` < `Expected Date/Time`.
-    *   **Definition:** The ticket has entered the final 20% of its allotted time. It needs immediate attention.
-*   **Breached (🔴)**: 
-    *   **Condition:** `Current Time` >= `Expected Date/Time`.
-    *   **Definition:** Overdue. The ticket failed to be resolved by the manually asserted deadline.
+- **Safe (🟢)**:
+  - **Condition:** `Current Time` < `80% of Completion Window`.
+  - **Definition:** The ticket is comfortably within the resolution timeline set by the manager.
+- **At Risk (🟡)**:
+  - **Condition:** `Current Time` >= `80% of Completion Window` AND `Current Time` < `Expected Date/Time`.
+  - **Definition:** The ticket has entered the final 20% of its allotted time. It needs immediate attention.
+- **Breached (🔴)**:
+  - **Condition:** `Current Time` >= `Expected Date/Time`.
+  - **Definition:** Overdue. The ticket failed to be resolved by the manually asserted deadline.
 
 ---
 
@@ -1552,14 +1557,969 @@ The SLA Status indicator (🟢, 🟡, 🔴) found throughout the ticketing dashb
 
 ## Ticket Lifecycle Matrix
 
-| Status      | Description                                     | Next Allowed Statuses         | SLA Timer Running? |
-| ----------- | ----------------------------------------------- | ----------------------------- | ------------------ |
-| Open        | Fresh ticket, unassigned.                       | Assigned, In Progress         | YES                |
-| Assigned    | Support Agent tagged, no action taken yet.      | In Progress                   | YES                |
-| In Progress | Being worked on, or Module 21 task dispatched.  | Paused, Resolved              | YES                |
-| Paused      | Waiting indefinitely on Customer.               | In Progress                   | NO (Paused)        |
-| Resolved    | Issue fixed, final confirmation pending.        | Closed, Reopened              | NO (Stopped)       |
-| Closed      | Final end-state. Locked.                        | Reopened (rare case)          | NO (Stopped)       |
+| Status      | Description                                    | Next Allowed Statuses | SLA Timer Running? |
+| ----------- | ---------------------------------------------- | --------------------- | ------------------ |
+| Open        | Fresh ticket, unassigned.                      | Assigned, In Progress | YES                |
+| Assigned    | Support Agent tagged, no action taken yet.     | In Progress           | YES                |
+| In Progress | Being worked on, or Module 21 task dispatched. | Paused, Resolved      | YES                |
+| Paused      | Waiting indefinitely on Customer.              | In Progress           | NO (Paused)        |
+| Resolved    | Issue fixed, final confirmation pending.       | Closed, Reopened      | NO (Stopped)       |
+| Closed      | Final end-state. Locked.                       | Reopened (rare case)  | NO (Stopped)       |
+
+---
+
+================================================================================
+
+# 🎯 MODULE 24: PETTY CASH MANAGEMENT
+
+## Overview
+
+Petty Cash Management handles day-to-day operational expenses incurred by technicians and employees during service execution. In a pest control business, technicians often spend money on-site for purchasing materials, travel, or minor service-related costs. This module ensures such expenses are properly recorded, submitted for approval, verified with supporting documents, and reimbursed in a controlled and transparent manner.
+
+**Module Connections:**
+
+- **Depends on:** Module 8 (Employee — user details, bank/UPI info, roles), Module 7 (Branch — branch association)
+- **Used by:** Finance / Accounting (reimbursement tracking), Reporting modules (expense analytics)
+
+---
+
+The module contains the following screens:
+
+- 24.1 Tab 1: All Expenses (Admin / Finance Dashboard)
+- 24.2 Tab 2: My Requests (Employee — submit & track own claims)
+- 24.2.1 Add Petty Cash Request
+- 24.2.2 View My Request (Read-only detail)
+- 24.3 Tab 3: Received Requests (Manager / Finance — review & approve)
+- 24.3.1 Request Review & Approval Form
+- 24.3.2 Payment Processing Form
+
+---
+
+================================================================================
+
+# 24.1 Tab 1: All Expenses
+
+**Description:**
+Master dashboard providing a company-wide view of all petty cash requests across branches. Accessible to **Admin, Finance Team, and Operations Head**. Provides summary cards for quick insight and a filterable datatable for detailed tracking.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        PETTY CASH MANAGEMENT                                 │
+│                                                                              │
+│  [Tab 1: All Expenses ●]  [Tab 2: My Requests]  [Tab 3: Received Requests] │
+│                                                                              │
+│                                                                              │
+│  ┌─ FILTERS ──────────────────────────────────────────────────────────────┐  │
+│  │ Branch   : [▼ All Branches ▼]     Status   : [▼ All ▼]                │  │
+│  │ Category : [▼ All Categories ▼]   Employee : [🔍 Search ▼]            │  │
+│  │ Date     : [📅 From] — [📅 To]    Amount   : [₹ Min] — [₹ Max]       │  │
+│  │                                                        [Reset Filters] │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  Search: [🔍 Request ID / Employee Name / Description_______________]       │
+│                                                                              │
+│  ALL EXPENSES TABLE                                                          │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Request ID   │Employee    │Branch │Category      │Amount(₹)│Date Range         │  ││
+│  │─────────────┼────────────┼───────┼──────────────┼─────────┼───────────────────│  ││
+│  │PC-2026-0045 │Ravi S.     │Mumbai │Local Convey. │ 1,250   │23–23 Mar 2026     │  ││
+│  │PC-2026-0044 │Anjali M.   │Pune   │Chemical      │ 3,800   │20–22 Mar 2026     │  ││
+│  │PC-2026-0043 │Suresh K.   │Mumbai │Vendor Payment│ 5,500   │22–22 Mar 2026     │  ││
+│  │PC-2026-0042 │Amit T.     │Delhi  │Stationery    │   850   │19–21 Mar 2026     │  ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Status        │Prior Appr. │Submitted Date     │Actions                  ││
+│  │──────────────┼────────────┼───────────────────┼─────────────────────────││
+│  │⏳ Pending     │No          │23 Mar 2026 10:30  │[View]                   ││
+│  │✅ Approved    │Yes         │22 Mar 2026 14:15  │[View]                   ││
+│  │💰 Paid        │No          │22 Mar 2026 09:00  │[View]                   ││
+│  │❌ Rejected    │No          │21 Mar 2026 16:45  │[View]                   ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  Shows 1 to 4 of 142 entries.                      [ < Previous | Next > ]  │
+│                                                                              │
+│  [📥 Export to Excel]                                                        │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Filter Fields
+
+| Filter     | Type         | Options                                                                                                                                                                                                                                                                                                              |
+| ---------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Branch     | Dropdown     | All Branches / Specific Branch (from Module 7)                                                                                                                                                                                                                                                                       |
+| Status     | Dropdown     | All / Draft / Pending / Approved / Rejected / Returned / Paid                                                                                                                                                                                                                                                        |
+| Category   | Dropdown     | All / Asset Purchase / Chemical / Fuel / Internet & Telephone / Local Conveyance / Office Expenses / Salary Advance / Staff Welfare / Stationery / Statutory & License / Travel Expenses / Vehicle Maintenance / Vendor Payment / Rent / Office Deposit / Promoter Incentive / Overtime / Transportation / Petrocard |
+| Date Range | Date Picker  | Custom From – To date range                                                                                                                                                                                                                                                                                          |
+| Amount     | Number Range | Min – Max amount filter                                                                                                                                                                                                                                                                                              |
+
+---
+
+## Search
+
+| Field         | Type   | Description                                         |
+| ------------- | ------ | --------------------------------------------------- |
+| Request ID    | Search | Direct lookup by `PC-YYYY-NNNN`                     |
+| Employee Name | Search | Free-text search against Employee Master (Module 8) |
+
+---
+
+## Table Columns
+
+| Field          | Type     | Description                                             |
+| -------------- | -------- | ------------------------------------------------------- |
+| Request ID     | Link     | `PC-YYYY-NNNN`. Clicks to view request detail           |
+| Employee Name  | Display  | Name of employee who submitted the claim                |
+| Branch Name    | Display  | Employee's branch (from Module 7)                       |
+| Category       | Badge    | From 19 category types (see Business Rules)             |
+| Amount (₹)     | Currency | Total claimed amount                                    |
+| Date Range     | Date     | Expense date range (From – To)                          |
+| Status         | Badge    | Draft / Pending / Approved / Rejected / Returned / Paid |
+| Prior Approval | Badge    | Yes / No — whether expense was pre-approved             |
+| Submitted Date | DateTime | When the request was submitted                          |
+| Actions        | Button   | [View] — Opens request detail                           |
+
+---
+
+## Table Actions
+
+| Action   | Condition    | Description                         |
+| -------- | ------------ | ----------------------------------- |
+| **View** | All statuses | Opens read-only request detail view |
+
+---
+
+================================================================================
+
+# 24.2 Tab 2: My Requests
+
+**Description:**
+Personal expense tracker for the logged-in employee. Shows all petty cash requests submitted by the current user. Users can create new requests, track approval status, and view details of past claims.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        PETTY CASH MANAGEMENT                                 │
+│                                                                              │
+│  [Tab 1: All Expenses]  [Tab 2: My Requests ●]  [Tab 3: Received Requests] │
+│                                                                              │
+│  Status Filter: [All] [Draft] [Pending] [Approved] [Rejected]               │
+│                 [Returned] [Paid]                                            │
+│                                                                              │
+│  [+ Add Request]                                                             │
+│                                                                              │
+│  MY REQUESTS TABLE                                                           │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Request ID   │Category      │Amount(₹)│Date Range         │Status     │Actions  ││
+│  │─────────────┼──────────────┼─────────┼───────────────────┼───────────┼─────────││
+│  │PC-2026-0045 │Local Convey. │ 1,250   │23–23 Mar 2026     │⏳ Pending  │[View]   ││
+│  │PC-2026-0038 │Chemical      │ 2,400   │20–22 Mar 2026     │✅ Approved│[View]   ││
+│  │PC-2026-0031 │Office Exp.   │ 800     │18–18 Mar 2026     │💰 Paid    │[View]   ││
+│  │PC-2026-0025 │Local Convey. │ 1,100   │15–16 Mar 2026     │❌ Rejected│[View]   ││
+│  │PC-2026-0020 │Vendor Payment│ 4,500   │12–12 Mar 2026     │🔄 Returned│[View][Edit]││
+│  │PC-2026-0019 │Office Exp.   │ 600     │11–11 Mar 2026     │📝 Draft   │[View][Edit][Revoke]││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Prior Approval│Submitted Date     │Sent To            │Reviewed By       ││
+│  │──────────────┼───────────────────┼───────────────────┼──────────────────││
+│  │No            │23 Mar 2026 10:30  │All Managers       │—                 ││
+│  │Yes           │20 Mar 2026 09:00  │Priya D. (Manager) │Priya D.          ││
+│  │No            │18 Mar 2026 11:15  │All                │Kamal R.          ││
+│  │No            │15 Mar 2026 14:00  │Kamal R.           │Kamal R.          ││
+│  │No            │12 Mar 2026 16:30  │All                │Priya D.          ││
+│  │No            │—                  │—                  │—                 ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  Shows 1 to 6 of 18 entries.                       [ < Previous | Next > ]  │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Table Fields
+
+| Field          | Type     | Description                                             |
+| -------------- | -------- | ------------------------------------------------------- |
+| Request ID     | Link     | `PC-YYYY-NNNN`; clicks to View detail (24.2.2)          |
+| Category       | Badge    | Expense category                                        |
+| Amount (₹)     | Currency | Total claimed amount                                    |
+| Date Range     | Date     | Expense date range (From – To)                          |
+| Status         | Badge    | Draft / Pending / Approved / Rejected / Returned / Paid |
+| Prior Approval | Badge    | Yes / No                                                |
+| Submitted Date | DateTime | Timestamp of submission                                 |
+| Sent To        | Display  | Recipient(s) of the request                             |
+| Reviewed By    | Display  | Manager who reviewed the request                        |
+| Actions        | Buttons  | View/Edit/Revoke                                        |
+
+---
+
+## Actions (Table Row)
+
+| Action     | Available When            | Description                            |
+| ---------- | ------------------------- | -------------------------------------- |
+| **View**   | All statuses              | Opens request detail (24.2.2)          |
+| **Edit**   | Status = Draft / Returned | Opens edit form to modify and resubmit |
+| **Revoke** | Status = Pending          | Cancels a submitted request            |
+
+---
+
+## Filter Fields
+
+| Filter     | Type         | Options                                                                                                                                                                                                                                                                                                              |
+| ---------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Status     | Dropdown     | All / Draft / Pending / Approved / Rejected / Returned / Paid                                                                                                                                                                                                                                                        |
+| Category   | Dropdown     | All / Asset Purchase / Chemical / Fuel / Internet & Telephone / Local Conveyance / Office Expenses / Salary Advance / Staff Welfare / Stationery / Statutory & License / Travel Expenses / Vehicle Maintenance / Vendor Payment / Rent / Office Deposit / Promoter Incentive / Overtime / Transportation / Petrocard |
+| Date Range | Date Picker  | Custom From – To date range                                                                                                                                                                                                                                                                                          |
+| Amount     | Number Range | Min – Max amount filter                                                                                                                                                                                                                                                                                              |
+
+## Search
+
+| Field         | Type   | Description                     |
+| ------------- | ------ | ------------------------------- |
+| Request ID    | Search | Direct lookup by `PC-YYYY-NNNN` |
+| Global Search | Search | Search by Each field            |
+
+================================================================================
+
+# 24.2.1 Add Petty Cash Request
+
+**Description:**
+Form for employees to submit a new petty cash expense claim. Captures expense details, supporting documents, employee bank/UPI information for reimbursement, and optional prior approval reference. Upon submission, a recipient selection popup allows the user to choose specific approver(s).
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to My Requests]            ADD PETTY CASH REQUEST                   │
+│                                                                              │
+│  Request ID: PC-2026-XXXX (Auto-generated on Submit)                         │
+│                                                                              │
+│  ─── SECTION 1: EXPENSE DETAILS ─────────────────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Category*            : [▼ Select Category ▼]                           │ │
+│  │                         • Asset Purchase        • Chemical              │ │
+│  │                         • Fuel                  • Internet & Telephone  │ │
+│  │                         • Local Conveyance      • Office Expenses       │ │
+│  │                         • Salary Advance        • Staff Welfare         │ │
+│  │                         • Stationery            • Statutory & License   │ │
+│  │                         • Travel Expenses       • Vehicle Maintenance   │ │
+│  │                         • Vendor Payment        • Rent                  │ │
+│  │                         • Office Deposit        • Promoter Incentive    │ │
+│  │                         • Overtime              • Transportation        │ │
+│  │                         • Petrocard                                     │ │
+│  │                                                                         │ │
+│  │  Expense Date (From)* : [📅 20 Mar 2026]                                │ │
+│  │  Expense Date (To)*   : [📅 23 Mar 2026]                                │ │
+│  │  Amount (₹)*          : [₹ 1,250_________]                             │ │
+│  │                                                                         │ │
+│  │  Description*         : [Purchased pest bait from local vendor during ] │ │
+│  │                         [service at ABC Corp Head Office.              ] │ │
+│  │                                                                         │ │
+│  │  Related Task (Opt.)  : [🔍 Search Task ID ▼]  (From Module 21)        │ │
+│  │  Related SO (Opt.)    : [🔍 Search SO No. ▼]   (From Module 20)        │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ─── SECTION 2: SUPPORTING DOCUMENTS ────────────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Bill / Receipt*      : [📎 Upload File]   ✅ receipt_1.jpg             │ │
+│  │                         (PDF, JPG, PNG — Max 5MB per file)             │ │
+│  │                         [📎 Upload More]   (Up to 5 files)             │ │
+│  │                                                                         │ │
+│  │                                                                         │ │
+│  │  Justification Note   : [________________________________]             │ │
+│  │                         (Optional — additional context for approver)    │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ─── SECTION 3: BANK / PAYMENT DETAILS ──────────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Payment Mode*        : (•) Bank Transfer   ( ) UPI                    │ │
+│  │                                                                         │ │
+│  │  ── If Bank Transfer ──                                                 │ │
+│  │  Account Holder Name  : [Ravi Sharma__________] (Auto from Module 8)   │ │
+│  │  Bank Name            : [State Bank of India__] (Auto from Module 8)   │ │
+│  │  Account Number       : [XXXX XXXX 4521______] (Auto from Module 8)   │ │
+│  │  IFSC Code            : [SBIN0001234__________] (Auto from Module 8)   │ │
+│  │                                                                         │ │
+│  │  ── If UPI ──                                                           │ │
+│  │  UPI ID               : [ravi.s@upi___________] (Auto from Module 8)   │ │
+│  │                                                                         │ │
+│  │  ⚠ Bank/UPI details auto-filled from your employee profile.            │ │
+│  │    You may edit if different payment method is preferred.               │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ─── SECTION 4: PRIOR APPROVAL ──────────────────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Was this expense pre-approved?                                         │ │
+│  │  [☑ Yes]  [☐ No]                                                       │ │
+│  │                                                                         │ │
+│  │  ── If Yes ──                                                           │ │
+│  │  Approved By*         : [🔍 Search Manager / Supervisor ▼]             │ │
+│  │  Approval Reference   : [Verbal approval on 22 Mar_______]             │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│       [SAVE DRAFT]          [SUBMIT REQUEST → opens 24.2.1.1]    [CANCEL]   │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Section 1: Expense Details Fields
+
+| Field             | Type     | Required | Validation                                           | Description                           |
+| ----------------- | -------- | -------- | ---------------------------------------------------- | ------------------------------------- |
+| Category          | Dropdown | Yes      | Must select from 19 categories(mentioned in Preview) | Type of expense (see Business Rules)  |
+| Expense Date From | Date     | Yes      | Cannot be future date (max = today)                  | Start date of the expense period      |
+| Expense Date To   | Date     | Yes      | ≥ From date; cannot be future date                   | End date of the expense period        |
+| Amount (₹)        | Currency | Yes      | Must be > 0; max ₹50,000                             | Total expense amount                  |
+| Description       | Textarea | Yes      | Min 10 chars, Max 500 chars                          | What, when, how — expense explanation |
+| Related Task      | Search   | No       | Must exist in Module 21 (if provided)                | Link to a specific service task       |
+| Related SO        | Search   | No       | Must exist in Module 20 (if provided)                | Link to a specific Sales Order        |
+
+---
+
+## Section 2: Supporting Documents Fields
+
+| Field              | Type        | Required | Validation                              | Description                         |
+| ------------------ | ----------- | -------- | --------------------------------------- | ----------------------------------- |
+| Bill / Receipt     | File Upload | Yes      | Min 1 file; PDF, JPG, PNG; Max 5MB each | Proof of expense (up to 5 files)    |
+| Justification Note | Textarea    | No       | Max 500 chars                           | Additional context for the approver |
+
+---
+
+## Section 3: Bank / Payment Details Fields
+
+| Field               | Type  | Required | Validation                   | Description                    |
+| ------------------- | ----- | -------- | ---------------------------- | ------------------------------ |
+| Payment Mode        | Radio | Yes      | Bank Transfer / UPI          | Preferred reimbursement method |
+| Account Holder Name | Text  | Cond.    | Auto from Module 8; editable | Name on bank account           |
+| Bank Name           | Text  | Cond.    | Auto from Module 8; editable | Bank name                      |
+| Account Number      | Text  | Cond.    | Numeric; auto from Module 8  | Bank account number            |
+| IFSC Code           | Text  | Cond.    | 11 chars; auto from Module 8 | Bank branch IFSC code          |
+| UPI ID              | Text  | Cond.    | Valid UPI format (xx@upi)    | UPI address for direct payment |
+
+> **Conditional:** Bank fields required if Payment Mode = Bank Transfer. UPI field required if Payment Mode = UPI.
+
+---
+
+## Section 4: Prior Approval Fields
+
+| Field              | Type            | Required | Validation                               | Description                             |
+| ------------------ | --------------- | -------- | ---------------------------------------- | --------------------------------------- |
+| Pre-Approved?      | Checkbox        | Yes      | Default: No                              | Whether expense was approved beforehand |
+| Approved By        | Search/dropdown | Cond.    | Must be manager/supervisor from Module 8 | Person who gave prior approval          |
+| Approval Reference | Text            | No       | Max 200 chars                            | Verbal/written approval reference       |
+
+---
+
+## Form Actions
+
+| Button             | Description                                                      |
+| ------------------ | ---------------------------------------------------------------- |
+| **Save Draft**     | Saves without validation, no notifications sent. Status = Draft  |
+| **Submit Request** | Validates all fields, opens Recipient Selection popup (24.2.1.1) |
+| **Cancel**         | Discards form and returns to My Requests list                    |
+
+---
+
+================================================================================
+
+# 24.2.1.1 Select Recipients for Petty Cash Request (Popup)
+
+**Description:**
+Popup that appears after clicking **[Submit Request]** in 24.2.1. Allows the requester to select one or multiple recipients (manager / supervisor / finance) who will receive the request for approval. By default, **"All"** is selected.
+
+---
+
+## Popup Layout
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  POPUP: SELECT RECIPIENTS                                │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │  Send to specific person(s):                     │    │
+│  │  ☑ All (Default checked)                        │    │
+│  │  ☐ Priya D. (Branch Manager — Mumbai)           │    │
+│  │  ☐ Kamal R. (Operations Head)                   │    │
+│  │  ☐ Neha S. (Finance Manager)                    │    │
+│  │                                                  │    │
+│  │  [CONFIRM SEND]  [CANCEL]                        │    │
+│  └─────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Fields
+
+| Field      | Type      | Required | Description                                           |
+| ---------- | --------- | -------- | ----------------------------------------------------- |
+| All        | Checkbox  | Default  | Sends to all authorized approvers                     |
+| Recipients | Multi-sel | Cond.    | Individual managers/supervisors (cascading from Role) |
+
+## System Behavior
+
+| Event        | Action                                                        |
+| ------------ | ------------------------------------------------------------- |
+| Confirm Send | Request status → **Pending**. Notification sent to recipients |
+| Cancel       | Returns to form without submitting                            |
+
+---
+
+================================================================================
+
+# 24.2.2 View My Request (Read-Only Detail)
+
+**Description:**
+Read-only detail screen showing the complete breakdown of a petty cash request. Includes expense info, supporting documents, bank details, prior approval info, approval status, payment status, and submission info.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to My Requests]                                                    │
+│                                                                              │
+│  REQUEST: PC-2026-0045                       Status: ⏳ PENDING APPROVAL     │
+│                                                                              │
+│  ─── EXPENSE DETAILS ───────────────────────────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Category         : Local Conveyance                                    │ │
+│  │  Expense Date     : 20 Mar 2026 — 23 Mar 2026                           │ │
+│  │  Amount (₹)       : ₹ 1,250                                            │ │
+│  │  Description      : Purchased pest bait from local vendor during        │ │
+│  │                     service at ABC Corp Head Office.                     │ │
+│  │  Related Task     : TASK-2026-0201                                      │ │
+│  │  Related SO       : SO-2026-0112                                        │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ─── SUPPORTING DOCUMENTS ──────────────────────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Bills / Receipts  : [📄 receipt_1.jpg] [📄 receipt_2.pdf]             │ │
+│  │  Justification     : Urgent purchase required during site visit.        │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ─── BANK / PAYMENT DETAILS ───────────────────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Payment Mode      : Bank Transfer                                      │ │
+│  │  Account Holder    : Ravi Sharma                                        │ │
+│  │  Bank Name         : State Bank of India                                │ │
+│  │  Account Number    : XXXX XXXX 4521                                     │ │
+│  │  IFSC Code         : SBIN0001234                                        │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ─── PRIOR APPROVAL ───────────────────────────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Pre-Approved?     : No                                                 │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ─── APPROVAL & PAYMENT STATUS ─────────────────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Approval Status   : ⏳ Pending                                        │ │
+│  │  Reviewed By       : —                                                  │ │
+│  │  Review Date       : —                                                  │ │
+│  │  Approved Amount   : —                                                  │ │
+│  │  Reviewer Remarks  : —                                                  │ │
+│  │                                                                         │ │
+│  │  Payment Status    : ⏳ Not Processed                                   │ │
+│  │  Payment Mode      : —                                                  │ │
+│  │  Transaction Ref   : —                                                  │ │
+│  │  Payment Date      : —                                                  │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ─── SUBMISSION INFO ───────────────────────────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Submitted By      : Ravi S. (Senior Technician)                       │ │
+│  │  Submitted Date    : 23 Mar 2026, 10:30 AM                             │ │
+│  │  Branch            : Mumbai                                             │ │
+│  │  Sent To           : All Managers                                       │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│                                                                              │
+│                                        [BACK]                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## View-Only Fields
+
+| Field            | Type     | Description                                    |
+| ---------------- | -------- | ---------------------------------------------- |
+| Request ID       | Display  | System-generated unique request ID             |
+| Status           | Badge    | Current lifecycle status                       |
+| Category         | Display  | Expense category                               |
+| Expense Date     | Date     | Expense date range (From – To)                 |
+| Amount (₹)       | Currency | Claimed amount                                 |
+| Description      | Text     | Expense description                            |
+| Related Task     | Link     | Task reference (navigates to Module 21)        |
+| Related SO       | Link     | Sales Order reference (navigates to Module 20) |
+| Bills / Receipts | File     | Click to view/download uploaded documents      |
+| Justification    | Text     | Context for the expense                        |
+| Payment Mode     | Display  | Bank Transfer / UPI (from Section 3)           |
+| Account Holder   | Display  | Name on account                                |
+| Bank Name        | Display  | Employee's bank                                |
+| Account Number   | Display  | Bank account number                            |
+| IFSC Code        | Display  | Bank branch IFSC code                          |
+| Pre-Approved?    | Badge    | Yes / No (from Section 4)                      |
+| Approval Status  | Badge    | Pending / Approved / Rejected / Returned       |
+| Reviewed By      | Display  | Name of the reviewing manager                  |
+| Review Date      | Date     | When the review was performed                  |
+| Approved Amount  | Currency | Amount approved (may differ from requested)    |
+| Reviewer Remarks | Text     | Notes from the approver                        |
+| Payment Status   | Badge    | Not Processed / Processed                      |
+| Payment Mode     | Display  | Actual mode used for payment (from Finance)    |
+| Transaction Ref  | Display  | Payment transaction reference (after payment)  |
+| Payment Date     | Date     | When payment was made                          |
+| Submitted By     | Display  | Name and role of requester                     |
+| Submitted Date   | DateTime | When the request was submitted                 |
+| Branch name      | Display  | Requester's branch                             |
+| Sent To          | Display  | Recipients of the request                      |
+
+---
+
+================================================================================
+
+# 24.3 Tab 3: Received Requests
+
+**Description:**
+For **Branch Managers, Operations Head, and Finance Team** to review incoming petty cash requests. Provides segmented views for different workflow stages and action buttons for approve, reject, return, and payment processing.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        PETTY CASH MANAGEMENT                                 │
+│                                                                              │
+│  [Tab 1: All Expenses]  [Tab 2: My Requests]  [Tab 3: Received Requests ●] │
+│                                                                              │
+│  Segmented Control: [Pending Approval] [Pending Payment] [Completed Today]  │
+│                     [All History]                                            │
+│                                                                              │
+│  ┌─ FILTERS ──────────────────────────────────────────────────────────────┐  │
+│  │ Branch   : [▼ All ▼]       Category: [▼ All ▼]     Date : [📅 Range]  │  │
+│  │ Employee : [🔍 Search ▼]   Amount  : [₹ Min] — [₹ Max]               │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  Search: [🔍 Request ID / Employee Name________________________]            │
+│                                                                              │
+│  RECEIVED REQUESTS TABLE                                                     │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Request ID   │Employee    │Branch │Category       │Amount(₹)│Date Range        ││
+│  │─────────────┼────────────┼───────┼───────────────┼─────────┼─────────────────││
+│  │PC-2026-0045 │Ravi S.     │Mumbai │Local Convey.  │ 1,250   │23–23 Mar 2026   ││
+│  │PC-2026-0044 │Anjali M.   │Pune   │Chemical       │ 3,800   │20–22 Mar 2026   ││
+│  │PC-2026-0043 │Suresh K.   │Mumbai │Vendor Payment │ 5,500   │22–22 Mar 2026   ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Prior Appr.│Submitted Date     │Bills│Status           │Actions          ││
+│  │───────────┼───────────────────┼─────┼─────────────────┼─────────────────││
+│  │No         │23 Mar 2026 10:30  │ 2   │⏳ Pending Appr. │[View] [Review]  ││
+│  │Yes        │22 Mar 2026 14:15  │ 1   │✅ Approved      │[View] [Pay]     ││
+│  │No         │22 Mar 2026 09:00  │ 3   │💰 Paid          │[View]           ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  Shows 1 to 3 of 23 entries.                       [ < Previous | Next > ]  │
+│                                                                              │
+│  [📥 Export to Excel]                                                        │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Segmented Control
+
+| Segment          | Description                                   |
+| ---------------- | --------------------------------------------- |
+| Pending Approval | Requests awaiting manager review              |
+| Pending Payment  | Approved requests awaiting finance processing |
+| Completed Today  | Requests paid today                           |
+| All History      | Full historical view of all received requests |
+
+---
+
+## Table Columns
+
+| Field          | Type     | Description                                     |
+| -------------- | -------- | ----------------------------------------------- |
+| Request ID     | Link     | `PC-YYYY-NNNN`. Clicks to view request detail   |
+| Employee Name  | Display  | Requesting employee's name                      |
+| Branch         | Display  | Employee's branch                               |
+| Category       | Badge    | Expense category                                |
+| Amount (₹)     | Currency | Claimed amount                                  |
+| Date Range     | Date     | Expense date range (From – To)                  |
+| Prior Approval | Badge    | Yes / No                                        |
+| Submitted Date | DateTime | When the request was submitted                  |
+| Bills          | Number   | Count of attached bill/receipt files            |
+| Status         | Badge    | Pending / Approved / Rejected / Returned / Paid |
+| Actions        | Buttons  | Context-sensitive (View / Review / Pay)         |
+
+---
+
+## Actions (Table Row)
+
+| Action     | Condition         | Role Required             | Description                            |
+| ---------- | ----------------- | ------------------------- | -------------------------------------- |
+| **View**   | All statuses      | All                       | Opens read-only detail (24.2.2)        |
+| **Review** | Status = Pending  | Manager / Operations Head | Opens Approval Form (24.3.1)           |
+| **Pay**    | Status = Approved | Finance Team              | Opens Payment Processing Form (24.3.2) |
+
+---
+
+## Filters
+
+| Filter | Type | Options  
+| Branch | Dropdown | All / Specific Branch |
+| Category | Dropdown | All / Asset Purchase / Chemical / Fuel / Internet & Telephone / Local Conveyance / Office Expenses / Salary Advance / Staff Welfare / Stationery / Statutory & License / Travel Expenses / Vehicle Maintenance / Vendor Payment / Rent / Office Deposit / Promoter Incentive / Overtime / Transportation / Petrocard | |
+| Date Range | Date Picker | Custom From – To |
+| Amount | Number Range | Min – Max amount filter |
+
+---
+
+## Search
+
+# | global search |
+
+# 24.3.1 Request Review & Approval Form
+
+**Description:**
+Dedicated approval screen for managers and supervisors to review a petty cash request. Shows all submitted details in read-only mode and provides an approval decision panel. The approver can approve, reject, or return the request for correction, with an optional adjustment to the approved amount.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to Received Requests]          REVIEW REQUEST: PC-2026-0045        │
+│                                                                              │
+│  ─── REQUEST DETAILS (Read-Only) ───────────────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Request ID       : PC-2026-0045                                        │ │
+│  │  Employee         : Ravi S. (Senior Technician)                         │ │
+│  │  Branch           : Mumbai                                              │ │
+│  │  Submitted On     : 23 Mar 2026, 10:30 AM                              │ │
+│  │                                                                         │ │
+│  │  Category         : Travel Expenses                                     │ │
+│  │  Expense Date     : 20 Mar 2026 — 23 Mar 2026                           │ │
+│  │  Amount (₹)       : ₹ 1,250                                            │ │
+│  │  Description      : Purchased pest bait from local vendor during        │ │
+│  │                     service at ABC Corp Head Office.                     │ │
+│  │                                                                         │ │
+│  │  Related Task     : TASK-2026-0201                                      │ │
+│  │  Related SO       : SO-2026-0112                                        │ │
+│  │  Prior Approval   : No                                                  │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ─── ATTACHED DOCUMENTS ────────────────────────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Bills / Receipts  : [📄 receipt_1.jpg — View/Download]                │ │
+│  │                      [📄 receipt_2.pdf — View/Download]                │ │
+│  │  Justification     : Urgent purchase required during site visit.        │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ─── BANK DETAILS ──────────────────────────────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Payment Mode      : Bank Transfer                                      │ │
+│  │  Account Holder    : Ravi Sharma       Account No : XXXX XXXX 4521     │ │
+│  │  Bank              : SBI               IFSC       : SBIN0001234        │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ─── APPROVAL DECISION ─────────────────────────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Decision*         : (•) Approve   ( ) Reject   ( ) Return for Correct.│ │
+│  │                                                                         │ │
+│  │  ── If Approve ──                                                       │ │
+│  │  Approved Amount*  : [₹ 1,250_________]                                │ │
+│  │                     (Pre-filled with requested amount; editable)        │ │
+│  │  Remarks           : [Verified against task assignment.__________]      │ │
+│  │                                                                         │ │
+│  │  ── If Reject ──                                                        │ │
+│  │  Rejection Reason* : [▼ Select Reason ▼]                               │ │
+│  │                       • Insufficient Documentation                      │ │
+│  │                       • Exceeds Policy Limit                            │ │
+│  │                       • Not Authorized                                  │ │
+│  │                       • Duplicate Claim                                 │ │
+│  │                       • Other                                           │ │
+│  │  Remarks*          : [________________________________________]         │ │
+│  │                                                                         │ │
+│  │  ── If Return for Correction ──                                         │ │
+│  │  Correction Notes* : [Please attach original bill, uploaded copy is  ]  │ │
+│  │                      [not readable.                                  ]  │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│       [CONFIRM DECISION]                                     [CANCEL]        │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Request Details (Read-Only)
+
+| Field          | Type     | Description                       |
+| -------------- | -------- | --------------------------------- |
+| Request ID     | Display  | Unique request reference          |
+| Employee       | Display  | Name, role of requesting employee |
+| Branch         | Display  | Employee's branch                 |
+| Submitted On   | DateTime | When the request was submitted    |
+| Category       | Display  | Expense category                  |
+| Expense Date   | Date     | Expense date range (From – To)    |
+| Amount (₹)     | Currency | Claimed amount                    |
+| Description    | Text     | Expense description               |
+| Related Task   | Link     | Task reference (if linked)        |
+| Related SO     | Link     | SO reference (if linked)          |
+| Prior Approval | Display  | Yes/No + approver name if Yes     |
+| Bills/Receipts | Files    | Clickable document links          |
+
+---
+
+## Approval Decision Fields
+
+| Field            | Type     | Required | Condition                    | Validation                         | Description                   |
+| ---------------- | -------- | -------- | ---------------------------- | ---------------------------------- | ----------------------------- |
+| Decision         | Radio    | Yes      | Always                       | Must select one option             | Approve / Reject / Return     |
+| Approved Amount  | Currency | Cond.    | Decision = Approve           | Must be > 0; ≤ Requested Amount    | Approved reimbursement amount |
+| Rejection Reason | Dropdown | Cond.    | Decision = Reject            | Must select from list              | Categorised rejection reason  |
+| Remarks          | Textarea | Cond.    | Decision = Approve or Reject | Max 500 chars; required for Reject | Reviewer notes                |
+| Correction Notes | Textarea | Cond.    | Decision = Return            | Min 10 chars; Max 500 chars        | Instructions for the employee |
+
+---
+
+## Validation Rules
+
+| Validation                  | Rule                                     |
+| --------------------------- | ---------------------------------------- |
+| Decision required           | Must select Approve, Reject, or Return   |
+| Approved Amount ≤ Requested | Cannot approve more than requested       |
+| Rejection reason required   | Must provide reason when rejecting       |
+| Correction notes required   | Must provide instructions when returning |
+| At least one bill reviewed  | System warns if no documents were opened |
+
+---
+
+## Form Actions
+
+| Button               | Description                                                       |
+| -------------------- | ----------------------------------------------------------------- |
+| **Confirm Decision** | Validates, saves decision, notifies employee, logs in audit trail |
+| **Cancel**           | Returns to Received Requests without changes                      |
+
+---
+
+## System Behavior on Decision
+
+| Decision                | System Action                                                          |
+| ----------------------- | ---------------------------------------------------------------------- |
+| **Approve**             | Status → Approved. Notification sent to employee + Finance Team        |
+| **Reject**              | Status → Rejected. Notification sent to employee with reason           |
+| **Return for Correct.** | Status → Returned. Notification sent to employee with correction notes |
+
+---
+
+================================================================================
+
+# 24.3.2 Payment Processing Form
+
+**Description:**
+Finance team form to process payment for approved petty cash requests. Captures payment mode, transaction details, and marks the request as paid. Only accessible for requests with **Status = Approved**.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to Received Requests]      PROCESS PAYMENT: PC-2026-0044           │
+│                                                                              │
+│  ─── APPROVED REQUEST SUMMARY (Read-Only) ──────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Request ID       : PC-2026-0044                                        │ │
+│  │  Employee         : Anjali M. (Technician)                              │ │
+│  │  Branch           : Pune                                                │ │
+│  │  Category         : Material Purchases                                  │ │
+│  │  Expense Date     : 20 Mar 2026 — 22 Mar 2026                           │ │
+│  │  Requested Amount : ₹ 3,800                                            │ │
+│  │  Approved Amount  : ₹ 3,500                                            │ │
+│  │  Approved By      : Priya D. (Branch Manager)                          │ │
+│  │  Approved On      : 22 Mar 2026, 03:00 PM                              │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ─── EMPLOYEE PAYMENT DETAILS (Read-Only) ──────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Payment Mode      : Bank Transfer                                      │ │
+│  │  Account Holder    : Anjali M.          Account No : XXXX XXXX 7890    │ │
+│  │  Bank              : HDFC Bank          IFSC       : HDFC0001234       │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ─── PAYMENT PROCESSING ────────────────────────────────────────────────── │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  Payment Mode*        : [▼ Bank Transfer ▼]                             │ │
+│  │                         • Bank Transfer (NEFT/IMPS/RTGS)               │ │
+│  │                         • UPI                                           │ │
+│  │                         • Cash                                          │ │
+│  │                         • Cheque                                        │ │
+│  │                                                                         │ │
+│  │  Amount to Pay        : ₹ 3,500 (From Approved Amount — Read-Only)     │ │
+│  │  Transaction Ref.*    : [NEFT-20260322-78456_______]                    │ │
+│  │  Payment Date*        : [📅 22 Mar 2026]                                │ │
+│  │                                                                         │ │
+│  │  Upload Proof (Opt.)  : [📎 Upload Payment Screenshot]                 │ │
+│  │  Finance Remarks      : [Payment processed via NEFT.__________]         │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│       [MARK AS PAID]                                         [CANCEL]        │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Approved Request Summary (Read-Only)
+
+| Field            | Type     | Description                    |
+| ---------------- | -------- | ------------------------------ |
+| Request ID       | Display  | Unique request reference       |
+| Employee         | Display  | Employee name and role         |
+| Branch           | Display  | Employee's branch              |
+| Category         | Display  | Expense type                   |
+| Expense Date     | Date     | Expense date range (From – To) |
+| Requested Amount | Currency | Original claimed amount        |
+| Approved Amount  | Currency | Amount approved by manager     |
+| Approved By      | Display  | Name of the approving manager  |
+| Approved On      | DateTime | Date/time of approval          |
+
+---
+
+## Payment Processing Fields
+
+| Field            | Type        | Required | Validation                          | Description                        |
+| ---------------- | ----------- | -------- | ----------------------------------- | ---------------------------------- |
+| Payment Mode     | Dropdown    | Yes      | Bank Transfer / UPI / Cash / Cheque | How the payment will be made       |
+| Amount to Pay    | Currency    | Auto     | Read-only; from Approved Amount     | Disbursement amount                |
+| Transaction Ref. | Text        | Yes      | Min 5 chars; unique                 | Bank/UPI transaction reference ID  |
+| Payment Date     | Date        | Yes      | Cannot be future date (max = today) | Date payment was processed         |
+| Upload Proof     | File Upload | No       | JPG, PNG, PDF; Max 5MB              | Payment confirmation screenshot    |
+| Finance Remarks  | Textarea    | No       | Max 500 chars                       | Additional notes from finance team |
+
+---
+
+## Form Actions
+
+| Button           | Description                                                            |
+| ---------------- | ---------------------------------------------------------------------- |
+| **Mark as Paid** | Validates, marks status → Paid, notifies employee, logs in audit trail |
+| **Cancel**       | Returns to Received Requests without changes                           |
+
+---
+
+## System Behavior
+
+| Event           | Action                                                                      |
+| --------------- | --------------------------------------------------------------------------- |
+| Mark as Paid    | Status → **Paid**. Employee notified. Payment details stored. Audit logged. |
+| Transaction Ref | Stored permanently for finance reconciliation and audit                     |
+
+---
+
+================================================================================
+
+# Access Control (RBAC)
+
+| Role                  | Tab 1 (All Expenses) | Tab 2 (My Requests)  | Tab 3 (Received Requests) | Add Request | Approve/Reject | Process Payment |
+| --------------------- | -------------------- | -------------------- | ------------------------- | ----------- | -------------- | --------------- |
+| **Technician**        | ❌ No access         | ✅ Own requests only | ❌ No access              | ✅ Yes      | ❌ No          | ❌ No           |
+| **Senior Technician** | ❌ No access         | ✅ Own requests only | ❌ No access              | ✅ Yes      | ❌ No          | ❌ No           |
+| **Branch Manager**    | ✅ Branch only       | ✅ Own requests only | ✅ Branch requests        | ✅ Yes      | ✅ Yes         | ❌ No           |
+| **Operations Head**   | ✅ All branches      | ✅ Own requests only | ✅ All branches           | ✅ Yes      | ✅ Yes         | ❌ No           |
+| **Finance Team**      | ✅ All branches      | ✅ Own requests only | ✅ All branches           | ✅ Yes      | ❌ No          | ✅ Yes          |
+| **Company Admin**     | ✅ All branches      | ✅ Own requests only | ✅ All branches           | ✅ Yes      | ✅ Yes         | ✅ Yes          |
+
+---
+
+================================================================================
+
+# Business Rules
+
+| Rule                          | Description                                                                |
+| ----------------------------- | -------------------------------------------------------------------------- |
+| Request ID Format             | `PC-YYYY-NNNN` (auto-generated, sequential per year)                       |
+| Max Single Expense            | ₹50,000 per request (configurable by Admin)                                |
+| Expense Date Validation       | Cannot be a future date; max age configurable (e.g., 30 days old)          |
+| Mandatory Receipts            | At least one bill/receipt must be uploaded                                 |
+| Bank Details Auto-fill        | Pre-filled from employee profile (Module 8); editable per request          |
+| Prior Approval Flag           | If marked, approver name is required for verification                      |
+| Approved Amount ≤ Requested   | Manager cannot approve more than the claimed amount                        |
+| Partial Approval              | Manager can reduce the approved amount with remarks                        |
+| Return for Correction         | Employee must re-edit and re-submit; retains original Request ID           |
+| Draft Visibility              | Draft requests are visible ONLY to the creator                             |
+| Duplicate Detection           | System warns if same employee, same amount, same date already exists       |
+| Notification on Status Change | Employee notified on every status change (Approved/Rejected/Returned/Paid) |
+| Audit Trail                   | All actions (create, submit, approve, reject, return, pay) are logged      |
+
+---
+
+================================================================================
+
+# Request Status Lifecycle
+
+| Status   | Description                          | Next Allowed Statuses        | Who Triggers      |
+| -------- | ------------------------------------ | ---------------------------- | ----------------- |
+| Draft    | Saved but not submitted              | Pending, Deleted             | Employee          |
+| Pending  | Submitted, awaiting manager review   | Approved, Rejected, Returned | Employee (submit) |
+| Approved | Manager approved, awaiting payment   | Paid                         | Manager           |
+| Rejected | Manager denied the request           | — (Final state)              | Manager           |
+| Returned | Sent back to employee for correction | Pending (after re-edit)      | Manager           |
+| Paid     | Finance processed the payment        | — (Final state)              | Finance           |
+| Revoked  | Employee cancelled before approval   | — (Final state)              | Employee          |
+
+---
+
+## Status Flow Diagram
+
+```
+                    ┌─────────┐
+                    │  DRAFT  │
+                    └────┬────┘
+                         │ Submit
+                         ▼
+               ┌─────────────────┐
+       ┌───── │    PENDING       │ ─────┐
+       │      └────────┬────────┘      │
+       │               │               │
+ Reject│         Approve│         Return│
+       │               │               │
+       ▼               ▼               ▼
+ ┌──────────┐   ┌──────────┐   ┌──────────┐
+ │ REJECTED │   │ APPROVED │   │ RETURNED │
+ │ (Final)  │   └────┬─────┘   └────┬─────┘
+ └──────────┘        │              │
+                     │ Pay          │ Re-edit & Re-submit
+                     ▼              │
+               ┌──────────┐        │
+               │   PAID   │        ▼
+               │  (Final) │   Back to PENDING
+               └──────────┘
+
+  Employee can REVOKE from PENDING → REVOKED (Final)
+```
 
 ---
 
