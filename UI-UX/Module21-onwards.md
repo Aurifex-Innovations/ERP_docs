@@ -1112,28 +1112,30 @@ A unified, comprehensive profile of a specific technician's logistics data. Mana
 │                                                                              │
 │  Filters: Period: [▼ Daily ▼]  Date: [📅 23 Mar 2026 ▼]                     │
 │                                                                              │
-│  ┌─────────────────────────┐ ┌──────────────────────────────────────────────┐│
-│  │ SUMMARY (23 Mar)        │ │                                              ││
-│  │ Total Distance: 42.5 KM │ │              [ MAP VIEW ]                    ││
-│  │ Total Active  : 8h 30m  │ │           (T1) ---------- (T2)               ││
-│  │ Tasks Done    : 3       │ │           /                 \                ││
-│  │                         │ │          /                   \               ││
-│  │ ── TIMELINE ─────────── │ │        (B)                    (T3)           ││
-│  │                         │ │          \                   /               ││
-│  │ 08:30 AM: Arrived       │ │           \                 /                ││
-│  │ 📍 Head Office (Site)   │ │            ------- (B) -----                 ││
-│  │ 👤 ABC Corp (Cockroach) │ │                                              ││
-│  │ 📋 TASK-2026-0201       │ │                                              ││
-│  │                         │ │  [ 📥 Export Map ]   [ Replay Route ▶ ]      ││
-│  │ 08:30 - 10:15 (On Site) │ └──────────────────────────────────────────────┘│
-│  │                         │                                                 │
-│  │ 10:15 AM: Departed      │  ── TABULAR TRAVEL LOG ───────────────────────  │
-│  │ 📍 Head Office          │  ┌───────────────────────────────────────────┐  │
-│  │                         │  │ Date  │ From       │ To Cust/Site │ Dist  │  │
-│  │ 10:15 - 10:45 (Travel)  │  │───────┼────────────┼──────────────┼───────│  │
-│  │ 🚗 12.8 KM              │  │ 23 Mar│ Branch     │ ABC: Head Off│15.2 KM│  │
-│  │ ⬇ Scroll for more...    │  │ 23 Mar│ ABC: Head  │ PQR: Warehse │12.8 KM│  │
-│  └─────────────────────────┘  └───────────────────────────────────────────┘  │
+│  ┌─ SUMMARY & TIMELINE ─────────────────┐ ┌─ EVENT MAP ───────────────────┐│
+│  │ Total Distance: 42.5 KM              │ │                               ││
+│  │ Total Active  : 8h 30m               │ │      (T1) ---------- (T2)     ││
+│  │ Tasks Done    : 3                    │ │      /                 \      ││
+│  │                                      │ │     /                   \     ││
+│  │ 08:30 AM: Arrived                    │ │   (B)                    (T3) ││
+│  │ 📍 Head Office (Site)                │ │     \                   /     ││
+│  │ 👤 ABC Corp (Cockroach)              │ │      \                 /      ││
+│  │ 📋 TASK-2026-0201                    │ │       ------- (B) -----       ││
+│  │                                      │ │                               ││
+│  │ 08:30 - 10:15 (On Site)              │ │ [📥 Map] [Replay Route ▶]     ││
+│  │                                      │ └───────────────────────────────┘│
+│  │ 10:15 AM: Departed                   │                                  │
+│  │ 📍 Head Office                       │                                  │
+│  └──────────────────────────────────────┘                                  │
+│                                                                            │
+│  ── TABULAR TRAVEL LOG ─────────────────────────────────────────────────── │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │ Date  │ Departure Pt │ Destination  │ Customer │ Task ID│ Dist │ Start│ │
+│  │───────┼──────────────┼──────────────┼──────────┼────────┼──────┼──────│ │
+│  │ 23 Mar│ Branch Off.  │ ABC: Head Off│ ABC Corp │ T-0201 │ 15.2 │ 08:00│ │
+│  │ 23 Mar│ ABC: Head Off│ PQR: Warehse │ PQR Ind. │ T-0202 │ 12.8 │ 10:15│ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+│    [⬅ Scroll Right to see: End Time, Duration, Status ➡]                    │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -1153,11 +1155,15 @@ A unified, comprehensive profile of a specific technician's logistics data. Mana
 
 | Field             | Type    | Description                                             |
 | ----------------- | ------- | ------------------------------------------------------- |
-| Event Time        | Display | Timestamp of the event (arrival, departure, clock-in).  |
-| Event Location    | Display | Site Name or Geo-location address.                      |
-| Customer & Service| Display | Associated Customer Name and specific Service Type.     |
-| Task Content Popup| Modal   | Click Task to view: Status, Category, Techs, Services Done Count (from Mod 21).|
-| Tabular Log Grid  | Grid    | Datatable matching tasks/segments to exact GPS distances.|
+| Date              | Display | Tracking Date.                                          |
+| Departure Point   | Display | Origin site or generic location (e.g., Branch).         |
+| Destination       | Display | Destination Site Name or Geo-location address.          |
+| Customer          | Display | Associated Customer Name and specific Service Type.     |
+| Task ID           | Modal   | Click Task to view details (Status, Category, Techs).   |
+| Distance          | Display | GPS calculated travel distance for that segment.        |
+| Start & End Time  | Display | Timestamps marking the departure and arrival bounds.    |
+| Duration          | Display | Total time computed between Start and End.              |
+| Status            | Badge   | On-Site, Travelling, Idle.                              |
 
 ---
 
@@ -1172,6 +1178,388 @@ A unified, comprehensive profile of a specific technician's logistics data. Mana
 | **Idle Alert**                | If GPS is stationary for > Y minutes not near a task site, flag as 'Idle'.  |
 | **Background Tracking**       | GPS tracking must only be active between Clock-in and Clock-out events.     |
 | **Distance Calculation**      | System calculates route segments and aggregates them for Daily/Weekly stats.|
+
+---
+
+================================================================================
+
+# 🎯 MODULE 23: CUSTOMER SUPPORT MANAGEMENT (SLA-DRIVEN)
+
+## Overview
+
+Live Location & Travel Tracking provided real-time operational oversight. **Module 23** provides enterprise-grade customer support by enabling the recording, tracking, and resolution of customer complaints and requests via a strict **SLA (Service Level Agreement)** framework.
+
+This module guarantees time-bound responses and automatically escalates tickets that breach resolution times. It tightly integrates with **Module 21 (Task Management)** to dispatch technicians for re-services stemming from support tickets.
+
+**Module Connections:**
+
+- **Depends on:** Module 18 (Customer Master), Module 20 (Sales Orders), Module 8 (Employee).
+- **Used by:** Module 21 (Re-Tasks), Customer History, Analytics.
+
+---
+
+The module contains the following screens:
+
+- 23.1 Ticket Dashboard (SLA-Driven)
+- 23.2 Raise New Ticket
+- 23.3 Ticket Detail View
+- 23.4 Assign / Reassign Ticket
+- 23.5 Convert Ticket to Task
+- 23.6 Ticket Resolution
+
+---
+
+================================================================================
+
+# 23.1 Ticket Dashboard (SLA-Driven)
+
+**Description:**
+The primary command center for the Support Team. Provides a high-visibility datatable of all active tickets. Critically powered by live countdown timers and color-coded SLA status indicators to prioritize agent workflows instantly.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          SUPPORT TICKET DASHBOARD                           │
+│                                                                              │
+│  [+ Raise New Ticket]                                                       │
+│                                                                              │
+│  ┌─ FILTERS ──────────────────────────────────────────────────────────────┐  │
+│  │ Branch  : [▼ All ▼]       Customer : [🔍 Search ▼] Date : [📅 Range ▼] │  │
+│  │ Status  : [▼ Open ▼]      Priority : [▼ All ▼]     Type : [▼ All ▼]    │  │
+│  │ SLA Stat: [▼ At Risk ▼]   Esc. Lvl : [▼ L2 ▼]                          │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐  │
+│  │ ID   │ Customer │ SO No  │ Priority│ Status  │ SLA Stage │ SLA Timer │  │
+│  │──────┼──────────┼────────┼─────────┼─────────┼───────────┼───────────│  │
+│  │ T001 │ ABC Corp │ SO-101 │🔴 Urgent│ Open    │ 🔴 Breach │ -02h 15m  │  │
+│  │ T002 │ PQR Ind  │ SO-089 │🟡 High  │ Open    │ 🟡 Risk   │ 00h 45m   │  │
+│  │ T003 │ XYZ Hotel│ SO-144 │🟢 Normal│ In Prog │ 🟢 Safe   │ 22h 10m   │  │
+│  │ T004 │ LMN Pvt  │ SO-201 │🟢 Normal│ Open    │ 🟢 Safe   │ 47h 00m   │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│    Shows 1 to 4 of 42 tickets.                     [ < Previous | Next > ]   │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Filter Fields
+
+| Field            | Type       | Description                                                 |
+| ---------------- | ---------- | ----------------------------------------------------------- |
+| Branch Name      | Dropdown   | Filter by servicing branch: `[All, Head Office, North, South, East, West]`. |
+| Date Range       | Date Range | Filter by Ticket Creation Date.                             |
+| Status           | Dropdown   | Standard lifecycle: `[Open, Assigned, In Progress, Paused, Resolved, Closed]`. |
+| Priority         | Dropdown   | Ticket Priority: `[All, Normal, High, Urgent, Critical]`.   |
+| SLA Status       | Dropdown   | SLA Health: `[Safe (🟢), At Risk (🟡), Breached (🔴)]`.      |
+| Escalation Level | Dropdown   | Triggered SLA: `[None, L1 (Soft), L2 (Manager), L3 (Critical)]`. |
+
+---
+
+## Search Fields
+
+| Field         | Type   | Description                                                                 |
+| ------------- | ------ | --------------------------------------------------------------------------- |
+| Ticket ID     | Search | Direct lookup by `TKT-YYYY-NNNN`. Navigates straight to 23.3 Detail View.  |
+| Customer Name | Search | Global free-text search against Customer Master (Module 18).                |
+| SO Number     | Search | Search by linked Sales Order `SO-YYYY-NNNN` to find all associated tickets. |
+
+
+---
+
+## Table Columns
+
+| Field          | Type      | Description                                                                 |
+| -------------- | --------- | --------------------------------------------------------------------------- |
+| Ticket ID      | Link      | `TKT-YYYY-NNNN`. Clicks to 23.3 Detail View.                                |
+| Customer Name      | Display   | Name of the Customer.                                                       |
+|Branch Name | Display | Name of Branch     | 
+| SO No          | Display   | Associated Sales Order (if applicable).                                     |
+| Priority       | Display   | Ticket Priority.                                                            |
+| Status         | Display   | Current lifecycle state.                                                    |
+| SLA Stage      | Badge     | Color-coded visual of SLA health (Safe/Risk/Breach).                        |
+| SLA Timer      | Display   | Live countdown (e.g. `22h 10m` remaining, `-02h 15m` overdue).              |
+
+---
+
+================================================================================
+
+# 23.2 Raise New Ticket
+
+**Description:**
+The data-entry screen for new complaints or service requests. Auto-calculates SLAs and expected resolution times based on the selected Priority and Ticket Type.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            RAISE NEW TICKET                                 │
+│                                                                              │
+│  ── CUSTOMER & SOURCE ──────────────────────────────────────────────────── │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │ Customer*     : [🔍 Search: "ABC Corp" ─────────▼]                    │ │
+│  │ Related SO    : [▼ SO-2026-00101 ▼] (Optional)                        │ │
+│  │ Reported By*  : [Suresh (Facility Manager)________]                   │ │
+│  │ Phone Number* : [+91 9876543210___________________]                   │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ── TICKETING DETAILS ──────────────────────────────────────────────────── │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │ Ticket Type*  : [▼ Complaint - Re-emergence ▼]                        │ │
+│  │ Priority*     : [▼ Urgent ▼]                                          │ │
+│  │ Subject*      : [Cockroaches seen again in lobby__]                   │ │
+│  │ Description*  : [Treated 2 days ago, but active   ]                   │ │
+│  │                 [infestation noticed near the     ]                   │ │
+│  │                 [registration desk.               ]                   │ │
+│  │                                                                       │ │
+│  │ Expected Date*: [📅 25 Mar 2026]   Time*: [▼ 17:00 ▼]                 │ │
+│  │                                                                       │ │
+│  │ Attachments   : [+ Upload Photos/Emails]                              │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│       [RAISE TICKET]                                        [CANCEL]         │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Field Table
+
+| Field          | Type     | Required | Validation                          | Description                                         |
+| -------------- | -------- | -------- | ----------------------------------- | --------------------------------------------------- |
+| Customer       | Search   | Yes      | Must select from Module 18          | Linked Customer Profile.                            |
+| Related SO     | Dropdown | No       | Filtered by selected Customer       | Links ticket to context: `[List of user's active SO-YYYY-NNNN]`. |
+| Reported By    | Text     | Yes      | —                                   | Name of the person reporting the issue.             |
+| Phone Number   | Text     | Yes      | Valid Phone format                  | Contact number for callbacks.                       |
+| Ticket Type    | Dropdown | Yes      | Values from Admin config            | Issue category: `[Complaint - Re-emergence, Complaint - Staff, Query - Billing, Query - Service]`. |
+| Priority       | Dropdown | Yes      | Auto-sets based on Type, editable   | Drives the SLA timer: `[Normal, High, Urgent, Critical]`. |
+| Subject        | Text     | Yes      | Max 100 chars                       | Short summary of the issue.                         |
+| Description    | Textarea | Yes      | Max 1000 chars                      | Full details of the complaint.                      |
+| Expected Date  | Date     | Yes      | Cannot be past date                 | Manager manually asserts proper resolution date.    |
+| Expected Time  | Time     | Yes      | —                                   | Manager manually asserts proper resolution time.    |
+| Attachments    | File     | No       | Max 5 files, 5MB each               | Image/PDF evidence of the issue.                    |
+
+---
+
+================================================================================
+
+# 23.3 Ticket Detail View
+
+**Description:**
+The core workspace for Support Agents. It presents the entire context of the ticket, complete with live SLA health, a chronological communication timeline, and multi-action capability.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to Dashboard]         TKT-2026-0042                  [Print/PDF 🖨]│
+│                                                                              │
+│  ┌─ TICKET SUMMARY ─────────────────┐ ┌─ SLA & STATUS ────────────────────┐ │
+│  │ Subject : Cockroaches in Lobby   │ │ Status     : [ In Progress ]      │ │
+│  │ Customer: ABC Corp               │ │ Priority   :  🔴 Urgent           │ │
+│  │ SO No   : SO-2026-00101          │ │ Assigned To:  Anjali M. (Support) │ │
+│  │ Type    : Complaint              │ │                                   │ │
+│  │ Created : 24 Mar 2026, 09:00 AM  │ │ ⏱ Response : ✅ Met (09:15 AM)    │ │
+│  │ Caller  : Suresh (9876543210)    │ │ ⏱ Resolut. : 🔴 -02h 15m (Breach) │ │
+│  │ Desc    : Treated 2 days ago...  │ │ 🚨 Esc. Lvl : Level 2 (Manager)   │ │
+│  └──────────────────────────────────┘ └───────────────────────────────────┘ │
+│                                                                              │
+│  ┌─ ACTIONS ──────────────────────────────────────────────────────────────┐ │
+│  │ [👤 Assign/Reassign] [📝 Add Note / Reply] [🛠 Convert to Task]         │ │
+│  │ [⏸ Pause Ticket]     [✅ Mark Resolved]    [🛑 Close Ticket]            │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌─ ACTIVITY TIMELINE ────────────────────────────────────────────────────┐ │
+│  │ 🔴 13:00 (Sys): SLA Resolution Breached! Esc. L2 (Manager Alerted).    │ │
+│  │ 🛠 10:30 (Anj): Re-task created: TASK-2026-0205 (Assigned to Ravi).    │ │
+│  │ 📝 09:15 (Anj): Called Suresh. Re-service needed today. [Int. Note]    │ │
+│  │ 👤 09:10 (Sys): Ticket assigned to Anjali M.                           │ │
+│  │ 🟢 09:00 (Sys): Ticket TKT-2026-0042 Raised by Admin.                  │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Screen Components
+
+| Component         | Description                                                                 |
+| ----------------- | --------------------------------------------------------------------------- |
+| **SLA & Status**  | Live updates of the dual-timers. Flags if the SLA has escalated to L1/L2/L3.|
+| **Actions Menu**  | Direct triggers for popups covering Assignment, Task mapping, and Resolution.|
+| **Activity Line** | Immutable audit log of all status changes, notes, calls, and task creations.|
+
+---
+
+================================================================================
+
+# 23.4 Assign / Reassign Ticket (Modal)
+
+**Description:**
+Popup to change the primary Support Agent handling the communication. Note: This does **not** assign a field technician (that happens in 23.5 Task Conversion).
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  REASSIGN TICKET: TKT-2026-0042                         │
+│                                                          │
+│  Current Agent: Anjali M. (Support)                      │
+│                                                          │
+│  Assign To (Role)*  : [▼ Operations Manager ▼]          │
+│  Assign To (Person)*: [▼ Kamal R. ▼]                    │
+│                                                          │
+│  Assignment Note    : [Customer escalated to manager  ] │
+│                       [due to repeated failure.       ] │
+│                                                          │
+│       [CONFIRM REASSIGNMENT]           [CANCEL]          │
+└─────────────────────────────────────────────────────────┘
+```
+
+| Field              | Type     | Required | Description                                  |
+| ------------------ | -------- | -------- | -------------------------------------------- |
+| Assign To (Role)   | Dropdown | Yes      | Destination Role: `[Support Agent, Senior Technician, Operations Manager, Quality Control]`. |
+| Assign To (Person) | Dropdown | Yes      | Cascading list based on Role: `[List of active Employee Names]`. |
+| Assignment Note    | Textarea | No       | Optional handover notes                      |
+
+---
+
+================================================================================
+
+# 23.5 Convert Ticket to Task (Modal / Flow)
+
+**Description:**
+The crucial bridge between Customer Support and Operations. Converts the complaint into an actionable Re-Task in Module 21.
+
+**SLA Impact:**
+- Converting to a task **does not stop** the Ticket's Resolution SLA.
+- The SLA only stops when the Technician *completes* the Re-Task in the field AND the Support Agent *resolves* the ticket.
+
+---
+
+## Screen Integration
+
+Clicking `[Convert to Task]` on Screen 23.3 directly opens **Module 21 → Screen 21.3 (Add Re-Task) → Tab 2: From Customer Tickets**.
+
+The following fields are **auto-filled** from the active ticket context:
+
+| Field               | Auto-filled Value                                |
+| ------------------- | ------------------------------------------------ |
+| Source Type         | Customer Ticket (pre-selected, locked)           |
+| Ticket ID           | Current `TKT-YYYY-NNNN`                          |
+| Customer            | Linked Customer from Ticket                      |
+| Original Service    | From the linked Sales Order / Service            |
+| Site                | From the linked Sales Order / Service            |
+| Complaint Reason    | Ticket Description (Read-only)                   |
+| Priority            | Inherited from Ticket Priority                   |
+| Materials/Chemicals | Auto-fetched from original SO service (editable) |
+
+> 📌 *For the complete Re-Task form layout, field validations, and technician assignment logic — **see Module 21 → Screen 21.3 → Tab 2**.*
+
+---
+
+================================================================================
+
+# 23.6 Ticket Resolution (Modal)
+
+**Description:**
+Fired by the Support Agent once the customer is satisfied and/or the associated field tasks are completed. 
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  RESOLVE TICKET: TKT-2026-0042                          │
+│                                                          │
+│  🚨 Pre-Check: Linked Task (TASK-2026-0205) is          │
+│  marked [Completed] by Technician Ravi.                 │
+│                                                          │
+│  Resolution Code* : [▼ Service Resolved Success ▼]      │
+│  Resolution Notes*: [Technician treated lobby area.   ] │
+│                     [Customer confirmed rodents gone. ] │
+│                     [SLA Timer will be stopped.       ] │
+│                                                          │
+│  Attachments      : [+ Upload Customer Sign-off PDF]    │
+│                                                          │
+│       [RESOLVE TICKET & STOP SLA]       [CANCEL]         │
+└─────────────────────────────────────────────────────────┘
+```
+
+## Screen Logic & Validation
+1. **Validation:** System checks Module 21. If any Linked Tasks (`TASK-2026-NNNN`) are NOT marked "Completed", the system **blocks** resolution:
+   > ❌ *Error: Cannot resolve ticket. Linked Task (TASK-2026-0205) is currently 'In Progress'.*
+2. **Success:** If no pending tasks, stops the Resolution SLA Timer.
+
+| Field             | Type     | Required | Description                                  |
+| ----------------- | -------- | -------- | -------------------------------------------- |
+| Resolution Code   | Dropdown | Yes      | Reason for closure: `[Service Resolved Success, False Alarm / Not Found, Duplicate Ticket, Unresolved (Closed)]`. |
+| Resolution Notes  | Textarea | Yes      | Detailed explanation of how issue was solved |
+| Attachments       | File     | No       | Sign-offs, final photos, emails              |
+
+---
+
+---
+
+================================================================================
+
+# ⚙️ Dual SLA & Escalation Engine Logic
+
+### 1. Dual SLA Architecture
+The system independently tracks two timers for every ticket:
+*   **Response SLA Timer:** Starts immediately when `Created`. Stops completely the moment an agent triggers `[Add Note / Reply]` or `[Assign]`.
+*   **Resolution SLA Timer:** Starts immediately when `Created`. Does not stop until the ticket is marked `[Resolved]`.
+
+### 2. SLA Pausing
+*   If a ticket requires input from the Customer (e.g., waiting on them to approve a re-visit time), the agent can click `[Pause Ticket]`.
+*   Both SLA timers **pause**.
+*   When the customer replies, or the agent clicks `[Resume]`, timers start from where they left off.
+
+### 3. Automated 3-Level Escalation Engine
+A cron/background service constantly checks active timers against the SLA Configuration Matrix (23.7).
+
+*   **Trigger L1 (Soft):** Response SLA breaches (Fixed at 2 hours post-creation with no agent action).
+    *   *Action:* Ticket changes color to 🟡. Email sent to assigning manager.
+*   **Trigger L2 (Manager Alert):** The ticket reaches **80% of the duration** between `Created Date` and the manually entered `Expected Date/Time`.
+    *   *Action:* Email alert sent to Operations Head. Flagged in Dashboards.
+*   **Trigger L3 (Critical Breach):** Current time exceeds the manually entered `Expected Date/Time`.
+    *   *Action:* Ticket status changed to "SLA Breached" 🔴. Alert sent to Company Admin / CEO roles.
+
+### 4. SLA Status Conditional Logic
+The SLA Status indicator (🟢, 🟡, 🔴) found throughout the ticketing dashboards automatically updates its visual state by evaluating the `Current Time` against the `Expected Date/Time` entered in **Screen 23.2**.
+
+*   **Safe (🟢)**: 
+    *   **Condition:** `Current Time` < `80% of Completion Window`.
+    *   **Definition:** The ticket is comfortably within the resolution timeline set by the manager.
+*   **At Risk (🟡)**: 
+    *   **Condition:** `Current Time` >= `80% of Completion Window` AND `Current Time` < `Expected Date/Time`.
+    *   **Definition:** The ticket has entered the final 20% of its allotted time. It needs immediate attention.
+*   **Breached (🔴)**: 
+    *   **Condition:** `Current Time` >= `Expected Date/Time`.
+    *   **Definition:** Overdue. The ticket failed to be resolved by the manually asserted deadline.
+
+---
+
+================================================================================
+
+# Flow Status Definitions
+
+## Ticket Lifecycle Matrix
+
+| Status      | Description                                     | Next Allowed Statuses         | SLA Timer Running? |
+| ----------- | ----------------------------------------------- | ----------------------------- | ------------------ |
+| Open        | Fresh ticket, unassigned.                       | Assigned, In Progress         | YES                |
+| Assigned    | Support Agent tagged, no action taken yet.      | In Progress                   | YES                |
+| In Progress | Being worked on, or Module 21 task dispatched.  | Paused, Resolved              | YES                |
+| Paused      | Waiting indefinitely on Customer.               | In Progress                   | NO (Paused)        |
+| Resolved    | Issue fixed, final confirmation pending.        | Closed, Reopened              | NO (Stopped)       |
+| Closed      | Final end-state. Locked.                        | Reopened (rare case)          | NO (Stopped)       |
 
 ---
 
