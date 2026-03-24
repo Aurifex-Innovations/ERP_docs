@@ -1003,3 +1003,176 @@ A dedicated form for rescheduling a task to a different date/time and/or reassig
 
 > **Future Module:** Customer Support Ticket creation and management module (referenced in Re-Task flow, Tab 2 of Screen 21.3).
 
+---
+---
+
+================================================================================
+================================================================================
+
+# 🎯 MODULE 22: LIVE LOCATION & TRAVEL TRACKING
+
+## Overview
+
+Live Location & Travel Tracking provides the **Operations Manager** and **Branch Manager** with real-time visibility into the field workforce. It directly builds on **Module 21 (Task Management)** by correlating a technician's GPS location with their scheduled tasks, calculating actual travel distances, and maintaining auditable travel logs.
+
+**Module Connections:**
+
+- **Depends on:** Module 21 (Tasks — locations, schedules, status), Module 8 (Employee — technician data), Module 7 (Branch — start/end depot points).
+- **Used by:** Reporting modules, Payroll (for travel claim validations).
+
+---
+
+The module contains the following screens:
+
+- 22.1 Fleet Tracking Dashboard (Live & Historical Map)
+- 22.2 Technician Logistics & Travel Log (Timeline & Tabular Reports)
+
+---
+
+================================================================================
+
+# 22.1 Fleet Tracking Dashboard
+
+**Description:**
+The primary command center for tracking the workforce. By default, it shows **Live Tracking** for Today. Managers can use the Date Calendar to select **any previous date** to view the historical map and routes of all active technicians on that specific day. 
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          FLEET TRACKING DASHBOARD                           │
+│                                                                              │
+│  ┌─────────────────────────┐ ┌──────────────────────────────────────────────┐│
+│  │ FILTERS                 │ │                                              ││
+│  │ Date  : [📅 Today ▼]    │ │              [ MAP VIEW ]                    ││
+│  │ Branch: [▼ All ▼]       │ │                                              ││
+│  │ Techs : [🔍 Search ▼]   │ │       📍(Ravi)               📍(Anjali)      ││
+│  │ Status: [▼ Active ▼]    │ │                                              ││
+│  │                         │ │                                              ││
+│  │ [🟢 Active] [⚪ Offline]│ │                                              ││
+│  │                         │ │                                              ││
+│  │ 🟢 Ravi S.              │ │                                              ││
+│  │ 📍 Head Office (Andheri)│ │                              📍(Amit)        ││
+│  │ ⏱ On Site (Since 08:05) │ │                                              ││
+│  │ 👤 ABC Corp (Cockroach) │ │                                              ││
+│  │ 📋 TASK-2026-0201       │ │                                              ││
+│  │                         │ │                                              ││
+│  │ ⚪ Amit T. (Offline)   │ │                                              ││
+│  │ 📍 Last: Branch Office  │ │                                              ││
+│  │ ⏱ Offline since 11:30  │ │         📍(Suresh)                         ││
+│  │                         │ │                                              ││
+│  │                         │ │                                              ││
+│  │ [Load More Data...]     │ │   [🔍 Zoom]  [🗺 Terrain]  [⚙ Map Settings]   ││
+│  └─────────────────────────┘ └──────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Dashboard Filters & Feed Fields
+
+| Field              | Type      | Description                                                |
+| ------------------ | --------- | ---------------------------------------------------------- |
+| Date Selector      | Date      | Default: Today (Live). Select past dates for historical Map.|
+| Technician Name    | Link      | Clicks through to Technician Travel Log (22.2).            |
+| Current Location   | Display   | Nearest address or specific Site Name (from Module 21).    |
+| Feed Tabs          | Tab       | Toggle between Active techs map vs Offline techs list      |
+| Current Status     | Badge     | Travelling / On Site / Idle / Offline.                     |
+| Customer & Service | Display   | Linked Customer Name and specific Service Type.            |
+| Active Task        | Link      | Current Module 21 Task ID (if On Site or Travelling to it).|
+
+---
+
+## Map Interactions
+
+| Action                        | Result                                                              |
+| ----------------------------- | ------------------------------------------------------------------- |
+| **Select Past Date**          | Updates map to show all drawn routes for selected techs on that day.|
+| **Hover on Map Pin**          | Shows mini-tooltip with Name, Speed/Time, and Assigned Task.        |
+| **Click on Feed Item**        | Pans/Zooms map to the selected technician's specific location.      |
+
+---
+
+================================================================================
+
+# 22.2 Technician Logistics & Travel Log
+
+**Description:**
+A unified, comprehensive profile of a specific technician's logistics data. Managers can select the view range (**Daily, Weekly, Monthly**) to see aggregated map routes, an activity timeline, and the full tabular travel log data (previously 22.3) in one organized place. 
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to Dashboard]         LOGISTICS PROFILE: Ravi S.                   │
+│                                                                              │
+│  Filters: Period: [▼ Daily ▼]  Date: [📅 23 Mar 2026 ▼]                     │
+│                                                                              │
+│  ┌─────────────────────────┐ ┌──────────────────────────────────────────────┐│
+│  │ SUMMARY (23 Mar)        │ │                                              ││
+│  │ Total Distance: 42.5 KM │ │              [ MAP VIEW ]                    ││
+│  │ Total Active  : 8h 30m  │ │           (T1) ---------- (T2)               ││
+│  │ Tasks Done    : 3       │ │           /                 \                ││
+│  │                         │ │          /                   \               ││
+│  │ ── TIMELINE ─────────── │ │        (B)                    (T3)           ││
+│  │                         │ │          \                   /               ││
+│  │ 08:30 AM: Arrived       │ │           \                 /                ││
+│  │ 📍 Head Office (Site)   │ │            ------- (B) -----                 ││
+│  │ 👤 ABC Corp (Cockroach) │ │                                              ││
+│  │ 📋 TASK-2026-0201       │ │                                              ││
+│  │                         │ │  [ 📥 Export Map ]   [ Replay Route ▶ ]      ││
+│  │ 08:30 - 10:15 (On Site) │ └──────────────────────────────────────────────┘│
+│  │                         │                                                 │
+│  │ 10:15 AM: Departed      │  ── TABULAR TRAVEL LOG ───────────────────────  │
+│  │ 📍 Head Office          │  ┌───────────────────────────────────────────┐  │
+│  │                         │  │ Date  │ From       │ To Cust/Site │ Dist  │  │
+│  │ 10:15 - 10:45 (Travel)  │  │───────┼────────────┼──────────────┼───────│  │
+│  │ 🚗 12.8 KM              │  │ 23 Mar│ Branch     │ ABC: Head Off│15.2 KM│  │
+│  │ ⬇ Scroll for more...    │  │ 23 Mar│ ABC: Head  │ PQR: Warehse │12.8 KM│  │
+│  └─────────────────────────┘  └───────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Profile Filter Fields
+
+| Field            | Type     | Description                                             |
+| ---------------- | -------- | ------------------------------------------------------- |
+| Period Selector  | Dropdown | Select Daily, Weekly, or Monthly view.                  |
+| Date Selector    | Control  | Selects the specific date, week, or month to analyze.   |
+| Summary Stats    | Display  | Aggregated Distance, Time, and Tasks for chosen period. |
+
+---
+
+## Timeline & Tabular Log Fields
+
+| Field             | Type    | Description                                             |
+| ----------------- | ------- | ------------------------------------------------------- |
+| Event Time        | Display | Timestamp of the event (arrival, departure, clock-in).  |
+| Event Location    | Display | Site Name or Geo-location address.                      |
+| Customer & Service| Display | Associated Customer Name and specific Service Type.     |
+| Task Content Popup| Modal   | Click Task to view: Status, Category, Techs, Services Done Count (from Mod 21).|
+| Tabular Log Grid  | Grid    | Datatable matching tasks/segments to exact GPS distances.|
+
+---
+
+================================================================================
+
+# Business Rules & Logic (Module 22)
+
+| Rule                          | Description                                                                 |
+| ----------------------------- | --------------------------------------------------------------------------- |
+| **GPS Polling Rate**          | Technician mobile app sends GPS coordinates every X minutes/meters.         |
+| **Task Auto-Arrival**         | Proximity to Module 21 Site Lat/Long automatically logs an 'Arrived' event. |
+| **Idle Alert**                | If GPS is stationary for > Y minutes not near a task site, flag as 'Idle'.  |
+| **Background Tracking**       | GPS tracking must only be active between Clock-in and Clock-out events.     |
+| **Distance Calculation**      | System calculates route segments and aggregates them for Daily/Weekly stats.|
+
+---
+
+================================================================================
