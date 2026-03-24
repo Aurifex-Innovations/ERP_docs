@@ -886,6 +886,8 @@ Your document has been resubmitted for verification.
 | Plan Details         | Text (Read-only)     | Auto     | Description of selected plan        |
 | Per Branch Price     | Currency (Read-only) | Auto     | From plan configuration             |
 | Per Technician Price | Currency (Read-only) | Auto     | From plan configuration             |
+| Exrta Technician Price | Currency (Read-only) | Auto     | From plan configuration             |
+| Extra Branch Price     | Currency (Read-only) | Auto     | From plan configuration             |
 | Branch Count         | Number               | Yes      | Number of branches to subscribe     |
 | Technician Count     | Number               | Yes      | Number of technicians to subscribe  |
 | Duration             | Radio Button         | Yes      | Monthly/Quarterly/Yearly/Custom     |
@@ -960,7 +962,9 @@ Each record represents a **subscription purchase entry**.
 | Plan Type               | Type of subscription plan                |
 | Duration                | Subscription duration (Monthly / Yearly) |
 | Branches                | Number of branches included              |
+| Extra Branches          | Number of extra branches included        |
 | Technicians             | Number of technicians included           |
+| Extra Technicians       | Number of extra technician included      |
 | Subscription Start Date | Date when subscription becomes active    |
 | Expiry Date             | Subscription end date                    |
 | Status                  | Active / Expired / Cancelled             |
