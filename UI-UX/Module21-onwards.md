@@ -1030,7 +1030,7 @@ The module contains the following screens:
 
 ================================================================================
 
-# 22.1 Fleet Tracking Dashboard
+# 22.1 Live Tracking Dashboard
 
 **Description:**
 The primary command center for tracking the workforce. By default, it shows **Live Tracking** for Today. Managers can use the Date Calendar to select **any previous date** to view the historical map and routes of all active technicians on that specific day.
