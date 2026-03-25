@@ -1,6 +1,7 @@
 # Role Permission Module API Documentation
 
 ## Short Description
+
 The Role Permission module is the central RBAC (Role-Based Access Control) engine of the platform. It allows Super Admins to define system-wide role templates and Company Admins to manage organization-specific roles. The module supports fine-grained, module-wise permission assignment (VIEW, ADD, EDIT, DELETE, REQUEST, APPROVAL, EXPORT, CONFIGURE) and ensures secure user access across web and mobile applications.
 
 ---
@@ -8,6 +9,7 @@ The Role Permission module is the central RBAC (Role-Based Access Control) engin
 ## APIs
 
 ### Get All Roles
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/role/get-all`
 - **Purpose:** Retrieves a list of all roles available in the platform.
@@ -17,6 +19,7 @@ The Role Permission module is the central RBAC (Role-Based Access Control) engin
 - **Access / Security:** `hasAnyRole('SERAVION', 'CEO')` or `hasAuthority('ROLE_MANAGEMENT_READ')`.
 
 ### Get Role by ID
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/role`
 - **Purpose:** Retrieves detailed information about a role by its ID, including mapped permissions.
@@ -27,6 +30,7 @@ The Role Permission module is the central RBAC (Role-Based Access Control) engin
 - **Access / Security:** `hasAnyRole('SERAVION', 'CEO')` or `hasAuthority('ROLE_MANAGEMENT_READ')`.
 
 ### Create Role
+
 - **Method:** `POST`
 - **Endpoint:** `/api/v1/role/create`
 - **Purpose:** Creates a new role along with its module permissions.
@@ -38,6 +42,7 @@ The Role Permission module is the central RBAC (Role-Based Access Control) engin
 - **Notes:** If `isAppUser` is true, module permissions are ignored (mobile app only).
 
 ### Update Role
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/v1/role/update`
 - **Purpose:** Updates an existing role's metadata and refreshes its module permissions.
@@ -50,6 +55,7 @@ The Role Permission module is the central RBAC (Role-Based Access Control) engin
 - **Notes:** Overwrites existing permissions for the role.
 
 ### Delete Role
+
 - **Method:** `DELETE`
 - **Endpoint:** `/api/v1/role/delete`
 - **Purpose:** Deletes a role and reassigns all linked users to a target role.
@@ -61,14 +67,16 @@ The Role Permission module is the central RBAC (Role-Based Access Control) engin
 - **Notes:** Hard delete from database. Requires a target role for migration if users are assigned.
 
 ### Role Dropdown
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/role/dropdown`
-- **Purpose:** Fetches a list of active role names and IDs for selection menus.
+- **Purpose:** Fetches a list of active role names and IDs for selection menus. (Use Whenever Role Dropdown Required.)
 - **Use Case:** Selecting a role during User Creation or Role Migration.
 - **Used In:** User Creation Step 1, Role Delete Popup.
 - **Response:** `List<RoleDropdownItem>`
 
 ### Role Analytics (Seravion)
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/role/seravion/analytics`
 - **Purpose:** Retrieves platform-wide role statistics for Super Admins.
@@ -77,6 +85,7 @@ The Role Permission module is the central RBAC (Role-Based Access Control) engin
 - **Access / Security:** `hasRole('SERAVION')`.
 
 ### Role Report (Company Admin)
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/role/analytics`
 - **Purpose:** Retrieves role statistics and usage for a specific company.
@@ -89,6 +98,7 @@ The Role Permission module is the central RBAC (Role-Based Access Control) engin
 ## Reusable / Common APIs (Used in this Module)
 
 ### Get All Modules
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/modules`
 - **Purpose:** Fetch all global platform modules (e.g., BRANCH_MANAGEMENT, USER_MANAGEMENT).
@@ -96,6 +106,7 @@ The Role Permission module is the central RBAC (Role-Based Access Control) engin
 - **Used In:** Add/Edit Role Screen (Permission Matrix).
 
 ### Get All Actions
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/actions`
 - **Purpose:** Fetch all global platform actions (e.g., READ, ADD, EDIT, DELETE, REQUEST, APPROVAL).
@@ -107,6 +118,7 @@ The Role Permission module is the central RBAC (Role-Based Access Control) engin
 ## Module Enums
 
 ### RoleStatus
+
 - **Used In:** Role Entity / Service logic
 - **Values:**
   - `ACTIVE`
