@@ -7159,21 +7159,41 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 
 ## Section 1: Source Selection Fields
 
-| Field           | Type            | Required    | Options/Validation                                                              | Notes                              |
-| --------------- | --------------- | ----------- | ------------------------------------------------------------------------------- | ---------------------------------- |
-| Source Type     | Radio           | Yes         | From Lead / From Customer / Add New                                             | Determines which sub-fields appear |
-| Select Lead     | Search Dropdown | Conditional | Active leads from Module 15 (Status ≥ QUALIFIED)                                | Required if Source = From Lead     |
-| Select Customer | Search Dropdown | Conditional | Active customers from Module 4                                                  | Required if Source = From Customer |
-| Full Name       | Text            | Conditional | Min 3 characters                                                                | Required if Source = Add New       |
-| Phone           | Number          | Conditional | 10-digit Indian mobile                                                          | Required if Source = Add New       |
-| Email           | Email           | No          | Valid email format                                                              | Optional for Add New               |
-| Company Name    | Text            | No          | Max 100 characters                                                              | Optional for Add New               |
-| Address         | Text            | Conditional | Min 10 characters                                                               | Required if Source = Add New       |
-| City            | Text            | Conditional | Min 3 characters                                                                | Required if Source = Add New       |
-| State           | Dropdown        | Conditional | Indian states list                                                              | Required if Source = Add New       |
-| Pincode         | Number          | No          | 6-digit                                                                         | Optional                           |
-| Country         | Dropdown        | No          | Country list (Default: India)                                                   | Optional                           |
-| Google Map URL  | URL             | No          | Valid URL format (e.g., https://maps.google.com/...)                             | Optional; paste from Google Maps   |
+### A. From Lead (Total 8 Fields)
+| Field | Type | Required | Options/Validation | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| **Select Lead** | Search | Yes | Active leads (Status ≥ QUALIFIED) | Required to trigger auto-fill |
+| **Lead ID** | Text | System | Auto-filled (Read-only) | Reference from Module 15 |
+| **Contact Person**| Text | System | Auto-filled (Read-only) | |
+| **Phone** | Text | System | Auto-filled (Read-only) | |
+| **Email** | Text | System | Auto-filled (Read-only) | |
+| **Lead Type** | Badge | System | Auto-filled (Read-only) | |
+| **Lead Status** | Badge | System | QUALIFIED ✅ (Read-only) | |
+
+#### B. From Customer (Total 8 Fields)
+| Field | Type | Required | Options/Validation | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| **Select Customer**| Search | Yes | Active customers from Module 9 | Required to trigger auto-fill |
+| **Customer ID** | Text | System | Auto-filled (Read-only) | |
+| **Customer Name** | Text | System | Auto-filled (Read-only) | |
+| **Phone** | Text | System | Auto-filled (Read-only) | |
+| **Email** | Text | System | Auto-filled (Read-only) | |
+| **Customer Type** | Badge | System | Auto-filled (Read-only) | |
+| **Address** | Text | System | Auto-filled (Read-only) | |
+
+#### C. Add New (Total 11 Fields)
+| Field | Type | Required | Options/Validation | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| **Full Name** | Text | Yes | Min 3 characters | |
+| **Phone** | Number | Yes | 10-digit Indian mobile | |
+| **Email** | Email | No | Valid email format | |
+| **Company Name** | Text | No | Max 100 characters | |
+| **Address** | Text | Yes | Min 10 characters | Site location address |
+| **City** | Text | Yes | Min 3 characters | |
+| **State** | Dropdown | Yes | Indian states list | |
+| **Pincode** | Number | No | 6-digit | |
+| **Country** | Dropdown | No | Default: India | |
+| **Google Map URL** | URL | No | Valid URL format | |
 
 ## Section 2: General Configuration Fields
 
@@ -8440,18 +8460,24 @@ A multi-section form to register a new customer — either by converting an exis
 
 ## Section 1: Source Fields
 
-| Field       | Type            | Required    | Options / Validation                                                    | Notes                                           |
-| ----------- | --------------- | ----------- | ----------------------------------------------------------------------- | ----------------------------------------------- |
-| Entry Mode  | Radio           | Yes         | Import from Lead / Manual Entry                                         | Determines which sub-fields are shown below     |
-| Select Lead | Search Dropdown | Conditional | Leads with Status = Qualified or Won (from Module 15)                   | Required if Entry Mode = Import from Lead       |
-| Lead ID     | Auto-filled     | System      | Read-only                                                               | Populated on lead selection                     |
-| Lead Name   | Auto-filled     | System      | Read-only                                                               | Populated on lead selection                     |
-| Phone       | Auto-filled     | System      | Read-only                                                               | Populated on lead selection                     |
-| Email       | Auto-filled     | System      | Read-only                                                               | Populated on lead selection                     |
-| Lead Type   | Auto-filled     | System      | Read-only                                                               | Determines default Customer Type in Section 2   |
-| Lead Status | Auto-filled     | System      | Read-only                                                               | Must be Qualified or Won to allow conversion    |
+### A. Import from Lead (Auto-fill)
+| Field | Type | Required | Options / Validation | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| **Select Lead** | Search | Yes | Leads (Status = Qualified or Won) | Triggers auto-population |
+| **Lead ID** | Text | System | Auto-filled (Read-only) | |
+| **Lead Name** | Text | System | Auto-filled (Read-only) | |
+| **Phone** | Text | System | Auto-filled (Read-only) | |
+| **Email** | Text | System | Auto-filled (Read-only) | |
+| **Lead Type** | Badge | System | Auto-filled (Read-only) | |
+| **Lead Status** | Badge | System | Qualified or Won (Read-only) | |
 
-> **Note:** Only leads with status **Qualified** or **Won** appear in the Lead search dropdown. Leads in Pending, New, or Lost status cannot be converted to customers.
+#### B. Manual Entry
+| Field | Type | Required | Options / Validation | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| **Entry Mode** | Radio | Yes | Select "Manual Entry" | No additional source fields appear |
+
+> [!NOTE]
+> Only leads with status **Qualified** or **Won** appear in the Lead search dropdown. Leads in Pending, New, or Lost status cannot be converted to customers.
 
 ---
 
@@ -9380,22 +9406,23 @@ This section breaks down the contract deliverables on a per-site basis. Each sit
 
 ## Section 4: Payment & Commercial Terms Fields
 
-| Field                  | Type     | Required | Options / Validation                                                              | Notes                                            |
-| ---------------------- | -------- | -------- | --------------------------------------------------------------------------------- | ------------------------------------------------ |
-| Payment Schedule Type  | Dropdown | Yes      | 100% Advance / Monthly Post-paid / Quarterly Post-paid / Half-Yearly / Milestone-based / Custom | Determines payment grid structure; * For Custom set one more field  |
-| Payment Due Date       | Date     | Cond.    | Required if 100% Advance; must be ≤ Start Date                                    | Single payment date                              |
-| Payment Grid           | Table    | Cond.    | Auto-generated for Quarterly/Monthly/Half-Yearly; manual for Milestone(Editable)/Custom     | Must sum to Total Sale Value                     |
-| Invoicing Frequency    | Dropdown | Yes      | Monthly / Quarterly / Half-Yearly / Annually / On Milestone / Service completion      | Determines invoice generation cadence            |
-| Legal SLA Remarks      | Text Area| No       | Max 1000 characters                                                               | Service-level commitments, penalties, terms       |
+### A. 100% Advance
+| Field | Type | Required | Options / Validation | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| **Payment Due Date** | Date | Yes | Must be ≤ Start Date | Single payment date |
+| **Amount (₹)** | Currency | System | Full contract value | Read-only |
 
-### Payment Grid Fields (for Quarterly / Milestone / Custom)
+#### B. Periodic (Monthly / Quarterly / Half-Yearly)
+| Field | Type | Required | Options / Validation | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| **Payment Grid** | Table | System | Auto-generated periods (e.g., Q1, Q2) | User can only view the dates/amounts |
+| **Invoicing Freq.** | Dropdown | Yes | Matches periodic schedule | e.g., Monthly invoicing |
 
-| Field          | Type     | Required | Validation                               | Notes                              |
-| -------------- | -------- | -------- | ---------------------------------------- | ---------------------------------- |
-| Period / Label | Text     | Yes      | Auto-generated for periodic; manual for milestone | e.g., "Q1", "M1 – Kick-off"  |
-| Description    | Text     | No       | Max 100 chars                            | Optional description               |
-| Amount (₹)     | Currency | Yes      | Must be > 0                              | Payment amount for this period     |
-| Due Date       | Date     | Yes      | Must be within contract Start–End range  | When payment is due                |
+#### C. Milestone / Custom-based
+| Field | Type | Required | Options / Validation | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| **Payment Grid** | Table | Yes | Manual entry: Label, Description, Amount, Due Date | Must sum to Total Sale Value |
+| **Invoicing Freq.** | Dropdown | Yes | On Milestone / Service completion | |
 
 > **Validation:** Sum of all payment grid amounts **must equal** the Total Sale Value. The system shows a validation error if there is a mismatch.
 
@@ -10272,20 +10299,30 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 
 ## Section 1: Order Source & Type Fields
 
-| Field              | Type            | Required    | Options / Validation                                                                | Notes                                          |
-| ------------------ | --------------- | ----------- | ----------------------------------------------------------------------------------- | ---------------------------------------------- |
-| Order Type         | Radio           | Yes         | Service Contract / One-Time Service / Product Sale                                       | Determines which source + line-item fields show|
-| Select Contract    | Search Dropdown | Conditional | Active contracts from Module 19                                                     | Required if Type = Service Contract                 |
-| Billing Period     | Dropdown        | Conditional | Available billing periods from contract's payment schedule                          | Required if Type = Service Contract                 |
-| Select Quotation/GMA | Search Dropdown | Conditional | Approved Quotations (Module 16) or Approved GMAs (Module 17)                     | Required if Type = One-Time Service            |
-| Select Customer    | Search Dropdown | Conditional | Active customers from Module 18                                                     | Required if Type = Product Sale                |
-| Contract ID        | Auto-filled     | System      | Read-only                                                                           | Populated from contract selection              |
-| Customer Name      | Auto-filled     | System      | Read-only                                                                           | From source record                             |
-| Customer ID        | Auto-filled     | System      | Read-only                                                                           | From source record                             |
-| Service Type       | Auto-filled     | System      | Read-only (for service orders)                                                      | Pest / service category                        |
-| Contract / Quoted Value | Auto-filled | System      | Read-only                                                                           | Reference value from source                    |
-| SO Date            | Date            | Yes         | Default: Today; cannot be future > 30 days                                          | Sales Order creation date                      |
-| Branch             | Dropdown        | Yes         | Auto from source; editable — active branches from Module 7                          | Servicing / dispatch branch                    |
+### A. Service Contract
+| Field | Type | Required | Options / Validation | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| **Select Contract** | Search | Yes | Active contracts from Module 19 | Triggers auto-fill |
+| **Billing Period** | Dropdown | Yes | Unused periods from contract schedule | |
+| **Contract ID** | Text | System | Auto-filled (Read-only) | |
+| **Customer Name** | Text | System | Auto-filled (Read-only) | |
+| **Customer ID** | Text | System | Auto-filled (Read-only) | |
+
+#### B. One-Time Service
+| Field | Type | Required | Options / Validation | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| **Source Type** | Radio | Yes | From Quotation / Standalone | |
+| **Select Source** | Search | Cond. | Approved Quotations (Module 16) | Required if Source = Quotation |
+| **Select Customer** | Search | Cond. | Active customers from Module 18 | Required if Source = Standalone |
+| **Service Type** | Text | System | Auto-filled (Read-only) | |
+| **Quoted Value** | Currency | System | Auto-filled (Read-only) | |
+
+#### C. Product Sale
+| Field | Type | Required | Options / Validation | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| **Select Customer** | Search | Yes | Active customers from Module 18 | |
+| **SO Date** | Date | Yes | Default: Today | |
+| **Branch** | Dropdown | Yes | Active branches from Module 7 | |
 
 > **Note:** For **Service Contract** orders, the system only shows contracts with unused billing periods. If all billing periods already have SOs, the contract will not appear in the search. For **One-Time Service**, only Quotations / GMAs that have not yet been converted to an SO are shown.
 
