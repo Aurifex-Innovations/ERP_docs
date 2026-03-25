@@ -6189,7 +6189,7 @@ The Add Quotation form allows sales team members to create new quotations. The f
 │                    [SAVE DRAFT]      [SEND QUOTATION]       [CANCEL]         │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
-
+```
 ---
 
 ## Section 1: Source Selection & Logic
