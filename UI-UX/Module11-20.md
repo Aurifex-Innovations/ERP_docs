@@ -8471,10 +8471,21 @@ A multi-section form to register a new customer — either by converting an exis
 | **Lead Type** | Badge | System | Auto-filled (Read-only) | |
 | **Lead Status** | Badge | System | Qualified or Won (Read-only) | |
 
-#### B. Manual Entry
+#### B. Manual Entry (Textfields)
+
 | Field | Type | Required | Options / Validation | Notes |
 | :--- | :--- | :--- | :--- | :--- |
-| **Entry Mode** | Radio | Yes | Select "Manual Entry" | No additional source fields appear |
+| **Entry Mode** | Radio | Yes | Select "Manual Entry" | Enables manual text fields in Sections 2 & 3 |
+| **Entity / Full Name** | Text | Yes | Min 3 characters | Manual entry required |
+| **Contact Person** | Text | Yes | Min 3 characters | Manual entry required |
+| **Phone** | Number | Yes | 10-digit Indian mobile | Manual entry required |
+| **Email** | Email | Yes | Valid email format | Manual entry required |
+| **Branch** | Dropdown | Yes | Select Branch | Manual selection required |
+| **Billing Address** | Text | Yes | Min 10 characters | Manual entry required |
+| **City** | Text | Yes | Min 3 characters | Manual entry required |
+| **State** | Dropdown | Yes | Select State | Manual selection required |
+| **Pincode** | Number | Yes | 6-digit numeric | Manual entry required |
+| **Google Map URL** | URL | Yes | Valid URL format | Manual entry required |
 
 > [!NOTE]
 > Only leads with status **Qualified** or **Won** appear in the Lead search dropdown. Leads in Pending, New, or Lost status cannot be converted to customers.
