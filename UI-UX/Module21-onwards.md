@@ -1895,7 +1895,7 @@ Form for employees to submit a new petty cash expense claim. Captures expense de
 | Field              | Type        | Required | Validation                              | Description                         |
 | ------------------ | ----------- | -------- | --------------------------------------- | ----------------------------------- |
 | Bill / Receipt     | File Upload | Yes      | Min 1 file; PDF, JPG, PNG; Max 5MB each | Proof of expense (up to 5 files)    |
-| Upload More         | Button     | Yes      | Min 1 file; PDF, JPG, PNG; Max 5MB each | Add More File (up to 5 files)       |
+| Upload More         | Button     | Yes      | Min 1 file; PDF, JPG, PNG; Max 5MB each | Can be add more file when 1 file is already uploaded (up to 5 files)       |
 | Justification Note | Textarea    | No       | Max 500 chars                           | Additional context for the approver |
 
 ---
