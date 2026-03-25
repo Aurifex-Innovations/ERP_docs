@@ -1045,12 +1045,11 @@ The primary command center for tracking the workforce. By default, it shows **Li
 │                                                                              │
 │  ┌─────────────────────────┐ ┌──────────────────────────────────────────────┐│
 │  │ FILTERS                 │ │                                              ││
-│  │ Date  : [📅 Today ▼]    │ │              [ MAP VIEW ]                    ││
+│  │ Date  : [📅 Today ▼]    │ │              [ MAP VIEW ]    [refresh button]││
 │  │ Branch: [▼ All ▼]       │ │                                              ││
 │  │ Techs : [🔍 Search ▼]   │ │       📍(Ravi)               📍(Anjali)      ││
-│  │ Status: [▼ Active ▼]    │ │                                              ││
 │  │                         │ │                                              ││
-│  │ [🟢 Active] [⚪ Offline]│ │                                              ││
+│  │ [All] [🟢 Active] [⚪ Offline]│ │                                              ││
 │  │                         │ │                                              ││
 │  │ 🟢 Ravi S.              │ │                                              ││
 │  │ 📍 Head Office (Andheri)│ │                              📍(Amit)        ││
@@ -1072,15 +1071,15 @@ The primary command center for tracking the workforce. By default, it shows **Li
 
 ## Dashboard Filters & Feed Fields
 
-| Field              | Type    | Description                                                  |
-| ------------------ | ------- | ------------------------------------------------------------ |
-| Date Selector      | Date    | Default: Today (Live). Select past dates for historical Map. |
-| Technician Name    | Link    | Clicks through to Technician Travel Log (22.2).              |
-| Current Location   | Display | Nearest address or specific Site Name (from Module 21).      |
-| Feed Tabs          | Tab     | Toggle between Active techs map vs Offline techs list        |
-| Current Status     | Badge   | Travelling / On Site / Idle / Offline.                       |
-| Customer & Service | Display | Linked Customer Name and specific Service Type.              |
-| Active Task        | Link    | Current Module 21 Task ID (if On Site or Travelling to it).  |
+| Field              | Type      | Description                                                |
+| ------------------ | --------- | ---------------------------------------------------------- |
+| Date Selector      | Date      | Default: Today (Live). Select past dates for historical Map.|
+| Technician Name    | Link      | Clicks through to Technician Travel Log (22.2).            |
+| Current Location   | Display   | Nearest address or specific Site Name (from Module 21).    |
+| Feed Tabs          | Tab       | Toggle between Active techs map vs Offline techs list      |
+| Current Status     | Badge     | Travelling / On Site / Idle / Offline.                     |
+| Customer & Service | Display   | Linked Customer Name and specific Service Type.            |
+| Active Task        | Link      | Current Module 21 Task ID (if On Site or Travelling to it).|
 
 ---
 
@@ -1112,7 +1111,7 @@ A unified, comprehensive profile of a specific technician's logistics data. Mana
 │  Filters: Period: [▼ Daily ▼]  Date: [📅 23 Mar 2026 ▼]                     │
 │                                                                              │
 │  ┌─ SUMMARY & TIMELINE ─────────────────┐ ┌─ EVENT MAP ───────────────────┐│
-│  │ Total Distance: 42.5 KM              │ │                               ││
+│  │ Total Distance: 42.5 KM              │ │            [refresh button]   ││
 │  │ Total Active  : 8h 30m               │ │      (T1) ---------- (T2)     ││
 │  │ Tasks Done    : 3                    │ │      /                 \      ││
 │  │                                      │ │     /                   \     ││
