@@ -5689,6 +5689,7 @@ Captures a brief summary of the interaction, allows the user to update the Lead'
 │                             Lead Type : Service  | Branch Name: Main Branch │
 │  ─────────────────────────────────────────────────────────────────────────  │
 │                                                                             │
+│  Contact Type*:    [▼ Call / Email / WhatsApp / Meeting / Site Visit ▼]    │
 │  Interaction Summary*:  [________________________________________]          │
 │                         (Details of the conversation or action taken)       │
 │                                                                             │
@@ -5721,6 +5722,7 @@ Captures a brief summary of the interaction, allows the user to update the Lead'
 | Lead Name            | Text      | Auto        |                                                              |                                        |
 | Lead Type            | Dropdown  | Auto        | Service, Product, Contract                                        |                                        |
 | Branch Name          | Dropdown  | Auto        |                                                              |                                        |
+| Contact Type         | Dropdown  | Yes         | Call, Meeting, Site Visit, Email, WhatsApp, Other            | Interaction mode                       |
 | Current Status       | Badge     | Auto        | New, Qualified, Quotation send, Negotiation, Converted, Lost | Updates the main lead status           |
 | Interaction Summary  | Text Area | Yes         | Min 10 characters                                            | Details of the current interaction     |
 | Update Status        | Dropdown  | Yes         | New, Qualified, Quotation send, Negotiation, Converted, Lost | Updates the main lead status           |
@@ -5765,6 +5767,7 @@ Read-only detailed view of a specific follow-up interaction showing complete con
 │  │  Follow-up Number:     #5                                               ││
 │  │  Date Executed:          18-Mar-2026, 15:30 IST                         ││
 │  │  Conducted By:           Rajesh Kumar (Sales Executive)                 ││
+│  │  Contact Type:           Call                                           ││
 │  └─────────────────────────────────────────────────────────────────────────┘│
 │                                                                             │
 │  INTERACTION DETAILS                                                        │
@@ -5812,6 +5815,7 @@ Read-only detailed view of a specific follow-up interaction showing complete con
 |                         | Lead Name           | Text            | Name of the associated lead                  |
 |                         | Date Executed       | DateTime        | When follow-up was submitted                 |
 |                         | Conducted By        | Text            | User who logged the follow-up                |
+|                         | Contact Type        | Text            | Mode of interaction                          |
 | **Interaction Details** | Interaction Summary | Text Area       | Full conversation notes from the interaction |
 |                         | Lead Status Updated | Text            | Before → After status change                 |
 | **Next Action**         | Scheduled Action    | Boolean         | Whether a next action was scheduled (Yes/No) |
