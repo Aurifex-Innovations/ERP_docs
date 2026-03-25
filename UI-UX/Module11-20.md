@@ -6597,9 +6597,7 @@ Read-only detailed view of a quotation showing complete pricing breakdown, servi
 | Action              | Available When    | Behavior                                               |
 | ------------------- | ----------------- | ------------------------------------------------------ |
 | Close               | Always            | Returns to Quotation Dashboard                         |
-| Edit                | Status = Draft    | Opens Edit Quotation form (same as Add, pre-populated) |
 | Download PDF        | Always            | Downloads customer-facing quotation PDF                |
-| Resend              | Status = Sent     | Resends quotation to client via email/WhatsApp         |
 | Convert to Contract | Status = Accepted | Triggers Contract creation workflow in Module 18       |
 
 ---
