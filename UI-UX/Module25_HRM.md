@@ -654,10 +654,10 @@ Form to apply for leave on behalf of an employee. Triggered from the Leave butto
 │  │ To Date*        : [📅 ____________]                                     ││
 │  │ Total Days      : 2 (auto-calculated, excludes week offs & holidays)    ││
 │  │                                                                          ││
-│  │ Description*    : [__________________________________________________] ││
-│  │                   [Textarea — reason for leave]                          ││
-│  │                                                                          ││
-│  │ Status          : ● Pending (Auto — set to Pending on submission)       ││
+│  │ Description*    : [__________________________________________________] │  │
+│  │                   [Textarea — reason for leave]                          │  │
+│  │                                                                          │  │
+│  │ Status*         : [▼ Approved / Pending / Rejected ▼]                  │  │
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
 │  ─── LEAVE HISTORY ──────────────────────────────────────────────────────  │
@@ -685,7 +685,7 @@ Form to apply for leave on behalf of an employee. Triggered from the Leave butto
 | To Date     | Date     | Yes      | Must be ≥ From Date                               |
 | Total Days  | Display  | Auto     | Calculated: To − From + 1 (excl. week offs/holidays) |
 | Description | Textarea | Yes      | Reason for leave, min 10 characters               |
-| Status      | Display  | Auto     | Auto-set to Pending on submission                 |
+| Status      | Dropdown | Yes      | Select status (Approved / Pending / Rejected)      |
 
 ## Leave Balance Fields (Read-only — from Module 6 Step 3 → Module 8 Step 4)
 
@@ -719,7 +719,7 @@ Form to apply for leave on behalf of an employee. Triggered from the Leave butto
 
 | Action           | Description                                           |
 | ---------------- | ----------------------------------------------------- |
-| **Submit Leave** | Creates leave request → status = Pending → flows to Tab 2 |
+| **Submit Leave** | Creates leave record with selected status. **Note:** If status = Pending, it flows to Tab 2 for approval. If Approved/Rejected, it records directly in history. |
 | **Cancel**       | Discards and returns to Employee List                 |
 
 ---
@@ -729,7 +729,7 @@ Form to apply for leave on behalf of an employee. Triggered from the Leave butto
 # 25.5 Tab 2: Leave Requests
 
 **Description:**
-Dashboard for HR/Admin to view and manage all leave requests submitted by employees (including application users). Provides filter, search, and approve/reject workflow.
+Dashboard for HR/Admin to view and manage leave requests **submitted by employees via the Mobile App / Self-Service portal**. Manual entries added by HR in Screen 25.4 bypass this queue if marked as Approved/Rejected.
 
 ---
 
@@ -949,8 +949,8 @@ HR logs in → Module 25 → Tab 1 → Click [📅 Attendance]
 ## Flow 3: Apply Leave (HR on behalf of Employee)
 ```
 HR logs in → Module 25 → Tab 1 → Click [🏖️ Leave]
-  → Leave Form opens → Select Leave Type, From/To, Description
-  → Submit → Status = Pending → Appears in Tab 2
+  → Leave Form opens → Select Leave Type, From/To, Description, and **Status**
+  → Submit → If status = Approved, leave balance deducted & attendance updated immediately.
 ```
 
 ## Flow 4: Employee Submits Leave (via App)
@@ -1128,17 +1128,18 @@ HR → Module 25 → Tab 1 → Click [💰 Salary] on any employee
 | TC-25.4.5| Verify Leave Reset Cycle displayed                 | Shows Yearly/Monthly/Custom from Module 6          |
 | TC-25.4.6| Submit leave with From > To date                   | Validation error                                   |
 | TC-25.4.7| Submit leave exceeding available balance            | Validation error — insufficient balance            |
-| TC-25.4.8| Submit valid leave request                          | Status = Pending, appears in Tab 2                 |
-| TC-25.4.9| Submit leave with < 10 char description            | Validation error                                   |
-| TC-25.4.10| Submit overlapping leave dates                    | Validation error — dates overlap with existing     |
-| TC-25.4.11| Total Days excludes weekends/holidays             | Auto-calculation correct                           |
-| TC-25.4.12| View Leave History table                          | Past leave records displayed correctly             |
+| TC-25.4.8| Submit leave with Status = Approved          | Status = Approved, deducted from balance, calendar updated, does NOT appear in Tab 2  |
+| TC-25.4.9 | Submit leave with Status = Pending           | Status = Pending, appears in Tab 2 for approval  |
+| TC-25.4.10| Submit leave with < 10 char description            | Validation error                                   |
+| TC-25.4.11| Submit overlapping leave dates                    | Validation error — dates overlap with existing     |
+| TC-25.4.12| Total Days excludes weekends/holidays             | Auto-calculation correct                           |
+| TC-25.4.13| View Leave History table                          | Past leave records displayed correctly             |
 
 ### TC-25.5: Leave Requests (Tab 2)
 
 | TC ID    | Test Case                                          | Expected Result                                    |
 | -------- | -------------------------------------------------- | -------------------------------------------------- |
-| TC-25.5.1| Load Leave Requests tab                            | All leave requests displayed                       |
+| TC-25.5.1| Load Leave Requests tab                            | Displays all pending/processed requests from **Mobile/Self-Service** |
 | TC-25.5.2| Filter by Status = Pending                         | Only pending requests shown                        |
 | TC-25.5.3| Click View on a request                            | Popup opens with full leave details                |
 | TC-25.5.4| Approve a pending request                          | Status → Approved, leave balance deducted          |
