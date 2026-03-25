@@ -557,44 +557,44 @@ Read-only screen showing the complete breakdown of a task — customer info, ser
 
 ## Source Information Fields (Read-Only)
 
-| Field          | Type    | Description                                      |
-| -------------- | ------- | ------------------------------------------------ |
-| SO Number      | Link    | Sales Order reference; navigates to Module 20    |
-| Contract Ref   | Link    | Contract reference; navigates to Module 19       |
-| Customer       | Display | Customer name (from Module 18)                   |
-| Customer ID    | Display | Unique ID (e.g. CUST-00245)                      |
-| Site & Site ID | Display | Site name and ID (e.g. SITE-00312)               |
-| Address        | Display | Site address from source                         |
-| Country        | Display | Country of the site                              |
-| Google Map URL | Link    | Clickable Google Maps link                       |
-| Branch         | Display | Servicing branch                                 |
-| Category       | Display | Service Category (e.g. General Pest Control)     |
-| Subcategory    | Display | Service Sub-Category (e.g. Cockroach Management) |
+| Field          | Type    | Description                                                      |
+| -------------- | ------- | ---------------------------------------------------------------- |
+| SO Number      | Link    | **[Auto-fetched]** Sales Order reference; navigates to Module 20 |
+| Contract Ref   | Link    | **[Auto-fetched]** Contract reference; navigates to Module 19    |
+| Customer       | Display | **[Auto-fetched]** Customer name (from Module 18)                |
+| Customer ID    | Display | **[Auto-fetched]** Unique ID (e.g. CUST-00245)                   |
+| Site & Site ID | Display | **[Auto-fetched]** Site name and ID (e.g. SITE-00312)            |
+| Address        | Display | **[Auto-fetched]** Site address from source                      |
+| Country        | Display | **[Auto-fetched]** Country of the site                           |
+| Google Map URL | Link    | **[Auto-fetched]** Clickable Google Maps link                    |
+| Branch         | Display | **[Auto-fetched]** Servicing branch                              |
+| Category       | Display | **[Auto-fetched]** Service Category (e.g. General Pest Control)  |
+| Subcategory    | Display | **[Auto-fetched]** Service Sub-Category (e.g. Cockroach Mgmt)    |
 
 ---
 
 ## Task Execution Fields (Read-Only)
 
-| Field             | Type     | Description                                 |
-| ----------------- | -------- | ------------------------------------------- |
-| Task ID           | Display  | System-generated unique task ID             |
-| Task Type         | Badge    | Normal / Re-Task                            |
-| Service Mode      | Badge    | Contract Base / One-Time Service            |
-| Pest(s) Treated   | Display  | Target pests (e.g. Cockroaches, Termites)   |
-| Area (SQFT)       | Display  | Total area covered/treated                  |
-| Status            | Badge    | Pending / In Progress / Completed / Overdue |
-| Priority          | Badge    | Normal / Urgent / Critical                  |
-| Scheduled Date    | Date     | Planned execution date                      |
-| Time Slot         | Display  | Start – End time                            |
-| Primary Tech      | Display  | Main technician + role                      |
-| Support Techs     | Display  | Additional technicians                      |
-| Started At        | DateTime | Actual start timestamp                      |
-| Completed At      | DateTime | Actual completion timestamp                 |
-| Actual Duration   | Display  | Real time taken                             |
-| Completion Note   | Text     | Technician's service notes                  |
-| Photos            | Image    | Before/after/treatment images               |
-| Customer Rating   | Display  | Star rating (1–5)                           |
-| Customer Feedback | Text     | Written feedback                            |
+| Field             | Type     | Description                                               |
+| ----------------- | -------- | --------------------------------------------------------- |
+| Task ID           | Display  | **[Auto-generated]** Unique task ID                       |
+| Task Type         | Badge    | **[System-set]** Normal / Re-Task                         |
+| Service Mode      | Badge    | **[Auto-fetched]** Contract Base / One-Time Service       |
+| Pest(s) Treated   | Display  | **[Auto-fetched]** Target pests                           |
+| Area (SQFT)       | Display  | **[Auto-fetched]** Total area covered/treated             |
+| Status            | Badge    | **[System-driven]** Pending / In Progress / Completed / Overdue |
+| Priority          | Badge    | **[Auto/Manual]** Normal / Urgent / Critical              |
+| Scheduled Date    | Date     | **[Manual Update]** Planned execution date                |
+| Time Slot         | Display  | **[Manual Update]** Start – End time                      |
+| Primary Tech      | Display  | **[Manual Update]** Main technician + role                |
+| Support Techs     | Display  | **[Manual Update]** Additional technicians                |
+| Started At        | DateTime | **[System-captured]** Actual start timestamp              |
+| Completed At      | DateTime | **[System-captured]** Actual completion timestamp         |
+| Actual Duration   | Display  | **[System-calculated]** Real time taken                   |
+| Completion Note   | Text     | **[Tech Input]** Technician's service notes               |
+| Photos            | Image    | **[Tech Input]** Before/after/treatment images            |
+| Customer Rating   | Display  | **[Customer Input]** Star rating (1–5)                    |
+| Customer Feedback | Text     | **[Customer Input]** Written feedback                     |
 
 ---
 
@@ -609,13 +609,13 @@ Read-only screen showing the complete breakdown of a task — customer info, ser
 
 ## Materials / Chemicals Detail (View)
 
-| Field         | Type    | Description                          |
-| ------------- | ------- | ------------------------------------ |
-| Chemical Name | Display | Name of the material used            |
-| HSN           | Display | HSN code for tax reporting           |
-| UOM           | Display | Unit of measurement                  |
-| Required Qty  | Display | Planned quantity from task creation  |
-| Used Qty      | Display | Actual quantity logged by technician |
+| Field         | Type    | Description                                                |
+| ------------- | ------- | ---------------------------------------------------------- |
+| Chemical Name | Display | **[Auto-fetched]** Name of the material used               |
+| HSN           | Display | **[Auto-fetched]** HSN code for tax reporting              |
+| UOM           | Display | **[Auto-fetched]** Unit of measurement                     |
+| Required Qty  | Display | **[Auto-fetched]** Planned quantity from task creation     |
+| Used Qty      | Display | **[Tech Input]** Actual quantity logged by technician      |
 
 ---
 
@@ -688,31 +688,31 @@ Editable form for modifying a task that has not yet been completed. Allows chang
 
 ## Source Details (Read-only)
 
-| Field       | Type    | Description                          |
-| ----------- | ------- | ------------------------------------ |
-| SO Number   | Display | Original Sales Order reference       |
-| Customer    | Display | Customer name                        |
-| Category    | Display | Service Category                     |
-| Subcategory | Display | Service Subcategory                  |
-| Service     | Display | Specific service name                |
-| Site        | Display | Target site location                 |
-| Task Type   | Badge   | Normal / Re-Task                     |
-| Created By  | Display | User who originally created the task |
+| Field       | Type    | Description                                             |
+| ----------- | ------- | ------------------------------------------------------- |
+| SO Number   | Display | **[Auto-fetched]** Original Sales Order reference       |
+| Customer    | Display | **[Auto-fetched]** Customer name                        |
+| Category    | Display | **[Auto-fetched]** Service Category                     |
+| Subcategory | Display | **[Auto-fetched]** Service Subcategory                  |
+| Service     | Display | **[Auto-fetched]** Specific service name                |
+| Site        | Display | **[Auto-fetched]** Target site location                 |
+| Task Type   | Badge   | **[System-set]** Normal / Re-Task                       |
+| Created By  | Display | **[Auto-fetched]** User who originally created the task |
 
 ---
 
-## Editable Fields
+## Editable Fields (Manual Update)
 
-| Field               | Type      | Required | Validation                        | Description                        |
-| ------------------- | --------- | -------- | --------------------------------- | ---------------------------------- |
-| Scheduled Date      | Date      | Yes      | Cannot be past date               | Task execution date                |
-| Start Time          | Time      | Yes      | Must be before End Time           | Task start time                    |
-| End Time            | Time      | Yes      | Must be after Start Time          | Task end time                      |
-| Role                | Dropdown  | Yes      | From Module 8 role definitions    | Cascading filter for employee list |
-| Available Employees | Multi-sel | Yes      | At least one selected             | Cascading from Role; multi-select  |
-| Primary Technician  | Dropdown  | Yes      | Must be one of selected employees | Main responsible person            |
-| Priority            | Dropdown  | Yes      | Normal / Urgent / Critical        | Task priority                      |
-| Task Notes          | Textarea  | No       | Max 500 chars                     | Additional instructions            |
+| Field               | Type      | Required | Validation                        | Description                                          |
+| ------------------- | --------- | -------- | --------------------------------- | ---------------------------------------------------- |
+| Scheduled Date      | Date      | Yes      | Cannot be past date               | **[Manual Update]** Task execution date              |
+| Start Time          | Time      | Yes      | Must be before End Time           | **[Manual Update]** Task start time                  |
+| End Time            | Time      | Yes      | Must be after Start Time          | **[Manual Update]** Task end time                    |
+| Role                | Dropdown  | Yes      | From Module 8 role definitions    | **[Manual Update]** Cascading filter for employees   |
+| Available Employees | Multi-sel | Yes      | At least one selected             | **[Auto-filtered/Manual Select]** Multi-select       |
+| Primary Technician  | Dropdown  | Yes      | Must be one of selected employees | **[Manual Update]** Main responsible person          |
+| Priority            | Dropdown  | Yes      | Normal / Urgent / Critical        | **[Manual Update]** Task priority                    |
+| Task Notes          | Textarea  | No       | Max 500 chars                     | **[Manual Update]** Additional instructions          |
 
 ---
 
@@ -1045,12 +1045,11 @@ The primary command center for tracking the workforce. By default, it shows **Li
 │                                                                              │
 │  ┌─────────────────────────┐ ┌──────────────────────────────────────────────┐│
 │  │ FILTERS                 │ │                                              ││
-│  │ Date  : [📅 Today ▼]    │ │              [ MAP VIEW ]                    ││
+│  │ Date  : [📅 Today ▼]    │ │              [ MAP VIEW ]    [refresh button]││
 │  │ Branch: [▼ All ▼]       │ │                                              ││
 │  │ Techs : [🔍 Search ▼]   │ │       📍(Ravi)               📍(Anjali)      ││
-│  │ Status: [▼ Active ▼]    │ │                                              ││
 │  │                         │ │                                              ││
-│  │ [🟢 Active] [⚪ Offline]│ │                                              ││
+│  │ [All] [🟢 Active] [⚪ Offline]│ │                                              ││
 │  │                         │ │                                              ││
 │  │ 🟢 Ravi S.              │ │                                              ││
 │  │ 📍 Head Office (Andheri)│ │                              📍(Amit)        ││
@@ -1072,15 +1071,15 @@ The primary command center for tracking the workforce. By default, it shows **Li
 
 ## Dashboard Filters & Feed Fields
 
-| Field              | Type    | Description                                                  |
-| ------------------ | ------- | ------------------------------------------------------------ |
-| Date Selector      | Date    | Default: Today (Live). Select past dates for historical Map. |
-| Technician Name    | Link    | Clicks through to Technician Travel Log (22.2).              |
-| Current Location   | Display | Nearest address or specific Site Name (from Module 21).      |
-| Feed Tabs          | Tab     | Toggle between Active techs map vs Offline techs list        |
-| Current Status     | Badge   | Travelling / On Site / Idle / Offline.                       |
-| Customer & Service | Display | Linked Customer Name and specific Service Type.              |
-| Active Task        | Link    | Current Module 21 Task ID (if On Site or Travelling to it).  |
+| Field              | Type      | Description                                                |
+| ------------------ | --------- | ---------------------------------------------------------- |
+| Date Selector      | Date      | Default: Today (Live). Select past dates for historical Map.|
+| Technician Name    | Link      | Clicks through to Technician Travel Log (22.2).            |
+| Current Location   | Display   | Nearest address or specific Site Name (from Module 21).    |
+| Feed Tabs          | Tab       | Toggle between Active techs map vs Offline techs list      |
+| Current Status     | Badge     | Travelling / On Site / Idle / Offline.                     |
+| Customer & Service | Display   | Linked Customer Name and specific Service Type.            |
+| Active Task        | Link      | Current Module 21 Task ID (if On Site or Travelling to it).|
 
 ---
 
@@ -1112,7 +1111,7 @@ A unified, comprehensive profile of a specific technician's logistics data. Mana
 │  Filters: Period: [▼ Daily ▼]  Date: [📅 23 Mar 2026 ▼]                     │
 │                                                                              │
 │  ┌─ SUMMARY & TIMELINE ─────────────────┐ ┌─ EVENT MAP ───────────────────┐│
-│  │ Total Distance: 42.5 KM              │ │                               ││
+│  │ Total Distance: 42.5 KM              │ │            [refresh button]   ││
 │  │ Total Active  : 8h 30m               │ │      (T1) ---------- (T2)     ││
 │  │ Tasks Done    : 3                    │ │      /                 \      ││
 │  │                                      │ │     /                   \     ││
@@ -1142,27 +1141,27 @@ A unified, comprehensive profile of a specific technician's logistics data. Mana
 
 ## Profile Filter Fields
 
-| Field           | Type     | Description                                             |
-| --------------- | -------- | ------------------------------------------------------- |
-| Period Selector | Dropdown | Select Daily, Weekly, or Monthly view.                  |
-| Date Selector   | Control  | Selects the specific date, week, or month to analyze.   |
-| Summary Stats   | Display  | Aggregated Distance, Time, and Tasks for chosen period. |
+| Field           | Type     | Description                                                          |
+| --------------- | -------- | -------------------------------------------------------------------- |
+| Period Selector | Dropdown | **[Manual Select]** Select Daily, Weekly, or Monthly view.           |
+| Date Selector   | Control  | **[Manual Select]** Selects the specific date, week, or month to analyze. |
+| Summary Stats   | Display  | **[Auto-calculated]** Aggregated Distance, Time, and Tasks for chosen period. |
 
 ---
 
-## Timeline & Tabular Log Fields
+## Timeline & Tabular Log Fields (Read-Only)
 
-| Field            | Type    | Description                                           |
-| ---------------- | ------- | ----------------------------------------------------- |
-| Date             | Display | Tracking Date.                                        |
-| Departure Point  | Display | Origin site or generic location (e.g., Branch).       |
-| Destination      | Display | Destination Site Name or Geo-location address.        |
-| Customer         | Display | Associated Customer Name and specific Service Type.   |
-| Task ID          | Modal   | Click Task to view details (Status, Category, Techs). |
-| Distance         | Display | GPS calculated travel distance for that segment.      |
-| Start & End Time | Display | Timestamps marking the departure and arrival bounds.  |
-| Duration         | Display | Total time computed between Start and End.            |
-| Status           | Badge   | On-Site, Travelling, Idle.                            |
+| Field            | Type    | Description                                                          |
+| ---------------- | ------- | -------------------------------------------------------------------- |
+| Date             | Display | **[System-generated]** Tracking Date.                                |
+| Departure Point  | Display | **[Auto-fetched]** Origin site or generic location (e.g., Branch).   |
+| Destination      | Display | **[Auto-fetched]** Destination Site Name or Geo-location address.    |
+| Customer         | Display | **[Auto-fetched]** Associated Customer Name and specific Service Type.|
+| Task ID          | Modal   | **[Auto-fetched]** Click Task to view details (Status, Category, Techs). |
+| Distance         | Display | **[System-calculated]** GPS calculated travel distance for that segment. |
+| Start & End Time | Display | **[System-captured]** Timestamps marking the departure and arrival bounds. |
+| Duration         | Display | **[System-calculated]** Total time computed between Start and End.   |
+| Status           | Badge   | **[System-driven]** On-Site, Travelling, Idle.                       |
 
 ---
 
@@ -1192,7 +1191,7 @@ This module guarantees time-bound responses and automatically escalates tickets 
 
 **Module Connections:**
 
-- **Depends on:** Module 18 (Customer Master), Module 20 (Sales Orders), Module 8 (Employee).
+- **Depends on:** Module 18 (Customer Master), Module 20 (Sales Orders), Module 21 (Task Management — linked tasks/re-services), Module 8 (Employee).
 - **Used by:** Module 21 (Re-Tasks), Customer History, Analytics.
 
 ---
@@ -1232,12 +1231,20 @@ The primary command center for the Support Team. Provides a high-visibility data
 │  └────────────────────────────────────────────────────────────────────────┘  │
 │                                                                              │
 │  ┌────────────────────────────────────────────────────────────────────────┐  │
-│  │ ID   │ Customer │ SO No  │ Priority│ Status  │ SLA Stage │ SLA Timer │  │
-│  │──────┼──────────┼────────┼─────────┼─────────┼───────────┼───────────│  │
-│  │ T001 │ ABC Corp │ SO-101 │🔴 Urgent│ Open    │ 🔴 Breach │ -02h 15m  │  │
-│  │ T002 │ PQR Ind  │ SO-089 │🟡 High  │ Open    │ 🟡 Risk   │ 00h 45m   │  │
-│  │ T003 │ XYZ Hotel│ SO-144 │🟢 Normal│ In Prog │ 🟢 Safe   │ 22h 10m   │  │
-│  │ T004 │ LMN Pvt  │ SO-201 │🟢 Normal│ Open    │ 🟢 Safe   │ 47h 00m   │  │
+│  │ ID   │ Customer │ SO No  │ Task ID        │ Priority│ Status  │      │  │
+│  │──────┼──────────┼────────┼────────────────┼─────────┼─────────┼──────│  │
+│  │ T001 │ ABC Corp │ SO-101 │ TASK-2026-0180 │🔴 Urgent│ Open    │      │  │
+│  │ T002 │ PQR Ind  │ SO-089 │ TASK-2026-0192 │🟡 High  │ Open    │      │  │
+│  │ T003 │ XYZ Hotel│ SO-144 │ —              │🟢 Normal│ In Prog │      │  │
+│  │ T004 │ LMN Pvt  │ SO-201 │ TASK-2026-0201 │🟢 Normal│ Open    │      │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│  ┌────────────────────────────────────────────────────────────────────────┐  │
+│  │ SLA Stage │ SLA Timer │ Actions                                       │  │
+│  │───────────┼───────────┼───────────────────────────────────────────────│  │
+│  │ 🔴 Breach │ -02h 15m  │ [👁 View]                                     │  │
+│  │ 🟡 Risk   │ 00h 45m   │ [👁 View]                                     │  │
+│  │ 🟢 Safe   │ 22h 10m   │ [👁 View]                                     │  │
+│  │ 🟢 Safe   │ 47h 00m   │ [👁 View]                                     │  │
 │  └────────────────────────────────────────────────────────────────────────┘  │
 │    Shows 1 to 4 of 42 tickets.                     [ < Previous | Next > ]   │
 └─────────────────────────────────────────────────────────────────────────────┘
@@ -1265,6 +1272,7 @@ The primary command center for the Support Team. Provides a high-visibility data
 | Ticket ID     | Search | Direct lookup by `TKT-YYYY-NNNN`. Navigates straight to 23.3 Detail View.   |
 | Customer Name | Search | Global free-text search against Customer Master (Module 18).                |
 | SO Number     | Search | Search by linked Sales Order `SO-YYYY-NNNN` to find all associated tickets. |
+| Task ID       | Search | Search by linked Task `TASK-YYYY-NNNN` from Module 21.                      |
 
 ---
 
@@ -1276,10 +1284,18 @@ The primary command center for the Support Team. Provides a high-visibility data
 | Customer Name | Display | Name of the Customer.                                          |
 | Branch Name   | Display | Name of Branch                                                 |
 | SO No         | Display | Associated Sales Order (if applicable).                        |
+| Task ID       | Link    | Linked Task from Module 21 (`TASK-YYYY-NNNN`). Clicks to Module 21 Task Detail. Shows `—` if no task linked. |
 | Priority      | Display | Ticket Priority.                                               |
-| Status        | Display | Current lifecycle state.                                       |
+| Status        | Display | Standard lifecycle: `[Open, Assigned, In Progress, Paused, Resolved, Closed]`.                                     |
 | SLA Stage     | Badge   | Color-coded visual of SLA health (Safe/Risk/Breach).           |
 | SLA Timer     | Display | Live countdown (e.g. `22h 10m` remaining, `-02h 15m` overdue). |
+| Actions       | Button  | `[👁 View]` — Opens Ticket Detail View (Screen 23.3).          |
+
+## Actions (Table Row)
+
+| Action   | Icon | Condition    | Description                                      |
+| -------- | ---- | ------------ | ------------------------------------------------ |
+| **View** | 👁   | All statuses | Opens Ticket Detail View (Screen 23.3)           |
 
 ---
 
@@ -1302,6 +1318,7 @@ The data-entry screen for new complaints or service requests. Auto-calculates SL
 │  ┌───────────────────────────────────────────────────────────────────────┐ │
 │  │ Customer*     : [🔍 Search: "ABC Corp" ─────────▼]                    │ │
 │  │ Related SO    : [▼ SO-2026-00101 ▼] (Optional)                        │ │
+│  │ Related Task  : [▼ TASK-2026-0180 ▼] (Optional — from Module 21)      │ │
 │  │ Reported By*  : [Suresh (Facility Manager)________]                   │ │
 │  │ Phone Number* : [+91 9876543210___________________]                   │ │
 │  └───────────────────────────────────────────────────────────────────────┘ │
@@ -1324,6 +1341,11 @@ The data-entry screen for new complaints or service requests. Auto-calculates SL
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
+> [!NOTE]
+> **Cascading Selection Logic:**
+> - **Customer Select** ➔ Fetches all **Sales Orders (SO)** of that customer.
+> - **SO Select** ➔ Fetches all **Tasks** of that specific SO from Module 21.
+
 ---
 
 ## Field Table
@@ -1331,7 +1353,8 @@ The data-entry screen for new complaints or service requests. Auto-calculates SL
 | Field         | Type     | Required | Validation                        | Description                                                                                        |
 | ------------- | -------- | -------- | --------------------------------- | -------------------------------------------------------------------------------------------------- |
 | Customer      | Search   | Yes      | Must select from Module 18        | Linked Customer Profile.                                                                           |
-| Related SO    | Dropdown | No       | Filtered by selected Customer     | Links ticket to context: `[List of user's active SO-YYYY-NNNN]`.                                   |
+| Related SO    | Dropdown | No       | Filtered by selected Customer     | Links ticket to Sales Order context: `[List of user's active SO-YYYY-NNNN]`.                       |
+| Related Task  | Dropdown | No       | Filtered by selected Customer/SO  | Links ticket to Task context from Module 21: `[List of TASK-YYYY-NNNN for selected Customer/SO]`. Shows tasks that are Completed/In Progress. |
 | Reported By   | Text     | Yes      | —                                 | Name of the person reporting the issue.                                                            |
 | Phone Number  | Text     | Yes      | Valid Phone format                | Contact number for callbacks.                                                                      |
 | Ticket Type   | Dropdown | Yes      | Values from Admin config          | Issue category: `[Complaint - Re-emergence, Complaint - Staff, Query - Billing, Query - Service]`. |
@@ -1363,10 +1386,11 @@ The core workspace for Support Agents. It presents the entire context of the tic
 │  │ Subject : Cockroaches in Lobby   │ │ Status     : [ In Progress ]      │ │
 │  │ Customer: ABC Corp               │ │ Priority   :  🔴 Urgent           │ │
 │  │ SO No   : SO-2026-00101          │ │ Assigned To:  Anjali M. (Support) │ │
-│  │ Type    : Complaint              │ │                                   │ │
-│  │ Created : 24 Mar 2026, 09:00 AM  │ │ ⏱ Response : ✅ Met (09:15 AM)    │ │
-│  │ Caller  : Suresh (9876543210)    │ │ ⏱ Resolut. : 🔴 -02h 15m (Breach) │ │
-│  │ Desc    : Treated 2 days ago...  │ │ 🚨 Esc. Lvl : Level 2 (Manager)   │ │
+│  │ Task ID : TASK-2026-0180         │ │                                   │ │
+│  │ Type    : Complaint              │ │ ⏱ Response : ✅ Met (09:15 AM)    │ │
+│  │ Created : 24 Mar 2026, 09:00 AM  │ │ ⏱ Resolut. : 🔴 -02h 15m (Breach) │ │
+│  │ Caller  : Suresh (9876543210)    │ │ 🚨 Esc. Lvl : Level 2 (Manager)   │ │
+│  │ Desc    : Treated 2 days ago...  │ │                                   │ │
 │  └──────────────────────────────────┘ └───────────────────────────────────┘ │
 │                                                                              │
 │  ┌─ ACTIONS ──────────────────────────────────────────────────────────────┐ │
@@ -1393,6 +1417,25 @@ The core workspace for Support Agents. It presents the entire context of the tic
 | **SLA & Status**  | Live updates of the dual-timers. Flags if the SLA has escalated to L1/L2/L3.  |
 | **Actions Menu**  | Direct triggers for popups covering Assignment, Task mapping, and Resolution. |
 | **Activity Line** | Immutable audit log of all status changes, notes, calls, and task creations.  |
+
+---
+
+## Ticket Details (Read-Only)
+
+| Field       | Type    | Description                                                     |
+| ----------- | ------- | --------------------------------------------------------------- |
+| Subject     | Display | **[Auto-fetched]** Short description of the issue.              |
+| Customer    | Display | **[Auto-fetched]** Customer name (from Module 18).              |
+| SO No       | Link    | **[Auto-fetched]** Linked Sales Order.                          |
+| Task ID     | Link    | **[Auto-fetched]** Linked Module 21 Task ID.                    |
+| Type        | Display | **[Auto-fetched]** Complaint / Request / Inquiry.               |
+| Created     | Display | **[System-generated]** Timestamp of ticket creation.            |
+| Caller      | Display | **[Auto-fetched]** Contact person and number.                   |
+| Description | Text    | **[Auto-fetched]** Full issue details.                          |
+| Status      | Badge   | **[System-driven]** Current ticket status.                      |
+| Priority    | Badge   | **[System-driven]** Priority level (determines SLA).            |
+| Assigned To | Display | **[Auto-fetched]** Current Support Agent handling the ticket.   |
+| Esc. Lvl    | Badge   | **[System-driven]** Current Escalation Level (L1/L2/L3).        |
 
 ---
 
@@ -1485,6 +1528,10 @@ Fired by the Support Agent once the customer is satisfied and/or the associated 
 │                     [Customer confirmed rodents gone. ] │
 │                     [SLA Timer will be stopped.       ] │
 │                                                          │
+│  Customer Rating* : [⭐] [⭐] [▼ Rating (1-5) ▼]        │
+│  Cust. Feedback*  : [Customer satisfied with prompt   ] │
+│                     [response.                        ] │
+│                                                          │
 │  Attachments      : [+ Upload Customer Sign-off PDF]    │
 │                                                          │
 │       [RESOLVE TICKET & STOP SLA]       [CANCEL]         │
@@ -1501,7 +1548,47 @@ Fired by the Support Agent once the customer is satisfied and/or the associated 
 | ---------------- | -------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
 | Resolution Code  | Dropdown | Yes      | Reason for closure: `[Service Resolved Success, False Alarm / Not Found, Duplicate Ticket, Unresolved (Closed)]`. |
 | Resolution Notes | Textarea | Yes      | Detailed explanation of how issue was solved                                                                      |
+| Customer Rating  | Dropdown | Yes      | Support agent asks customer to rate service (1-5 Stars).                                                          |
+| Cust. Feedback   | Textarea | Yes      | Description of customer's actual remarks and feedback on resolution.                                              |
 | Attachments      | File     | No       | Sign-offs, final photos, emails                                                                                   |
+
+---
+
+================================================================================
+
+# 23.7 Close Ticket (Modal)
+
+**Description:**
+Fired by the Support Agent or Manager as the final, immutable step to permanently lock the ticket. Can only be triggered when Status is `Resolved` or under administrative override.
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  CLOSE TICKET: TKT-2026-0042                            │
+│                                                          │
+│  🚨 Warning: This action cannot be undone. Closed        │
+│  tickets can only be reopened by a System Admin.         │
+│                                                          │
+│  Close Reason*    : [▼ Resolved to Customer Satisfaction ▼] │
+│                     • Resolved to Customer Satisfaction   │
+│                     • Duplicate Request                   │
+│                     • Customer Non-Responsive             │
+│                     • Out of Scope                        │
+│                                                          │
+│  Closure Remarks* : [Final follow up done. Customer   ] │
+│                     [is satisfied with outcome.       ] │
+│                                                          │
+│       [PERMANENTLY CLOSE TICKET]        [CANCEL]         │
+└─────────────────────────────────────────────────────────┘
+```
+
+## Screen Logic & Validation
+
+| Field            | Type     | Required | Description                                                         |
+| ---------------- | -------- | -------- | ------------------------------------------------------------------- |
+| Close Reason     | Dropdown | Yes      | Standardized categorical reason for closing the ticket permanently. |
+| Closure Remarks  | Textarea | Yes      | Final notes wrapping up the entire ticket lifecycle.                |
 
 ---
 
@@ -1896,6 +1983,7 @@ Form for employees to submit a new petty cash expense claim. Captures expense de
 | Field              | Type        | Required | Validation                              | Description                         |
 | ------------------ | ----------- | -------- | --------------------------------------- | ----------------------------------- |
 | Bill / Receipt     | File Upload | Yes      | Min 1 file; PDF, JPG, PNG; Max 5MB each | Proof of expense (up to 5 files)    |
+| Upload More         | Button     | Yes      | Min 1 file; PDF, JPG, PNG; Max 5MB each | Can be add more file when 1 file is already uploaded (up to 5 files)       |
 | Justification Note | Textarea    | No       | Max 500 chars                           | Additional context for the approver |
 
 ---
@@ -2058,37 +2146,37 @@ Read-only detail screen showing the complete breakdown of a petty cash request. 
 
 ## View-Only Fields
 
-| Field            | Type     | Description                                    |
-| ---------------- | -------- | ---------------------------------------------- |
-| Request ID       | Display  | System-generated unique request ID             |
-| Status           | Badge    | Current lifecycle status                       |
-| Category         | Display  | Expense category                               |
-| Expense Date     | Date     | Expense date range (From – To)                 |
-| Amount (₹)       | Currency | Claimed amount                                 |
-| Description      | Text     | Expense description                            |
-| Related Task     | Link     | Task reference (navigates to Module 21)        |
-| Related SO       | Link     | Sales Order reference (navigates to Module 20) |
-| Bills / Receipts | File     | Click to view/download uploaded documents      |
-| Justification    | Text     | Context for the expense                        |
-| Payment Mode     | Display  | Bank Transfer / UPI (from Section 3)           |
-| Account Holder   | Display  | Name on account                                |
-| Bank Name        | Display  | Employee's bank                                |
-| Account Number   | Display  | Bank account number                            |
-| IFSC Code        | Display  | Bank branch IFSC code                          |
-| Pre-Approved?    | Badge    | Yes / No (from Section 4)                      |
-| Approval Status  | Badge    | Pending / Approved / Rejected / Returned       |
-| Reviewed By      | Display  | Name of the reviewing manager                  |
-| Review Date      | Date     | When the review was performed                  |
-| Approved Amount  | Currency | Amount approved (may differ from requested)    |
-| Reviewer Remarks | Text     | Notes from the approver                        |
-| Payment Status   | Badge    | Not Processed / Processed                      |
-| Payment Mode     | Display  | Actual mode used for payment (from Finance)    |
-| Transaction Ref  | Display  | Payment transaction reference (after payment)  |
-| Payment Date     | Date     | When payment was made                          |
-| Submitted By     | Display  | Name and role of requester                     |
-| Submitted Date   | DateTime | When the request was submitted                 |
-| Branch name      | Display  | Requester's branch                             |
-| Sent To          | Display  | Recipients of the request                      |
+| Field            | Type     | Description                                                          |
+| ---------------- | -------- | -------------------------------------------------------------------- |
+| Request ID       | Display  | **[System-generated]** Unique request ID                             |
+| Status           | Badge    | **[System-driven]** Current lifecycle status                         |
+| Category         | Display  | **[Auto-fetched]** Expense category                                  |
+| Expense Date     | Date     | **[Auto-fetched]** Expense date range (From – To)                    |
+| Amount (₹)       | Currency | **[Auto-fetched]** Claimed amount                                    |
+| Description      | Text     | **[Auto-fetched]** Expense description                               |
+| Related Task     | Link     | **[Auto-fetched]** Task reference (navigates to Module 21)           |
+| Related SO       | Link     | **[Auto-fetched]** Sales Order reference (navigates to Module 20)    |
+| Bills / Receipts | File     | **[Auto-fetched]** Click to view/download uploaded documents         |
+| Justification    | Text     | **[Auto-fetched]** Context for the expense                           |
+| Payment Mode     | Display  | **[Auto-fetched]** Bank Transfer / UPI (from Section 3)              |
+| Account Holder   | Display  | **[Auto-fetched]** Name on account                                   |
+| Bank Name        | Display  | **[Auto-fetched]** Employee's bank                                   |
+| Account Number   | Display  | **[Auto-fetched]** Bank account number                               |
+| IFSC Code        | Display  | **[Auto-fetched]** Bank branch IFSC code                             |
+| Pre-Approved?    | Badge    | **[Auto-fetched]** Yes / No (from Section 4)                         |
+| Approval Status  | Badge    | **[System-driven]** Pending / Approved / Rejected / Returned         |
+| Reviewed By      | Display  | **[Auto-fetched]** Name of the reviewing manager                     |
+| Review Date      | Date     | **[Auto-fetched]** When the review was performed                     |
+| Approved Amount  | Currency | **[Auto-fetched]** Amount approved (may differ from requested)       |
+| Reviewer Remarks | Text     | **[Auto-fetched]** Notes from the approver                           |
+| Payment Status   | Badge    | **[System-driven]** Not Processed / Processed                        |
+| Payment Mode     | Display  | **[Auto-fetched]** Actual mode used for payment (from Finance)       |
+| Transaction Ref  | Display  | **[Auto-fetched]** Payment transaction reference (after payment)     |
+| Payment Date     | Date     | **[Auto-fetched]** When payment was made                             |
+| Submitted By     | Display  | **[Auto-fetched]** Name and role of requester                        |
+| Submitted Date   | DateTime | **[System-captured]** When the request was submitted                 |
+| Branch name      | Display  | **[Auto-fetched]** Requester's branch                                |
+| Sent To          | Display  | **[Auto-fetched]** Recipients of the request                         |
 
 ---
 
@@ -2274,20 +2362,20 @@ Dedicated approval screen for managers and supervisors to review a petty cash re
 
 ## Request Details (Read-Only)
 
-| Field          | Type     | Description                       |
-| -------------- | -------- | --------------------------------- |
-| Request ID     | Display  | Unique request reference          |
-| Employee       | Display  | Name, role of requesting employee |
-| Branch         | Display  | Employee's branch                 |
-| Submitted On   | DateTime | When the request was submitted    |
-| Category       | Display  | Expense category                  |
-| Expense Date   | Date     | Expense date range (From – To)    |
-| Amount (₹)     | Currency | Claimed amount                    |
-| Description    | Text     | Expense description               |
-| Related Task   | Link     | Task reference (if linked)        |
-| Related SO     | Link     | SO reference (if linked)          |
-| Prior Approval | Display  | Yes/No + approver name if Yes     |
-| Bills/Receipts | Files    | Clickable document links          |
+| Field          | Type     | Description                                             |
+| -------------- | -------- | ------------------------------------------------------- |
+| Request ID     | Display  | **[Auto-fetched]** Unique request reference             |
+| Employee       | Display  | **[Auto-fetched]** Name, role of requesting employee    |
+| Branch         | Display  | **[Auto-fetched]** Employee's branch                    |
+| Submitted On   | DateTime | **[Auto-fetched]** When the request was submitted       |
+| Category       | Display  | **[Auto-fetched]** Expense category                     |
+| Expense Date   | Date     | **[Auto-fetched]** Expense date range (From – To)       |
+| Amount (₹)     | Currency | **[Auto-fetched]** Claimed amount                       |
+| Description    | Text     | **[Auto-fetched]** Expense description                  |
+| Related Task   | Link     | **[Auto-fetched]** Task reference (if linked)           |
+| Related SO     | Link     | **[Auto-fetched]** SO reference (if linked)             |
+| Prior Approval | Display  | **[Auto-fetched]** Yes/No + approver name if Yes        |
+| Bills/Receipts | Files    | **[Auto-fetched]** Clickable document links             |
 
 ---
 
@@ -2394,17 +2482,17 @@ Finance team form to process payment for approved petty cash requests. Captures 
 
 ## Approved Request Summary (Read-Only)
 
-| Field            | Type     | Description                    |
-| ---------------- | -------- | ------------------------------ |
-| Request ID       | Display  | Unique request reference       |
-| Employee         | Display  | Employee name and role         |
-| Branch           | Display  | Employee's branch              |
-| Category         | Display  | Expense type                   |
-| Expense Date     | Date     | Expense date range (From – To) |
-| Requested Amount | Currency | Original claimed amount        |
-| Approved Amount  | Currency | Amount approved by manager     |
-| Approved By      | Display  | Name of the approving manager  |
-| Approved On      | DateTime | Date/time of approval          |
+| Field            | Type     | Description                                           |
+| ---------------- | -------- | ----------------------------------------------------- |
+| Request ID       | Display  | **[Auto-fetched]** Unique request reference           |
+| Employee         | Display  | **[Auto-fetched]** Employee name and role             |
+| Branch           | Display  | **[Auto-fetched]** Employee's branch                  |
+| Category         | Display  | **[Auto-fetched]** Expense type                       |
+| Expense Date     | Date     | **[Auto-fetched]** Expense date range (From – To)     |
+| Requested Amount | Currency | **[Auto-fetched]** Original claimed amount            |
+| Approved Amount  | Currency | **[Auto-fetched]** Amount approved by manager         |
+| Approved By      | Display  | **[Auto-fetched]** Name of the approving manager      |
+| Approved On      | DateTime | **[Auto-fetched]** Date/time of approval              |
 
 ---
 
