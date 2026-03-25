@@ -6189,27 +6189,48 @@ The Add Quotation form allows sales team members to create new quotations. The f
 │                    [SAVE DRAFT]      [SEND QUOTATION]       [CANCEL]         │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 
-## Section 1: Source Selection Fields
+## Section 1: Source Selection & Logic
 
-| Field           | Type            | Required    | Options/Validation                                                                                        | Notes                              |
-| --------------- | --------------- | ----------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| Source Type     | Radio           | Yes         | From Lead / From Customer / Add New                                                                       | Determines which sub-fields appear |
-| Select Lead     | Search Dropdown | Conditional | Active leads from Module 15 (Status ≥ QUALIFIED)                                                          | Required if Source = From Lead     |
-| Select Customer | Search Dropdown | Conditional | Active customers from Module 9                                                                            | Required if Source = From Customer |
-| Full Name       | Text            | Conditional | Min 3 characters                                                                                          | Required if Source = Add New       |
-| Phone           | Number          | Conditional | 10-digit Indian mobile                                                                                    | Required if Source = Add New       |
-| Email           | Email           | yes          | Valid email format                                                                                        | Optional for Add New               |
-| Company Name    | Text            | No          | Max 100 characters                                                                                        | Optional for Add New               |
-| Address         | Text            | Conditional | Min 10 characters                                                                                         | Required if Source = Add New       |
-| City            | Text            | Conditional | Min 3 characters                                                                                          | Required if Source = Add New       |
-| State           | Dropdown        | Conditional | Indian states list                                                                                        | Required if Source = Add New       |
-| Pincode         | Number          | No          | 6-digit                                                                                                   | Optional                           |
-| Country         | Dropdown        | No          | Country list (Default: India)                                                                             | Optional                           |
-| Google Map URL  | URL             | No          | Valid URL format (e.g., https://maps.google.com/...)                                                       | Optional; paste from Google Maps   |
+**Source Type Selection**: `(•) From Lead ( ) From Customer ( ) Add New` (Radio)
+
+#### A. From Lead
+| Field | Type | Required | Behavior / Auto-fill |
+| :--- | :--- | :--- | :--- |
+| Select Lead | Search Dropdown | Yes | Search active leads (Status ≥ QUALIFIED) from Module 15 |
+| Lead ID | Text | Read-only | **Auto-fill**: Unique ID from Module 15 |
+| Contact Person | Text | Read-only | **Auto-fill**: Primary contact name of the lead |
+| Phone | Text | Read-only | **Auto-fill**: Primary contact number |
+| Email | Text | Read-only | **Auto-fill**: Registered email address |
+| Lead Type | Badge | Read-only | **Auto-fill**: Service / Product / Both |
+| Lead Status | Badge | Read-only | **Auto-fill**: QUALIFIED ✅ |
+
+#### B. From Customer
+| Field | Type | Required | Behavior / Auto-fill |
+| :--- | :--- | :--- | :--- |
+| Select Customer | Search Dropdown | Yes | Search active customers from Module 9 |
+| Customer ID | Text | Read-only | **Auto-fill**: Unique ID from Module 9 |
+| Customer Name | Text | Read-only | **Auto-fill**: Registered entity name |
+| Phone | Text | Read-only | **Auto-fill**: Primary business contact |
+| Email | Text | Read-only | **Auto-fill**: Billing/Primary email |
+| Customer Type | Badge | Read-only | **Auto-fill**: Residential / Commercial / Industrial |
+| Address | Text | Read-only | **Auto-fill**: Registered address (auto-populates Location 1) |
+
+#### C. Add New (New Prospect)
+| Field | Type | Required | Behavior / Auto-fill |
+| :--- | :--- | :--- | :--- |
+| Full Name | Text | Yes | **Manual Input**: Min 3 characters |
+| Phone | Number | Yes | **Manual Input**: 10-digit Indian mobile |
+| Email | Email | Yes | **Manual Input**: Valid email format |
+| Company Name | Text | No | **Manual Input**: Max 100 characters |
+| Address | Text | Yes | **Manual Input**: Min 10 characters |
+| City | Text | Yes | **Manual Input**: Min 3 characters |
+| State | Dropdown | Yes | **Manual Input**: Indian states list |
+| Pincode | Number | No | **Manual Input**: 6-digit |
+| Country | Dropdown | No | **Manual Input**: Default India |
+| Google Map URL | URL | No | **Manual Input**: Valid URL from Google Maps |
 
 ---
 
@@ -6472,38 +6493,102 @@ Read-only detailed view of a quotation showing complete pricing breakdown, servi
 
 ## View Quotation Detail Fields
 
-| Section             | Field              | Type            | Description                                |
-| ------------------- | ------------------ | --------------- | ------------------------------------------ |
-| **Status Bar**      | Status Timeline    | Progress Bar    | Visual status progression                  |
-|                     | Current Status     | Badge           | Active status highlighted                  |
-|                     | Status Timestamps  | DateTime        | When each status was reached               |
-| **Client Info**     | Source             | Badge + Link    | Lead/Customer/New with clickable reference |
-|                     | Client Name        | Text            | Full name of client                        |
-|                     | Phone              | Text            | Contact number                             |
-|                     | Email              | Text            | Email address                              |
-|                     | Address            | Text            | Full address                               |
-|                     | Country            | Text            | Country of the client                      |
-|                     | Google Map URL     | Link            | Clickable Google Maps link                 |
-| **Configuration**   | Quotation Type     | Text            | Service / Product / Combined               |
-|                     | Service Mode       | Text            | One-Time / Contract                             |
-|                     | Frequency          | Text            | Contract frequency if applicable                |
-|                     | Contract Duration  | Text            | Contract duration if applicable                 |
-|                     | Proposed Start     | Date            | Contract start date if applicable               |
-| **Services**        | Per-location table | Table           | Service, rate, frequency, visits, total    |
-|                     | Location Country   | Text            | Country for the location                   |
-|                     | Location Map URL   | Link            | Google Maps link for the location          |
-|                     | Location Subtotal  | Currency        | Per-location total                         |
-| **Products**        | Product table      | Table           | Product, qty, unit price, tax, line total  |
-|                     | Product Subtotal   | Currency        | Total product amount                       |
-| **Pricing Summary** | All summary fields | Currency        | Subtotal, tax, discount, grand total       |
-| **Terms**           | Valid Till         | Date            | Expiry date                                |
-|                     | Payment Terms      | Text            | Payment conditions                         |
-|                     | Special Terms      | Text            | Additional T&C                             |
-| **Attachments**     | Files              | File List       | Downloadable attached files                |
-| **Audit**           | Created            | DateTime + User | Creation info                              |
-|                     | Last Modified      | DateTime + User | Last edit info                             |
-|                     | Sent               | DateTime        | When quotation was sent                    |
-|                     | Viewed             | DateTime        | When client viewed (tracking)              |
+### 1. Status Bar
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| **Status Timeline** | Progress Bar | Visual steps: Draft ➔ Sent ➔ Viewed ➔ Accepted/Rejected |
+| **Current Status** | Badge | Highlighted active state (e.g., "Sent") |
+| **Sent On** | DateTime | Timestamp when quotation was emailed/shared |
+| **Viewed On** | DateTime | Timestamp of first client view (tracking) |
+
+### 2. Client Information (Dynamic)
+*The fields displayed here depend on the Source Type selected during creation.*
+
+#### A. From Lead
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| **Source** | Link | Clickable Lead Reference (LD-2026-XXXX) |
+| **Client Name** | Text | Primary contact person's name |
+| **Phone** | Text | Primary contact number |
+| **Email** | Text | Registered email address |
+| **Lead Type** | Badge | Service / Product / Both |
+| **Lead Status** | Badge | Current status from Module 15 |
+
+#### B. From Customer
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| **Source** | Link | Clickable Customer Reference (CUST-XXXX) |
+| **Client Name** | Text | Entity / Business name |
+| **Phone** | Text | Business contact number |
+| **Email** | Text | Billing / Primary email |
+| **Customer Type** | Badge | Residential / Commercial / Industrial |
+| **Address** | Text | Default billing address from Master |
+
+#### C. Add New (New Prospect)
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| **Source** | Badge | "New Prospect" (No external link) |
+| **Full Name** | Text | Manual entry name |
+| **Company Name** | Text | Manual entry business name (if any) |
+| **Phone** | Text | 10-digit mobile number |
+| **Email** | Text | Valid email address |
+| **Address** | Text | Manual entry service/site address |
+| **City / State** | Text | Location details |
+| **Map URL** | Link | Clickable Google Maps location |
+
+### 3. Quotation Configuration
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| **Quotation Type** | Text | Service / Product / Combined |
+| **Service Mode** | Text | One-Time / Contract (AMC) |
+| **Frequency** | Text | Maintenance interval (e.g., Monthly, Quarterly) |
+| **Contract Duration** | Text | Duration of agreement (e.g., 1 Year) |
+| **Proposed Start** | Date | Expected date for first service/delivery |
+
+### 4. Service Details (Per Location)
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| **Location Header** | Text | Site Name, Area (Sqft), and Country |
+| **Assigned Branch** | Badge | Branch handling the location (from CRM) |
+| **Map URL** | Link | Site-specific coordinate link |
+| **Service Table** | Table | List of services, pricing type, rates, and visits |
+| **Location Subtotal** | Currency | Total amount before tax for this specific site |
+
+### 5. Product Details
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| **Product Table** | Table | List of products, quantity, unit price, and tax % |
+| **Product Subtotal** | Currency | Total amount before tax for all products |
+
+### 6. Pricing Summary
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| **Services Subtotal** | Currency | Sum of all location service subtotals |
+| **Products Subtotal** | Currency | Sum of all product line totals |
+| **Subtotal (Net)** | Currency | Total amount before tax and discount |
+| **Tax (GST)** | Currency | Calculated tax breakdown (CGST + SGST) |
+| **Discount** | Currency | Percentage or flat amount reduction |
+| **Grand Total** | Currency | Final payable amount (All inclusive) |
+
+### 7. Terms & Validity
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| **Valid Till** | Date | Quotation expiry date |
+| **Payment Terms** | Text | Advance vs Completion milestones |
+| **Special Terms** | Text | Custom T&Cs or warranty details |
+
+### 8. Attachments
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| **File List** | Icons | List of uploaded reports, site photos, etc. |
+| **File Actions** | Link | Download or View in Browser |
+
+### 9. Audit Trail
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| **Created By** | Text | Name of the user + Creation Timestamp |
+| **Last Modified** | Text | Name of the last editor + timestamp |
+| **History Logs** | List | Status changes (e.g., "Draft to Sent" by HR-User-01) |
 
 ---
 
