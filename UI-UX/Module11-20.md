@@ -2952,7 +2952,7 @@ _(Integrated with Module 10 Product Master — product price auto-fetched on sel
 | **Price / UOM (₹)**      | Auto-filled     | System   | **Purchase Price from Module 10 Product Master** (editable) |
 | **Cost / Visit (₹)**     | Auto-calculated | System   | `Required Qty × Price per UOM`                              |
 | **Est. Cost / Month (₹)**| Auto-calculated | System   | `Cost per Visit × Visits per Month`                         |
-| Custom Chemical          | Text            | No       | Allowed if product does not exist in Product Master         |
+
 
 **System Behavior — On Product Selection**
 
