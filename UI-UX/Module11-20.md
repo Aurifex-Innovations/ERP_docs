@@ -7235,7 +7235,7 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 | Field              | Type        | Required    | Options/Validation                                            | Notes                                    |
 | ------------------ | ----------- | ----------- | ------------------------------------------------------------- | ---------------------------------------- |
 | Service Type       | Dropdown    | Yes         | Cockroach / Termite / Rodent / Fogging / etc.                 | Determines the chemical/costings grid    |
-| Service Mode       | Dropdown    | Yes         |  Contract Base/ One-Time                                                | Determines frequency requirement         |
+| Service Mode       | Dropdown    | Yes         |  Contract/ One-Time                                                | Determines frequency requirement         |
 | Frequency          | Dropdown    | Conditional | Weekly / Fortnightly / Monthly / Quarterly / Custom           | Required if Mode = Contract                   |
 | Annual Frequency   | Number      | Auto        | Auto-calculated (Weekly=52, Monthly=12, Quarterly=4)          | Derived from Frequency                   |
 | Visits/Month       | Display     | Auto        | Auto-calculated (Annual ÷ 12)                                 | Used for chemical usage calculations     |
@@ -10320,6 +10320,8 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 │  │  │─┼───────────────┼────┼─────────────────┼─────┼─────┼──────────│  │ │
 │  │  │1│Alpha Cyperm.  │[ 5]│[₹ 1,200] (Edit) │3808 │18%  │₹ 7,080   │  │ │
 │  │  │2│Fipronil Gel   │[20]│[₹ 220]   (Edit) │3808 │18%  │₹ 5,192   │  │ │
+│  │  ├─┴───────────────┴────┴─────────────────┴─────┴─────┴──────────┤  │ │
+│  │  │ [+ Add Product]                                                 │  │ │
 │  │  └───────────────────────────────────────────────────────────────────┘  │ │
 │  │                                                                         │ │
 │  │  ═══ ORDER TOTAL SUMMARY ═══════════════════════════════════════════  │ │
@@ -10396,18 +10398,46 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 ### A. CONDITION: SERVICE CONTRACT
 *(Sites, Services, and Chemicals are auto-fetched from the Contract, but Site details and Qty remain editable for execution/dispatch flexibility)*
 
+#### 1. Site configuration fields (Auto-fetched & Editable)
 | Field           | Type            | Required | Validation / Notes                                                              |
 | --------------- | --------------- | -------- | ------------------------------------------------------------------------------- |
-| Auto-Fetched Site Data | Text / Dropdown | System | Address, City, State, Country, Map URL, Category, Area auto-load but are **Editable** |
-| Contact Person & Mobile | Text/Phone| Yes | Auto-load but are **Editable** for dispatch purposes                            |
-| Service Name    | Read-Only       | System   | Fixed from Contract Service Master.                                             |
-| Qty (Visits)    | Number          | Yes      | Auto-fetched but **Editable** per SO generation (e.g. ad-hoc visit additions)   |
-| Unit Price (₹)  | Currency        | System   | Read-only (Fixed from Contract Financials)                                      |
-| Chemical Items  | Data Table      | System   | Read-only (Fixed from Contract Service definitions)                             |
+| Site Name       | Display         | System   | Auto-fetched from Contract Site Master; Read-only title.                        |
+| Address         | Text Area       | Yes      | Auto-fetched but **Editable** for dispatch accuracy.                            |
+| City, State, Country | Text/Dropdown | Yes   | Auto-fetched but **Editable**.                                                  |
+| Google Map URL  | URL             | Yes      | Auto-fetched but **Editable** (Required for execution dispatch).                |
+| Category / Sub-Cat| Dropdown      | Yes      | Auto-fetched but **Editable**.                                                  |
+| Area (sqft)     | Number          | Yes      | Auto-fetched but **Editable**.                                                  |
+| Contact Person & Mobile | Text/Phone| Yes    | Auto-fetched but **Editable** (site-specific point of contact).                 |
+
+#### 2. Service Line Items Grid
+| Field           | Type            | Required | Validation / Notes                                                              |
+| --------------- | --------------- | -------- | ------------------------------------------------------------------------------- |
+| Service Name    | Display (Link)  | System   | Fixed from Contract Service Master (Read-only).                                 |
+| Visits (Qty)    | Number          | Yes      | Auto-fetched from billing schedule but **Editable** for ad-hoc adjustments.     |
+| Unit Price (₹)  | Display         | System   | **Read-only** (Fixed from Contract Financials).                                 |
+| SQFT            | Number          | Auto     | Inherited from Site Configuration above.                                      |
+| HSN             | System          | Auto     | Service Accounting Code fetched from Contract/Module 12.                      |
+| Tax %           | System          | Auto     | GST rate based on HSN.                                                        |
+| Tax Amt         | Currency        | Auto     | `(Visits × Unit Price) × Tax %`                                               |
+| Total (₹)       | Currency        | Auto     | `(Visits × Unit Price) + Tax Amt`                                             |
+
+#### 3. Consumable Chemicals Grid
+*(Read-only: Fixed from Contract definitions to ensure strict material audit trail for recurring services.)*
+
+| Field           | Type            | Required | Validation / Notes                                                              |
+| --------------- | --------------- | -------- | ------------------------------------------------------------------------------- |
+| Product Name    | Display         | System   | Read-only (Fixed from Contract Service norms).                                  |
+| Code            | System          | Auto     | From Product Master (Module 10).                                                |
+| UOM             | System          | Auto     | Base unit (ml, Ltr, Tube, etc.).                                                |
+| Coverage        | System          | Auto     | Standard SQFT coverage per unit.                                                |
+| Req. Qty        | Number          | System   | Auto-calculated: `Area (sqft) ÷ Coverage`.                                      |
+| Price           | Currency        | Auto     | Fixed Contract inventory price.                                                 |
+| Cost            | Currency        | Auto     | `Req. Qty × Price`.                                                             |
 
 ### B. CONDITION: ONE-TIME SERVICE
 *(If Source = Quotation/GMA, behaves similar to Contract. If Source = Standalone, fully manual entry.)*
 
+#### 1. Site configuration fields
 | Field           | Type            | Required | Validation / Notes                                                              |
 | --------------- | --------------- | -------- | ------------------------------------------------------------------------------- |
 | Site Name       | Search/Text     | Yes      | Select existing from Customer Master OR Add New.                                |
@@ -10417,10 +10447,33 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 | Category / Sub-Cat| Dropdown      | Yes      | Residential/Commercial/Industrial, Internal/External                            |
 | Area (sqft)     | Number          | Yes      | Used for chemical coverage calculation and capacity mapping                     |
 | Contact Person & Mobile | Text/Phone| Yes    | Site-specific contact (Required for execution/dispatch)                         |
+
+#### 2. Service Line Items Grid
+| Field           | Type            | Required | Validation / Notes                                                              |
+| --------------- | --------------- | -------- | ------------------------------------------------------------------------------- |
 | Service Name    | Search Dropdown | Yes      | Select from Module 12 (Services) if standalone                                  |
-| Qty (Visits)    | Number          | Yes      | Number of visits for this SO; must be > 0                                       |
+| Visits (Qty)    | Number          | Yes      | Number of visits for this SO; must be > 0                                       |
 | Unit Price (₹)  | Currency        | Yes      | Editable for standalone; Auto-fetched from GMA if linked.                       |
-| Chemical Line Items | Addable Table | Cond.  | Auto-fetched from Module 12 Pest Type. Editable: Calculates `Req Qty` based on Area ÷ Coverage. |
+| SQFT            | Number          | Auto     | Inherited from Site Configuration above.                                      |
+| HSN             | System          | Auto     | Service Accounting Code fetched from Module 12.                               |
+| Tax %           | System          | Auto     | GST rate based on HSN.                                                        |
+| Tax Amt         | Currency        | Auto     | `(Visits × Unit Price) × Tax %`                                               |
+| Total           | Currency        | Auto     | `(Visits × Unit Price) + Tax Amt`                                             |
+
+#### 3. Consumable Chemicals Grid
+*(Auto-fetched from Module 12 based on the pest type defined in the Service Grid above, but numbers remain editable for Standalone SOs to account for site differences.)*
+
+| Field           | Type            | Required | Validation / Notes                                                              |
+| --------------- | --------------- | -------- | ------------------------------------------------------------------------------- |
+| Product Name    | Search Dropdown | Cond.    | Inherited from Module 12 default norms; dispatcher can add more items manually. |
+| Code            | System          | Auto     | From Product Master (Module 10).                                                |
+| UOM             | System          | Auto     | Base unit (ml, Ltr, Tube, etc.).                                                |
+| Coverage        | System          | Auto     | Standard SQFT coverage per unit (from Module 12 config).                        |
+| Req. Qty        | Number          | Yes      | Base calculation: `Area (sqft) ÷ Coverage`. **Editable** by dispatcher.         |
+| Price           | Currency        | Auto     | Cost equivalent price from Module 10 stock.                                     |
+| Cost            | Currency        | Auto     | `Req. Qty × Price`. Triggers job margin deduction.                              |
+
+**Note:** If you doesn't understand the above table, please refer to the screen layout above.
 
 ### C. CONDITION: PRODUCT SALE
 
