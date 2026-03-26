@@ -7235,7 +7235,7 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 | Field              | Type        | Required    | Options/Validation                                            | Notes                                    |
 | ------------------ | ----------- | ----------- | ------------------------------------------------------------- | ---------------------------------------- |
 | Service Type       | Dropdown    | Yes         | Cockroach / Termite / Rodent / Fogging / etc.                 | Determines the chemical/costings grid    |
-| Service Mode       | Dropdown    | Yes         |  / One-Time                                                | Determines frequency requirement         |
+| Service Mode       | Dropdown    | Yes         |  Contract Base/ One-Time                                                | Determines frequency requirement         |
 | Frequency          | Dropdown    | Conditional | Weekly / Fortnightly / Monthly / Quarterly / Custom           | Required if Mode = Contract                   |
 | Annual Frequency   | Number      | Auto        | Auto-calculated (Weekly=52, Monthly=12, Quarterly=4)          | Derived from Frequency                   |
 | Visits/Month       | Display     | Auto        | Auto-calculated (Annual ÷ 12)                                 | Used for chemical usage calculations     |
