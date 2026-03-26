@@ -276,6 +276,8 @@ A multi-step form to create service tasks. Opens with **two tabs** — tasks sou
 │  │  │  End Time*         : [▼ 10:00 ▼]                                 │   │ │
 │  │  │  Duration          : 2 hours (auto-calculated)                    │   │ │
 │  │  │  Area (SQFT)       : 3,500                                       │   │ │
+│  │  │  Site Contact*     : [Rajesh_______________]                        │   │ │
+│  │  │  Contact Mobile*   : [+919876543210        ]                        │   │ │
 │  │  │                                                                  │   │ │
 │  │  │  ── Technician Assignment ──                                     │   │ │
 │  │  │  Role*             : [▼ Select Role ▼]                            │   │ │
@@ -304,6 +306,8 @@ A multi-step form to create service tasks. Opens with **two tabs** — tasks sou
 │  │  ┌──────────────────────────────────────────────────────────────────┐   │ │
 │  │  │  Category          : Specialized Service                         │   │ │
 │  │  │  Sub-category      : Rodent Management                           │   │ │
+│  │  │  Site Contact*     : [Amit Kumar___________]                        │   │ │
+│  │  │  Contact Mobile*   : [+919988776655        ]                        │   │ │
 │  │  │  Scheduled Date*   : [📅 23 Mar 2026]                            │   │ │
 │  │  │  Start Time*       : [▼ 10:30 ▼]   End Time*: [▼ 12:00 ▼]       │   │ │
 │  │  │  Role*             : [▼ Technician ▼]                             │   │ │
@@ -357,6 +361,8 @@ A multi-step form to create service tasks. Opens with **two tabs** — tasks sou
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
 │  │  Service Type*     : [▼ Rodent Control ▼] (Pre-filled; editable)       │ │
 │  │  Site*             : [▼ Lobby ▼] (Pre-filled; editable)                │ │
+│  │  Site Contact*     : [Amit Kumar___________] (Editable)                 │ │
+│  │  Contact Mobile*   : [+919988776655        ] (Editable)                 │ │
 │  │  Scheduled Date*   : [📅 24 Mar 2026]                                   │ │
 │  │  Start Time*       : [▼ 09:00 ▼]    End Time*: [▼ 11:00 ▼]            │ │
 │  │                                                                         │ │
@@ -402,6 +408,8 @@ A multi-step form to create service tasks. Opens with **two tabs** — tasks sou
 | Category            | Display   | Auto     | From GMA/SO service definition    | Service Category (e.g. General Pest Control)    |
 | Sub-category        | Display   | Auto     | From GMA/SO service definition    | Service Sub-category (e.g. Cockroach Mgmt)      |
 | Area (SQFT)         | Display   | Auto     | From GMA/SO service definition    | Total area to be treated (read-only)            |
+| Site Contact        | Text      | Yes      | Auto-fetched from SO/Customer     | **[Editable]** Point of contact for the tech    |
+| Contact Mobile      | Phone     | Yes      | Valid 10-digit number             | **[Editable]** Contact number for execution     |
 | Scheduled Date      | Date      | Yes      | Cannot be past date               | Task execution date                             |
 | Start Time          | Time      | Yes      | Must be before End Time           | Task start time                                 |
 | End Time            | Time      | Yes      | Must be after Start Time          | Task end time                                   |
@@ -498,6 +506,7 @@ Read-only screen showing the complete breakdown of a task — customer info, ser
 │  │  Site           : Head Office (SITE-00312)                             │ │
 │  │  Address        : Andheri East, Mumbai, Maharashtra                    │ │
 │  │  Country        : India               Google Map    : 🔗 View on Maps │ │
+│  │  Site Contact   : Rajesh              Mobile        : +919876543210   │ │
 │  │  Branch         : Mumbai                                               │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
@@ -567,6 +576,8 @@ Read-only screen showing the complete breakdown of a task — customer info, ser
 | Address        | Display | **[Auto-fetched]** Site address from source                      |
 | Country        | Display | **[Auto-fetched]** Country of the site                           |
 | Google Map URL | Link    | **[Auto-fetched]** Clickable Google Maps link                    |
+| Site Contact   | Display | **[Configured at Creation]** POC Name for the tech               |
+| Contact Mobile | Display | **[Configured at Creation]** POC Phone for the tech              |
 | Branch         | Display | **[Auto-fetched]** Servicing branch                              |
 | Category       | Display | **[Auto-fetched]** Service Category (e.g. General Pest Control)  |
 | Subcategory    | Display | **[Auto-fetched]** Service Sub-Category (e.g. Cockroach Mgmt)    |
@@ -656,12 +667,14 @@ Editable form for modifying a task that has not yet been completed. Allows chang
 │  │  Task Type       : Normal (SO)         Created By    : Priya D.        │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  ─── SCHEDULE (Editable) ───────────────────────────────────────────────── │
+│  ─── SCHEDULE & CONTACT (Editable) ─────────────────────────────────────── │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
 │  │  Scheduled Date*   : [📅 23 Mar 2026]                                   │ │
 │  │  Start Time*       : [▼ 14:00 ▼]                                       │ │
 │  │  End Time*         : [▼ 16:00 ▼]                                       │ │
 │  │  Duration          : 2 hours (auto)                                     │ │
+│  │  Site Contact*     : [Rajesh_______________]                        │ │
+│  │  Contact Mobile*   : [+919876543210        ]                        │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │  ─── TECHNICIAN ASSIGNMENT (Editable) ──────────────────────────────────── │
@@ -708,6 +721,8 @@ Editable form for modifying a task that has not yet been completed. Allows chang
 | Scheduled Date      | Date      | Yes      | Cannot be past date               | **[Manual Update]** Task execution date              |
 | Start Time          | Time      | Yes      | Must be before End Time           | **[Manual Update]** Task start time                  |
 | End Time            | Time      | Yes      | Must be after Start Time          | **[Manual Update]** Task end time                    |
+| Site Contact        | Text      | Yes      | Required                          | **[Manual Update]** Site point of contact            |
+| Contact Mobile      | Phone     | Yes      | Valid 10-digit number             | **[Manual Update]** Mobile string for dispatcher     |
 | Role                | Dropdown  | Yes      | From Module 8 role definitions    | **[Manual Update]** Cascading filter for employees   |
 | Available Employees | Multi-sel | Yes      | At least one selected             | **[Auto-filtered/Manual Select]** Multi-select       |
 | Primary Technician  | Dropdown  | Yes      | Must be one of selected employees | **[Manual Update]** Main responsible person          |

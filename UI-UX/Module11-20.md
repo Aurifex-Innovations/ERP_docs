@@ -2685,18 +2685,17 @@ The Service Dashboard displays a list of all configured pest control services in
 
 # Table View Fields
 
-| Field         | Type            | Required | Description                       |
-| ------------- | --------------- | -------- | --------------------------------- |
-| Service Image | Image Thumbnail | Optional | Icon representing pest type       |
-| Service ID    | Text            | Auto     | Unique service identifier         |
-| Service Name  | Text            | Required | Name of pest control service      |
-| Category,Sub Category      | Text,Text            | Required | Residential / Commercial,External/Internal      |
-| Pest Type     | Multi Tag       | Required | Pest category linked with service |
-| Price Type    | Text            | Required | Fixed / Area Based / Inspection   |
-| Duration      | Text            | Required | Service duration                  |
-| Warranty      | Text            | Optional | Warranty with revisit count       |
-| Status        | Badge           | Auto     | Active / Inactive                 |
-| Actions       | Button Group    | —        | View / Edit                       |
+| Field                 | Type         | Required | Description                                |
+| --------------------- | ------------ | -------- | ------------------------------------------ |
+| Service ID            | Text         | Auto     | Unique service identifier                  |
+| Service Name          | Text         | Required | Name of pest control service               |
+| Category,Sub Category | Text,Text    | Required | Residential / Commercial,External/Internal |
+| Pest Type             | Multi Tag    | Required | Pest category linked with service          |
+| Price Type            | Text         | Required | Fixed / Area Based / Inspection            |
+| Duration              | Text         | Required | Service duration                           |
+| Warranty              | Text         | Optional | Warranty with revisit count                |
+| Status                | Badge        | Auto     | Active / Inactive                          |
+| Actions               | Button Group | —        | View / Edit                                |
 
 ---
 
@@ -2941,56 +2940,55 @@ The Add Service form allows administrators to create and configure pest control 
 
 _(Integrated with Module 10 Product Master — product price auto-fetched on selection)_
 
-| Field                    | Type            | Required | Validation / Notes                                          |
-| ------------------------ | --------------- | -------- | ----------------------------------------------------------- |
-| Product Name             | Search Dropdown | Yes      | Must exist in Product Master (active consumables only)      |
-| Product Code             | Auto-filled     | System   | Auto-fetched from Product Master on selection               |
-| UOM                      | Auto-filled     | System   | Base UOM from Product Master (ml / Ltr / gm / kg / Nos)    |
-| Dilution                 | Number          | Yes      | Standard dilution dose per treatment (e.g., 10 ml)         |
-| Coverage (SQFT)          | Number          | Yes      | Area covered per dilution dose (e.g., 100 SQFT)            |
-| Required Qty             | Number          | Yes      | Quantity needed per service visit; must be > 0              |
-| **Price / UOM (₹)**      | Auto-filled     | System   | **Purchase Price from Module 10 Product Master** (editable) |
-| **Cost / Visit (₹)**     | Auto-calculated | System   | `Required Qty × Price per UOM`                              |
-| **Est. Cost / Month (₹)**| Auto-calculated | System   | `Cost per Visit × Visits per Month`                         |
-| Custom Chemical          | Text            | No       | Allowed if product does not exist in Product Master         |
+| Field                     | Type            | Required | Validation / Notes                                          |
+| ------------------------- | --------------- | -------- | ----------------------------------------------------------- |
+| Product Name              | Search Dropdown | Yes      | Must exist in Product Master (active consumables only)      |
+| Product Code              | Auto-filled     | System   | Auto-fetched from Product Master on selection               |
+| UOM                       | Auto-filled     | System   | Base UOM from Product Master (ml / Ltr / gm / kg / Nos)     |
+| Dilution                  | Number          | Yes      | Standard dilution dose per treatment (e.g., 10 ml)          |
+| Coverage (SQFT)           | Number          | Yes      | Area covered per dilution dose (e.g., 100 SQFT)             |
+| Required Qty              | Number          | Yes      | Quantity needed per service visit; must be > 0              |
+| **Price / UOM (₹)**       | Auto-filled     | System   | **Purchase Price from Module 10 Product Master** (editable) |
+| **Cost / Visit (₹)**      | Auto-calculated | System   | `Required Qty × Price per UOM`                              |
+| **Est. Cost / Month (₹)** | Auto-calculated | System   | `Cost per Visit × Visits per Month`                         |
 
 **System Behavior — On Product Selection**
 
 When a product is selected from the search dropdown, the system automatically fetches and fills:
 
-| Field Auto-Filled  | Source in Module 10     |
-| ------------------ | ----------------------- |
-| Product Code       | Product Master record   |
-| UOM                | Base UOM from Product   |
-| Dilution           | Standard Usage (if set) |
-| Price / UOM (₹)    | **Purchase Price**      |
+| Field Auto-Filled | Source in Module 10     |
+| ----------------- | ----------------------- |
+| Product Code      | Product Master record   |
+| UOM               | Base UOM from Product   |
+| Dilution          | Standard Usage (if set) |
+| Price / UOM (₹)   | **Purchase Price**      |
 
 > The **Price / UOM** is editable — the admin can override the fetched price if a negotiated rate applies for this service.
 
 **Calculation Rules**
 
-| Calculation            | Formula                                          |
-| ---------------------- | ------------------------------------------------ |
-| Cost per Visit (₹)     | `Required Qty × Price per UOM`                   |
-| Est. Cost / Month (₹)  | `Cost per Visit × Visits per Month`              |
-| Total Chemical Cost    | Sum of all chemical rows' Est. Cost / Month      |
+| Calculation           | Formula                                     |
+| --------------------- | ------------------------------------------- |
+| Cost per Visit (₹)    | `Required Qty × Price per UOM`              |
+| Est. Cost / Month (₹) | `Cost per Visit × Visits per Month`         |
+| Total Chemical Cost   | Sum of all chemical rows' Est. Cost / Month |
 
 **Chemical Cost Summary** (displayed below the table, read-only)
 
-| Summary Field                    | Value                                          |
-| -------------------------------- | ---------------------------------------------- |
-| Total Chemical Cost / Visit (₹)  | Sum of all Cost/Visit across chemical rows     |
-| Total Chemical Cost / Month (₹)  | Sum of all Est. Cost/Month across chemical rows |
+| Summary Field                   | Value                                           |
+| ------------------------------- | ----------------------------------------------- |
+| Total Chemical Cost / Visit (₹) | Sum of all Cost/Visit across chemical rows      |
+| Total Chemical Cost / Month (₹) | Sum of all Est. Cost/Month across chemical rows |
 
 > This total is shown to guide the admin when setting the final service price in the **Pricing Configuration** section below.
 
 **Example**
 
-| Product             | UOM | Req. Qty | Price/UOM | Cost/Visit | Visits/Month | Cost/Month |
-| ------------------- | --- | -------- | --------- | ---------- | ------------ | ---------- |
-| Alpha Cypermethrin  | ml  | 50 ml    | ₹4.20     | ₹210       | 4            | ₹840       |
-| Chlorpyriphos       | ml  | 30 ml    | ₹3.50     | ₹105       | 4            | ₹420       |
-| **TOTAL**           |     |          |           | **₹315**   |              | **₹1,260** |
+| Product            | UOM | Req. Qty | Price/UOM | Cost/Visit | Visits/Month | Cost/Month |
+| ------------------ | --- | -------- | --------- | ---------- | ------------ | ---------- |
+| Alpha Cypermethrin | ml  | 50 ml    | ₹4.20     | ₹210       | 4            | ₹840       |
+| Chlorpyriphos      | ml  | 30 ml    | ₹3.50     | ₹105       | 4            | ₹420       |
+| **TOTAL**          |     |          |           | **₹315**   |              | **₹1,260** |
 
 ---
 
@@ -2998,32 +2996,32 @@ When a product is selected from the search dropdown, the system automatically fe
 
 > **💡 Pricing Reference:** The **Chemical Cost Summary** calculated in **Section 4** (Total Chemical Cost / Month) is displayed as a reference banner at the top of this section, so the admin can set service prices that comfortably cover chemical costs and ensure profitability.
 
-| Field                          | Type               | Required    | Validation                                                            |
-| ------------------------------ | ------------------ | ----------- | --------------------------------------------------------------------- |
-| Price Type                     | Radio              | Yes         | Fixed Price / Area Based / Inspection Based                           |
-| **[FIXED PRICE CONFIG]**       | —                  | —           | Only if Price Type = Fixed Price                                      |
-| Residential (BHK Pricing)      | Number             | Conditional | 1BHK, 2BHK, 3BHK, 4BHK+ pricing; should exceed Chemical Cost/Month  |
-| Custom Property Type           | Text               | No          | Added via [+ Add Custom Property Type]                                |
-| Commercial (Office Pricing)    | Number             | Conditional | Small, Medium, Large Office, Warehouse pricing                        |
-| Custom Commercial Type         | Text               | No          | Added via [+ Add Custom Commercial Type]                              |
-| **[AREA BASED CONFIG]**        | —                  | —           | Only if Price Type = Area Based                                       |
-| Base Price                     | Number             | Conditional | Minimum charge; recommended ≥ Total Chemical Cost / Visit            |
-| Price per SQFT                 | Number             | Conditional | Charge per specified SQFT area                                        |
-| **[INSPECTION BASED CONFIG]**  | —                  | —           | Only if Price Type = Inspection Based                                 |
-| Inspection Fee                 | Number             | Conditional | Fee charged for visit; final price quoted after inspection            |
-| **[CUSTOM CATEGORY CONFIG]**   | —                  | —           | [+ Add Pricing for Custom Service Category]                           |
-| Category                       | Dropdown           | No          | Selected from Service Categories                                      |
-| Sub Category                   | Dropdown           | No          | Selected from Sub Categories                                          |
-| Field Name                     | Text               | No          | Label for the custom pricing field                                    |
-| Price Type Config              | Text               | No          | Configuration for the custom pricing                                  |
+| Field                         | Type     | Required    | Validation                                                         |
+| ----------------------------- | -------- | ----------- | ------------------------------------------------------------------ |
+| Price Type                    | Radio    | Yes         | Fixed Price / Area Based / Inspection Based                        |
+| **[FIXED PRICE CONFIG]**      | —        | —           | Only if Price Type = Fixed Price                                   |
+| Residential (BHK Pricing)     | Number   | Conditional | 1BHK, 2BHK, 3BHK, 4BHK+ pricing; should exceed Chemical Cost/Month |
+| Custom Property Type          | Text     | No          | Added via [+ Add Custom Property Type]                             |
+| Commercial (Office Pricing)   | Number   | Conditional | Small, Medium, Large Office, Warehouse pricing                     |
+| Custom Commercial Type        | Text     | No          | Added via [+ Add Custom Commercial Type]                           |
+| **[AREA BASED CONFIG]**       | —        | —           | Only if Price Type = Area Based                                    |
+| Base Price                    | Number   | Conditional | Minimum charge; recommended ≥ Total Chemical Cost / Visit          |
+| Price per SQFT                | Number   | Conditional | Charge per specified SQFT area                                     |
+| **[INSPECTION BASED CONFIG]** | —        | —           | Only if Price Type = Inspection Based                              |
+| Inspection Fee                | Number   | Conditional | Fee charged for visit; final price quoted after inspection         |
+| **[CUSTOM CATEGORY CONFIG]**  | —        | —           | [+ Add Pricing for Custom Service Category]                        |
+| Category                      | Dropdown | No          | Selected from Service Categories                                   |
+| Sub Category                  | Dropdown | No          | Selected from Sub Categories                                       |
+| Field Name                    | Text     | No          | Label for the custom pricing field                                 |
+| Price Type Config             | Text     | No          | Configuration for the custom pricing                               |
 
 **Pricing Reference Banner** (shown above the price inputs, read-only)
 
-| Reference Item                       | Value                                         |
-| ------------------------------------ | --------------------------------------------- |
-| Total Chemical Cost / Visit (₹)      | Auto-calculated from Section 4 chemicals      |
-| Total Chemical Cost / Month (₹)      | Auto-calculated from Section 4 chemicals      |
-| Recommended Minimum Service Price    | Total Cost / Visit + Labour / Overhead margin |
+| Reference Item                    | Value                                         |
+| --------------------------------- | --------------------------------------------- |
+| Total Chemical Cost / Visit (₹)   | Auto-calculated from Section 4 chemicals      |
+| Total Chemical Cost / Month (₹)   | Auto-calculated from Section 4 chemicals      |
+| Recommended Minimum Service Price | Total Cost / Visit + Labour / Overhead margin |
 
 > Setting the service price **below** the Chemical Cost / Month will trigger a **⚠️ warning** to alert the admin of a potential loss-making configuration.
 
@@ -3051,6 +3049,662 @@ When a product is selected from the search dropdown, the system automatically fe
 | Updated Date  | Auto   | Yes      | Updated automatically             |
 | Updated By    | Auto   | Yes      | Logged user                       |
 | Display Order | Number | No       | Used for service listing priority |
+
+---
+
+=============================== FOR 12.2 New In depth reference =========================================
+
+# 📋 12.2 — Complete Field Reference (Developer / UI-UX Guide)
+
+> **Purpose:** This section provides a **complete, section-wise field reference** for the Add Service Form (12.2). Every field — including those that appear only after clicking a **[+ Add ...]** button — is documented with its parent section, hierarchy level, UI type, and behavior. This guide is intended to help a **beginner UI/UX developer** understand every element on the form.
+
+---
+
+## 🗂️ Master Field Reference — All Sections
+
+### Section 1: Basic Service Information
+
+| #   | Field Name                   | Parent / Belongs To           | Hierarchy                                      | UI Type                    | Required | Default State        | Behavior / Notes                                                                 |
+| --- | ---------------------------- | ----------------------------- | ---------------------------------------------- | -------------------------- | -------- | -------------------- | -------------------------------------------------------------------------------- |
+| 1   | Service Name                 | Section 1 – Basic Info        | Top-level field                                | Text Input                 | Yes      | Empty                | Min 3 chars, must be unique                                                      |
+| 2   | Service Category             | Section 1 – Basic Info        | Top-level field                                | Multi-Select Checkbox      | Yes      | All unchecked        | Options: Residential, Commercial, Industrial, Warehouse                          |
+| 3   | **[+ Add Custom Category]**  | Section 1 → Service Category  | 🔘 **Add Button** (child of Service Category)  | Button → Inline Input      | No       | Hidden until clicked | See **[+ Add] Button Guide** below                                               |
+| 4   | Service Sub Category         | Section 1 – Basic Info        | Top-level field                                | Multi-Select Checkbox      | Yes      | All unchecked        | Options: Internal, External                                                      |
+| 5   | Service Code                 | Section 1 – Basic Info        | Top-level field                                | Auto Generated (Read Only) | Yes      | Auto-filled          | Format: `SRV-XXXX`                                                               |
+| 6   | Pest Type Covered            | Section 1 – Basic Info        | Top-level field                                | Multi-Select Checkbox      | Yes      | All unchecked        | Options: Rodent, Cockroach, Mosquito, Termite, Fly, Ant, Bed Bug, Spider, Lizard |
+| 7   | **[+ Add Custom Pest Type]** | Section 1 → Pest Type Covered | 🔘 **Add Button** (child of Pest Type Covered) | Button → Inline Input      | No       | Hidden until clicked | See **[+ Add] Button Guide** below                                               |
+| 8   | Description                  | Section 1 – Basic Info        | Top-level field                                | Text Area                  | Yes      | Empty                | Min 10 characters                                                                |
+| 9   | Service Duration (Value)     | Section 1 – Basic Info        | Top-level field                                | Number Input               | Yes      | Empty                | Must be > 0                                                                      |
+| 10  | Service Duration (UOM)       | Section 1 – Basic Info        | Top-level field (paired with #9)               | Dropdown                   | Yes      | Minutes              | Options: Minutes, Hours                                                          |
+| 11  | Service Status               | Section 1 – Basic Info        | Top-level field                                | Radio Button               | Yes      | Active               | Options: Active, Inactive                                                        |
+
+---
+
+### Section 2: Pest Species Covered
+
+| #   | Field Name          | Parent / Belongs To      | Hierarchy                           | UI Type          | Required | Default State  | Behavior / Notes                   |
+| --- | ------------------- | ------------------------ | ----------------------------------- | ---------------- | -------- | -------------- | ---------------------------------- |
+| 12  | Pest Species Name   | Section 2 – Pest Species | Dynamic Row Field                   | Text Input       | No       | Empty          | Each row = one species entry       |
+| 13  | Scientific Name     | Section 2 – Pest Species | Dynamic Row Field (paired with #12) | Text Input       | No       | Empty          | Optional classification name       |
+| 14  | **[+ Add Species]** | Section 2 → Species List | 🔘 **Add Button** (adds a new row)  | Button → New Row | No       | Always visible | See **[+ Add] Button Guide** below |
+
+---
+
+### Section 3: Method of Control / Treatment
+
+| #   | Field Name                          | Parent / Belongs To           | Hierarchy                                      | UI Type               | Required | Default State        | Behavior / Notes                      |
+| --- | ----------------------------------- | ----------------------------- | ---------------------------------------------- | --------------------- | -------- | -------------------- | ------------------------------------- |
+| 15  | Treatment Method (Preset)           | Section 3 – Treatment         | Top-level field                                | Multi-Select Checkbox | Yes      | All unchecked        | 11 preset options (see Screen Layout) |
+| 16  | **[+ Add Custom Treatment Method]** | Section 3 → Treatment Methods | 🔘 **Add Button** (child of Treatment Methods) | Button → Inline Input | No       | Hidden until clicked | See **[+ Add] Button Guide** below    |
+
+---
+
+### Section 4: Chemicals / Products Used
+
+| #   | Field Name                  | Parent / Belongs To               | Hierarchy                                 | UI Type                     | Required | Default State                   | Behavior / Notes                                            |
+| --- | --------------------------- | --------------------------------- | ----------------------------------------- | --------------------------- | -------- | ------------------------------- | ----------------------------------------------------------- |
+| 17  | Search Product              | Section 4 – Chemicals             | Top-level field                           | Search Dropdown             | Yes      | Empty                           | Searches Module 10 Product Master (active consumables only) |
+| 18  | Product Name                | Section 4 → Chemical Table Row    | Table Column (per row)                    | Auto-filled from search     | System   | —                               | Filled on product selection                                 |
+| 19  | Product Code                | Section 4 → Chemical Table Row    | Table Column (per row)                    | Auto-filled                 | System   | —                               | From Product Master                                         |
+| 20  | UOM                         | Section 4 → Chemical Table Row    | Table Column (per row)                    | Auto-filled                 | System   | —                               | Base UOM (ml / Ltr / gm / kg / Nos)                         |
+| 21  | Dilution                    | Section 4 → Chemical Table Row    | Table Column (per row)                    | Number Input                | Yes      | Auto-filled if set in Module 10 | Editable                                                    |
+| 22  | Coverage (SQFT)             | Section 4 → Chemical Table Row    | Table Column (per row)                    | Number Input                | Yes      | Empty                           | Area covered per dilution dose                              |
+| 23  | Required Qty                | Section 4 → Chemical Table Row    | Table Column (per row)                    | Number Input                | Yes      | Empty                           | Must be > 0                                                 |
+| 24  | Price / UOM (₹)             | Section 4 → Chemical Table Row    | Table Column (per row)                    | Auto-filled (Editable)      | System   | Auto from Module 10             | Admin can override                                          |
+| 25  | Cost / Visit (₹)            | Section 4 → Chemical Table Row    | Table Column (per row)                    | Auto-calculated (Read Only) | System   | ₹0                              | = Req. Qty × Price/UOM                                      |
+| 26  | Est. Cost / Month (₹)       | Section 4 → Chemical Table Row    | Table Column (per row)                    | Auto-calculated (Read Only) | System   | ₹0                              | = Cost/Visit × Visits/Month                                 |
+| 27  | 🗑 Delete Row               | Section 4 → Chemical Table Row    | Table Action (per row)                    | Icon Button                 | —        | Visible per row                 | Removes the chemical row                                    |
+| 28  | Visits/Month (Reference)    | Section 4 – Chemicals             | Summary field (below table)               | Auto-filled (Read Only)     | System   | —                               | From Service Frequency                                      |
+| 29  | Total Chemical Cost / Visit | Section 4 – Chemical Cost Summary | Summary field (below table)               | Auto-calculated (Read Only) | System   | ₹0                              | Sum of all rows' Cost/Visit                                 |
+| 30  | Total Chemical Cost / Month | Section 4 – Chemical Cost Summary | Summary field (below table)               | Auto-calculated (Read Only) | System   | ₹0                              | Sum of all rows' Est. Cost/Month                            |
+| 31  | **[+ Add Custom Chemical]** | Section 4 → Chemical Table        | 🔘 **Add Button** (adds new chemical row) | Button → New Row + Popup    | No       | Always visible                  | See **[+ Add] Button Guide** below                          |
+
+---
+
+### Section 5: Pricing Configuration
+
+| #   | Field Name                                      | Parent / Belongs To                   | Hierarchy                                              | UI Type                    | Required    | Default State        | Behavior / Notes                                        |
+| --- | ----------------------------------------------- | ------------------------------------- | ------------------------------------------------------ | -------------------------- | ----------- | -------------------- | ------------------------------------------------------- |
+| 32  | Price Type                                      | Section 5 – Pricing                   | Top-level field                                        | Radio Button               | Yes         | None selected        | Options: Fixed Price, Area Based, Inspection Based      |
+| —   | **── IF FIXED PRICE ──**                        | —                                     | —                                                      | —                          | —           | —                    | Fields #33–#38 appear only when Price Type = Fixed      |
+| 33  | Residential → 1BHK Price                        | Section 5 → Fixed Price → Residential | Conditional field (Level 2)                            | Number Input (₹)           | Conditional | Empty                | Should exceed Chemical Cost/Month                       |
+| 34  | Residential → 2BHK Price                        | Section 5 → Fixed Price → Residential | Conditional field (Level 2)                            | Number Input (₹)           | Conditional | Empty                | —                                                       |
+| 35  | Residential → 3BHK Price                        | Section 5 → Fixed Price → Residential | Conditional field (Level 2)                            | Number Input (₹)           | Conditional | Empty                | —                                                       |
+| 36  | Residential → 4BHK+ Price                       | Section 5 → Fixed Price → Residential | Conditional field (Level 2)                            | Number Input (₹)           | Conditional | Empty                | —                                                       |
+| 37  | **[+ Add Custom Property Type]**                | Section 5 → Fixed Price → Residential | 🔘 **Add Button** (child of Residential Pricing)       | Button → Inline Input      | No          | Hidden until clicked | See **[+ Add] Button Guide** below                      |
+| 38  | Commercial → Small Office Price                 | Section 5 → Fixed Price → Commercial  | Conditional field (Level 2)                            | Number Input (₹)           | Conditional | Empty                | —                                                       |
+| 39  | Commercial → Medium Office Price                | Section 5 → Fixed Price → Commercial  | Conditional field (Level 2)                            | Number Input (₹)           | Conditional | Empty                | —                                                       |
+| 40  | Commercial → Large Office Price                 | Section 5 → Fixed Price → Commercial  | Conditional field (Level 2)                            | Number Input (₹)           | Conditional | Empty                | —                                                       |
+| 41  | Commercial → Warehouse Price                    | Section 5 → Fixed Price → Commercial  | Conditional field (Level 2)                            | Number Input (₹)           | Conditional | Empty                | —                                                       |
+| 42  | **[+ Add Custom Commercial Type]**              | Section 5 → Fixed Price → Commercial  | 🔘 **Add Button** (child of Commercial Pricing)        | Button → Inline Input      | No          | Hidden until clicked | See **[+ Add] Button Guide** below                      |
+| —   | **── IF AREA BASED ──**                         | —                                     | —                                                      | —                          | —           | —                    | Fields #43–#46 appear only when Price Type = Area Based |
+| 43  | Residential → Base Price                        | Section 5 → Area Based → Residential  | Conditional field (Level 2)                            | Number Input (₹)           | Conditional | Empty                | Minimum charge                                          |
+| 44  | Residential → Price per SQFT                    | Section 5 → Area Based → Residential  | Conditional field (Level 2)                            | Number Input (₹ per SQFT)  | Conditional | Empty                | —                                                       |
+| 45  | Commercial → Base Price                         | Section 5 → Area Based → Commercial   | Conditional field (Level 2)                            | Number Input (₹)           | Conditional | Empty                | —                                                       |
+| 46  | Commercial → Price per SQFT                     | Section 5 → Area Based → Commercial   | Conditional field (Level 2)                            | Number Input (₹ per SQFT)  | Conditional | Empty                | —                                                       |
+| —   | **── IF INSPECTION BASED ──**                   | —                                     | —                                                      | —                          | —           | —                    | Field #47 appears only when Price Type = Inspection     |
+| 47  | Inspection Fee                                  | Section 5 → Inspection Based          | Conditional field (Level 1)                            | Number Input (₹)           | Conditional | Empty                | Final price quoted after visit                          |
+| 48  | **[+ Add Pricing for Custom Service Category]** | Section 5 → Custom Category Pricing   | 🔘 **Add Button** (adds custom category pricing block) | Button → Multi-field Popup | No          | Always visible       | See **[+ Add] Button Guide** below                      |
+
+**Pricing Reference Banner** (Read-only, shown above price inputs)
+
+| #   | Field Name                      | Parent / Belongs To        | Hierarchy           | UI Type               | Required | Default State         |
+| --- | ------------------------------- | -------------------------- | ------------------- | --------------------- | -------- | --------------------- |
+| 49  | Total Chemical Cost / Visit (₹) | Section 5 – Pricing Banner | Read-only reference | Auto-calculated Label | System   | From Section 4        |
+| 50  | Total Chemical Cost / Month (₹) | Section 5 – Pricing Banner | Read-only reference | Auto-calculated Label | System   | From Section 4        |
+| 51  | Recommended Min. Service Price  | Section 5 – Pricing Banner | Read-only reference | Auto-calculated Label | System   | Cost/Visit + Overhead |
+
+---
+
+### Section 6: Warranty / Service Guarantee
+
+| #   | Field Name            | Parent / Belongs To  | Hierarchy                        | UI Type               | Required    | Default State            | Behavior / Notes                 |
+| --- | --------------------- | -------------------- | -------------------------------- | --------------------- | ----------- | ------------------------ | -------------------------------- |
+| 52  | Warranty Period       | Section 6 – Warranty | Top-level field                  | Number Input (Months) | No          | Empty                    | Value ≥ 0                        |
+| 53  | Free Revisit Included | Section 6 – Warranty | Top-level field                  | Checkbox              | No          | Unchecked                | If checked, Qty becomes required |
+| 54  | Free Revisit Quantity | Section 6 – Warranty | Conditional field (child of #53) | Number Input          | Conditional | Hidden until #53 checked | Must be > 0 when enabled         |
+
+---
+
+### Section 7: System Fields
+
+| #   | Field Name    | Parent / Belongs To | Hierarchy       | UI Type                    | Required | Default State    | Behavior / Notes              |
+| --- | ------------- | ------------------- | --------------- | -------------------------- | -------- | ---------------- | ----------------------------- |
+| 55  | Service ID    | Section 7 – System  | Top-level field | Auto Generated (Read Only) | Yes      | System generated | —                             |
+| 56  | Created Date  | Section 7 – System  | Top-level field | Auto (Read Only)           | Yes      | System timestamp | —                             |
+| 57  | Created By    | Section 7 – System  | Top-level field | Auto (Read Only)           | Yes      | Logged-in user   | —                             |
+| 58  | Updated Date  | Section 7 – System  | Top-level field | Auto (Read Only)           | Yes      | Auto on save     | —                             |
+| 59  | Updated By    | Section 7 – System  | Top-level field | Auto (Read Only)           | Yes      | Auto on save     | —                             |
+| 60  | Display Order | Section 7 – System  | Top-level field | Number Input               | No       | Empty            | Service listing sort priority |
+
+---
+
+---
+
+## 🔘 [+ Add ...] Button Guide — What Each Button Does (Beginner Reference)
+
+> **Why this section?**
+> The form has **8 different [+ Add ...] buttons**. Each one is **NOT a separate standalone field** — it is a **child action** belonging to a specific parent field/section. When clicked, it either shows an **inline input**, opens a **popup/modal**, or **adds a new row** to a table. This section explains each one clearly.
+
+---
+
+### 📌 Summary — All [+ Add ...] Buttons at a Glance
+
+| #   | Button Label                                | Located In (Section)       | Parent Field                 | What It Does                                                    | UI Interaction         |
+| --- | ------------------------------------------- | -------------------------- | ---------------------------- | --------------------------------------------------------------- | ---------------------- |
+| A   | [+ Add Custom Category]                     | Section 1: Basic Info      | Service Category checkboxes  | Adds a new category option to the checkbox list                 | Inline Text Input      |
+| B   | [+ Add Custom Pest Type]                    | Section 1: Basic Info      | Pest Type Covered checkboxes | Adds a new pest type option to the checkbox list                | Inline Text Input      |
+| C   | [+ Add Species]                             | Section 2: Pest Species    | Species List                 | Adds a new species entry row                                    | New Row (2 fields)     |
+| D   | [+ Add Custom Treatment Method]             | Section 3: Treatment       | Treatment Method checkboxes  | Adds a new treatment option to the checkbox list                | Inline Text Input      |
+| E   | [+ Add Custom Chemical]                     | Section 4: Chemicals       | Chemical Table               | Adds a new chemical row (manual entry, not from Product Master) | New Table Row (manual) |
+| F   | [+ Add Custom Property Type]                | Section 5: Pricing (Fixed) | Residential Pricing          | Adds a new property type with price field under Residential     | Inline Text + Number   |
+| G   | [+ Add Custom Commercial Type]              | Section 5: Pricing (Fixed) | Commercial Pricing           | Adds a new commercial type with price field under Commercial    | Inline Text + Number   |
+| H   | [+ Add Pricing for Custom Service Category] | Section 5: Pricing         | Custom Category Pricing      | Adds a complete pricing block for a custom category             | Multi-field Popup      |
+
+---
+
+### 🅰️ [+ Add Custom Category] — Detailed Breakdown
+
+**Location:** Section 1 → Below the Service Category checkboxes
+**Parent Field:** Service Category (Residential, Commercial, Industrial, Warehouse)
+
+```
+FLOW: What happens when user clicks [+ Add Custom Category]
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │  Service Category:                                          │
+  │  [☑] Residential  [☑] Commercial  [☑] Industrial           │
+  │  [☑] Warehouse                                              │
+  │                                                             │
+  │  [+ Add Custom Category]  ← USER CLICKS THIS               │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │
+                                 ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │  An INLINE TEXT INPUT appears below the existing checkboxes │
+  │                                                             │
+  │  New Category Name: [________________________] [✓ Add] [✗]  │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │ User types "Government" and clicks ✓
+                                 ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │  Service Category:                                          │
+  │  [☑] Residential  [☑] Commercial  [☑] Industrial           │
+  │  [☑] Warehouse    [☑] Government  ← NEW (auto-checked)     │
+  │                                                             │
+  │  [+ Add Custom Category]  ← Still available for more       │
+  └─────────────────────────────────────────────────────────────┘
+```
+
+**Fields shown on click:**
+
+| Field             | UI Type             | Required        | Validation                               |
+| ----------------- | ------------------- | --------------- | ---------------------------------------- |
+| New Category Name | Text Input (inline) | Yes (to submit) | Min 2 chars, must not duplicate existing |
+| ✓ Add Button      | Icon Button         | —               | Confirms and adds the new category       |
+| ✗ Cancel Button   | Icon Button         | —               | Hides the input, discards entry          |
+
+---
+
+### 🅱️ [+ Add Custom Pest Type] — Detailed Breakdown
+
+**Location:** Section 1 → Below the Pest Type Covered checkboxes
+**Parent Field:** Pest Type Covered (Rodent, Cockroach, Mosquito, Termite, Fly, Ant, Bed Bug, Spider, Lizard)
+
+```
+FLOW: What happens when user clicks [+ Add Custom Pest Type]
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │  Pest Type Covered:                                         │
+  │  [☑] Rodent   [☑] Cockroach   [☑] Mosquito                 │
+  │  [☑] Termite  [☑] Fly         [☑] Ant                      │
+  │  [☑] Bed Bug  [☑] Spider      [☑] Lizard                   │
+  │                                                             │
+  │  [+ Add Custom Pest Type]  ← USER CLICKS THIS              │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │
+                                 ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │  An INLINE TEXT INPUT appears below the existing checkboxes │
+  │                                                             │
+  │  New Pest Type: [________________________] [✓ Add] [✗]      │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │ User types "Silverfish" and clicks ✓
+                                 ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │  Pest Type Covered:                                         │
+  │  [☑] Rodent   [☑] Cockroach   [☑] Mosquito                 │
+  │  [☑] Termite  [☑] Fly         [☑] Ant                      │
+  │  [☑] Bed Bug  [☑] Spider      [☑] Lizard                   │
+  │  [☑] Silverfish  ← NEW (auto-checked)                      │
+  │                                                             │
+  │  [+ Add Custom Pest Type]  ← Still available for more      │
+  └─────────────────────────────────────────────────────────────┘
+```
+
+**Fields shown on click:**
+
+| Field              | UI Type             | Required        | Validation                               |
+| ------------------ | ------------------- | --------------- | ---------------------------------------- |
+| New Pest Type Name | Text Input (inline) | Yes (to submit) | Min 2 chars, must not duplicate existing |
+| ✓ Add Button       | Icon Button         | —               | Confirms and adds the new pest type      |
+| ✗ Cancel Button    | Icon Button         | —               | Hides the input, discards entry          |
+
+---
+
+### 🅲 [+ Add Species] — Detailed Breakdown
+
+**Location:** Section 2 → Below the Pest Species list
+**Parent Field:** Pest Species Covered (dynamic list of species rows)
+
+```
+FLOW: What happens when user clicks [+ Add Species]
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │  PEST SPECIES COVERED                                       │
+  │                                                             │
+  │  (Empty — no species added yet)                             │
+  │                                                             │
+  │  [+ Add Species]  ← USER CLICKS THIS                       │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │
+                                 ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │  A NEW ROW appears with 2 input fields:                     │
+  │                                                             │
+  │  ┌──────────────────────┬─────────────────────────┬───────┐ │
+  │  │ Pest Species Name    │ Scientific Name         │       │ │
+  │  ├──────────────────────┼─────────────────────────┼───────┤ │
+  │  │ [________________]   │ [_____________________] │ [🗑]  │ │
+  │  └──────────────────────┴─────────────────────────┴───────┘ │
+  │                                                             │
+  │  [+ Add Species]  ← Click again to add more rows           │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │ User fills in and clicks [+ Add Species] again
+                                 ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │  ┌──────────────────────┬─────────────────────────┬───────┐ │
+  │  │ Pest Species Name    │ Scientific Name         │       │ │
+  │  ├──────────────────────┼─────────────────────────┼───────┤ │
+  │  │ Roof Rat              │ Rattus rattus           │ [🗑]  │ │
+  │  │ [________________]   │ [_____________________] │ [🗑]  │ │
+  │  └──────────────────────┴─────────────────────────┴───────┘ │
+  │                                                             │
+  │  [+ Add Species]                                            │
+  └─────────────────────────────────────────────────────────────┘
+```
+
+**Fields shown per new row:**
+
+| Field             | UI Type     | Required | Validation                         |
+| ----------------- | ----------- | -------- | ---------------------------------- |
+| Pest Species Name | Text Input  | No       | Common name (e.g., "Roof Rat")     |
+| Scientific Name   | Text Input  | No       | Latin name (e.g., "Rattus rattus") |
+| 🗑 Delete         | Icon Button | —        | Removes this species row           |
+
+---
+
+### 🅳 [+ Add Custom Treatment Method] — Detailed Breakdown
+
+**Location:** Section 3 → Below the Treatment Method checkboxes
+**Parent Field:** Treatment Methods (11 preset options)
+
+```
+FLOW: What happens when user clicks [+ Add Custom Treatment Method]
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │  METHOD OF CONTROL / TREATMENT                              │
+  │                                                             │
+  │  [☑] Gel Baiting          [☑] Trapping                      │
+  │  [☑] Rodent Baiting       [☑] Monitoring                    │
+  │  [☑] Residual Spray       [☑] Fogging (Thermal / Cold)      │
+  │  [☑] Dusting Cracks       [☑] Foam Treatment                │
+  │  [☑] Soil Treatment       [☑] Sticky Pad Trapping           │
+  │  [☑] Disinfection                                           │
+  │                                                             │
+  │  [+ Add Custom Treatment Method]  ← USER CLICKS THIS       │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │
+                                 ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │  An INLINE TEXT INPUT appears below:                         │
+  │                                                             │
+  │  New Treatment Method: [____________________] [✓ Add] [✗]   │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │ User types "Heat Treatment" and clicks ✓
+                                 ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │  ... (existing checkboxes) ...                              │
+  │  [☑] Disinfection                                           │
+  │  [☑] Heat Treatment  ← NEW (auto-checked)                  │
+  │                                                             │
+  │  [+ Add Custom Treatment Method]                            │
+  └─────────────────────────────────────────────────────────────┘
+```
+
+**Fields shown on click:**
+
+| Field                     | UI Type             | Required        | Validation                                 |
+| ------------------------- | ------------------- | --------------- | ------------------------------------------ |
+| New Treatment Method Name | Text Input (inline) | Yes (to submit) | Min 2 chars, must not duplicate existing   |
+| ✓ Add Button              | Icon Button         | —               | Confirms and adds the new treatment method |
+| ✗ Cancel Button           | Icon Button         | —               | Hides the input, discards entry            |
+
+---
+
+### 🅴 [+ Add Custom Chemical] — Detailed Breakdown
+
+**Location:** Section 4 → Below the Chemical Cost Summary
+**Parent Field:** Chemicals / Products Used table
+
+> **Difference from Product Search:** The "Search Product" field at the top of Section 4 adds chemicals **from Module 10 Product Master** (auto-fills fields). The **[+ Add Custom Chemical]** button allows manual entry of a chemical that may **NOT exist in Product Master** — all fields must be filled manually.
+
+```
+FLOW: What happens when user clicks [+ Add Custom Chemical]
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │  CHEMICAL COST SUMMARY                                      │
+  │  Total Chemical Cost / Visit  : ₹315                        │
+  │  Total Chemical Cost / Month  : ₹1,260                      │
+  │                                                             │
+  │  [+ Add Custom Chemical]  ← USER CLICKS THIS               │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │
+                                 ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │  A NEW EMPTY ROW is added to the Chemical Table             │
+  │  (All fields are MANUALLY editable — nothing is auto-filled)│
+  │                                                             │
+  │  ┌────────────┬──────┬─────┬────────┬────────┬───────┬──────────┬──────────┬──────────┬────┐
+  │  │Product Name│ Code │ UOM │Dilution│Coverage│Req Qty│Price/UOM │Cost/Visit│Cost/Month│    │
+  │  ├────────────┼──────┼─────┼────────┼────────┼───────┼──────────┼──────────┼──────────┼────┤
+  │  │[__________]│[____]│[___]│[______]│[______]│[_____]│[________]│ Auto     │ Auto     │[🗑]│
+  │  └────────────┴──────┴─────┴────────┴────────┴───────┴──────────┴──────────┴──────────┴────┘
+  └─────────────────────────────────────────────────────────────┘
+```
+
+**Fields in the new manual row:**
+
+| Field                 | UI Type               | Required | Validation                               |
+| --------------------- | --------------------- | -------- | ---------------------------------------- |
+| Product Name          | Text Input (manual)   | Yes      | Free-text entry for custom chemical name |
+| Product Code          | Text Input (manual)   | No       | User-defined code (no auto-fetch)        |
+| UOM                   | Dropdown (manual)     | Yes      | ml / Ltr / gm / kg / Nos                 |
+| Dilution              | Number Input          | Yes      | Standard dilution dose                   |
+| Coverage (SQFT)       | Number Input          | Yes      | Area covered per dose                    |
+| Required Qty          | Number Input          | Yes      | Must be > 0                              |
+| Price / UOM (₹)       | Number Input (manual) | Yes      | User enters price manually               |
+| Cost / Visit (₹)      | Auto-calculated       | System   | = Req. Qty × Price/UOM                   |
+| Est. Cost / Month (₹) | Auto-calculated       | System   | = Cost/Visit × Visits/Month              |
+| 🗑 Delete             | Icon Button           | —        | Removes this row                         |
+
+---
+
+### 🅵 [+ Add Custom Property Type] — Detailed Breakdown
+
+**Location:** Section 5 → Pricing Configuration → Fixed Price → Residential
+**Parent Field:** Residential BHK Pricing (1BHK, 2BHK, 3BHK, 4BHK+)
+**Visibility Condition:** Only visible when Price Type = **Fixed Price**
+
+```
+FLOW: What happens when user clicks [+ Add Custom Property Type]
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │  PRICING CONFIGURATION (Fixed Price Selected)               │
+  │                                                             │
+  │  ▼ Residential (Internal/External)                          │
+  │    1BHK [₹____]  2BHK [₹____]  3BHK [₹____]  4BHK+ [₹____]│
+  │                                                             │
+  │    [+ Add Custom Property Type]  ← USER CLICKS THIS        │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │
+                                 ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │  An INLINE INPUT pair appears below the existing BHK fields │
+  │                                                             │
+  │  Property Type Name: [______________]  Price: [₹____]       │
+  │                                           [✓ Add] [✗]       │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │ User types "5BHK" → Price "₹3500" → clicks ✓
+                                 ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │  ▼ Residential (Internal/External)                          │
+  │    1BHK [₹____]  2BHK [₹____]  3BHK [₹____]  4BHK+ [₹____]│
+  │    5BHK [₹3500]  ← NEW                              [🗑]   │
+  │                                                             │
+  │    [+ Add Custom Property Type]  ← Still available          │
+  └─────────────────────────────────────────────────────────────┘
+```
+
+**Fields shown on click:**
+
+| Field              | UI Type             | Required        | Validation                                  |
+| ------------------ | ------------------- | --------------- | ------------------------------------------- |
+| Property Type Name | Text Input (inline) | Yes (to submit) | e.g., "5BHK", "Penthouse", "Villa"          |
+| Price (₹)          | Number Input        | Yes (to submit) | Must be > 0; warning if below Chemical Cost |
+| ✓ Add Button       | Icon Button         | —               | Confirms and adds the new property type row |
+| ✗ Cancel Button    | Icon Button         | —               | Hides the input, discards entry             |
+
+---
+
+### 🅶 [+ Add Custom Commercial Type] — Detailed Breakdown
+
+**Location:** Section 5 → Pricing Configuration → Fixed Price → Commercial
+**Parent Field:** Commercial Office Pricing (Small Office, Medium Office, Large Office, Warehouse)
+**Visibility Condition:** Only visible when Price Type = **Fixed Price**
+
+```
+FLOW: What happens when user clicks [+ Add Custom Commercial Type]
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │  ▼ Commercial (Internal/External)                           │
+  │    Small Office [₹____]  Medium Office [₹____]              │
+  │    Large Office [₹____]  Warehouse [₹____]                  │
+  │                                                             │
+  │    [+ Add Custom Commercial Type]  ← USER CLICKS THIS      │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │
+                                 ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │  An INLINE INPUT pair appears below:                         │
+  │                                                             │
+  │  Commercial Type Name: [______________]  Price: [₹____]     │
+  │                                              [✓ Add] [✗]    │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │ User types "Data Center" → Price "₹12000" → clicks ✓
+                                 ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │  ▼ Commercial (Internal/External)                           │
+  │    Small Office [₹____]   Medium Office [₹____]             │
+  │    Large Office [₹____]   Warehouse [₹____]                 │
+  │    Data Center [₹12000]   ← NEW                      [🗑]  │
+  │                                                             │
+  │    [+ Add Custom Commercial Type]  ← Still available        │
+  └─────────────────────────────────────────────────────────────┘
+```
+
+**Fields shown on click:**
+
+| Field                | UI Type             | Required        | Validation                                    |
+| -------------------- | ------------------- | --------------- | --------------------------------------------- |
+| Commercial Type Name | Text Input (inline) | Yes (to submit) | e.g., "Data Center", "Mall", "Factory"        |
+| Price (₹)            | Number Input        | Yes (to submit) | Must be > 0; warning if below Chemical Cost   |
+| ✓ Add Button         | Icon Button         | —               | Confirms and adds the new commercial type row |
+| ✗ Cancel Button      | Icon Button         | —               | Hides the input, discards entry               |
+
+---
+
+### 🅷 [+ Add Pricing for Custom Service Category] — Detailed Breakdown
+
+**Location:** Section 5 → Bottom of Pricing Configuration section
+**Parent Field:** Pricing Configuration (entire section)
+**Visibility Condition:** Always visible regardless of Price Type selection
+
+> This is the **most complex [+ Add] button** on the form. It allows the admin to define an entirely new pricing block for a custom service category that is not Residential or Commercial.
+
+```
+FLOW: What happens when user clicks [+ Add Pricing for Custom Service Category]
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │  PRICING CONFIGURATION                                      │
+  │  ... (existing pricing for Residential / Commercial) ...    │
+  │                                                             │
+  │  [+ Add Pricing for Custom Service Category]  ← CLICKS     │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │
+                                 ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │  A MULTI-FIELD BLOCK appears below existing pricing:        │
+  │                                                             │
+  │  ┌─── NEW CUSTOM CATEGORY PRICING ────────────────────────┐ │
+  │  │                                                         │ │
+  │  │  Category:     [________▼]  (dropdown from Sec 1 cats) │ │
+  │  │  Sub Category: [________▼]  (Internal / External)      │ │
+  │  │                                                         │ │
+  │  │  ┌────────────────────┬──────────────────┬────────────┐ │ │
+  │  │  │ Field Name         │ Price (₹)        │            │ │ │
+  │  │  ├────────────────────┼──────────────────┼────────────┤ │ │
+  │  │  │ [______________]   │ [₹__________]    │ [🗑]       │ │ │
+  │  │  └────────────────────┴──────────────────┴────────────┘ │ │
+  │  │                                                         │ │
+  │  │  [+ Add Field]  ← Adds more price fields in this block │ │
+  │  │                                                         │ │
+  │  │  [✓ Save Block]  [🗑 Remove Block]                      │ │
+  │  └─────────────────────────────────────────────────────────┘ │
+  │                                                             │
+  │  [+ Add Pricing for Custom Service Category]  ← Add more   │
+  └─────────────────────────────────────────────────────────────┘
+```
+
+**Step-by-step interaction:**
+
+```
+  Step 1: Click [+ Add Pricing for Custom Service Category]
+       │
+       ▼
+  Step 2: Select Category from dropdown
+          (Shows categories from Section 1: e.g., Industrial, Government)
+       │
+       ▼
+  Step 3: Select Sub Category
+          (Internal / External)
+       │
+       ▼
+  Step 4: Enter Field Name + Price
+          (e.g., Field Name = "Small Factory", Price = ₹8000)
+       │
+       ▼
+  Step 5 (Optional): Click [+ Add Field] to add more rows
+          (e.g., "Large Factory" = ₹15000)
+       │
+       ▼
+  Step 6: Click [✓ Save Block] to confirm
+```
+
+**Fields shown in this block:**
+
+| Field           | UI Type               | Required            | Validation                                            |
+| --------------- | --------------------- | ------------------- | ----------------------------------------------------- |
+| Category        | Dropdown              | Yes (to save block) | Populated from Service Categories (Section 1)         |
+| Sub Category    | Dropdown              | Yes (to save block) | Internal / External                                   |
+| Field Name      | Text Input            | Yes (per row)       | Label for the pricing tier (e.g., "Small Factory")    |
+| Price (₹)       | Number Input          | Yes (per row)       | Must be > 0                                           |
+| [+ Add Field]   | Button                | —                   | Adds another Field Name + Price row inside this block |
+| 🗑 Remove Row   | Icon Button (per row) | —                   | Removes individual price field row                    |
+| ✓ Save Block    | Button                | —                   | Confirms the entire custom category pricing block     |
+| 🗑 Remove Block | Button                | —                   | Removes the entire custom category pricing block      |
+
+---
+
+## 🔄 Field Hierarchy Overview — Visual Map
+
+> This diagram shows how **every field** on the form relates to its parent section and which fields are revealed by [+ Add] buttons.
+
+```
+12.2 ADD SERVICE FORM
+│
+├── Section 1: BASIC SERVICE INFORMATION
+│   ├── Service Name (Text Input)
+│   ├── Service Category (Multi-Checkbox)
+│   │   └── [+ Add Custom Category] → Inline Input: New Category Name
+│   ├── Service Sub Category (Multi-Checkbox: Internal / External)
+│   ├── Service Code (Auto Generated)
+│   ├── Pest Type Covered (Multi-Checkbox)
+│   │   └── [+ Add Custom Pest Type] → Inline Input: New Pest Type Name
+│   ├── Description (Text Area)
+│   ├── Service Duration (Number + UOM Dropdown)
+│   └── Service Status (Radio: Active / Inactive)
+│
+├── Section 2: PEST SPECIES COVERED
+│   ├── Species Row(s)
+│   │   ├── Pest Species Name (Text)
+│   │   ├── Scientific Name (Text)
+│   │   └── 🗑 Delete Row
+│   └── [+ Add Species] → Adds new row: { Pest Species Name, Scientific Name, 🗑 }
+│
+├── Section 3: METHOD OF CONTROL / TREATMENT
+│   ├── Treatment Method Checkboxes (11 preset options)
+│   └── [+ Add Custom Treatment Method] → Inline Input: New Treatment Name
+│
+├── Section 4: CHEMICALS / PRODUCTS USED
+│   ├── 🔍 Search Product (from Module 10 Product Master)
+│   ├── Chemical Table Row(s) — per product selected
+│   │   ├── Product Name (Auto-filled)
+│   │   ├── Product Code (Auto-filled)
+│   │   ├── UOM (Auto-filled)
+│   │   ├── Dilution (Number, editable)
+│   │   ├── Coverage SQFT (Number, editable)
+│   │   ├── Required Qty (Number, editable)
+│   │   ├── Price / UOM ₹ (Auto-filled, editable override)
+│   │   ├── Cost / Visit ₹ (Auto-calculated)
+│   │   ├── Est. Cost / Month ₹ (Auto-calculated)
+│   │   └── 🗑 Delete Row
+│   ├── Chemical Cost Summary (Read-Only)
+│   │   ├── Total Chemical Cost / Visit
+│   │   └── Total Chemical Cost / Month
+│   └── [+ Add Custom Chemical] → Adds manual row: { All fields editable }
+│
+├── Section 5: PRICING CONFIGURATION
+│   ├── Pricing Reference Banner (Read-Only from Section 4)
+│   ├── Price Type (Radio: Fixed / Area Based / Inspection)
+│   │
+│   ├── [IF Fixed Price]
+│   │   ├── ▼ Residential Pricing
+│   │   │   ├── 1BHK, 2BHK, 3BHK, 4BHK+ (Number Inputs)
+│   │   │   └── [+ Add Custom Property Type] → Inline: { Name, Price ₹ }
+│   │   └── ▼ Commercial Pricing
+│   │       ├── Small/Medium/Large Office, Warehouse (Number Inputs)
+│   │       └── [+ Add Custom Commercial Type] → Inline: { Name, Price ₹ }
+│   │
+│   ├── [IF Area Based]
+│   │   ├── ▼ Residential → Base Price + Price per SQFT
+│   │   └── ▼ Commercial → Base Price + Price per SQFT
+│   │
+│   ├── [IF Inspection Based]
+│   │   └── Inspection Fee (Number Input)
+│   │
+│   └── [+ Add Pricing for Custom Service Category]
+│       → Multi-field block: { Category ▼, Sub Category ▼, Field Name, Price ₹ }
+│       → [+ Add Field] inside block for more rows
+│
+├── Section 6: WARRANTY / SERVICE GUARANTEE
+│   ├── Warranty Period (Number, Months)
+│   ├── Free Revisit Included (Checkbox)
+│   └── Free Revisit Quantity (Number, conditional on checkbox)
+│
+├── Section 7: SYSTEM FIELDS
+│   ├── Service ID (Auto)
+│   ├── Created Date (Auto)
+│   ├── Created By (Auto)
+│   ├── Updated Date (Auto)
+│   ├── Updated By (Auto)
+│   └── Display Order (Number)
+│
+└── FORM ACTIONS
+    ├── ← Back to Services
+    ├── Cancel
+    └── Save
+```
 
 ---
 
@@ -3170,31 +3824,31 @@ The form structure remains **same as Add Service**, but fields are **pre-populat
 
 # **Field Editability Matrix**
 
-| Section                   | Field                 | Editable | Notes                                            |
-| ------------------------- | --------------------- | -------- | ------------------------------------------------ |
-| **Basic Information**     | Service Name          | Yes      | —                                                |
-|                           | Service Category      | Yes      | —                                                |
-|                           | Service Sub Category  | Yes      | —                                                |
-|                           | Service Code          | **No**   | Permanently assigned on creation                 |
-|                           | Pest Type Covered     | Yes      | —                                                |
-|                           | Description           | Yes      | —                                                |
-|                           | Service Duration      | Yes      | —                                                |
-|                           | Service Status        | Yes      | Triggers Inactive Reason if changed to Inactive  |
-| **Pest Species**          | All Fields            | Yes      | Rows can be added/removed                        |
-| **Treatment Methods**     | All Fields            | Yes      | Checkboxes and custom additions                  |
+| Section                   | Field                 | Editable | Notes                                                      |
+| ------------------------- | --------------------- | -------- | ---------------------------------------------------------- |
+| **Basic Information**     | Service Name          | Yes      | —                                                          |
+|                           | Service Category      | Yes      | —                                                          |
+|                           | Service Sub Category  | Yes      | —                                                          |
+|                           | Service Code          | **No**   | Permanently assigned on creation                           |
+|                           | Pest Type Covered     | Yes      | —                                                          |
+|                           | Description           | Yes      | —                                                          |
+|                           | Service Duration      | Yes      | —                                                          |
+|                           | Service Status        | Yes      | Triggers Inactive Reason if changed to Inactive            |
+| **Pest Species**          | All Fields            | Yes      | Rows can be added/removed                                  |
+| **Treatment Methods**     | All Fields            | Yes      | Checkboxes and custom additions                            |
 | **Chemicals / Products**  | Product Name          | Yes      | Items can be added/removed; searchable from Product Master |
-|                           | Price / UOM (₹)       | Yes      | Auto-fetched from Module 10; editable override   |
-|                           | Cost / Visit (₹)      | **Auto** | `Required Qty × Price per UOM`                   |
-|                           | Est. Cost / Month (₹) | **Auto** | `Cost per Visit × Visits per Month`              |
-| **Pricing Configuration** | Price Type            | Yes      | —                                                |
-|                           | Pricing Values        | Yes      | BHK rates, Base price, SQFT rates, etc.          |
-|                           | Custom Pricing Config | Yes      | New fields can be added                          |
-| **Warranty**              | All Fields            | Yes      | Period and revisits                              |
-| **System Fields**         | Service ID            | **No**   | Auto-generated                                   |
-|                           | Created Date/By       | **No**   | Fixed upon creation                              |
-|                           | Updated Date/By       | **Auto** | Managed by system on save                        |
-|                           | Display Order         | Yes      | Used for sorting                                 |
-|                           | Inactive Reason       | Yes      | Mandatory only if status becomes Inactive        |
+|                           | Price / UOM (₹)       | Yes      | Auto-fetched from Module 10; editable override             |
+|                           | Cost / Visit (₹)      | **Auto** | `Required Qty × Price per UOM`                             |
+|                           | Est. Cost / Month (₹) | **Auto** | `Cost per Visit × Visits per Month`                        |
+| **Pricing Configuration** | Price Type            | Yes      | —                                                          |
+|                           | Pricing Values        | Yes      | BHK rates, Base price, SQFT rates, etc.                    |
+|                           | Custom Pricing Config | Yes      | New fields can be added                                    |
+| **Warranty**              | All Fields            | Yes      | Period and revisits                                        |
+| **System Fields**         | Service ID            | **No**   | Auto-generated                                             |
+|                           | Created Date/By       | **No**   | Fixed upon creation                                        |
+|                           | Updated Date/By       | **Auto** | Managed by system on save                                  |
+|                           | Display Order         | Yes      | Used for sorting                                           |
+|                           | Inactive Reason       | Yes      | Mandatory only if status becomes Inactive                  |
 
 ---
 
@@ -3383,33 +4037,33 @@ The **Edit button** redirects to **12.3 Edit Service**.
 
 # **Section 4: Chemicals / Products Used Fields**
 
-| Field                     | Description                                              |
-| ------------------------- | -------------------------------------------------------- |
-| Product Name              | Chemical/product name (from Product Master)              |
-| Product Code              | Auto-fetched product master code                         |
-| UOM                       | Unit of measurement (ml / Ltr / gm / kg / Nos)          |
-| Dilution                  | Mixing ratio (e.g., 10 ml per treatment)                 |
-| Coverage (SQFT)           | Area covered per dilution dose                           |
-| Required Quantity         | Quantity required per service visit                      |
-| **Price / UOM (₹)**       | Purchase price from Module 10 (read-only in View)        |
-| **Cost / Visit (₹)**      | `Required Qty × Price per UOM` (auto-calculated)         |
-| **Est. Cost / Month (₹)** | `Cost per Visit × Visits per Month` (auto-calculated)    |
-| **Total Cost / Visit**    | Sum of all chemical Cost/Visit rows (Chemical Summary)   |
-| **Total Cost / Month**    | Sum of all chemical Cost/Month rows (Chemical Summary)   |
+| Field                     | Description                                            |
+| ------------------------- | ------------------------------------------------------ |
+| Product Name              | Chemical/product name (from Product Master)            |
+| Product Code              | Auto-fetched product master code                       |
+| UOM                       | Unit of measurement (ml / Ltr / gm / kg / Nos)         |
+| Dilution                  | Mixing ratio (e.g., 10 ml per treatment)               |
+| Coverage (SQFT)           | Area covered per dilution dose                         |
+| Required Quantity         | Quantity required per service visit                    |
+| **Price / UOM (₹)**       | Purchase price from Module 10 (read-only in View)      |
+| **Cost / Visit (₹)**      | `Required Qty × Price per UOM` (auto-calculated)       |
+| **Est. Cost / Month (₹)** | `Cost per Visit × Visits per Month` (auto-calculated)  |
+| **Total Cost / Visit**    | Sum of all chemical Cost/Visit rows (Chemical Summary) |
+| **Total Cost / Month**    | Sum of all chemical Cost/Month rows (Chemical Summary) |
 
 ---
 
 # **Section 5: Pricing Configuration Fields**
 
-| Field                   | Description                                          |
-| ----------------------- | ---------------------------------------------------- |
-| Price Type              | Fixed / Area Based / Inspection Based                |
+| Field                   | Description                                           |
+| ----------------------- | ----------------------------------------------------- |
+| Price Type              | Fixed / Area Based / Inspection Based                 |
 | Residential Pricing     | Pricing based on property type (Fixed) or SQFT (Area) |
-| Commercial Pricing      | Pricing for offices (Fixed) or SQFT (Area)           |
-| Base Price              | Minimum charge for area-based services               |
-| Per SQFT Price          | Scaling charge for area-based services               |
-| Inspection Fee          | Fee charged for inspection before final quote        |
-| Custom Category Pricing | Specific pricing rules for custom service categories |
+| Commercial Pricing      | Pricing for offices (Fixed) or SQFT (Area)            |
+| Base Price              | Minimum charge for area-based services                |
+| Per SQFT Price          | Scaling charge for area-based services                |
+| Inspection Fee          | Fee charged for inspection before final quote         |
+| Custom Category Pricing | Specific pricing rules for custom service categories  |
 
 ---
 
@@ -5127,10 +5781,7 @@ Provides full visibility of vendor, items, pricing, and audit history without al
 └──────────────────────────────────────────────────────────────────────────────┘
 ```
 
-
-
 ===================================================================================================
-
 
 # 🎯 MODULE 15: LEADS & FOLLOW-UP MANAGEMENT
 
@@ -5317,26 +5968,26 @@ Initial lead capture form for registering new customer inquiries. Captures essen
 
 ## Form Fields
 
-| Field               | Type           | Required    | Options/Validation                                                             | Notes                                                             |
-| ------------------- | -------------- | ----------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
-| Lead ID             | Auto Generated | System      | Format: LD-YYYY-XXXXX (e.g., LD-2026-00042)                                    | Read-only, unique sequential                                      |
-| Lead Date           | Date           | System      | Current date, editable if needed                                               | Lead creation date                                                |
-| Lead Source         | Dropdown       | Yes         | Website / Referral / Walk-in / Cold Call / Social Media / Exhibition / Partner | Track origin                                                      |
-| Branch Name         | Dropdown       | Yes         | Select from active branches                                                    | Lead assignment branch                                            |
-| Priority            | Dropdown       | Yes         | Low / Normal / High / Urgent                                                   | Determines follow-up SLA                                          |
-| Lead Name           | Text           | Yes         | Min 3 characters, alphabets and spaces                                         | Primary contact person                                            |
-| Mobile Number       | Phone          | Yes         | Exactly 10 digits, unique across leads                                         | Primary contact number                                            |
-| Alternate Number    | Phone          | No          | Exactly 10 digits, different from primary                                      | Secondary contact                                                 |
-| Email ID            | Email          | No          | Valid email format, unique check                                               | For email communications                                          |
-| Lead Type           | Dropdown       | Yes         | Product / Service                                                              | Determines if Service Type dropdown appears                       |
-| Service Type        | Dropdown       | Conditional | Contract / Product Purchase / Jobbing                                          | Visible & required only when Lead Type = "Service"                |
-| Budget Range        | Dropdown       | No          | <₹5K / ₹5K-10K / ₹10K-25K / ₹25K-50K / ₹50K+ / Not Discussed                   | Qualification data                                                |
-| Lead Description    | Text Area      | Yes         | Min 20 characters                                                              | Detailed requirements                                             |
-| Created By          | Auto           | System      | Current logged-in user                                                         | System field                                                      |
-| Created Date        | Auto           | System      | System timestamp                                                               | System field                                                      |
+| Field               | Type           | Required    | Options/Validation                                                             | Notes                                                           |
+| ------------------- | -------------- | ----------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------- | -------------------- |
+| Lead ID             | Auto Generated | System      | Format: LD-YYYY-XXXXX (e.g., LD-2026-00042)                                    | Read-only, unique sequential                                    |
+| Lead Date           | Date           | System      | Current date, editable if needed                                               | Lead creation date                                              |
+| Lead Source         | Dropdown       | Yes         | Website / Referral / Walk-in / Cold Call / Social Media / Exhibition / Partner | Track origin                                                    |
+| Branch Name         | Dropdown       | Yes         | Select from active branches                                                    | Lead assignment branch                                          |
+| Priority            | Dropdown       | Yes         | Low / Normal / High / Urgent                                                   | Determines follow-up SLA                                        |
+| Lead Name           | Text           | Yes         | Min 3 characters, alphabets and spaces                                         | Primary contact person                                          |
+| Mobile Number       | Phone          | Yes         | Exactly 10 digits, unique across leads                                         | Primary contact number                                          |
+| Alternate Number    | Phone          | No          | Exactly 10 digits, different from primary                                      | Secondary contact                                               |
+| Email ID            | Email          | No          | Valid email format, unique check                                               | For email communications                                        |
+| Lead Type           | Dropdown       | Yes         | Product / Service                                                              | Determines if Service Type dropdown appears                     |
+| Service Type        | Dropdown       | Conditional | Contract / Product Purchase / Jobbing                                          | Visible & required only when Lead Type = "Service"              |
+| Budget Range        | Dropdown       | No          | <₹5K / ₹5K-10K / ₹10K-25K / ₹25K-50K / ₹50K+ / Not Discussed                   | Qualification data                                              |
+| Lead Description    | Text Area      | Yes         | Min 20 characters                                                              | Detailed requirements                                           |
+| Created By          | Auto           | System      | Current logged-in user                                                         | System field                                                    |
+| Created Date        | Auto           | System      | System timestamp                                                               | System field                                                    |
 | Status              | Auto           | System      | Default: NEW                                                                   | New / Qualified / Quotation send / Negotiation /Lost/ Converted |
-Lost Reason	|          Text Area	|Conditional	  |    Required if Status = Lost  ||	Reason for lead loss
-| Next Follow-up Date | Date & Time    | Yes         | Must be today or future date                                                   | Manually entered by user (not auto-calculated)                    |
+| Lost Reason         | Text Area      | Conditional | Required if Status = Lost                                                      |                                                                 | Reason for lead loss |
+| Next Follow-up Date | Date & Time    | Yes         | Must be today or future date                                                   | Manually entered by user (not auto-calculated)                  |
 
 ---
 
@@ -5720,7 +6371,7 @@ Captures a brief summary of the interaction, allows the user to update the Lead'
 | Field                | Type      | Required    | Options/Validation                                           | Notes                                  |
 | -------------------- | --------- | ----------- | ------------------------------------------------------------ | -------------------------------------- |
 | Lead Name            | Text      | Auto        |                                                              |                                        |
-| Lead Type            | Dropdown  | Auto        | Service, Product, Contract                                        |                                        |
+| Lead Type            | Dropdown  | Auto        | Service, Product, Contract                                   |                                        |
 | Branch Name          | Dropdown  | Auto        |                                                              |                                        |
 | Contact Type         | Dropdown  | Yes         | Call, Meeting, Site Visit, Email, WhatsApp, Other            | Interaction mode                       |
 | Current Status       | Badge     | Auto        | New, Qualified, Quotation send, Negotiation, Converted, Lost | Updates the main lead status           |
@@ -6194,6 +6845,7 @@ The Add Quotation form allows sales team members to create new quotations. The f
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
+
 ---
 
 ## Section 1: Source Selection & Logic
@@ -6201,68 +6853,71 @@ The Add Quotation form allows sales team members to create new quotations. The f
 **Source Type Selection**: `(•) From Lead ( ) From Customer ( ) Add New` (Radio)
 
 #### A. From Lead
-| Field | Type | Required | Behavior / Auto-fill |
-| :--- | :--- | :--- | :--- |
-| Select Lead | Search Dropdown | Yes | Search active leads (Status ≥ QUALIFIED) from Module 15 |
-| Lead ID | Text | Read-only | **Auto-fill**: Unique ID from Module 15 |
-| Contact Person | Text | Read-only | **Auto-fill**: Primary contact name of the lead |
-| Phone | Text | Read-only | **Auto-fill**: Primary contact number |
-| Email | Text | Read-only | **Auto-fill**: Registered email address |
-| Lead Type | Badge | Read-only | **Auto-fill**: Service / Product / Both |
-| Lead Status | Badge | Read-only | **Auto-fill**: QUALIFIED ✅ |
+
+| Field          | Type            | Required  | Behavior / Auto-fill                                    |
+| :------------- | :-------------- | :-------- | :------------------------------------------------------ |
+| Select Lead    | Search Dropdown | Yes       | Search active leads (Status ≥ QUALIFIED) from Module 15 |
+| Lead ID        | Text            | Read-only | **Auto-fill**: Unique ID from Module 15                 |
+| Contact Person | Text            | Read-only | **Auto-fill**: Primary contact name of the lead         |
+| Phone          | Text            | Read-only | **Auto-fill**: Primary contact number                   |
+| Email          | Text            | Read-only | **Auto-fill**: Registered email address                 |
+| Lead Type      | Badge           | Read-only | **Auto-fill**: Service / Product / Both                 |
+| Lead Status    | Badge           | Read-only | **Auto-fill**: QUALIFIED ✅                             |
 
 #### B. From Customer
-| Field | Type | Required | Behavior / Auto-fill |
-| :--- | :--- | :--- | :--- |
-| Select Customer | Search Dropdown | Yes | Search active customers from Module 9 |
-| Customer ID | Text | Read-only | **Auto-fill**: Unique ID from Module 9 |
-| Customer Name | Text | Read-only | **Auto-fill**: Registered entity name |
-| Phone | Text | Read-only | **Auto-fill**: Primary business contact |
-| Email | Text | Read-only | **Auto-fill**: Billing/Primary email |
-| Customer Type | Badge | Read-only | **Auto-fill**: Residential / Commercial / Industrial |
-| Address | Text | Read-only | **Auto-fill**: Registered address (auto-populates Location 1) |
+
+| Field           | Type            | Required  | Behavior / Auto-fill                                          |
+| :-------------- | :-------------- | :-------- | :------------------------------------------------------------ |
+| Select Customer | Search Dropdown | Yes       | Search active customers from Module 9                         |
+| Customer ID     | Text            | Read-only | **Auto-fill**: Unique ID from Module 9                        |
+| Customer Name   | Text            | Read-only | **Auto-fill**: Registered entity name                         |
+| Phone           | Text            | Read-only | **Auto-fill**: Primary business contact                       |
+| Email           | Text            | Read-only | **Auto-fill**: Billing/Primary email                          |
+| Customer Type   | Badge           | Read-only | **Auto-fill**: Residential / Commercial / Industrial          |
+| Address         | Text            | Read-only | **Auto-fill**: Registered address (auto-populates Location 1) |
 
 #### C. Add New (New Prospect)
-| Field | Type | Required | Behavior / Auto-fill |
-| :--- | :--- | :--- | :--- |
-| Full Name | Text | Yes | **Manual Input**: Min 3 characters |
-| Phone | Number | Yes | **Manual Input**: 10-digit Indian mobile |
-| Email | Email | Yes | **Manual Input**: Valid email format |
-| Company Name | Text | No | **Manual Input**: Max 100 characters |
-| Address | Text | Yes | **Manual Input**: Min 10 characters |
-| City | Text | Yes | **Manual Input**: Min 3 characters |
-| State | Dropdown | Yes | **Manual Input**: Indian states list |
-| Pincode | Number | No | **Manual Input**: 6-digit |
-| Country | Dropdown | No | **Manual Input**: Default India |
-| Google Map URL | URL | No | **Manual Input**: Valid URL from Google Maps |
+
+| Field          | Type     | Required | Behavior / Auto-fill                         |
+| :------------- | :------- | :------- | :------------------------------------------- |
+| Full Name      | Text     | Yes      | **Manual Input**: Min 3 characters           |
+| Phone          | Number   | Yes      | **Manual Input**: 10-digit Indian mobile     |
+| Email          | Email    | Yes      | **Manual Input**: Valid email format         |
+| Company Name   | Text     | No       | **Manual Input**: Max 100 characters         |
+| Address        | Text     | Yes      | **Manual Input**: Min 10 characters          |
+| City           | Text     | Yes      | **Manual Input**: Min 3 characters           |
+| State          | Dropdown | Yes      | **Manual Input**: Indian states list         |
+| Pincode        | Number   | No       | **Manual Input**: 6-digit                    |
+| Country        | Dropdown | No       | **Manual Input**: Default India              |
+| Google Map URL | URL      | No       | **Manual Input**: Valid URL from Google Maps |
 
 ---
 
 ## Section 2: Quotation Type Fields
 
-| Field             | Type     | Required    | Options/Validation                         | Notes                                 |
-| ----------------- | -------- | ----------- | ------------------------------------------ | ------------------------------------- |
-| Quotation Type    | Radio    | Yes         | Service / Product / Combined               | Controls which sections are visible   |
-| Service Mode      | Radio    | Conditional | One-Time / Contract                             | Visible if Type = Service or Combined |
-| Contract Frequency     | Dropdown | Conditional | Monthly / Quarterly / Half-Yearly / Yearly | Required if Mode = Contract                |
-| Contract Duration | Dropdown | Conditional | 6 Months / 1 Year / 2 Years / 3 Years      | Required if Mode = Contract                |
-| Proposed Start    | Date     | Conditional | ≥ Today                                    | Required if Mode = Contract                |
+| Field              | Type     | Required    | Options/Validation                         | Notes                                 |
+| ------------------ | -------- | ----------- | ------------------------------------------ | ------------------------------------- |
+| Quotation Type     | Radio    | Yes         | Service / Product / Combined               | Controls which sections are visible   |
+| Service Mode       | Radio    | Conditional | One-Time / Contract                        | Visible if Type = Service or Combined |
+| Contract Frequency | Dropdown | Conditional | Monthly / Quarterly / Half-Yearly / Yearly | Required if Mode = Contract           |
+| Contract Duration  | Dropdown | Conditional | 6 Months / 1 Year / 2 Years / 3 Years      | Required if Mode = Contract           |
+| Proposed Start     | Date     | Conditional | ≥ Today                                    | Required if Mode = Contract           |
 
 ---
 
 ## Section 3: Location & Branch Assignment Fields
 
-| Field         | Type                | Required | Options/Validation                                         | Notes                         |
-| ------------- | ------------------- | -------- | ---------------------------------------------------------- | ----------------------------- |
-| Address       | Text                | Yes      | Min 10 characters                                                                                         | Service delivery address      |
-| City          | Text                | Yes      | Min 3 characters                                                                                                         | City name                     |
-| State         | Dropdown            | Yes      | Indian states list                                                                                                       | State selection               |
-| Country       | Dropdown            | No       | Country list (Default: India)                                                                                            | Optional                      |
-| Google Map URL| URL                 | No       | Valid URL format (e.g., https://maps.google.com/...)                                                                     | Optional; paste from Google Maps |
-| Category      | Dropdown            | Yes      | Residential / Commercial / Industrial / Warehouse                                                                        | Linked to Module 12 Categories |
-| Sub-Category  | Dropdown            | Yes      | Internal / External                                                                                                      | Linked to Module 12           |
-| Area (sqft)   | Number              | Yes      | Must be > 0                                                                                                              | Used for area-based pricing   |
-| Assign Branch | Searchable Dropdown | Yes      | Active branches from Module 7                                                                                            | Nearest branch auto-suggested |
+| Field          | Type                | Required | Options/Validation                                   | Notes                            |
+| -------------- | ------------------- | -------- | ---------------------------------------------------- | -------------------------------- |
+| Address        | Text                | Yes      | Min 10 characters                                    | Service delivery address         |
+| City           | Text                | Yes      | Min 3 characters                                     | City name                        |
+| State          | Dropdown            | Yes      | Indian states list                                   | State selection                  |
+| Country        | Dropdown            | No       | Country list (Default: India)                        | Optional                         |
+| Google Map URL | URL                 | No       | Valid URL format (e.g., https://maps.google.com/...) | Optional; paste from Google Maps |
+| Category       | Dropdown            | Yes      | Residential / Commercial / Industrial / Warehouse    | Linked to Module 12 Categories   |
+| Sub-Category   | Dropdown            | Yes      | Internal / External                                  | Linked to Module 12              |
+| Area (sqft)    | Number              | Yes      | Must be > 0                                          | Used for area-based pricing      |
+| Assign Branch  | Searchable Dropdown | Yes      | Active branches from Module 7                        | Nearest branch auto-suggested    |
 
 **Business Rules:**
 
@@ -6277,15 +6932,15 @@ The Add Quotation form allows sales team members to create new quotations. The f
 
 _(Integrated with Module 12 – Service Management)_
 
-| Field               | Type                | Required | Options/Validation                                                                                                       | Notes                                   |
-| ------------------- | ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- |
-| Service Name        | Search Dropdown     | Yes      | Active services from Module 12                                                                                           | Triggers Dynamic Pricing Config         |
-| Pest Type           | Auto-filled         | System   | From service master                                                                                                      | Read-only                               |
-| Pricing Configuration| Modal / Inline Block| Auto     | User enters BHK size or Area SQFT based on fetched logic                                                                 | Per-service selection/calc              |
-| Rate (₹)            | Auto-calculated     | System   | Based on Configuration Selection (BHK) or Area (SQFT)                                                                    | Dynamic fetch from Module 12            |
-| Frequency / Visits  | Dropdown            | Yes      | Single / Monthly / Quarterly / Contract                                                                                       | Determines revisit cycle                |
-| Total (₹)           | Number              | Auto     | `Rate × Total Visits`                                                                                                    | Auto-calculated                         |
-| Actions             | Button(s)           | —        | Edit Pricing / Remove Service                                                                                            | Per service row                         |
+| Field                 | Type                 | Required | Options/Validation                                       | Notes                           |
+| --------------------- | -------------------- | -------- | -------------------------------------------------------- | ------------------------------- |
+| Service Name          | Search Dropdown      | Yes      | Active services from Module 12                           | Triggers Dynamic Pricing Config |
+| Pest Type             | Auto-filled          | System   | From service master                                      | Read-only                       |
+| Pricing Configuration | Modal / Inline Block | Auto     | User enters BHK size or Area SQFT based on fetched logic | Per-service selection/calc      |
+| Rate (₹)              | Auto-calculated      | System   | Based on Configuration Selection (BHK) or Area (SQFT)    | Dynamic fetch from Module 12    |
+| Frequency / Visits    | Dropdown             | Yes      | Single / Monthly / Quarterly / Contract                  | Determines revisit cycle        |
+| Total (₹)             | Number               | Auto     | `Rate × Total Visits`                                    | Auto-calculated                 |
+| Actions               | Button(s)            | —        | Edit Pricing / Remove Service                            | Per service row                 |
 
 **Business Rules:**
 
@@ -6365,7 +7020,6 @@ _(Integrated with Module 10 – Product Master)_
 
 | Action         | Behavior                                                                               |
 | -------------- | -------------------------------------------------------------------------------------- |
-| Save Draft     | Saves quotation with Status = Draft, no notifications sent                             |
 | Send Quotation | Validates all fields, generates PDF, sends to client via email/WhatsApp, Status → Sent |
 | Cancel         | Discards changes, returns to Quotation Dashboard                                       |
 
@@ -6373,17 +7027,17 @@ _(Integrated with Module 10 – Product Master)_
 
 ## Automatic System Behaviors
 
-| Trigger                   | System Action                                                      |
-| ------------------------- | ------------------------------------------------------------------ |
-| Source = From Lead        | Auto-populate lead details, link quotation to lead record          |
-| Source = From Customer    | Auto-populate customer details, link quotation to customer record  |
+| Trigger                   | System Action                                                                 |
+| ------------------------- | ----------------------------------------------------------------------------- |
+| Source = From Lead        | Auto-populate lead details, link quotation to lead record                     |
+| Source = From Customer    | Auto-populate customer details, link quotation to customer record             |
 | Service Selected          | Auto-fetch pricing from Module 12 based on selection in Dynamic Pricing block |
-| Dynamic Selection Changed | Recalculate service pricing for affected location                  |
-| Quantity / Visits Changed | Recalculate line totals and grand total                            |
-| Discount Applied          | Recalculate grand total                                            |
-| Send Quotation            | Generate PDF, send notification, update lead status to PROPOSAL    |
-| Quotation Accepted        | Trigger Contract creation workflow (Module 18), update lead to WON |
-| Validity Date Passed      | Auto-expire quotation, notify sales rep                            |
+| Dynamic Selection Changed | Recalculate service pricing for affected location                             |
+| Quantity / Visits Changed | Recalculate line totals and grand total                                       |
+| Discount Applied          | Recalculate grand total                                                       |
+| Send Quotation            | Generate PDF, send notification, update lead status to PROPOSAL               |
+| Quotation Accepted        | Trigger Contract creation workflow (Module 18), update lead to WON            |
+| Validity Date Passed      | Auto-expire quotation, notify sales rep                                       |
 
 ---
 
@@ -6498,111 +7152,123 @@ Read-only detailed view of a quotation showing complete pricing breakdown, servi
 ## View Quotation Detail Fields
 
 ### 1. Status Bar
-| Field | Type | Description |
-| :--- | :--- | :--- |
+
+| Field               | Type         | Description                                             |
+| :------------------ | :----------- | :------------------------------------------------------ |
 | **Status Timeline** | Progress Bar | Visual steps: Draft ➔ Sent ➔ Viewed ➔ Accepted/Rejected |
-| **Current Status** | Badge | Highlighted active state (e.g., "Sent") |
-| **Sent On** | DateTime | Timestamp when quotation was emailed/shared |
-| **Viewed On** | DateTime | Timestamp of first client view (tracking) |
+| **Current Status**  | Badge        | Highlighted active state (e.g., "Sent")                 |
+| **Sent On**         | DateTime     | Timestamp when quotation was emailed/shared             |
+| **Viewed On**       | DateTime     | Timestamp of first client view (tracking)               |
 
 ### 2. Client Information (Dynamic)
-*The fields displayed here depend on the Source Type selected during creation.*
+
+_The fields displayed here depend on the Source Type selected during creation._
 
 #### A. From Lead
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| **Source** | Link | Clickable Lead Reference (LD-2026-XXXX) |
-| **Client Name** | Text | Primary contact person's name |
-| **Phone** | Text | Primary contact number |
-| **Email** | Text | Registered email address |
-| **Lead Type** | Badge | Service / Product / Both |
-| **Lead Status** | Badge | Current status from Module 15 |
+
+| Field           | Type  | Description                             |
+| :-------------- | :---- | :-------------------------------------- |
+| **Source**      | Link  | Clickable Lead Reference (LD-2026-XXXX) |
+| **Client Name** | Text  | Primary contact person's name           |
+| **Phone**       | Text  | Primary contact number                  |
+| **Email**       | Text  | Registered email address                |
+| **Lead Type**   | Badge | Service / Product / Both                |
+| **Lead Status** | Badge | Current status from Module 15           |
 
 #### B. From Customer
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| **Source** | Link | Clickable Customer Reference (CUST-XXXX) |
-| **Client Name** | Text | Entity / Business name |
-| **Phone** | Text | Business contact number |
-| **Email** | Text | Billing / Primary email |
-| **Customer Type** | Badge | Residential / Commercial / Industrial |
-| **Address** | Text | Default billing address from Master |
+
+| Field             | Type  | Description                              |
+| :---------------- | :---- | :--------------------------------------- |
+| **Source**        | Link  | Clickable Customer Reference (CUST-XXXX) |
+| **Client Name**   | Text  | Entity / Business name                   |
+| **Phone**         | Text  | Business contact number                  |
+| **Email**         | Text  | Billing / Primary email                  |
+| **Customer Type** | Badge | Residential / Commercial / Industrial    |
+| **Address**       | Text  | Default billing address from Master      |
 
 #### C. Add New (New Prospect)
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| **Source** | Badge | "New Prospect" (No external link) |
-| **Full Name** | Text | Manual entry name |
-| **Company Name** | Text | Manual entry business name (if any) |
-| **Phone** | Text | 10-digit mobile number |
-| **Email** | Text | Valid email address |
-| **Address** | Text | Manual entry service/site address |
-| **City / State** | Text | Location details |
-| **Map URL** | Link | Clickable Google Maps location |
+
+| Field            | Type  | Description                         |
+| :--------------- | :---- | :---------------------------------- |
+| **Source**       | Badge | "New Prospect" (No external link)   |
+| **Full Name**    | Text  | Manual entry name                   |
+| **Company Name** | Text  | Manual entry business name (if any) |
+| **Phone**        | Text  | 10-digit mobile number              |
+| **Email**        | Text  | Valid email address                 |
+| **Address**      | Text  | Manual entry service/site address   |
+| **City / State** | Text  | Location details                    |
+| **Map URL**      | Link  | Clickable Google Maps location      |
 
 ### 3. Quotation Configuration
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| **Quotation Type** | Text | Service / Product / Combined |
-| **Service Mode** | Text | One-Time / Contract (AMC) |
-| **Frequency** | Text | Maintenance interval (e.g., Monthly, Quarterly) |
-| **Contract Duration** | Text | Duration of agreement (e.g., 1 Year) |
-| **Proposed Start** | Date | Expected date for first service/delivery |
+
+| Field                 | Type | Description                                     |
+| :-------------------- | :--- | :---------------------------------------------- |
+| **Quotation Type**    | Text | Service / Product / Combined                    |
+| **Service Mode**      | Text | One-Time / Contract (AMC)                       |
+| **Frequency**         | Text | Maintenance interval (e.g., Monthly, Quarterly) |
+| **Contract Duration** | Text | Duration of agreement (e.g., 1 Year)            |
+| **Proposed Start**    | Date | Expected date for first service/delivery        |
 
 ### 4. Service Details (Per Location)
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| **Location Header** | Text | Site Name, Area (Sqft), and Country |
-| **Assigned Branch** | Badge | Branch handling the location (from CRM) |
-| **Map URL** | Link | Site-specific coordinate link |
-| **Service Table** | Table | List of services, pricing type, rates, and visits |
-| **Location Subtotal** | Currency | Total amount before tax for this specific site |
+
+| Field                 | Type     | Description                                       |
+| :-------------------- | :------- | :------------------------------------------------ |
+| **Location Header**   | Text     | Site Name, Area (Sqft), and Country               |
+| **Assigned Branch**   | Badge    | Branch handling the location (from CRM)           |
+| **Map URL**           | Link     | Site-specific coordinate link                     |
+| **Service Table**     | Table    | List of services, pricing type, rates, and visits |
+| **Location Subtotal** | Currency | Total amount before tax for this specific site    |
 
 ### 5. Product Details
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| **Product Table** | Table | List of products, quantity, unit price, and tax % |
-| **Product Subtotal** | Currency | Total amount before tax for all products |
+
+| Field                | Type     | Description                                       |
+| :------------------- | :------- | :------------------------------------------------ |
+| **Product Table**    | Table    | List of products, quantity, unit price, and tax % |
+| **Product Subtotal** | Currency | Total amount before tax for all products          |
 
 ### 6. Pricing Summary
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| **Services Subtotal** | Currency | Sum of all location service subtotals |
-| **Products Subtotal** | Currency | Sum of all product line totals |
-| **Subtotal (Net)** | Currency | Total amount before tax and discount |
-| **Tax (GST)** | Currency | Calculated tax breakdown (CGST + SGST) |
-| **Discount** | Currency | Percentage or flat amount reduction |
-| **Grand Total** | Currency | Final payable amount (All inclusive) |
+
+| Field                 | Type     | Description                            |
+| :-------------------- | :------- | :------------------------------------- |
+| **Services Subtotal** | Currency | Sum of all location service subtotals  |
+| **Products Subtotal** | Currency | Sum of all product line totals         |
+| **Subtotal (Net)**    | Currency | Total amount before tax and discount   |
+| **Tax (GST)**         | Currency | Calculated tax breakdown (CGST + SGST) |
+| **Discount**          | Currency | Percentage or flat amount reduction    |
+| **Grand Total**       | Currency | Final payable amount (All inclusive)   |
 
 ### 7. Terms & Validity
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| **Valid Till** | Date | Quotation expiry date |
+
+| Field             | Type | Description                      |
+| :---------------- | :--- | :------------------------------- |
+| **Valid Till**    | Date | Quotation expiry date            |
 | **Payment Terms** | Text | Advance vs Completion milestones |
-| **Special Terms** | Text | Custom T&Cs or warranty details |
+| **Special Terms** | Text | Custom T&Cs or warranty details  |
 
 ### 8. Attachments
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| **File List** | Icons | List of uploaded reports, site photos, etc. |
-| **File Actions** | Link | Download or View in Browser |
+
+| Field            | Type  | Description                                 |
+| :--------------- | :---- | :------------------------------------------ |
+| **File List**    | Icons | List of uploaded reports, site photos, etc. |
+| **File Actions** | Link  | Download or View in Browser                 |
 
 ### 9. Audit Trail
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| **Created By** | Text | Name of the user + Creation Timestamp |
-| **Last Modified** | Text | Name of the last editor + timestamp |
-| **History Logs** | List | Status changes (e.g., "Draft to Sent" by HR-User-01) |
+
+| Field             | Type | Description                                          |
+| :---------------- | :--- | :--------------------------------------------------- |
+| **Created By**    | Text | Name of the user + Creation Timestamp                |
+| **Last Modified** | Text | Name of the last editor + timestamp                  |
+| **History Logs**  | List | Status changes (e.g., "Draft to Sent" by HR-User-01) |
 
 ---
 
 ## Actions
 
-| Action              | Available When    | Behavior                                               |
-| ------------------- | ----------------- | ------------------------------------------------------ |
-| Close               | Always            | Returns to Quotation Dashboard                         |
-| Download PDF        | Always            | Downloads customer-facing quotation PDF                |
-| Convert to Contract | Status = Accepted | Triggers Contract creation workflow in Module 18       |
+| Action              | Available When    | Behavior                                         |
+| ------------------- | ----------------- | ------------------------------------------------ |
+| Close               | Always            | Returns to Quotation Dashboard                   |
+| Download PDF        | Always            | Downloads customer-facing quotation PDF          |
+| Convert to Contract | Status = Accepted | Triggers Contract creation workflow in Module 18 |
 
 ---
 
@@ -6644,10 +7310,10 @@ Warning popup displayed when a user attempts to delete (revoke) a quotation. Onl
 
 ## Popup Fields
 
-| Field           | Type      | Required    | Options/Validation                                                                          | Notes                         |
-| --------------- | --------- | ----------- | ------------------------------------------------------------------------------------------- | ----------------------------- |
-| Deletion Reason | Dropdown  | Yes         | Created by Mistake / Duplicate Quotation / Client Withdrew Interest / Pricing Error / Other | Reason for deletion           |
-| Specify Reason  | Text Area | Conditional | Min 10 characters, required if "Other" selected                                             | Custom reason                 |
+| Field           | Type      | Required    | Options/Validation                                                                          | Notes               |
+| --------------- | --------- | ----------- | ------------------------------------------------------------------------------------------- | ------------------- |
+| Deletion Reason | Dropdown  | Yes         | Created by Mistake / Duplicate Quotation / Client Withdrew Interest / Pricing Error / Other | Reason for deletion |
+| Specify Reason  | Text Area | Conditional | Min 10 characters, required if "Other" selected                                             | Custom reason       |
 
 ---
 
@@ -6670,11 +7336,9 @@ Warning popup displayed when a user attempts to delete (revoke) a quotation. Onl
 | Audit Log          | Record deletion with quotation ID, user, timestamp, and reason       |
 | Notification       | Notify sales manager of quotation deletion                           |
 
-
-
 ---
-=========================================================================================================
 
+=========================================================================================================
 
 # 🎯 MODULE 17: GROSS MARGIN ANALYSIS (GMA) MANAGEMENT
 
@@ -6757,40 +7421,42 @@ A consolidated view displaying all GMA sheets accessible to the user, filtered b
 
 ## Table View Fields
 
-| Field           | Type         | Description                                              |
-| --------------- | ------------ | -------------------------------------------------------- |
-| GMA ID          | Text (Auto)  | System-generated unique ID (e.g., GMA-00091)             |
+| Field              | Type         | Description                                              |
+| ------------------ | ------------ | -------------------------------------------------------- |
+| GMA ID             | Text (Auto)  | System-generated unique ID (e.g., GMA-00091)             |
 | Customer/Lead Name | Text         | Customer name from Customer Master                       |
-| Service Type    | Text         | Service category (Contract / One-Time)     |
-| Branch name     | Text         | Branch responsible for this service proposal             |
-| No. of Sites    | Number       | Total locations included in this GMA sheet               |
-| Total Cost (₹)  | Currency     | Sum of all chemical + labor + revisit costs across sites |
-| Sale Price (₹)  | Currency     | Total proposed price billed to customer                  |
-| Gross Margin %  | Percentage   | Auto-calculated: `(Price – Cost) / Price × 100`          |
-| Status          | Badge        | Draft / Approved / Pending / Rejected |
-| Created By      | Text         | Sales person who created the GMA sheet                   |
-| Created Date    | Date         | Date of GMA sheet creation                               |
-| Actions         | Button Group | [View]                                                   |
+| Service Type       | Text         | Service category (Contract / One-Time)                   |
+| Branch name        | Text         | Branch responsible for this service proposal             |
+| No. of Sites       | Number       | Total locations included in this GMA sheet               |
+| Total Cost (₹)     | Currency     | Sum of all chemical + labor + revisit costs across sites |
+| Sale Price (₹)     | Currency     | Total proposed price billed to customer                  |
+| Gross Margin %     | Percentage   | Auto-calculated: `(Price – Cost) / Price × 100`          |
+| Status             | Badge        | Draft / Approved / Pending / Rejected                    |
+| Created By         | Text         | Sales person who created the GMA sheet                   |
+| Created Date       | Date         | Date of GMA sheet creation                               |
+| Actions            | Button Group | [View]                                                   |
 
 ---
 
 ## Filters
 
-| Filter       | Type            | Options                                               |
-| ------------ | --------------- | ----------------------------------------------------- |
-| Service Type | Dropdown        | Contract / One-Time   |
-| Status       | Multi-select    | Draft / Approved / Pending / Rejected         |
-| Branch name  | Dropdown        | All Branches / Specific Branch                        |
-| Date Range   | Date Range      | From – To (GMA creation date)                         |
+| Filter       | Type         | Options                               |
+| ------------ | ------------ | ------------------------------------- |
+| Service Type | Dropdown     | Contract / One-Time                   |
+| Status       | Multi-select | Draft / Approved / Pending / Rejected |
+| Branch name  | Dropdown     | All Branches / Specific Branch        |
+| Date Range   | Date Range   | From – To (GMA creation date)         |
 
 ---
 
 ## Search
 
 Searchable by:
+
 - GMA ID
 - Service Type
 - Customer/lead name
+
 ---
 
 ## Actions (Table Row)
@@ -6800,6 +7466,7 @@ Searchable by:
 | **View** | Opens the GMA sheet in read-only mode (Screen 17.1.1) |
 
 ---
+
 ================================================================================
 
 # 17.2 Tab 2: My Requests
@@ -6843,35 +7510,37 @@ Displays all GMA sheets created by the currently logged-in sales person. Include
 
 ## Table Fields
 
-| Field          | Description                                              |
-| -------------- | -------------------------------------------------------- |
-| GMA ID         | System-generated unique reference                        |
-| Customer       | Customer name linked to the GMA sheet                    |
-| Service Type   | Type of pest control service                             |
-| GM %           | Gross margin percentage (auto-calculated)                |
-| Submitted Date | Date the GMA sheet was submitted for approval            |
-| Status         | Draft / Approved / Pending / Rejected |
-| Actions        | View / Revoke                                            |
+| Field          | Description                                   |
+| -------------- | --------------------------------------------- |
+| GMA ID         | System-generated unique reference             |
+| Customer       | Customer name linked to the GMA sheet         |
+| Service Type   | Type of pest control service                  |
+| GM %           | Gross margin percentage (auto-calculated)     |
+| Submitted Date | Date the GMA sheet was submitted for approval |
+| Status         | Draft / Approved / Pending / Rejected         |
+| Actions        | View / Revoke                                 |
 
 ---
 
 ## Actions
 
-| Action     | Condition                | Description                                                   |
-| ---------- | ------------------------ | ------------------------------------------------------------- |
-| **View**   | All statuses             | Opens GMA sheet in read-only mode (Screen 17.2.2)            |
-| **Revoke** | Status = Pending only    | Cancels the submitted request and resets it to Draft status   |
+| Action     | Condition             | Description                                                 |
+| ---------- | --------------------- | ----------------------------------------------------------- |
+| **View**   | All statuses          | Opens GMA sheet in read-only mode (Screen 17.2.2)           |
+| **Revoke** | Status = Pending only | Cancels the submitted request and resets it to Draft status |
 
 ---
 
 ## Form Actions
 
-| Action              | Description                                                          |
-| ------------------- | -------------------------------------------------------------------- |
+| Action              | Description                                                            |
+| ------------------- | ---------------------------------------------------------------------- |
 | **+ Add GMA Sheet** | Opens the **Add GMA Sheet Form** (Screen 17.2.1) to create a new sheet |
 
 ---
+
 =====================================================================================
+
 # 17.3 Tab 3: Received Requests
 
 **Description:**
@@ -6918,34 +7587,34 @@ Displays GMA sheets received by the logged-in manager or approver (Sales Manager
 
 ## Table Fields
 
-| Field          | Description                                                    |
-| -------------- | -------------------------------------------------------------- |
-| GMA ID         | System-generated reference                                     |
-| Customer       | Customer name linked to the GMA sheet                          |
-| Submitted By   | Sales person who created this GMA sheet                        |
-| GM %           | Overall gross margin (auto-calculated)                         |
-| Submitted On   | Date the sheet was submitted for approval                      |
-| Deadline       | Approval deadline (24 hrs for Manager, 48 hrs for CEO)        |
-| Status         | Pending / Approved / Rejected                                  |
-| Actions        | View / Approve                                                 |
+| Field        | Description                                            |
+| ------------ | ------------------------------------------------------ |
+| GMA ID       | System-generated reference                             |
+| Customer     | Customer name linked to the GMA sheet                  |
+| Submitted By | Sales person who created this GMA sheet                |
+| GM %         | Overall gross margin (auto-calculated)                 |
+| Submitted On | Date the sheet was submitted for approval              |
+| Deadline     | Approval deadline (24 hrs for Manager, 48 hrs for CEO) |
+| Status       | Pending / Approved / Rejected                          |
+| Actions      | View / Approve                                         |
 
 ---
 
 ## Filters
 
-| Filter     | Type       | Options                       |
-| ---------- | ---------- | ----------------------------- |
+| Filter     | Type       | Options                             |
+| ---------- | ---------- | ----------------------------------- |
 | Status     | Dropdown   | Pending / Approved / Rejected / All |
-| Date Range | Date Range | From – To (submission date)   |
+| Date Range | Date Range | From – To (submission date)         |
 
 ---
 
 ## Actions
 
-| Action      | Condition         | Description                                      |
-| ----------- | ----------------- | ------------------------------------------------ |
-| **View**    | All statuses      | Opens the GMA sheet in read-only review mode     |
-| **Approve** | Status = Pending  | Opens the approval / rejection form (Screen 17.3.2) |
+| Action      | Condition        | Description                                         |
+| ----------- | ---------------- | --------------------------------------------------- |
+| **View**    | All statuses     | Opens the GMA sheet in read-only review mode        |
+| **Approve** | Status = Pending | Opens the approval / rejection form (Screen 17.3.2) |
 
 ---
 
@@ -7162,51 +7831,54 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 ## Section 1: Source Selection Fields
 
 ### A. From Lead (Total 8 Fields)
-| Field | Type | Required | Options/Validation | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **Select Lead** | Search | Yes | Active leads (Status ≥ QUALIFIED) | Required to trigger auto-fill |
-| **Lead ID** | Text | System | Auto-filled (Read-only) | Reference from Module 15 |
-| **Contact Person**| Text | System | Auto-filled (Read-only) | |
-| **Phone** | Text | System | Auto-filled (Read-only) | |
-| **Email** | Text | System | Auto-filled (Read-only) | |
-| **Lead Type** | Badge | System | Auto-filled (Read-only) | |
-| **Lead Status** | Badge | System | QUALIFIED ✅ (Read-only) | |
+
+| Field              | Type   | Required | Options/Validation                | Notes                         |
+| :----------------- | :----- | :------- | :-------------------------------- | :---------------------------- |
+| **Select Lead**    | Search | Yes      | Active leads (Status ≥ QUALIFIED) | Required to trigger auto-fill |
+| **Lead ID**        | Text   | System   | Auto-filled (Read-only)           | Reference from Module 15      |
+| **Contact Person** | Text   | System   | Auto-filled (Read-only)           |                               |
+| **Phone**          | Text   | System   | Auto-filled (Read-only)           |                               |
+| **Email**          | Text   | System   | Auto-filled (Read-only)           |                               |
+| **Lead Type**      | Badge  | System   | Auto-filled (Read-only)           |                               |
+| **Lead Status**    | Badge  | System   | QUALIFIED ✅ (Read-only)          |                               |
 
 #### B. From Customer (Total 8 Fields)
-| Field | Type | Required | Options/Validation | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **Select Customer**| Search | Yes | Active customers from Module 9 | Required to trigger auto-fill |
-| **Customer ID** | Text | System | Auto-filled (Read-only) | |
-| **Customer Name** | Text | System | Auto-filled (Read-only) | |
-| **Phone** | Text | System | Auto-filled (Read-only) | |
-| **Email** | Text | System | Auto-filled (Read-only) | |
-| **Customer Type** | Badge | System | Auto-filled (Read-only) | |
-| **Address** | Text | System | Auto-filled (Read-only) | |
+
+| Field               | Type   | Required | Options/Validation             | Notes                         |
+| :------------------ | :----- | :------- | :----------------------------- | :---------------------------- |
+| **Select Customer** | Search | Yes      | Active customers from Module 9 | Required to trigger auto-fill |
+| **Customer ID**     | Text   | System   | Auto-filled (Read-only)        |                               |
+| **Customer Name**   | Text   | System   | Auto-filled (Read-only)        |                               |
+| **Phone**           | Text   | System   | Auto-filled (Read-only)        |                               |
+| **Email**           | Text   | System   | Auto-filled (Read-only)        |                               |
+| **Customer Type**   | Badge  | System   | Auto-filled (Read-only)        |                               |
+| **Address**         | Text   | System   | Auto-filled (Read-only)        |                               |
 
 #### C. Add New (Total 11 Fields)
-| Field | Type | Required | Options/Validation | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **Full Name** | Text | Yes | Min 3 characters | |
-| **Phone** | Number | Yes | 10-digit Indian mobile | |
-| **Email** | Email | No | Valid email format | |
-| **Company Name** | Text | No | Max 100 characters | |
-| **Address** | Text | Yes | Min 10 characters | Site location address |
-| **City** | Text | Yes | Min 3 characters | |
-| **State** | Dropdown | Yes | Indian states list | |
-| **Pincode** | Number | No | 6-digit | |
-| **Country** | Dropdown | No | Default: India | |
-| **Google Map URL** | URL | No | Valid URL format | |
+
+| Field              | Type     | Required | Options/Validation     | Notes                 |
+| :----------------- | :------- | :------- | :--------------------- | :-------------------- |
+| **Full Name**      | Text     | Yes      | Min 3 characters       |                       |
+| **Phone**          | Number   | Yes      | 10-digit Indian mobile |                       |
+| **Email**          | Email    | No       | Valid email format     |                       |
+| **Company Name**   | Text     | No       | Max 100 characters     |                       |
+| **Address**        | Text     | Yes      | Min 10 characters      | Site location address |
+| **City**           | Text     | Yes      | Min 3 characters       |                       |
+| **State**          | Dropdown | Yes      | Indian states list     |                       |
+| **Pincode**        | Number   | No       | 6-digit                |                       |
+| **Country**        | Dropdown | No       | Default: India         |                       |
+| **Google Map URL** | URL      | No       | Valid URL format       |                       |
 
 ## Section 2: General Configuration Fields
 
-| Field              | Type        | Required    | Options/Validation                                            | Notes                                    |
-| ------------------ | ----------- | ----------- | ------------------------------------------------------------- | ---------------------------------------- |
-| Contract Duration  | Dropdown    | No          | 6 Months / 1 Year / 2 Years / 3 Years / Custom                 | Optional top-level duration                |
-| Proposed Start Date| Date        | Yes         | ≥ Today                                                       | Earliest service start across all sites  |
-| Branch             | Dropdown    | Yes         | Active branches from Module 7                                 | Nearest branch auto-suggested            |
-| Prepared By        | Auto-filled | System      | Logged-in user                                                | Read-only                                |
-| Prepared Date      | Auto-filled | System      | Today's date                                                  | Read-only                                |
-| Remarks / Notes    | Text Area   | No          | Max 500 characters                                            | Free-text for special instructions       |
+| Field               | Type        | Required | Options/Validation                             | Notes                                   |
+| ------------------- | ----------- | -------- | ---------------------------------------------- | --------------------------------------- |
+| Contract Duration   | Dropdown    | No       | 6 Months / 1 Year / 2 Years / 3 Years / Custom | Optional top-level duration             |
+| Proposed Start Date | Date        | Yes      | ≥ Today                                        | Earliest service start across all sites |
+| Branch              | Dropdown    | Yes      | Active branches from Module 7                  | Nearest branch auto-suggested           |
+| Prepared By         | Auto-filled | System   | Logged-in user                                 | Read-only                               |
+| Prepared Date       | Auto-filled | System   | Today's date                                   | Read-only                               |
+| Remarks / Notes     | Text Area   | No       | Max 500 characters                             | Free-text for special instructions      |
 
 ---
 
@@ -7214,17 +7886,17 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 
 ### Site Information
 
-| Field              | Type            | Required | Validation                                                | Notes                                |
-| ------------------ | --------------- | -------- | --------------------------------------------------------- | ------------------------------------ |
-| Site Name/Location | Text            | Yes      | Free-text name (e.g., "Mumbai HQ")                        | Identifies this site in summary      |
-| Address            | Text            | No       | Min 10 characters if provided                             | Optional; service delivery address   |
-| City               | Text            | Yes      | Min 3 characters                                          | City name                            |
-| State              | Dropdown        | Yes      | Indian states list                                        | State selection                      |
-| Country            | Dropdown        | No       | Country list (Default: India)                             | Optional                             |
-| Google Map URL     | URL             | No       | Valid URL format (e.g., https://maps.google.com/...)       | Optional; paste from Google Maps     |
-| Category           | Dropdown        | Yes      | Residential / Commercial / Industrial                     | Linked to Module 12 pricing          |
-| Sub-Category       | Dropdown        | Yes      | Internal / External                                       | Linked to Module 12                  |
-| Area (sqft)        | Number          | Yes      | Must be > 0                                               | Used for area-based chemical calc    |
+| Field              | Type     | Required | Validation                                           | Notes                              |
+| ------------------ | -------- | -------- | ---------------------------------------------------- | ---------------------------------- |
+| Site Name/Location | Text     | Yes      | Free-text name (e.g., "Mumbai HQ")                   | Identifies this site in summary    |
+| Address            | Text     | No       | Min 10 characters if provided                        | Optional; service delivery address |
+| City               | Text     | Yes      | Min 3 characters                                     | City name                          |
+| State              | Dropdown | Yes      | Indian states list                                   | State selection                    |
+| Country            | Dropdown | No       | Country list (Default: India)                        | Optional                           |
+| Google Map URL     | URL      | No       | Valid URL format (e.g., https://maps.google.com/...) | Optional; paste from Google Maps   |
+| Category           | Dropdown | Yes      | Residential / Commercial / Industrial                | Linked to Module 12 pricing        |
+| Sub-Category       | Dropdown | Yes      | Internal / External                                  | Linked to Module 12                |
+| Area (sqft)        | Number   | Yes      | Must be > 0                                          | Used for area-based chemical calc  |
 
 ---
 
@@ -7232,35 +7904,35 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 
 > Users click **[+ ADD SERVICE TO THIS SITE]** to add multiple treatments under one site block.
 
-| Field              | Type        | Required    | Options/Validation                                            | Notes                                    |
-| ------------------ | ----------- | ----------- | ------------------------------------------------------------- | ---------------------------------------- |
-| Service Type       | Dropdown    | Yes         | Cockroach / Termite / Rodent / Fogging / etc.                 | Determines the chemical/costings grid    |
-| Service Mode       | Dropdown    | Yes         |  / One-Time                                                | Determines frequency requirement         |
-| Frequency          | Dropdown    | Conditional | Weekly / Fortnightly / Monthly / Quarterly / Custom           | Required if Mode = Contract                   |
-| Annual Frequency   | Number      | Auto        | Auto-calculated (Weekly=52, Monthly=12, Quarterly=4)          | Derived from Frequency                   |
-| Visits/Month       | Display     | Auto        | Auto-calculated (Annual ÷ 12)                                 | Used for chemical usage calculations     |
+| Field            | Type     | Required    | Options/Validation                                   | Notes                                 |
+| ---------------- | -------- | ----------- | ---------------------------------------------------- | ------------------------------------- |
+| Service Type     | Dropdown | Yes         | Cockroach / Termite / Rodent / Fogging / etc.        | Determines the chemical/costings grid |
+| Service Mode     | Dropdown | Yes         | Contract/ One-Time                                   | Determines frequency requirement      |
+| Frequency        | Dropdown | Conditional | Weekly / Fortnightly / Monthly / Quarterly / Custom  | Required if Mode = Contract           |
+| Annual Frequency | Number   | Auto        | Auto-calculated (Weekly=52, Monthly=12, Quarterly=4) | Derived from Frequency                |
+| Visits/Month     | Display  | Auto        | Auto-calculated (Annual ÷ 12)                        | Used for chemical usage calculations  |
 
 ---
 
 ### 3A — Service Visit Cost
 
-| Field              | Type            | Required | Validation / Notes                                                |
-| ------------------ | --------------- | -------- | ----------------------------------------------------------------- |
-| Rate per Visit (₹) | Currency        | Yes      | Manually entered; cost charged per visit (e.g., ₹300)             |
-| Annual Frequency   | Display         | Auto     | From Service config (e.g., Monthly = 12)                          |
-| Cost/Year (A)      | Auto-calculated | System   | `Rate per Visit × Annual Frequency`                               |
-| Cost/Month         | Auto-calculated | System   | `A ÷ 12`                                                         |
+| Field              | Type            | Required | Validation / Notes                                    |
+| ------------------ | --------------- | -------- | ----------------------------------------------------- |
+| Rate per Visit (₹) | Currency        | Yes      | Manually entered; cost charged per visit (e.g., ₹300) |
+| Annual Frequency   | Display         | Auto     | From Service config (e.g., Monthly = 12)              |
+| Cost/Year (A)      | Auto-calculated | System   | `Rate per Visit × Annual Frequency`                   |
+| Cost/Month         | Auto-calculated | System   | `A ÷ 12`                                              |
 
 ---
 
 ### 3B — Manpower / Labor Cost
 
-| Field                  | Type            | Required | Validation / Notes                                            |
-| ---------------------- | --------------- | -------- | ------------------------------------------------------------- |
-| No. of Hours per Visit | Number          | Yes      | Hours of technician work per visit (e.g., 4)                  |
-| Rate per Hour (₹)      | Currency        | Yes      | Hourly rate for technician labor (e.g., ₹100)                 |
-| Cost/Year (B)          | Auto-calculated | System   | `Hours × Annual Frequency × Rate/Hour`                        |
-| Cost/Month             | Auto-calculated | System   | `B ÷ 12`                                                     |
+| Field                  | Type            | Required | Validation / Notes                            |
+| ---------------------- | --------------- | -------- | --------------------------------------------- |
+| No. of Hours per Visit | Number          | Yes      | Hours of technician work per visit (e.g., 4)  |
+| Rate per Hour (₹)      | Currency        | Yes      | Hourly rate for technician labor (e.g., ₹100) |
+| Cost/Year (B)          | Auto-calculated | System   | `Hours × Annual Frequency × Rate/Hour`        |
+| Cost/Month             | Auto-calculated | System   | `B ÷ 12`                                      |
 
 ---
 
@@ -7268,67 +7940,70 @@ Chemical products are pulled from the **Products Module (Module 10 — consumabl
 
 > Automatically fetched from **Module 12** → **Module 10** based on the specific **Service Type** selected for this block.
 
-| Field                    | Type            | Required | Validation / Notes                                                          |
-| ------------------------ | --------------- | -------- | --------------------------------------------------------------------------- |
-| Product Name             | Auto-filled     | System   | Auto-fetched from Module 12 service config                                |
-| Coverage (SQFT)          | Number          | Yes      | **User enters** — area to be treated (defaults to Site Area)               |
-| Required Qty             | Number          | Yes      | **User enters** — quantity needed per visit; must be > 0                   |
-| Price / UOM (₹)          | Auto-filled     | System   | **Purchase Price from Module 10** (editable override)                      |
-| Est. Cost / Month (₹)    | Auto-calculated | System   | `(Required Qty × Price per UOM) × Visits per Month`                        |
+| Field                 | Type            | Required | Validation / Notes                                           |
+| --------------------- | --------------- | -------- | ------------------------------------------------------------ |
+| Product Name          | Auto-filled     | System   | Auto-fetched from Module 12 service config                   |
+| Coverage (SQFT)       | Number          | Yes      | **User enters** — area to be treated (defaults to Site Area) |
+| Required Qty          | Number          | Yes      | **User enters** — quantity needed per visit; must be > 0     |
+| Price / UOM (₹)       | Auto-filled     | System   | **Purchase Price from Module 10** (editable override)        |
+| Est. Cost / Month (₹) | Auto-calculated | System   | `(Required Qty × Price per UOM) × Visits per Month`          |
 
 **Chemical Cost Rules:**
+
 - Calculated individually per service added.
 - `Total Chemical Cost / Year (C) = Sum of all Chemical Est.Cost/Month × 12` within this service block.
 
 ---
 
 ### 3D & 3E — Surcharges and Documentation (Site-Level)
-These costs apply to the *entire site* (across all services):
 
-| Field                     | Validation / Notes                                                              |
-| ------------------------- | ------------------------------------------------------------------------------- |
-| Weekend/Night Surcharge   | If Yes: 25% applied to the SUM of all Service Visit Cost (A) + Manpower Cost (B)  |
-| Documentation Cost        | If Yes: `Cost/Doc × Docs/Month × 12` added to the total site cost               |
+These costs apply to the _entire site_ (across all services):
+
+| Field                   | Validation / Notes                                                               |
+| ----------------------- | -------------------------------------------------------------------------------- |
+| Weekend/Night Surcharge | If Yes: 25% applied to the SUM of all Service Visit Cost (A) + Manpower Cost (B) |
+| Documentation Cost      | If Yes: `Cost/Doc × Docs/Month × 12` added to the total site cost                |
 
 ---
 
 ### Site Cost Summary (Auto-calculated per Site)
 
-| Component                  | Formula                                                                |
-| -------------------------- | ---------------------------------------------------------------------- |
-| A+B+C (All Services)       | Sum of (`A + B + C`) for every service configured under this site      |
-| D. Surcharge Cost          | Applied globally to A+B per site if applicable                         |
-| E. Documentation Cost      | Flat site-level document cost addition                                 |
-| **Site Total Cost/Year**   | **∑ (All Services A+B+C) + D + E**                                     |
-| Site Proposed Price/Year   | Manually entered by the sales person                                   |
-| **Site Gross Margin %**    | **`(Proposed Price – Total Cost) / Proposed Price × 100`**             |
+| Component                | Formula                                                           |
+| ------------------------ | ----------------------------------------------------------------- |
+| A+B+C (All Services)     | Sum of (`A + B + C`) for every service configured under this site |
+| D. Surcharge Cost        | Applied globally to A+B per site if applicable                    |
+| E. Documentation Cost    | Flat site-level document cost addition                            |
+| **Site Total Cost/Year** | **∑ (All Services A+B+C) + D + E**                                |
+| Site Proposed Price/Year | Manually entered by the sales person                              |
+| **Site Gross Margin %**  | **`(Proposed Price – Total Cost) / Proposed Price × 100`**        |
 
 ---
 
 ## Section 4: Overall GM Summary (Auto-calculated)
 
-| Field                       | Value                                                               |
-| --------------------------- | ------------------------------------------------------------------- |
-| Each site's cost row        | Site Name / Total Cost/Yr / Sale Price/Yr / Site GM%                |
-| Total Annual Cost           | Sum of all site total costs                                         |
-| Total Annual Price          | Sum of all site proposed prices                                     |
-| GM% without Documentation   | `(Price – (A+B+C+D)) / Price × 100`                                |
-| GM% with Documentation      | `(Price – (A+B+C+D+E)) / Price × 100`                              |
-| Overall Gross Margin %      | `(Total Price – Total Cost) / Total Price × 100`                    |
-| Approval Determination      | Auto-applied based on the GM% and Approval Matrix                   |
+| Field                     | Value                                                |
+| ------------------------- | ---------------------------------------------------- |
+| Each site's cost row      | Site Name / Total Cost/Yr / Sale Price/Yr / Site GM% |
+| Total Annual Cost         | Sum of all site total costs                          |
+| Total Annual Price        | Sum of all site proposed prices                      |
+| GM% without Documentation | `(Price – (A+B+C+D)) / Price × 100`                  |
+| GM% with Documentation    | `(Price – (A+B+C+D+E)) / Price × 100`                |
+| Overall Gross Margin %    | `(Total Price – Total Cost) / Total Price × 100`     |
+| Approval Determination    | Auto-applied based on the GM% and Approval Matrix    |
 
 ---
 
 ## Approval Matrix
 
-| Gross Margin %  | Approver               | Timeline  | Outcome                               |
+| Gross Margin % | Approver | Timeline | Outcome |
+
 ## Approval Matrix
 
-| Authorizer         | Contracts        | Jobs / Products  | Signature Required |
-| ------------------ | ---------------- | ---------------- | ------------------ |
-| Auto (System)      | GM ≥ 40%         | GM ≥ 40%         | Not required       |
-| Sales Manager      | GM 20% – 39.99%  | GM 20% – 39.99%  | Required           |
-| CEO / Ops Head     | GM < 20%         | GM < 20%         | Required           |
+| Authorizer     | Contracts       | Jobs / Products | Signature Required |
+| -------------- | --------------- | --------------- | ------------------ |
+| Auto (System)  | GM ≥ 40%        | GM ≥ 40%        | Not required       |
+| Sales Manager  | GM 20% – 39.99% | GM 20% – 39.99% | Required           |
+| CEO / Ops Head | GM < 20%        | GM < 20%        | Required           |
 
 > If the calculated GM% is ≥ 40%, the GMA sheet will be auto-approved. If the GM% is < 40%, the user must manually select an approver from a popup list to route the request successfully.
 
@@ -7336,12 +8011,12 @@ These costs apply to the *entire site* (across all services):
 
 ## Form Actions
 
-| Button                       | Description                                                                  |
-| ---------------------------- | ---------------------------------------------------------------------------- |
-| **Save as Draft**            | Saves the current progress without submitting. Status becomes Draft.         |
-| **Save & Submit**            | Appears if GM ≥ 40%. Validates, saves, and sets status to Approved.          |
-| **Save & Request Approval**  | Appears if GM < 40%. Validates data and triggers the "Select Approver" popup.  |
-| **Cancel**                   | Discards all entries and returns to My Requests table.                         |
+| Button                      | Description                                                                   |
+| --------------------------- | ----------------------------------------------------------------------------- |
+| **Save as Draft**           | Saves the current progress without submitting. Status becomes Draft.          |
+| **Save & Submit**           | Appears if GM ≥ 40%. Validates, saves, and sets status to Approved.           |
+| **Save & Request Approval** | Appears if GM < 40%. Validates data and triggers the "Select Approver" popup. |
+| **Cancel**                  | Discards all entries and returns to My Requests table.                        |
 
 ---
 
@@ -7362,26 +8037,27 @@ When the user clicks **Save & Request Approval**, this popup overlay appears:
 │             [SEND REQUEST]     [CANCEL]                │
 └────────────────────────────────────────────────────────┘
 ```
-- Clicking **Send Request** routes the GMA to the selected user's *Received Requests* tab and changes status to *Pending*.
+
+- Clicking **Send Request** routes the GMA to the selected user's _Received Requests_ tab and changes status to _Pending_.
 
 ---
 
 ## Validation Rules
 
-| Validation                         | Rule                                                          |
-| ---------------------------------- | ------------------------------------------------------------- |
-| Source Required                    | Must select From Lead, From Customer, or Add New              |
-| Lead/Customer Required             | Must select a valid active lead or customer (if applicable)   |
-| At Least 1 Site Required           | Minimum one site must be added under Section 3                |
-| At Least 1 Service per Site        | Every site block must have at least one Service configured    |
-| Service Type Required              | Must select a service type inside each Service Block          |
-| At Least 1 Chemical per Service    | Minimum one chemical row per configured service               |
-| Coverage (SQFT) > 0               | Each chemical row must have SQFT > 0                          |
-| Required Qty > 0                   | Each chemical row must have Required Qty > 0                  |
-| Proposed Sale Price > 0            | Each site must have a proposed price greater than 0           |
-| Rate per Visit > 0                 | Service visit rate cannot be zero                             |
-| Hours per Visit ≥ 1               | Must have at least 1 hour per visit                           |
-| Rate per Hour > 0                  | Manpower hourly rate cannot be zero                           |
+| Validation                      | Rule                                                        |
+| ------------------------------- | ----------------------------------------------------------- |
+| Source Required                 | Must select From Lead, From Customer, or Add New            |
+| Lead/Customer Required          | Must select a valid active lead or customer (if applicable) |
+| At Least 1 Site Required        | Minimum one site must be added under Section 3              |
+| At Least 1 Service per Site     | Every site block must have at least one Service configured  |
+| Service Type Required           | Must select a service type inside each Service Block        |
+| At Least 1 Chemical per Service | Minimum one chemical row per configured service             |
+| Coverage (SQFT) > 0             | Each chemical row must have SQFT > 0                        |
+| Required Qty > 0                | Each chemical row must have Required Qty > 0                |
+| Proposed Sale Price > 0         | Each site must have a proposed price greater than 0         |
+| Rate per Visit > 0              | Service visit rate cannot be zero                           |
+| Hours per Visit ≥ 1             | Must have at least 1 hour per visit                         |
+| Rate per Hour > 0               | Manpower hourly rate cannot be zero                         |
 
 ---
 
@@ -7394,19 +8070,21 @@ When the user clicks **Save & Request Approval**, this popup overlay appears:
 
 ## System Behaviors on Submission
 
-| Trigger                     | System Action                                                         |
-| --------------------------- | --------------------------------------------------------------------- |
-| GM ≥ 40%                    | Status → Approved; no approval routing needed                         |
-| GM < 40% + Approver Picked  | Status → Pending; Notification sent to selected Approver              |
-| Service Type Selected       | Auto-fill applicable chemicals from Module 12 into the Service block  |
-| Chemical auto-added         | Auto-fill UOM, Base Price, +15%, +18% GST from Product Master         |
-| Rate overridden by user     | System retains overridden value; does not reset on re-selection       |
-| Source = From Lead          | Auto-populate lead details; link GMA to lead record                   |
-| Source = From Customer      | Auto-populate customer details; link GMA to customer record           |
-| Weekend/Night = Yes         | Automatically add 25% surcharge to the sum of all Manpower and Visit costs in that site |
+| Trigger                    | System Action                                                                           |
+| -------------------------- | --------------------------------------------------------------------------------------- |
+| GM ≥ 40%                   | Status → Approved; no approval routing needed                                           |
+| GM < 40% + Approver Picked | Status → Pending; Notification sent to selected Approver                                |
+| Service Type Selected      | Auto-fill applicable chemicals from Module 12 into the Service block                    |
+| Chemical auto-added        | Auto-fill UOM, Base Price, +15%, +18% GST from Product Master                           |
+| Rate overridden by user    | System retains overridden value; does not reset on re-selection                         |
+| Source = From Lead         | Auto-populate lead details; link GMA to lead record                                     |
+| Source = From Customer     | Auto-populate customer details; link GMA to customer record                             |
+| Weekend/Night = Yes        | Automatically add 25% surcharge to the sum of all Manpower and Visit costs in that site |
 
 ---
+
 ====================================================================================================
+
 # 17.1.2 View GMA Sheet (Tab 1 — Read Only)
 
 **Description:**
@@ -7547,24 +8225,22 @@ Full read-only view of any GMA sheet accessible to the logged-in user. Used for 
 
 ## Fields Displayed
 
-| Section                  | Field                                                                                      | Display Type     |
-| ------------------------ | ------------------------------------------------------------------------------------------ | ---------------- |
-| **Header**               | GMA ID, Status, Created By, Created On, Submitted On, Approved On                         | Static Display   |
-| **Section 1 (Source)**   | Source Type, Customer/Lead ID, Name, Phone, Email, Type, Address                           | Read-only        |
-| **Section 2 (Config)**   | Pest Type, Service Mode, Contract Duration, Start Date, Frequency, Branch, Prepared By/Date | Read-only       |
-| **Section 3A (per site)**| Rate per Visit, Annual Frequency, Cost/Year (A), Cost/Month                                | Read-only        |
-| **Section 3B (per site)**| Hours/Visit, Annual Frequency, Rate/Hour, Cost/Year (B), Cost/Month                       | Read-only        |
-| **Section 3C (per site)**| Chemical Table: Product Name, Code, UOM, Dilution, SQFT, Req.Qty, Price/UOM, Cost/Visit   | Read-only        |
-| **Section 3D (per site)**| Applicable flag, Surcharge Cost (D)                                                         | Read-only        |
-| **Section 3E (per site)**| Applicable flag, Cost/Doc, Docs/Month, Doc Cost/Year (E)                                   | Read-only        |
-| **Site Summary**         | Cost breakdown table (A+B+C+D+E), Total Cost, Proposed Price, Site GM%                     | Read-only        |
-| **Section 4 (Overall)**  | Site-wise summary, Total Annual Cost/Price, Overall GM%, GM with/without Documentation     | Auto / Read-only |
-| **Approval**             | Status, Approval Type, Approver, Approved/Rejected Date, Remarks, Authority Matrix         | Read-only        |
-| **Audit Trail**          | Timestamp, Action, User, Remarks                                                            | Read-only        |
+| Section                   | Field                                                                                       | Display Type     |
+| ------------------------- | ------------------------------------------------------------------------------------------- | ---------------- |
+| **Header**                | GMA ID, Status, Created By, Created On, Submitted On, Approved On                           | Static Display   |
+| **Section 1 (Source)**    | Source Type, Customer/Lead ID, Name, Phone, Email, Type, Address                            | Read-only        |
+| **Section 2 (Config)**    | Pest Type, Service Mode, Contract Duration, Start Date, Frequency, Branch, Prepared By/Date | Read-only        |
+| **Section 3A (per site)** | Rate per Visit, Annual Frequency, Cost/Year (A), Cost/Month                                 | Read-only        |
+| **Section 3B (per site)** | Hours/Visit, Annual Frequency, Rate/Hour, Cost/Year (B), Cost/Month                         | Read-only        |
+| **Section 3C (per site)** | Chemical Table: Product Name, Code, UOM, Dilution, SQFT, Req.Qty, Price/UOM, Cost/Visit     | Read-only        |
+| **Section 3D (per site)** | Applicable flag, Surcharge Cost (D)                                                         | Read-only        |
+| **Section 3E (per site)** | Applicable flag, Cost/Doc, Docs/Month, Doc Cost/Year (E)                                    | Read-only        |
+| **Site Summary**          | Cost breakdown table (A+B+C+D+E), Total Cost, Proposed Price, Site GM%                      | Read-only        |
+| **Section 4 (Overall)**   | Site-wise summary, Total Annual Cost/Price, Overall GM%, GM with/without Documentation      | Auto / Read-only |
+| **Approval**              | Status, Approval Type, Approver, Approved/Rejected Date, Remarks, Authority Matrix          | Read-only        |
+| **Audit Trail**           | Timestamp, Action, User, Remarks                                                            | Read-only        |
 
 ---
-
-
 
 ================================================================================
 
@@ -7706,28 +8382,28 @@ Read-only view of a GMA sheet submitted by the logged-in user. Displays source i
 
 ## Fields Displayed
 
-| Section                  | Field                                                                                      | Display Type     |
-| ------------------------ | ------------------------------------------------------------------------------------------ | ---------------- |
-| **Header**               | GMA ID, Status, Created By, Created On, Submitted On, Approved On                         | Static Display   |
-| **Section 1 (Source)**   | Source Type, Customer/Lead ID, Name, Phone, Email, Type, Address                           | Read-only        |
-| **Section 2 (Config)**   | Pest Type, Service Mode, Contract Duration, Start Date, Frequency, Branch, Prepared By/Date | Read-only       |
-| **Section 3A (per site)**| Rate per Visit, Annual Frequency, Cost/Year (A), Cost/Month                                | Read-only        |
-| **Section 3B (per site)**| Hours/Visit, Annual Frequency, Rate/Hour, Cost/Year (B), Cost/Month                       | Read-only        |
-| **Section 3C (per site)**| Chemical Table: Product Name, Code, UOM, Dilution, SQFT, Req.Qty, Price/UOM, Cost/Visit   | Read-only        |
-| **Section 3D (per site)**| Applicable flag, Surcharge Cost (D)                                                         | Read-only        |
-| **Section 3E (per site)**| Applicable flag, Cost/Doc, Docs/Month, Doc Cost/Year (E)                                   | Read-only        |
-| **Site Summary**         | Cost breakdown table (A+B+C+D+E), Total Cost, Proposed Price, Site GM%                     | Read-only        |
-| **Section 4 (Overall)**  | Site-wise summary, Total Annual Cost/Price, Overall GM%, GM with/without Documentation     | Auto / Read-only |
-| **Approval**             | Status, Approval Type, Approver, Approved/Rejected Date, Remarks, Authority Matrix         | Read-only        |
-| **Audit Trail**          | Timestamp, Action, User, Remarks                                                            | Read-only        |
+| Section                   | Field                                                                                       | Display Type     |
+| ------------------------- | ------------------------------------------------------------------------------------------- | ---------------- |
+| **Header**                | GMA ID, Status, Created By, Created On, Submitted On, Approved On                           | Static Display   |
+| **Section 1 (Source)**    | Source Type, Customer/Lead ID, Name, Phone, Email, Type, Address                            | Read-only        |
+| **Section 2 (Config)**    | Pest Type, Service Mode, Contract Duration, Start Date, Frequency, Branch, Prepared By/Date | Read-only        |
+| **Section 3A (per site)** | Rate per Visit, Annual Frequency, Cost/Year (A), Cost/Month                                 | Read-only        |
+| **Section 3B (per site)** | Hours/Visit, Annual Frequency, Rate/Hour, Cost/Year (B), Cost/Month                         | Read-only        |
+| **Section 3C (per site)** | Chemical Table: Product Name, Code, UOM, Dilution, SQFT, Req.Qty, Price/UOM, Cost/Visit     | Read-only        |
+| **Section 3D (per site)** | Applicable flag, Surcharge Cost (D)                                                         | Read-only        |
+| **Section 3E (per site)** | Applicable flag, Cost/Doc, Docs/Month, Doc Cost/Year (E)                                    | Read-only        |
+| **Site Summary**          | Cost breakdown table (A+B+C+D+E), Total Cost, Proposed Price, Site GM%                      | Read-only        |
+| **Section 4 (Overall)**   | Site-wise summary, Total Annual Cost/Price, Overall GM%, GM with/without Documentation      | Auto / Read-only |
+| **Approval**              | Status, Approval Type, Approver, Approved/Rejected Date, Remarks, Authority Matrix          | Read-only        |
+| **Audit Trail**           | Timestamp, Action, User, Remarks                                                            | Read-only        |
 
 ---
 
 ## Actions
 
-| Button           | Condition              | Description                                              |
-| **Back**         | Always                 | Returns to My Requests tab                               |
-| **Download PDF** | Status ≠ Draft         | Exports the GMA sheet as a formatted PDF document        |
+| Button | Condition | Description |
+| **Back** | Always | Returns to My Requests tab |
+| **Download PDF** | Status ≠ Draft | Exports the GMA sheet as a formatted PDF document |
 
 ---
 
@@ -7857,35 +8533,35 @@ A focused action screen where the approver confirms their decision to approve or
 
 ## Fields Displayed (Read-Only)
 
-| Section                  | Field                                                                                      | Display Type     |
-| ------------------------ | ------------------------------------------------------------------------------------------ | ---------------- |
-| **Header**               | GMA ID, Status, Created By, Created On, Submitted On, Deadline                            | Static Display   |
-| **Section 1 (Source)**   | Source Type, Customer/Lead ID, Name, Phone, Email, Type, Address                           | Read-only        |
-| **Section 2 (Config)**   | Pest Type, Service Mode, Contract Duration, Start Date, Frequency, Branch, Prepared By/Date | Read-only       |
-| **Section 3A (per site)**| Rate per Visit, Annual Frequency, Cost/Year (A), Cost/Month                                | Read-only        |
-| **Section 3B (per site)**| Hours/Visit, Annual Frequency, Rate/Hour, Cost/Year (B), Cost/Month                       | Read-only        |
-| **Section 3C (per site)**| Chemical Table: Product Name, Code, UOM, Dilution, SQFT, Req.Qty, Price/UOM, Cost/Visit   | Read-only        |
-| **Section 3D (per site)**| Applicable flag, Surcharge Cost (D)                                                         | Read-only        |
-| **Section 3E (per site)**| Applicable flag, Cost/Doc, Docs/Month, Doc Cost/Year (E)                                   | Read-only        |
-| **Site Summary**         | Cost breakdown table (A+B+C+D+E), Total Cost, Proposed Price, Site GM%                     | Read-only        |
-| **Section 4 (Overall)**  | Site-wise summary, Total Annual Cost/Price, Overall GM%                                    | Read-only        |
+| Section                   | Field                                                                                       | Display Type   |
+| ------------------------- | ------------------------------------------------------------------------------------------- | -------------- |
+| **Header**                | GMA ID, Status, Created By, Created On, Submitted On, Deadline                              | Static Display |
+| **Section 1 (Source)**    | Source Type, Customer/Lead ID, Name, Phone, Email, Type, Address                            | Read-only      |
+| **Section 2 (Config)**    | Pest Type, Service Mode, Contract Duration, Start Date, Frequency, Branch, Prepared By/Date | Read-only      |
+| **Section 3A (per site)** | Rate per Visit, Annual Frequency, Cost/Year (A), Cost/Month                                 | Read-only      |
+| **Section 3B (per site)** | Hours/Visit, Annual Frequency, Rate/Hour, Cost/Year (B), Cost/Month                         | Read-only      |
+| **Section 3C (per site)** | Chemical Table: Product Name, Code, UOM, Dilution, SQFT, Req.Qty, Price/UOM, Cost/Visit     | Read-only      |
+| **Section 3D (per site)** | Applicable flag, Surcharge Cost (D)                                                         | Read-only      |
+| **Section 3E (per site)** | Applicable flag, Cost/Doc, Docs/Month, Doc Cost/Year (E)                                    | Read-only      |
+| **Site Summary**          | Cost breakdown table (A+B+C+D+E), Total Cost, Proposed Price, Site GM%                      | Read-only      |
+| **Section 4 (Overall)**   | Site-wise summary, Total Annual Cost/Price, Overall GM%                                     | Read-only      |
 
 ---
 
 ## Action Fields
 
-| Field     | Type      | Required           | Validation                            |
-| --------- | --------- | ------------------ | ------------------------------------- |
-| Decision  | Radio     | Yes                | Approve / Reject                      |
-| Remarks   | Text Area | Required if Reject | Free-text; max 500 characters         |
+| Field    | Type      | Required           | Validation                    |
+| -------- | --------- | ------------------ | ----------------------------- |
+| Decision | Radio     | Yes                | Approve / Reject              |
+| Remarks  | Text Area | Required if Reject | Free-text; max 500 characters |
 
 ---
 
 ## System Actions on Submission
 
-| Decision    | System Behavior                                                                         |
-| ----------- | --------------------------------------------------------------------------------------- |
-| **Approve** | GMA status → Approved; sales person notified in-app & email; contract creation unlocked |
+| Decision    | System Behavior                                                                                  |
+| ----------- | ------------------------------------------------------------------------------------------------ |
+| **Approve** | GMA status → Approved; sales person notified in-app & email; contract creation unlocked          |
 | **Reject**  | GMA status → Rejected; sales person notified with rejection remarks; sheet returned to submitter |
 
 ---
@@ -7894,7 +8570,7 @@ A focused action screen where the approver confirms their decision to approve or
 
 | Button               | Description                                           |
 | -------------------- | ----------------------------------------------------- |
-| **Confirm Decision** | Saves the decision and triggers notification workflow  |
+| **Confirm Decision** | Saves the decision and triggers notification workflow |
 | **Cancel**           | Returns to Received Requests tab without any action   |
 
 ---
@@ -7925,6 +8601,7 @@ Chemical Cost / Visit = Required Qty × Price per UOM  (per chemical row)
 Chemical Cost / Month = Cost per Visit × Visits per Month
 Chemical Cost / Year (C) = Chemical Cost / Month × 12
 ```
+
 - Chemicals are auto-fetched from **Module 12** (Service Config → Section 4: Chemicals/Products Used)
 - Product Name, Code, UOM, Dilution, Price/UOM are auto-filled from **Module 10** (Product Master)
 - User enters **Coverage (SQFT)** and **Required Qty**
@@ -7952,11 +8629,11 @@ Site Total Cost = A (Service Visit) + B (Manpower) + C (Chemical) + D (Surcharge
 
 ## 6. Sales Authority & Approval Matrix
 
-| Authorizer         | Margin Rule      | Approval Routing                         |
-| ------------------ | ---------------- | ---------------------------------------- |
-| Auto (System)      | GM ≥ 40%         | **Automatic**: No manual routing needed |
-| Sales Manager      | GM 20% – 39.99%  | **Manual Selection**: User must select  |
-| CEO / Ops Head     | GM < 20%         | **Manual Selection**: User must select  |
+| Authorizer     | Margin Rule     | Approval Routing                        |
+| -------------- | --------------- | --------------------------------------- |
+| Auto (System)  | GM ≥ 40%        | **Automatic**: No manual routing needed |
+| Sales Manager  | GM 20% – 39.99% | **Manual Selection**: User must select  |
+| CEO / Ops Head | GM < 20%        | **Manual Selection**: User must select  |
 
 > If GM% < 40%, the user is required to select the appropriate approver from a popup list and send the request manually.
 
@@ -7975,13 +8652,13 @@ Draft → Pending → Approved / Rejected
 
 ## 10. Notifications
 
-| Event              | Recipient        | Channel                  |
-| ------------------ | ---------------- | ------------------------ |
-| GMA Submitted      | Approver         | In-app + Email           |
-| Approved (Auto)    | Sales Person     | In-app notification      |
-| Approved           | Sales Person     | In-app + Email           |
-| Rejected           | Sales Person     | In-app + Email + Remarks |
-| Deadline Reminder  | Approver         | Auto-reminder at 50% of timeline |
+| Event             | Recipient    | Channel                          |
+| ----------------- | ------------ | -------------------------------- |
+| GMA Submitted     | Approver     | In-app + Email                   |
+| Approved (Auto)   | Sales Person | In-app notification              |
+| Approved          | Sales Person | In-app + Email                   |
+| Rejected          | Sales Person | In-app + Email + Remarks         |
+| Deadline Reminder | Approver     | Auto-reminder at 50% of timeline |
 
 ## 11. PDF Export
 
@@ -7990,28 +8667,28 @@ Draft → Pending → Approved / Rejected
 
 ## 12. Module Dependencies
 
-| Dependency Module                            | What It Provides to GMA                                                   |
-| -------------------------------------------- | ------------------------------------------------------------------------- |
-| **Module 4** – Customer Management           | Customer data for "From Customer" source selection                        |
-| **Module 7** – Branch Management             | Branch selection dropdown                                                  |
-| **Module 10** – Product Master (Inventory)   | Chemical/product details: Name, Code, UOM, Purchase Price                 |
-| **Module 12** – Service Management           | Service-to-chemical mapping; pest types; treatment methods; dilution data |
-| **Module 15** – Lead Management              | Lead data for "From Lead" source selection                                |
-| **Module 18** – Contract Management          | GMA Approval is a **prerequisite** for Contract Creation                  |
+| Dependency Module                          | What It Provides to GMA                                                   |
+| ------------------------------------------ | ------------------------------------------------------------------------- |
+| **Module 4** – Customer Management         | Customer data for "From Customer" source selection                        |
+| **Module 7** – Branch Management           | Branch selection dropdown                                                 |
+| **Module 10** – Product Master (Inventory) | Chemical/product details: Name, Code, UOM, Purchase Price                 |
+| **Module 12** – Service Management         | Service-to-chemical mapping; pest types; treatment methods; dilution data |
+| **Module 15** – Lead Management            | Lead data for "From Lead" source selection                                |
+| **Module 18** – Contract Management        | GMA Approval is a **prerequisite** for Contract Creation                  |
 
 ## 11. System Behaviors on Submission
 
-| Trigger                     | System Action                                                                   |
-| --------------------------- | ------------------------------------------------------------------------------- |
-| GM ≥ 40%                    | Status → Approved; no approval routing needed                                   |
-| GM < 40% + Approver Picked  | Status → Pending; Notification sent to selected Approver                        |
-| Service Type selected       | Auto-fetch chemicals from Module 12 → Module 10; populate chemical rows         |
-| Chemical SQFT/Qty changed   | Cost/Visit, Cost/Month, Cost/Year recalculated dynamically                      |
-| Price/UOM overridden        | System retains overridden value; does not reset on re-selection                 |
-| Frequency changed           | Annual Frequency updated; cascades to all site cost calculations (A, B)         |
-| Source = From Lead          | Auto-populate lead details; link GMA to lead record                             |
-| Source = From Customer      | Auto-populate customer details; link GMA to customer record                     |
-| Weekend/Night = Yes         | Automatically add 25% surcharge to Service Visit + Manpower costs               |
+| Trigger                    | System Action                                                           |
+| -------------------------- | ----------------------------------------------------------------------- |
+| GM ≥ 40%                   | Status → Approved; no approval routing needed                           |
+| GM < 40% + Approver Picked | Status → Pending; Notification sent to selected Approver                |
+| Service Type selected      | Auto-fetch chemicals from Module 12 → Module 10; populate chemical rows |
+| Chemical SQFT/Qty changed  | Cost/Visit, Cost/Month, Cost/Year recalculated dynamically              |
+| Price/UOM overridden       | System retains overridden value; does not reset on re-selection         |
+| Frequency changed          | Annual Frequency updated; cascades to all site cost calculations (A, B) |
+| Source = From Lead         | Auto-populate lead details; link GMA to lead record                     |
+| Source = From Customer     | Auto-populate customer details; link GMA to customer record             |
+| Weekend/Night = Yes        | Automatically add 25% surcharge to Service Visit + Manpower costs       |
 
 ---
 
@@ -8019,12 +8696,12 @@ Draft → Pending → Approved / Rejected
 
 ## RBAC – Role-Based Access Control
 
-| Role              | Tab 1 (GMA Entries) | Tab 2 (My Requests)    | Tab 3 (Received Requests) | Add GMA | Approve/Reject   |
-| ----------------- | ------------------- | ---------------------- | ------------------------- | ------- | ---------------- |
-| Sales Person      | View (own)          | View / Add / Revoke    | —                         | ✅       | ❌               |
-| Sales Manager     | View (team)         | View (own)             | View / Approve / Reject   | ✅       | ✅ (Route explicitly)  |
-| CEO / Ops Head    | View (all)          | View (own)             | View / Approve / Reject   | ✅       | ✅ (Route explicitly)  |
-| Admin             | View (all)          | View (all)             | View (all)                | ✅       | ❌               |
+| Role           | Tab 1 (GMA Entries) | Tab 2 (My Requests) | Tab 3 (Received Requests) | Add GMA | Approve/Reject        |
+| -------------- | ------------------- | ------------------- | ------------------------- | ------- | --------------------- |
+| Sales Person   | View (own)          | View / Add / Revoke | —                         | ✅      | ❌                    |
+| Sales Manager  | View (team)         | View (own)          | View / Approve / Reject   | ✅      | ✅ (Route explicitly) |
+| CEO / Ops Head | View (all)          | View (own)          | View / Approve / Reject   | ✅      | ✅ (Route explicitly) |
+| Admin          | View (all)          | View (all)          | View (all)                | ✅      | ❌                    |
 
 ---
 
@@ -8055,8 +8732,7 @@ MODULE 17: GMA MANAGEMENT
 
 ---
 
-================================================================================
-================================================================================
+# ================================================================================
 
 # Complete Data Flow — Module 17 GMA Management
 
@@ -8260,7 +8936,6 @@ MODULE 17: GMA MANAGEMENT
 
 =========================================================================
 
-
 # 🎯 MODULE 18: CUSTOMER MANAGEMENT
 
 ## Overview
@@ -8330,36 +9005,37 @@ A paginated data table displaying all customers registered in the system. Provid
 
 ## Table View Fields
 
-| Field             | Type         | Description                                                      |
-| ----------------- | ------------ | ---------------------------------------------------------------- |
-| Customer ID       | Text (Auto)  | System-generated unique ID (e.g., CUST-00245)                    |
-| Name              | Text         | Company name (Contract/Product) or Full name (One-time)          |
-| Customer Type     | Badge        | Contract / One-time / Product                                       |
-| Primary Contact   | Text         | Primary phone number of the account contact                      |
-| Primary Email     | Text         | Primary email address of the account contact                      |
-| Branch Name       | Text         | Servicing branch assigned to this customer                       |
-| Status            | Badge        | Active / Inactive                                                |
-| Total Sites       | Number       | Total number of sites                                            |
-| Created Date      | Date         | Date of customer creation                                        |
-| Created By        | Text         | User who created the customer                                    |
-| Actions           | Button Group | [View] [Edit] [Deactivate / Activate]                            |
+| Field           | Type         | Description                                             |
+| --------------- | ------------ | ------------------------------------------------------- |
+| Customer ID     | Text (Auto)  | System-generated unique ID (e.g., CUST-00245)           |
+| Name            | Text         | Company name (Contract/Product) or Full name (One-time) |
+| Customer Type   | Badge        | Contract / One-time / Product                           |
+| Primary Contact | Text         | Primary phone number of the account contact             |
+| Primary Email   | Text         | Primary email address of the account contact            |
+| Branch Name     | Text         | Servicing branch assigned to this customer              |
+| Status          | Badge        | Active / Inactive                                       |
+| Total Sites     | Number       | Total number of sites                                   |
+| Created Date    | Date         | Date of customer creation                               |
+| Created By      | Text         | User who created the customer                           |
+| Actions         | Button Group | [View] [Edit] [Deactivate / Activate]                   |
 
 ---
 
 ## Filters
 
-| Filter        | Type       | Options                                          |
-| ------------- | ---------- | ------------------------------------------------ |
-| Customer Type | Dropdown   | All / Contract / One-time / Product              |
-| Status        | Dropdown   | All / Active / Inactive                          |
-| Branch        | Dropdown   | All Branches / Specific Branch (from Module 7)   |
-| Date Range    | Date Range | From – To (Customer onboarding / creation date)  |
+| Filter        | Type       | Options                                         |
+| ------------- | ---------- | ----------------------------------------------- |
+| Customer Type | Dropdown   | All / Contract / One-time / Product             |
+| Status        | Dropdown   | All / Active / Inactive                         |
+| Branch        | Dropdown   | All Branches / Specific Branch (from Module 7)  |
+| Date Range    | Date Range | From – To (Customer onboarding / creation date) |
 
 ---
 
 ## Search
 
 Searchable by:
+
 - Customer ID
 - Customer Name
 - Phone Number
@@ -8368,20 +9044,20 @@ Searchable by:
 
 ## Actions (Table Row)
 
-| Action          | Condition          | Description                                                 |
-| --------------- | ------------------ | ----------------------------------------------------------- |
-| **View**        | All statuses       | Opens the customer detail dashboard (Screen 18.3)           |
-| **Edit**        | Active customers   | Opens the Edit Customer form (Screen 18.4)                  |
-| **Deactivate**  | Status = Active    | Opens the deactivation confirmation dialog (Screen 18.5)    |
-| **Activate**    | Status = Inactive  | Re-activates the customer record, sets status back to Active |
+| Action         | Condition         | Description                                                  |
+| -------------- | ----------------- | ------------------------------------------------------------ |
+| **View**       | All statuses      | Opens the customer detail dashboard (Screen 18.3)            |
+| **Edit**       | Active customers  | Opens the Edit Customer form (Screen 18.4)                   |
+| **Deactivate** | Status = Active   | Opens the deactivation confirmation dialog (Screen 18.5)     |
+| **Activate**   | Status = Inactive | Re-activates the customer record, sets status back to Active |
 
 ---
 
 ## Form Actions
 
-| Action            | Description                                                          |
-| ----------------- | -------------------------------------------------------------------- |
-| **+ Add Customer**| Opens the **Add Customer Form** (Screen 18.2)                        |
+| Action             | Description                                   |
+| ------------------ | --------------------------------------------- |
+| **+ Add Customer** | Opens the **Add Customer Form** (Screen 18.2) |
 
 ---
 
@@ -8463,31 +9139,32 @@ A multi-section form to register a new customer — either by converting an exis
 ## Section 1: Source Fields
 
 ### A. Import from Lead (Auto-fill)
-| Field | Type | Required | Options / Validation | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **Select Lead** | Search | Yes | Leads (Status = Qualified or Won) | Triggers auto-population |
-| **Lead ID** | Text | System | Auto-filled (Read-only) | |
-| **Lead Name** | Text | System | Auto-filled (Read-only) | |
-| **Phone** | Text | System | Auto-filled (Read-only) | |
-| **Email** | Text | System | Auto-filled (Read-only) | |
-| **Lead Type** | Badge | System | Auto-filled (Read-only) | |
-| **Lead Status** | Badge | System | Qualified or Won (Read-only) | |
+
+| Field           | Type   | Required | Options / Validation              | Notes                    |
+| :-------------- | :----- | :------- | :-------------------------------- | :----------------------- |
+| **Select Lead** | Search | Yes      | Leads (Status = Qualified or Won) | Triggers auto-population |
+| **Lead ID**     | Text   | System   | Auto-filled (Read-only)           |                          |
+| **Lead Name**   | Text   | System   | Auto-filled (Read-only)           |                          |
+| **Phone**       | Text   | System   | Auto-filled (Read-only)           |                          |
+| **Email**       | Text   | System   | Auto-filled (Read-only)           |                          |
+| **Lead Type**   | Badge  | System   | Auto-filled (Read-only)           |                          |
+| **Lead Status** | Badge  | System   | Qualified or Won (Read-only)      |                          |
 
 #### B. Manual Entry (Textfields)
 
-| Field | Type | Required | Options / Validation | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **Entry Mode** | Radio | Yes | Select "Manual Entry" | Enables manual text fields in Sections 2 & 3 |
-| **Entity / Full Name** | Text | Yes | Min 3 characters | Manual entry required |
-| **Contact Person** | Text | Yes | Min 3 characters | Manual entry required |
-| **Phone** | Number | Yes | 10-digit Indian mobile | Manual entry required |
-| **Email** | Email | Yes | Valid email format | Manual entry required |
-| **Branch** | Dropdown | Yes | Select Branch | Manual selection required |
-| **Billing Address** | Text | Yes | Min 10 characters | Manual entry required |
-| **City** | Text | Yes | Min 3 characters | Manual entry required |
-| **State** | Dropdown | Yes | Select State | Manual selection required |
-| **Pincode** | Number | Yes | 6-digit numeric | Manual entry required |
-| **Google Map URL** | URL | Yes | Valid URL format | Manual entry required |
+| Field                  | Type     | Required | Options / Validation   | Notes                                        |
+| :--------------------- | :------- | :------- | :--------------------- | :------------------------------------------- |
+| **Entry Mode**         | Radio    | Yes      | Select "Manual Entry"  | Enables manual text fields in Sections 2 & 3 |
+| **Entity / Full Name** | Text     | Yes      | Min 3 characters       | Manual entry required                        |
+| **Contact Person**     | Text     | Yes      | Min 3 characters       | Manual entry required                        |
+| **Phone**              | Number   | Yes      | 10-digit Indian mobile | Manual entry required                        |
+| **Email**              | Email    | Yes      | Valid email format     | Manual entry required                        |
+| **Branch**             | Dropdown | Yes      | Select Branch          | Manual selection required                    |
+| **Billing Address**    | Text     | Yes      | Min 10 characters      | Manual entry required                        |
+| **City**               | Text     | Yes      | Min 3 characters       | Manual entry required                        |
+| **State**              | Dropdown | Yes      | Select State           | Manual selection required                    |
+| **Pincode**            | Number   | Yes      | 6-digit numeric        | Manual entry required                        |
+| **Google Map URL**     | URL      | Yes      | Valid URL format       | Manual entry required                        |
 
 > [!NOTE]
 > Only leads with status **Qualified** or **Won** appear in the Lead search dropdown. Leads in Pending, New, or Lost status cannot be converted to customers.
@@ -8496,74 +9173,74 @@ A multi-section form to register a new customer — either by converting an exis
 
 ## Section 2: Entity Information Fields
 
-| Field               | Type      | Required | Validation                                              | Notes                                   |
-| ------------------- | --------- | -------- | ------------------------------------------------------- | --------------------------------------- |
-| Customer Type       | Radio     | Yes      | Contract / One-time / Product                           | Customer categorization metric          |
-| Entity / Full Name  | Text      | Yes      | Min 3 chars, Max 100 chars                              | Legal entity name or individual's name    |
-| Industry Type       | Dropdown  | No       | Hospitality / Healthcare / Education / IT / Other       | Used for segmentation                   |
-| PAN Number          | Text      | No       | Format: 5 alpha + 4 digits + 1 alpha (e.g., AAAAA0000A) | Validated against standard PAN regex    |
-| GST Number          | Text      | No       | Format: 15-char alphanumeric (e.g., 22AAAAA0000A1Z5)  | Optional; validated if provided         |
-| Contact Person      | Text      | Yes      | Min 3 chars, Max 100 chars                              | Primary decision-maker contact          |
-| Designation         | Text      | No       | Max 100 chars                                           | Job title of contact person             |
-| Phone               | Number    | Yes      | 10-digit Indian mobile number                           | Primary contact number                  |
-| Alternate Phone     | Number    | No       | 10-digit Indian mobile number                           | Optional secondary contact              |
-| Email               | Email     | Yes      | Valid email format                                      | Used for all communications & invoices  |
-| Branch              | Dropdown  | Yes      | Active branches from Module 7                           | Servicing branch for this customer      |
+| Field              | Type     | Required | Validation                                              | Notes                                  |
+| ------------------ | -------- | -------- | ------------------------------------------------------- | -------------------------------------- |
+| Customer Type      | Radio    | Yes      | Contract / One-time / Product                           | Customer categorization metric         |
+| Entity / Full Name | Text     | Yes      | Min 3 chars, Max 100 chars                              | Legal entity name or individual's name |
+| Industry Type      | Dropdown | No       | Hospitality / Healthcare / Education / IT / Other       | Used for segmentation                  |
+| PAN Number         | Text     | No       | Format: 5 alpha + 4 digits + 1 alpha (e.g., AAAAA0000A) | Validated against standard PAN regex   |
+| GST Number         | Text     | No       | Format: 15-char alphanumeric (e.g., 22AAAAA0000A1Z5)    | Optional; validated if provided        |
+| Contact Person     | Text     | Yes      | Min 3 chars, Max 100 chars                              | Primary decision-maker contact         |
+| Designation        | Text     | No       | Max 100 chars                                           | Job title of contact person            |
+| Phone              | Number   | Yes      | 10-digit Indian mobile number                           | Primary contact number                 |
+| Alternate Phone    | Number   | No       | 10-digit Indian mobile number                           | Optional secondary contact             |
+| Email              | Email    | Yes      | Valid email format                                      | Used for all communications & invoices |
+| Branch             | Dropdown | Yes      | Active branches from Module 7                           | Servicing branch for this customer     |
 
 ---
 
 ## Section 3: Billing & Contact Details Fields
 
-| Field                  | Type     | Required | Validation                            | Notes                                       |
-| ---------------------- | -------- | -------- | ------------------------------------- | ------------------------------------------- |
-| Billing Address Line 1 | Text     | Yes      | Min 10 chars, Max 200 chars           | Street, building, locality                  |
-| Billing Address Line 2 | Text     | No       | Max 200 chars                         | Landmark, area                              |
-| City                   | Text     | Yes      | Min 3 chars                           | Billing city                                |
-| State                  | Dropdown | Yes      | Indian states list                    | Billing state                               |
-| Pincode                | Number   | Yes      | 6-digit numeric                       | India PIN code                              |
-| Country                | Dropdown | No       | Country list (Default: India)         | Optional                                    |
-| Google Map URL         | URL      | Yes       | Valid URL format                      | Optional; paste from Google Maps            |
-| Finance Contact Name   | Text     | Yes      | Min 3 chars, Max 100 chars            | Accounts/Finance department point-of-contact|
-| Finance Contact Phone  | Number   | Yes      | 10-digit Indian mobile number         | Finance contact's phone                     |
-| Finance Contact Email  | Email    | No       | Valid email format                    | Finance contact's email (for invoices)      |
+| Field                  | Type     | Required | Validation                    | Notes                                        |
+| ---------------------- | -------- | -------- | ----------------------------- | -------------------------------------------- |
+| Billing Address Line 1 | Text     | Yes      | Min 10 chars, Max 200 chars   | Street, building, locality                   |
+| Billing Address Line 2 | Text     | No       | Max 200 chars                 | Landmark, area                               |
+| City                   | Text     | Yes      | Min 3 chars                   | Billing city                                 |
+| State                  | Dropdown | Yes      | Indian states list            | Billing state                                |
+| Pincode                | Number   | Yes      | 6-digit numeric               | India PIN code                               |
+| Country                | Dropdown | No       | Country list (Default: India) | Optional                                     |
+| Google Map URL         | URL      | Yes      | Valid URL format              | Optional; paste from Google Maps             |
+| Finance Contact Name   | Text     | Yes      | Min 3 chars, Max 100 chars    | Accounts/Finance department point-of-contact |
+| Finance Contact Phone  | Number   | Yes      | 10-digit Indian mobile number | Finance contact's phone                      |
+| Finance Contact Email  | Email    | No       | Valid email format            | Finance contact's email (for invoices)       |
 
 ---
 
 ## Form Actions
 
-| Button             | Description                                                                  |
-| ------------------ | ---------------------------------------------------------------------------- |
-| **Save as Draft**  | Saves the form without finalising. Customer appears in list with Draft status.|
-| **Save & Submit**  | Validates all required fields and creates the Customer record as Active.      |
-| **Cancel**         | Discards all entries and returns to the Customer Master List.                 |
+| Button            | Description                                                                    |
+| ----------------- | ------------------------------------------------------------------------------ |
+| **Save as Draft** | Saves the form without finalising. Customer appears in list with Draft status. |
+| **Save & Submit** | Validates all required fields and creates the Customer record as Active.       |
+| **Cancel**        | Discards all entries and returns to the Customer Master List.                  |
 
 ---
 
 ## Validation Rules
 
-| Validation                            | Rule                                                                    |
-| ------------------------------------- | ----------------------------------------------------------------------- |
-| Entry Mode Required                   | Must select Import from Lead or Manual Entry                            |
-| Lead Selection Required               | If Entry Mode = Import from Lead, a valid qualified lead must be chosen |
-| Customer Type Required                | Must select Contract, One-time, or Product                              |
-| PAN Format                            | If provided, must match AAAAA0000A pattern                              |
-| GST Format                            | If provided, must be 15-char alphanumeric starting with valid state code|
-| Duplicate Phone Check                 | System warns if phone number already exists on another customer record  |
-| Duplicate GST Check                   | System blocks creation if GST number already registered                 |
-| Billing Address Required              | At least Line 1, City, State, Pincode must be filled                   |
-| Finance Contact Required              | Name and Phone are mandatory                                            |
-| Branch Required                       | Must select an active branch                                            |
+| Validation               | Rule                                                                     |
+| ------------------------ | ------------------------------------------------------------------------ |
+| Entry Mode Required      | Must select Import from Lead or Manual Entry                             |
+| Lead Selection Required  | If Entry Mode = Import from Lead, a valid qualified lead must be chosen  |
+| Customer Type Required   | Must select Contract, One-time, or Product                               |
+| PAN Format               | If provided, must match AAAAA0000A pattern                               |
+| GST Format               | If provided, must be 15-char alphanumeric starting with valid state code |
+| Duplicate Phone Check    | System warns if phone number already exists on another customer record   |
+| Duplicate GST Check      | System blocks creation if GST number already registered                  |
+| Billing Address Required | At least Line 1, City, State, Pincode must be filled                     |
+| Finance Contact Required | Name and Phone are mandatory                                             |
+| Branch Required          | Must select an active branch                                             |
 
 ---
 
 ## System Behaviors on Save
 
-| Trigger                    | System Action                                                                   |
-| -------------------------- | ------------------------------------------------------------------------------- |
-| Entry Mode = Import Lead   | Auto-populates all lead fields; links created customer back to the Lead record  |
-| Save & Submit              | Customer status set to Active; Customer ID generated (e.g., CUST-00245)          |
-| Duplicate GST detected     | Blocks save and shows error: "GST already registered under another customer"     |
-| Lead converted             | Lead status updated to **Customer** (Won) in Module 15                           |
+| Trigger                  | System Action                                                                  |
+| ------------------------ | ------------------------------------------------------------------------------ |
+| Entry Mode = Import Lead | Auto-populates all lead fields; links created customer back to the Lead record |
+| Save & Submit            | Customer status set to Active; Customer ID generated (e.g., CUST-00245)        |
+| Duplicate GST detected   | Blocks save and shows error: "GST already registered under another customer"   |
+| Lead converted           | Lead status updated to **Customer** (Won) in Module 15                         |
 
 ---
 
@@ -8611,39 +9288,37 @@ Displays the full entity profile — entity info and billing address for this cu
 
 ## Entity Information Fields (Read-Only)
 
-| Field              | Type    | Description                                            |
-| ------------------ | ------- | ------------------------------------------------------ |
-| Entity / Name      | Display | Legal entity name or individual's name                 |
-| Customer Type      | Display | Contract / One-time / Product                          |
-| Industry           | Display | Sector classification (if applicable)                  |
-| PAN Number         | Display | Tax ID                                                 |
-| GST Number         | Display | GST registration (if provided)                         |
-| Branch             | Display | Assigned servicing branch                              |
-| Contact Person     | Display | Primary decision-maker                                 |
-| Designation        | Display | Job title                                              |
-| Phone              | Display | Primary contact number                                 |
-| Alternate Phone    | Display | Secondary contact (if provided)                        |
-| Email              | Display | Email address                                          |
-| LTV                | Currency| Lifetime Value — auto-calculated sum of all SO values   |
-| Onboarded Date     | Date    | Date when customer was created / activated             |
+| Field           | Type     | Description                                           |
+| --------------- | -------- | ----------------------------------------------------- |
+| Entity / Name   | Display  | Legal entity name or individual's name                |
+| Customer Type   | Display  | Contract / One-time / Product                         |
+| Industry        | Display  | Sector classification (if applicable)                 |
+| PAN Number      | Display  | Tax ID                                                |
+| GST Number      | Display  | GST registration (if provided)                        |
+| Branch          | Display  | Assigned servicing branch                             |
+| Contact Person  | Display  | Primary decision-maker                                |
+| Designation     | Display  | Job title                                             |
+| Phone           | Display  | Primary contact number                                |
+| Alternate Phone | Display  | Secondary contact (if provided)                       |
+| Email           | Display  | Email address                                         |
+| LTV             | Currency | Lifetime Value — auto-calculated sum of all SO values |
+| Onboarded Date  | Date     | Date when customer was created / activated            |
 
 ---
 
 ## Billing Address Fields (Read-Only)
 
-| Field                | Type    | Description                              |
-| -------------------- | ------- | ---------------------------------------- |
-| Billing Address      | Display | Full billing address                     |
-| City / State / PIN   | Display | Location details                         |
-| Country              | Display | Country (default: India)                 |
-| Google Map URL       | Link    | Clickable Google Maps link               |
-| Finance Contact Name | Display | Accounts department contact              |
-| Finance Contact Phone| Display | Finance phone                            |
-| Finance Contact Email| Display | Finance email                            |
+| Field                 | Type    | Description                 |
+| --------------------- | ------- | --------------------------- |
+| Billing Address       | Display | Full billing address        |
+| City / State / PIN    | Display | Location details            |
+| Country               | Display | Country (default: India)    |
+| Google Map URL        | Link    | Clickable Google Maps link  |
+| Finance Contact Name  | Display | Accounts department contact |
+| Finance Contact Phone | Display | Finance phone               |
+| Finance Contact Email | Display | Finance email               |
 
 ---
-
-
 
 ================================================================================
 
@@ -8679,14 +9354,14 @@ A chronological grid listing all agreements (both historical and active) associa
 
 ## Contracts Grid Fields
 
-| Field          | Type    | Description                                                  |
-| -------------- | ------- | ------------------------------------------------------------ |
-| Contract ID    | Link    | System ID; clickable — navigates to Module 19 contract detail|
-| Start Date     | Date    | Contract commencement date                                   |
-| End Date       | Date    | Contract scheduled end date                                  |
-| Contract Value | Currency| Total value of the contract (₹)                             |
-| GMA ID         | Link    | Source GMA sheet; clickable — navigates to Module 17 GMA view|
-| Status         | Badge   | Active / Expired / Terminated / Draft                        |
+| Field          | Type     | Description                                                   |
+| -------------- | -------- | ------------------------------------------------------------- |
+| Contract ID    | Link     | System ID; clickable — navigates to Module 19 contract detail |
+| Start Date     | Date     | Contract commencement date                                    |
+| End Date       | Date     | Contract scheduled end date                                   |
+| Contract Value | Currency | Total value of the contract (₹)                               |
+| GMA ID         | Link     | Source GMA sheet; clickable — navigates to Module 17 GMA view |
+| Status         | Badge    | Active / Expired / Terminated / Draft                         |
 
 > **Note:** This tab is **read-only**. To create a new contract for this customer, navigate to **Module 19 (Contract Management)** and select this customer as the source. A valid approved GMA (Module 17) is required before a contract can be created.
 
@@ -8737,16 +9412,16 @@ A consolidated grid showing all Sales Orders and their real-time service executi
 
 ## Sales Orders Grid Fields
 
-| Field            | Type    | Description                                                        |
-| ---------------- | ------- | ------------------------------------------------------------------ |
-| SO Number        | Link    | System ID for the Sales Order; navigates to Module 20 SO detail    |
-| Export Action    | Button  | Triggers comprehensive service history download in .xlsx format    |
-| SO Date          | Date    | Date the Sales Order was generated                                 |
-| Linked Contract  | Link    | Contract ID the SO was generated from (blank for standalone SOs)   |
-| Order Type       | Text    |  Contract / One-Time Service / Product Sale                     |
-| Total Value (₹)  | Currency| Total invoiced value of this Sales Order                           |
-| SO Status        | Badge   | Draft / Open / Fulfilled / Billed / Cancelled                      |
-| Service Status   | Badge   | Scheduled / In Progress / Completed / Pending                      |
+| Field           | Type     | Description                                                      |
+| --------------- | -------- | ---------------------------------------------------------------- |
+| SO Number       | Link     | System ID for the Sales Order; navigates to Module 20 SO detail  |
+| Export Action   | Button   | Triggers comprehensive service history download in .xlsx format  |
+| SO Date         | Date     | Date the Sales Order was generated                               |
+| Linked Contract | Link     | Contract ID the SO was generated from (blank for standalone SOs) |
+| Order Type      | Text     | Contract / One-Time Service / Product Sale                       |
+| Total Value (₹) | Currency | Total invoiced value of this Sales Order                         |
+| SO Status       | Badge    | Draft / Open / Fulfilled / Billed / Cancelled                    |
+| Service Status  | Badge    | Scheduled / In Progress / Completed / Pending                    |
 
 > **Note:** This tab is **read-only**. Sales Orders are created and managed in **Module 20 (Sales Order Management)**. Service Status is updated by the Operations module once Job Cards are dispatched.
 
@@ -8807,35 +9482,34 @@ Pre-filled form mirroring the Add Customer form (18.2). Allows authorised users 
 
 ## Editable vs. Locked Fields
 
-| Field                  | Editable? | Notes                                                          |
-| ---------------------- | --------- | -------------------------------------------------------------- |
-| Customer Type          | ❌ Locked  | Cannot change Contract/Product → One-time or vice versa        |
-| Entity / Name          | ✅ Yes     | Can correct spelling or reflect legal name change              |
-| Industry Type          | ✅ Yes     | Dropdown update allowed                                        |
-| PAN Number             | ❌ Locked  | Tax-sensitive; requires admin override with audit note         |
-| GST Number             | ✅ Yes     | Can be added or updated                                        |
-| Contact Person         | ✅ Yes     | Contact person can change                                      |
-| Designation            | ✅ Yes     | Free text update allowed                                       |
-| Phone / Alternate      | ✅ Yes     | Duplicate phone check applies on save                          |
-| Email                  | ✅ Yes     | Valid email format check                                       |
-| Branch                 | ✅ Yes     | Can reassign to another active branch                          |
-| Billing Address        | ✅ Yes     | Fully editable                                                 |
-| Country                | ✅ Yes     | Dropdown; default India                                        |
-| Google Map URL         | ✅ Yes     | Editable URL field                                              |
-| Finance Contact        | ✅ Yes     | Fully editable                                                 |
-
+| Field             | Editable? | Notes                                                   |
+| ----------------- | --------- | ------------------------------------------------------- |
+| Customer Type     | ❌ Locked | Cannot change Contract/Product → One-time or vice versa |
+| Entity / Name     | ✅ Yes    | Can correct spelling or reflect legal name change       |
+| Industry Type     | ✅ Yes    | Dropdown update allowed                                 |
+| PAN Number        | ❌ Locked | Tax-sensitive; requires admin override with audit note  |
+| GST Number        | ✅ Yes    | Can be added or updated                                 |
+| Contact Person    | ✅ Yes    | Contact person can change                               |
+| Designation       | ✅ Yes    | Free text update allowed                                |
+| Phone / Alternate | ✅ Yes    | Duplicate phone check applies on save                   |
+| Email             | ✅ Yes    | Valid email format check                                |
+| Branch            | ✅ Yes    | Can reassign to another active branch                   |
+| Billing Address   | ✅ Yes    | Fully editable                                          |
+| Country           | ✅ Yes    | Dropdown; default India                                 |
+| Google Map URL    | ✅ Yes    | Editable URL field                                      |
+| Finance Contact   | ✅ Yes    | Fully editable                                          |
 
 ---
 
 ## Validation Rules
 
-| Validation                   | Rule                                                              |
-| ---------------------------- | ----------------------------------------------------------------- |
-| Required fields remain filled| All previously required fields must still have valid values       |
-| GST Format (if edited)       | Must be valid 15-char alphanumeric                               |
-| Duplicate Phone Check        | Warns if phone number already exists on another active customer   |
-| Duplicate GST Check          | Blocks save if updated GST matches another registered customer    |
-| Branch Active                | Selected branch must be Active in Module 7                        |
+| Validation                    | Rule                                                            |
+| ----------------------------- | --------------------------------------------------------------- |
+| Required fields remain filled | All previously required fields must still have valid values     |
+| GST Format (if edited)        | Must be valid 15-char alphanumeric                              |
+| Duplicate Phone Check         | Warns if phone number already exists on another active customer |
+| Duplicate GST Check           | Blocks save if updated GST matches another registered customer  |
+| Branch Active                 | Selected branch must be Active in Module 7                      |
 
 ---
 
@@ -8843,13 +9517,13 @@ Pre-filled form mirroring the Add Customer form (18.2). Allows authorised users 
 
 Every save triggers an **audit log entry** recording:
 
-| Log Field      | Value                              |
-| -------------- | ---------------------------------- |
-| Changed By     | Logged-in user ID and name         |
-| Changed On     | Timestamp                          |
-| Fields Changed | Array of changed field names       |
-| Previous Value | Before-state for each changed field|
-| New Value      | After-state for each changed field |
+| Log Field      | Value                               |
+| -------------- | ----------------------------------- |
+| Changed By     | Logged-in user ID and name          |
+| Changed On     | Timestamp                           |
+| Fields Changed | Array of changed field names        |
+| Previous Value | Before-state for each changed field |
+| New Value      | After-state for each changed field  |
 
 > **Note:** The customer **Master Data Audit Log** can be viewed by Admin and Finance Auditor roles. It is accessible from the Customer Detail page under the audit trail link.
 
@@ -8857,10 +9531,10 @@ Every save triggers an **audit log entry** recording:
 
 ## Form Actions
 
-| Button            | Description                                                                   |
-| ----------------- | ----------------------------------------------------------------------------- |
-| **Save Changes**  | Validates all required fields, saves updates, records audit log entry          |
-| **Cancel**        | Discards all unsaved changes and returns to the Customer Detail view           |
+| Button           | Description                                                           |
+| ---------------- | --------------------------------------------------------------------- |
+| **Save Changes** | Validates all required fields, saves updates, records audit log entry |
+| **Cancel**       | Discards all unsaved changes and returns to the Customer Detail view  |
 
 ---
 
@@ -8896,7 +9570,7 @@ A soft-delete mechanism that marks a customer as **Inactive** rather than perman
 └───────────────────────────────────────────────────────┘
 ```
 
-*When eligible (no active contracts / open SOs):*
+_When eligible (no active contracts / open SOs):_
 
 ```
 ┌───────────────────────────────────────────────────────┐
@@ -8924,41 +9598,41 @@ A soft-delete mechanism that marks a customer as **Inactive** rather than perman
 
 ## Deactivation Prerequisite Check
 
-| Check                   | Condition to Block                                       | Error Message Shown                                       |
-| ----------------------- | -------------------------------------------------------- | --------------------------------------------------------- |
-| Active Contracts        | Customer has ≥ 1 contract with Status = Active           | "X Active Contract(s) must be terminated before deactivation" |
-| Open Sales Orders       | Customer has ≥ 1 SO with Status = Open or Draft          | "X Open Sales Order(s) must be fulfilled or cancelled first" |
+| Check             | Condition to Block                              | Error Message Shown                                           |
+| ----------------- | ----------------------------------------------- | ------------------------------------------------------------- |
+| Active Contracts  | Customer has ≥ 1 contract with Status = Active  | "X Active Contract(s) must be terminated before deactivation" |
+| Open Sales Orders | Customer has ≥ 1 SO with Status = Open or Draft | "X Open Sales Order(s) must be fulfilled or cancelled first"  |
 
 ---
 
 ## Deactivation Form Fields
 
-| Field                | Type     | Required    | Options / Validation                                                                   |
-| -------------------- | -------- | ----------- | -------------------------------------------------------------------------------------- |
-| Reason for Deactivation | Dropdown | Yes      | Customer Relocated / Business Closure / Non-Renewal / Payment Default / Other          |
+| Field                   | Type     | Required | Options / Validation                                                          |
+| ----------------------- | -------- | -------- | ----------------------------------------------------------------------------- |
+| Reason for Deactivation | Dropdown | Yes      | Customer Relocated / Business Closure / Non-Renewal / Payment Default / Other |
 
 ---
 
 ## Validation Rules
 
-| Validation                    | Rule                                                          |
-| ----------------------------- | ------------------------------------------------------------- |
-| No Active Contracts           | Deactivation fails if any contract has Status = Active        |
-| No Open Sales Orders          | Deactivation fails if any SO has Status = Open or Draft       |
-| Reason Required               | A reason must be selected from the dropdown                   |
-| Remarks Required (if Other)   | Free-text remark is mandatory when "Other" reason is selected |
+| Validation                  | Rule                                                          |
+| --------------------------- | ------------------------------------------------------------- |
+| No Active Contracts         | Deactivation fails if any contract has Status = Active        |
+| No Open Sales Orders        | Deactivation fails if any SO has Status = Open or Draft       |
+| Reason Required             | A reason must be selected from the dropdown                   |
+| Remarks Required (if Other) | Free-text remark is mandatory when "Other" reason is selected |
 
 ---
 
 ## System Behavior on Deactivation
 
-| Trigger                      | System Action                                                             |
-| ---------------------------- | ------------------------------------------------------------------------- |
-| Confirm Deactivate clicked   | Customer status set to **Inactive**                                        |
-| Status change applied        | Customer no longer appears in default Active listing (remains searchable) |
-| Sites linked                 | All linked sites are also flagged Inactive automatically                   |
-| Audit log                    | Deactivation event logged with Reason, Timestamp, and user who acted      |
-| Reactivation possible        | Admin can reactivate the customer from the list by clicking [Activate]    |
+| Trigger                    | System Action                                                             |
+| -------------------------- | ------------------------------------------------------------------------- |
+| Confirm Deactivate clicked | Customer status set to **Inactive**                                       |
+| Status change applied      | Customer no longer appears in default Active listing (remains searchable) |
+| Sites linked               | All linked sites are also flagged Inactive automatically                  |
+| Audit log                  | Deactivation event logged with Reason, Timestamp, and user who acted      |
+| Reactivation possible      | Admin can reactivate the customer from the list by clicking [Activate]    |
 
 ---
 
@@ -8966,13 +9640,13 @@ A soft-delete mechanism that marks a customer as **Inactive** rather than perman
 
 ## RBAC – Role-Based Access Control
 
-| Role              | List View (18.1)          | Add Customer (18.2) | View Details (18.3) | Edit (18.4) | Deactivate (18.5) |
-| ----------------- | ------------------------- | ------------------- | ------------------- | ----------- | ----------------- |
-| Sales Person      | View (own branch)         | ✅                   | ✅                   | ✅           | ❌                 |
-| Sales Manager     | View (own branch / team)  | ✅                   | ✅                   | ✅           | ✅                 |
-| Branch Manager    | View (own branch)         | ✅                   | ✅                   | ✅           | ✅                 |
-| Head Ops / Admin  | View (all branches)       | ✅                   | ✅                   | ✅           | ✅                 |
-| Finance Auditor   | View (all – read-only)    | ❌                   | ✅                   | ❌           | ❌                 |
+| Role             | List View (18.1)         | Add Customer (18.2) | View Details (18.3) | Edit (18.4) | Deactivate (18.5) |
+| ---------------- | ------------------------ | ------------------- | ------------------- | ----------- | ----------------- |
+| Sales Person     | View (own branch)        | ✅                  | ✅                  | ✅          | ❌                |
+| Sales Manager    | View (own branch / team) | ✅                  | ✅                  | ✅          | ✅                |
+| Branch Manager   | View (own branch)        | ✅                  | ✅                  | ✅          | ✅                |
+| Head Ops / Admin | View (all branches)      | ✅                  | ✅                  | ✅          | ✅                |
+| Finance Auditor  | View (all – read-only)   | ❌                  | ✅                  | ❌          | ❌                |
 
 ---
 
@@ -9059,21 +9733,16 @@ MODULE 18: CUSTOMER MANAGEMENT
 
 ## Data Flow Table
 
-| Source Module  | Data Provided                                           | Used In (Customer Mgmt)                              |
-| -------------- | ------------------------------------------------------- | ---------------------------------------------------- |
-| **Module 15**  | Lead ID, Name, Phone, Email, Type, Status               | Section 1: Source Selection (Import from Lead)       |
-| **Module 7**   | Branch list (Active branches)                           | Section 2: Branch dropdown                           |
-| **Module 9**   | PAN / GST validation rules                              | Section 2: Entity Information (format validation)    |
-| **Module 18**  | Customer ID, Site IDs, Billing Address                  | Module 17 (GMA), Module 19 (Contract), Module 20 (SO)|
-| **Module 19**  | Contract counts and status per customer                 | 18.3 Tab 2: Contract Logs & LTV calculation          |
-| **Module 20**  | Sales Order counts and service history per customer     | 18.3 Tab 3: Sales Orders & Service History           |
-
-
+| Source Module | Data Provided                                       | Used In (Customer Mgmt)                               |
+| ------------- | --------------------------------------------------- | ----------------------------------------------------- |
+| **Module 15** | Lead ID, Name, Phone, Email, Type, Status           | Section 1: Source Selection (Import from Lead)        |
+| **Module 7**  | Branch list (Active branches)                       | Section 2: Branch dropdown                            |
+| **Module 9**  | PAN / GST validation rules                          | Section 2: Entity Information (format validation)     |
+| **Module 18** | Customer ID, Site IDs, Billing Address              | Module 17 (GMA), Module 19 (Contract), Module 20 (SO) |
+| **Module 19** | Contract counts and status per customer             | 18.3 Tab 2: Contract Logs & LTV calculation           |
+| **Module 20** | Sales Order counts and service history per customer | 18.3 Tab 3: Sales Orders & Service History            |
 
 =======================================================================================
-
-
-
 
 # 🎯 MODULE 19: CONTRACT MANAGEMENT
 
@@ -9144,33 +9813,34 @@ A paginated ledger displaying all contracts in the system. Provides status-based
 
 ## Table View Fields
 
-| Field          | Type         | Description                                                          |
-| -------------- | ------------ | -------------------------------------------------------------------- |
-| Contract ID    | Text (Auto)  | System-generated unique ID (e.g., CON-2026-0041)                     |
-| Customer Name  | Text         | Customer name from Module 18 Customer Master                         |
-| GMA ID         | Link         | Source GMA sheet ID; clickable — navigates to Module 17 GMA detail   |
-| Contract Value | Currency     | Total agreed sale value for the contract period (₹)                   |
-| Start Date     | Date         | Contract commencement date                                           |
-| End Date       | Date         | Contract scheduled end date                                          |
-| Status         | Badge        | Draft / Active / Expiring Soon / Terminated / Expired                |
-| Actions        | Button Group | [View] [Edit / Amend] [Terminate]   /[Download PDF]                                 |
+| Field          | Type         | Description                                                        |
+| -------------- | ------------ | ------------------------------------------------------------------ |
+| Contract ID    | Text (Auto)  | System-generated unique ID (e.g., CON-2026-0041)                   |
+| Customer Name  | Text         | Customer name from Module 18 Customer Master                       |
+| GMA ID         | Link         | Source GMA sheet ID; clickable — navigates to Module 17 GMA detail |
+| Contract Value | Currency     | Total agreed sale value for the contract period (₹)                |
+| Start Date     | Date         | Contract commencement date                                         |
+| End Date       | Date         | Contract scheduled end date                                        |
+| Status         | Badge        | Draft / Active / Expiring Soon / Terminated / Expired              |
+| Actions        | Button Group | [View] [Edit / Amend] [Terminate] /[Download PDF]                  |
 
 ---
 
 ## Filters
 
-| Filter     | Type         | Options                                                         |
-| ---------- | ------------ | --------------------------------------------------------------- |
-| Status     | Multi-select | Draft / Active / Expiring Soon / Terminated / Expired           |
-| Customer   | Search       | Search by Customer Name / ID from Module 18                     |
-| Branch     | Dropdown     | All Branches / Specific Branch (from Module 7)                  |
-| Date Range | Date Range   | From – To (contract start or end date)                          |
+| Filter     | Type         | Options                                               |
+| ---------- | ------------ | ----------------------------------------------------- |
+| Status     | Multi-select | Draft / Active / Expiring Soon / Terminated / Expired |
+| Customer   | Search       | Search by Customer Name / ID from Module 18           |
+| Branch     | Dropdown     | All Branches / Specific Branch (from Module 7)        |
+| Date Range | Date Range   | From – To (contract start or end date)                |
 
 ---
 
 ## Search
 
 Searchable by:
+
 - Contract ID
 - Customer Name
 - GMA ID
@@ -9179,21 +9849,21 @@ Searchable by:
 
 ## Actions (Table Row)
 
-| Action           | Condition                          | Description                                               |
-| ---------------- | ---------------------------------- | --------------------------------------------------------- |
-| **View**         | All statuses                       | Opens the contract detail dashboard (Screen 19.3)         |
-| **Edit / Amend** | Status = Draft or Active           | Opens the Edit / Amend Contract form (Screen 19.4)        |
-| **Terminate**    | Status = Active or Expiring Soon   | Opens the Termination dialog (Screen 19.5)                |
+| Action           | Condition                        | Description                                        |
+| ---------------- | -------------------------------- | -------------------------------------------------- |
+| **View**         | All statuses                     | Opens the contract detail dashboard (Screen 19.3)  |
+| **Edit / Amend** | Status = Draft or Active         | Opens the Edit / Amend Contract form (Screen 19.4) |
+| **Terminate**    | Status = Active or Expiring Soon | Opens the Termination dialog (Screen 19.5)         |
 
 ---
 
 ## Form Actions
 
-| Action               | Description                                                    |
-| -------------------- | -------------------------------------------------------------- |
-| **+ Create Contract**| Opens the **Add Contract Form** (Screen 19.2)                  |
+| Action                | Description                                   |
+| --------------------- | --------------------------------------------- |
+| **+ Create Contract** | Opens the **Add Contract Form** (Screen 19.2) |
 
-> **Note:** The [+ Create Contract] button is only enabled when at least one **Approved** GMA sheet exists. If no approved GMA is available, the button is greyed out with a tooltip: *"An approved GMA is required to create a contract."*
+> **Note:** The [+ Create Contract] button is only enabled when at least one **Approved** GMA sheet exists. If no approved GMA is available, the button is greyed out with a tooltip: _"An approved GMA is required to create a contract."_
 
 ---
 
@@ -9352,18 +10022,18 @@ A multi-section form to formalize a service agreement. Inherits approximately 80
 
 ## Section 1: Source Selection Fields
 
-| Field              | Type            | Required | Options / Validation                                                     | Notes                                          |
-| ------------------ | --------------- | -------- | ------------------------------------------------------------------------ | ---------------------------------------------- |
-| Select Approved GMA| Search Dropdown | Yes      | Only GMA sheets with Status = **Approved** appear                        | Primary data source for the contract           |
-| GMA ID             | Auto-filled     | System   | Read-only                                                                | Linked GMA reference                           |
-| Customer Name      | Auto-filled     | System   | Read-only; populated from GMA → Module 18                                | Customer whose contract is being created       |
-| Customer ID        | Auto-filled     | System   | Read-only                                                                | Unique customer reference                      |
-| No. of Sites       | Auto-filled     | System   | Read-only; count of sites in the GMA sheet                               | Summary count                                  |
-| Total Cost (₹)     | Auto-filled     | System   | Read-only; sum of all site costs from GMA                                | Internal cost reference                        |
-| Total Sale Price (₹)| Auto-filled    | System   | Read-only; sum of all site proposed prices from GMA                      | Commercial price reference                     |
-| Overall GM%        | Auto-filled     | System   | Read-only; auto-calculated from GMA                                      | Gross Margin percentage                        |
-| Branch             | Auto-filled     | System   | Read-only; branch from GMA                                               | Servicing branch                               |
-| Sites Grid         | Auto-filled     | System   | Read-only; all sites inherited from GMA                                  | Site ID, Name, Address, SQFT, Category         |
+| Field                | Type            | Required | Options / Validation                                | Notes                                    |
+| -------------------- | --------------- | -------- | --------------------------------------------------- | ---------------------------------------- |
+| Select Approved GMA  | Search Dropdown | Yes      | Only GMA sheets with Status = **Approved** appear   | Primary data source for the contract     |
+| GMA ID               | Auto-filled     | System   | Read-only                                           | Linked GMA reference                     |
+| Customer Name        | Auto-filled     | System   | Read-only; populated from GMA → Module 18           | Customer whose contract is being created |
+| Customer ID          | Auto-filled     | System   | Read-only                                           | Unique customer reference                |
+| No. of Sites         | Auto-filled     | System   | Read-only; count of sites in the GMA sheet          | Summary count                            |
+| Total Cost (₹)       | Auto-filled     | System   | Read-only; sum of all site costs from GMA           | Internal cost reference                  |
+| Total Sale Price (₹) | Auto-filled     | System   | Read-only; sum of all site proposed prices from GMA | Commercial price reference               |
+| Overall GM%          | Auto-filled     | System   | Read-only; auto-calculated from GMA                 | Gross Margin percentage                  |
+| Branch               | Auto-filled     | System   | Read-only; branch from GMA                          | Servicing branch                         |
+| Sites Grid           | Auto-filled     | System   | Read-only; all sites inherited from GMA             | Site ID, Name, Address, SQFT, Category   |
 
 > **Note:** Once a GMA is selected, all the above fields are auto-populated and **cannot be modified** in this form. To change the underlying commercial terms, the GMA itself must be revised and re-approved in Module 17.
 
@@ -9371,15 +10041,15 @@ A multi-section form to formalize a service agreement. Inherits approximately 80
 
 ## Section 2: Contract Terms Fields
 
-| Field              | Type      | Required    | Options / Validation                                                    | Notes                                            |
-| ------------------ | --------- | ----------- | ----------------------------------------------------------------------- | ------------------------------------------------ |
-| Contract Duration  | Dropdown  | Yes         | 6 Months / 1 Year / 2 Years / 3 Years / Custom                         | Determines the End Date auto-calculation         |
-| Start Date         | Date      | Yes         | Must be ≥ Today                                                         | Contract commencement                            |
-| End Date           | Date      | Yes         | Auto-calculated from Start Date + Duration; manual if Custom selected   | Must be > Start Date                             |
-| Total Sale Value (₹)| Currency | Yes         | Pre-filled from GMA Total Sale Price; editable                          | If modified, triggers re-approval workflow        |
-| Contract Reference | Text      | No          | Max 50 chars, alphanumeric                                              | Optional internal/legal reference number         |
-| Renewal Type       | Dropdown  | No          | Auto-Renew / Manual / Non-Renewable                                     | Determines behaviour at contract expiry          |
-| Legal Notes / SLA  | Text Area | No          | Max 1000 characters                                                     | Free-text for SLA terms, special conditions       |
+| Field                | Type      | Required | Options / Validation                                                  | Notes                                       |
+| -------------------- | --------- | -------- | --------------------------------------------------------------------- | ------------------------------------------- |
+| Contract Duration    | Dropdown  | Yes      | 6 Months / 1 Year / 2 Years / 3 Years / Custom                        | Determines the End Date auto-calculation    |
+| Start Date           | Date      | Yes      | Must be ≥ Today                                                       | Contract commencement                       |
+| End Date             | Date      | Yes      | Auto-calculated from Start Date + Duration; manual if Custom selected | Must be > Start Date                        |
+| Total Sale Value (₹) | Currency  | Yes      | Pre-filled from GMA Total Sale Price; editable                        | If modified, triggers re-approval workflow  |
+| Contract Reference   | Text      | No       | Max 50 chars, alphanumeric                                            | Optional internal/legal reference number    |
+| Renewal Type         | Dropdown  | No       | Auto-Renew / Manual / Non-Renewable                                   | Determines behaviour at contract expiry     |
+| Legal Notes / SLA    | Text Area | No       | Max 1000 characters                                                   | Free-text for SLA terms, special conditions |
 
 > **Note:** If **Total Sale Value** is modified from the GMA's original value (increase or decrease), the system flags this as a **commercial amendment** and may trigger a re-approval workflow based on the variance percentage. A variance > 10% requires Sales Manager approval.
 
@@ -9391,13 +10061,13 @@ This section breaks down the contract deliverables on a per-site basis. Each sit
 
 ### Site Information
 
-| Field              | Type           | Required | Options / Validation                                 | Notes                                        |
-| ------------------ | -------------- | -------- | ---------------------------------------------------- | -------------------------------------------- |
-| Site ID & Name     | Display        | System   | Read-only; inherited from GMA                        | Identifies the site block                    |
-| Address & Area     | Display        | System   | Read-only                                            | Context for the service                      |
-| Country            | Display        | System   | Read-only; inherited from GMA                        | Country of the site location                 |
-| Google Map URL     | Link           | System   | Read-only; inherited from GMA                        | Clickable Maps link for the site             |
-| Total Site Sale Value | Calculation   | System   | Sum of all 'Service Sale Values' inside this site    | Displayed at the footer of the site block    |
+| Field                 | Type        | Required | Options / Validation                              | Notes                                     |
+| --------------------- | ----------- | -------- | ------------------------------------------------- | ----------------------------------------- |
+| Site ID & Name        | Display     | System   | Read-only; inherited from GMA                     | Identifies the site block                 |
+| Address & Area        | Display     | System   | Read-only                                         | Context for the service                   |
+| Country               | Display     | System   | Read-only; inherited from GMA                     | Country of the site location              |
+| Google Map URL        | Link        | System   | Read-only; inherited from GMA                     | Clickable Maps link for the site          |
+| Total Site Sale Value | Calculation | System   | Sum of all 'Service Sale Values' inside this site | Displayed at the footer of the site block |
 
 ---
 
@@ -9405,37 +10075,40 @@ This section breaks down the contract deliverables on a per-site basis. Each sit
 
 > Users click **[+ ADD SERVICE TO THIS SITE]** to nest multiple service configurations within a single physical location block. Each service schedule is managed independently.
 
-| Field              | Type           | Required | Options / Validation                                 | Notes                                        |
-| ------------------ | -------------- | -------- | ---------------------------------------------------- | -------------------------------------------- |
-| Service Type       | Dropdown       | Yes      | Inherited from GMA; editable if multi-service        | The pest control treatment being rendered    |
-| Contract Mode      | Dropdown       | Yes      | Contract Base / One-Time                             | Determines frequency applicability           |
-| Frequency          | Dropdown       | Yes      | Weekly / Fortnightly / Monthly / Quarterly / Custom  | Inherits GMA frequency by default            |
-| Preferred Days     | Multi-checkbox | Yes      | Mon – Sun                                            | Sets the recurring schedule pattern          |
-| Preferred Time     | Dropdown       | Yes      | Morning (8–12) / Afternoon (12–5) / Evening (5–8)    | Time window for visits                       |
-| Assigned Team      | Search Dropdown| Yes      | Active technician teams from Module 8                | Team responsible for this specific treatment |
-| Service Sale Value (₹)| Currency       | Yes      | Inherited from GMA proposed price for this service   | Validated against Total Contract Value       |
+| Field                  | Type            | Required | Options / Validation                                | Notes                                        |
+| ---------------------- | --------------- | -------- | --------------------------------------------------- | -------------------------------------------- |
+| Service Type           | Dropdown        | Yes      | Inherited from GMA; editable if multi-service       | The pest control treatment being rendered    |
+| Contract Mode          | Dropdown        | Yes      | Contract Base / One-Time                            | Determines frequency applicability           |
+| Frequency              | Dropdown        | Yes      | Weekly / Fortnightly / Monthly / Quarterly / Custom | Inherits GMA frequency by default            |
+| Preferred Days         | Multi-checkbox  | Yes      | Mon – Sun                                           | Sets the recurring schedule pattern          |
+| Preferred Time         | Dropdown        | Yes      | Morning (8–12) / Afternoon (12–5) / Evening (5–8)   | Time window for visits                       |
+| Assigned Team          | Search Dropdown | Yes      | Active technician teams from Module 8               | Team responsible for this specific treatment |
+| Service Sale Value (₹) | Currency        | Yes      | Inherited from GMA proposed price for this service  | Validated against Total Contract Value       |
 
 ---
 
 ## Section 4: Payment & Commercial Terms Fields
 
 ### A. 100% Advance
-| Field | Type | Required | Options / Validation | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **Payment Due Date** | Date | Yes | Must be ≤ Start Date | Single payment date |
-| **Amount (₹)** | Currency | System | Full contract value | Read-only |
+
+| Field                | Type     | Required | Options / Validation | Notes               |
+| :------------------- | :------- | :------- | :------------------- | :------------------ |
+| **Payment Due Date** | Date     | Yes      | Must be ≤ Start Date | Single payment date |
+| **Amount (₹)**       | Currency | System   | Full contract value  | Read-only           |
 
 #### B. Periodic (Monthly / Quarterly / Half-Yearly)
-| Field | Type | Required | Options / Validation | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **Payment Grid** | Table | System | Auto-generated periods (e.g., Q1, Q2) | User can only view the dates/amounts |
-| **Invoicing Freq.** | Dropdown | Yes | Matches periodic schedule | e.g., Monthly invoicing |
+
+| Field               | Type     | Required | Options / Validation                  | Notes                                |
+| :------------------ | :------- | :------- | :------------------------------------ | :----------------------------------- |
+| **Payment Grid**    | Table    | System   | Auto-generated periods (e.g., Q1, Q2) | User can only view the dates/amounts |
+| **Invoicing Freq.** | Dropdown | Yes      | Matches periodic schedule             | e.g., Monthly invoicing              |
 
 #### C. Milestone / Custom-based
-| Field | Type | Required | Options / Validation | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **Payment Grid** | Table | Yes | Manual entry: Label, Description, Amount, Due Date | Must sum to Total Sale Value |
-| **Invoicing Freq.** | Dropdown | Yes | On Milestone / Service completion | |
+
+| Field               | Type     | Required | Options / Validation                               | Notes                        |
+| :------------------ | :------- | :------- | :------------------------------------------------- | :--------------------------- |
+| **Payment Grid**    | Table    | Yes      | Manual entry: Label, Description, Amount, Due Date | Must sum to Total Sale Value |
+| **Invoicing Freq.** | Dropdown | Yes      | On Milestone / Service completion                  |                              |
 
 > **Validation:** Sum of all payment grid amounts **must equal** the Total Sale Value. The system shows a validation error if there is a mismatch.
 
@@ -9443,41 +10116,41 @@ This section breaks down the contract deliverables on a per-site basis. Each sit
 
 ## Form Actions
 
-| Button               | Description                                                                      |
-| -------------------- | -------------------------------------------------------------------------------- |
-| **Save as Draft**    | Saves the contract without activating. Contract appears in list with Draft status.|
-| **Activate Contract**| Validates all sections, creates the contract as Active, and triggers initial SO generation for the first billing period.|
-| **Cancel**           | Discards all entries and returns to the Contract Master List.                     |
+| Button                | Description                                                                                                              |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| **Save as Draft**     | Saves the contract without activating. Contract appears in list with Draft status.                                       |
+| **Activate Contract** | Validates all sections, creates the contract as Active, and triggers initial SO generation for the first billing period. |
+| **Cancel**            | Discards all entries and returns to the Contract Master List.                                                            |
 
 ---
 
 ## Validation Rules
 
-| Validation                          | Rule                                                                  |
-| ----------------------------------- | --------------------------------------------------------------------- |
-| Approved GMA Required               | Must select a valid GMA with Status = Approved                        |
-| Start Date ≥ Today                  | Contract cannot start in the past                                     |
-| End Date > Start Date               | End date must be after start date                                     |
-| Total Sale Value > 0                | Contract value must be positive                                       |
-| Site Values Equal Total             | Sum of all 'Site Sale Values' must equal 'Total Sale Value'           |
-| Payment Sum = Total Value           | Sum of all payment amounts must equal the Total Sale Value             |
-| Technician Group Required           | Every site/service block must have an assigned Technician Team        |
-| Service Frequency Required          | Every AMC service block must have a valid service frequency           |
-| No Duplicate GMA Contract           | Same GMA cannot be used for more than one Active contract             |
-| Value Variance Check                | If Sale Value differs from GMA by > 10%, triggers re-approval alert   |
+| Validation                 | Rule                                                                |
+| -------------------------- | ------------------------------------------------------------------- |
+| Approved GMA Required      | Must select a valid GMA with Status = Approved                      |
+| Start Date ≥ Today         | Contract cannot start in the past                                   |
+| End Date > Start Date      | End date must be after start date                                   |
+| Total Sale Value > 0       | Contract value must be positive                                     |
+| Site Values Equal Total    | Sum of all 'Site Sale Values' must equal 'Total Sale Value'         |
+| Payment Sum = Total Value  | Sum of all payment amounts must equal the Total Sale Value          |
+| Technician Group Required  | Every site/service block must have an assigned Technician Team      |
+| Service Frequency Required | Every AMC service block must have a valid service frequency         |
+| No Duplicate GMA Contract  | Same GMA cannot be used for more than one Active contract           |
+| Value Variance Check       | If Sale Value differs from GMA by > 10%, triggers re-approval alert |
 
 ---
 
 ## System Behaviors on Save
 
-| Trigger                          | System Action                                                                     |
-| -------------------------------- | --------------------------------------------------------------------------------- |
-| Approved GMA selected            | Auto-populates all Section 1 fields from GMA + Module 18 customer data           |
-| Duration selected                | Auto-calculates End Date from Start Date + Duration selection                     |
-| Activate Contract clicked        | Status → Active; Contract ID generated; linked to customer in Module 18           |
-| First SO triggered               | System auto-generates the first Sales Order (Module 20) based on payment schedule|
-| GMA marked as consumed           | The selected GMA is flagged as "Contract Created" to prevent reuse               |
-| Contract activated               | Appears in Module 18 → Tab 2 (Contract Logs) for the linked customer            |
+| Trigger                   | System Action                                                                     |
+| ------------------------- | --------------------------------------------------------------------------------- |
+| Approved GMA selected     | Auto-populates all Section 1 fields from GMA + Module 18 customer data            |
+| Duration selected         | Auto-calculates End Date from Start Date + Duration selection                     |
+| Activate Contract clicked | Status → Active; Contract ID generated; linked to customer in Module 18           |
+| First SO triggered        | System auto-generates the first Sales Order (Module 20) based on payment schedule |
+| GMA marked as consumed    | The selected GMA is flagged as "Contract Created" to prevent reuse                |
+| Contract activated        | Appears in Module 18 → Tab 2 (Contract Logs) for the linked customer              |
 
 ---
 
@@ -9580,52 +10253,52 @@ Displays the complete contract configuration — commercial terms, payment sched
 
 ## Contract Terms Fields (Read-Only)
 
-| Field           | Type     | Description                                              |
-| --------------- | -------- | -------------------------------------------------------- |
-| Contract ID     | Display  | Unique contract identifier                               |
-| GMA Ref         | Display  | Linked GMA ID (Read-only source)                         |
-| Start Date      | Date     | Contract commencement                                    |
-| End Date        | Date     | Contract expiry                                          |
-| Duration        | Display  | e.g., 1 Year, 6 Months                                  |
-| No. of Sites    | Display  | Total physical sites covered                            |
-| Total Value (₹) | Currency | Total agreed sale value                                  |
-| Total Cost (₹)  | Currency | Estimated internal cost from GMA                        |
-| Overall GM%     | Display  | Gross margin percentage                                  |
-| Renewal Type    | Display  | Auto-Renew / Manual / Non-Renewable                      |
-| Contract Ref    | Display  | Optional internal reference number                       |
+| Field           | Type     | Description                         |
+| --------------- | -------- | ----------------------------------- |
+| Contract ID     | Display  | Unique contract identifier          |
+| GMA Ref         | Display  | Linked GMA ID (Read-only source)    |
+| Start Date      | Date     | Contract commencement               |
+| End Date        | Date     | Contract expiry                     |
+| Duration        | Display  | e.g., 1 Year, 6 Months              |
+| No. of Sites    | Display  | Total physical sites covered        |
+| Total Value (₹) | Currency | Total agreed sale value             |
+| Total Cost (₹)  | Currency | Estimated internal cost from GMA    |
+| Overall GM%     | Display  | Gross margin percentage             |
+| Renewal Type    | Display  | Auto-Renew / Manual / Non-Renewable |
+| Contract Ref    | Display  | Optional internal reference number  |
 
 ---
 
 ## Payment Schedule Fields (Read-Only)
 
-| Field            | Type     | Description                                             |
-| ---------------- | -------- | ------------------------------------------------------- |
-| Payment Type     | Display  | 100% Advance / Monthly / Quarterly / Milestone / Custom |
-| Invoicing Freq.  | Display  | Monthly / Quarterly / Annually / Service Completion     |
-| Period / Label   | Display  | Quarter / Month / Milestone identifier                  |
-| Duration         | Display  | Date range for the period                               |
-| Amount (₹)       | Currency | Installment amount                                      |
-| Due Date         | Date     | Payment due date                                        |
-| Payment Status   | Badge    | Paid / Due / Overdue / Upcoming                          |
-| Export Log       | Button   | Downloads full execution & billing log for this contract (Excel) |
+| Field           | Type     | Description                                                      |
+| --------------- | -------- | ---------------------------------------------------------------- |
+| Payment Type    | Display  | 100% Advance / Monthly / Quarterly / Milestone / Custom          |
+| Invoicing Freq. | Display  | Monthly / Quarterly / Annually / Service Completion              |
+| Period / Label  | Display  | Quarter / Month / Milestone identifier                           |
+| Duration        | Display  | Date range for the period                                        |
+| Amount (₹)      | Currency | Installment amount                                               |
+| Due Date        | Date     | Payment due date                                                 |
+| Payment Status  | Badge    | Paid / Due / Overdue / Upcoming                                  |
+| Export Log      | Button   | Downloads full execution & billing log for this contract (Excel) |
 
 ---
 
 ## Scope of Work (Sites & Services) Fields (Read-Only)
 
-| Field            | Type     | Description                                              |
-| ---------------- | -------- | -------------------------------------------------------- |
-| Site ID & Name   | Display  | Unique site reference and friendly label                 |
-| Address & Area   | Display  | Physical address and SQFT                                |
-| Country          | Display  | Country of the site (from GMA)                           |
-| Google Map URL   | Link     | Clickable Google Maps link (from GMA)                    |
-| Site Sale/Cost/GM| Display  | Financial summary rolled up for the entire site          |
-| Service Name     | Display  | Pest / service category mapped under the site            |
-| Contract Mode    | Display  | Contract Base / One-Time                                 |
-| Service Sale Val | Currency | Assigned revenue value for this specific service line    |
-| Frequency        | Display  | Service visit frequency (e.g. Weekly)                    |
-| Technician Group | Display  | Assigned team from Module 8                              |
-| Schedule Details | Display  | Preferred days and time slot for this recurring service  |
+| Field             | Type     | Description                                             |
+| ----------------- | -------- | ------------------------------------------------------- |
+| Site ID & Name    | Display  | Unique site reference and friendly label                |
+| Address & Area    | Display  | Physical address and SQFT                               |
+| Country           | Display  | Country of the site (from GMA)                          |
+| Google Map URL    | Link     | Clickable Google Maps link (from GMA)                   |
+| Site Sale/Cost/GM | Display  | Financial summary rolled up for the entire site         |
+| Service Name      | Display  | Pest / service category mapped under the site           |
+| Contract Mode     | Display  | Contract Base / One-Time                                |
+| Service Sale Val  | Currency | Assigned revenue value for this specific service line   |
+| Frequency         | Display  | Service visit frequency (e.g. Weekly)                   |
+| Technician Group  | Display  | Assigned team from Module 8                             |
+| Schedule Details  | Display  | Preferred days and time slot for this recurring service |
 
 > **Note:** All data in this tab is derived from the **GMA sheet (Module 17)** and the **contract creation form (19.2)**. Modifications can only be made via the **Edit / Amend** form (19.4).
 
@@ -9671,26 +10344,26 @@ A chronological grid showing all Sales Orders linked to this contract — both a
 
 ## SO Schedule Grid Fields
 
-| Field          | Type    | Description                                                            |
-| -------------- | ------- | ---------------------------------------------------------------------- |
-| Export Action  | Button  | Downloads full execution & billing log for this contract (Excel)        |
-| SO Number      | Link    | Sales Order ID; clickable — navigates to Module 20 SO Detail           |
-| SO Date        | Date    | Date the SO was generated                                              |
-| Period         | Text    | Billing period / milestone label this SO covers                        |
-| SO Value (₹)   | Currency| Value of this Sales Order                                              |
-| SO Status      | Badge   | Draft / Open / Fulfilled / Billed / Cancelled                          |
-| Service Status | Badge   | Scheduled / In Progress / Completed / Pending                          |
+| Field          | Type     | Description                                                      |
+| -------------- | -------- | ---------------------------------------------------------------- |
+| Export Action  | Button   | Downloads full execution & billing log for this contract (Excel) |
+| SO Number      | Link     | Sales Order ID; clickable — navigates to Module 20 SO Detail     |
+| SO Date        | Date     | Date the SO was generated                                        |
+| Period         | Text     | Billing period / milestone label this SO covers                  |
+| SO Value (₹)   | Currency | Value of this Sales Order                                        |
+| SO Status      | Badge    | Draft / Open / Fulfilled / Billed / Cancelled                    |
+| Service Status | Badge    | Scheduled / In Progress / Completed / Pending                    |
 
 ---
 
 ## Billing Summary Fields (Auto-Calculated)
 
-| Field                | Type     | Description                                          |
-| -------------------- | -------- | ---------------------------------------------------- |
-| Total Contract Value | Currency | Total agreed sale value from Section 2               |
-| Total SO Value Raised| Currency | Sum of all generated SO values                       |
-| Remaining to Invoice | Currency | Contract Value – Total SO Value Raised               |
-| Fulfillment Progress | Progress | Percentage bar of SOs Fulfilled vs. Total expected   |
+| Field                 | Type     | Description                                        |
+| --------------------- | -------- | -------------------------------------------------- |
+| Total Contract Value  | Currency | Total agreed sale value from Section 2             |
+| Total SO Value Raised | Currency | Sum of all generated SO values                     |
+| Remaining to Invoice  | Currency | Contract Value – Total SO Value Raised             |
+| Fulfillment Progress  | Progress | Percentage bar of SOs Fulfilled vs. Total expected |
 
 > **Note:** Sales Orders are auto-generated by the system based on the **Payment Schedule** configured in Section 4 of the contract. Manual SOs can also be created from **Module 20** and linked to this contract. The billing log provides a single view to reconcile what was agreed vs. what has been invoiced.
 
@@ -9798,44 +10471,45 @@ An interface to handle mid-cycle changes to an active contract. Pre-filled with 
 ## Amendment Section Details
 
 ### Section 4: Amend Payment Schedule
-*   **Recalculation Trigger**: This section becomes mandatory if the **Revised Sale Value** or **End Date** is modified.
-*   **Historical Data**: Installments already marked as **Paid** (e.g., Q1 in the ASCII above) are locked. Only future/unpaid installments can be revised.
-*   **Balance Validation**: The sum of all revised installments plus already paid ones must exactly equal the `Revised Sale Value`.
+
+- **Recalculation Trigger**: This section becomes mandatory if the **Revised Sale Value** or **End Date** is modified.
+- **Historical Data**: Installments already marked as **Paid** (e.g., Q1 in the ASCII above) are locked. Only future/unpaid installments can be revised.
+- **Balance Validation**: The sum of all revised installments plus already paid ones must exactly equal the `Revised Sale Value`.
 
 ---
 
 ## Editable vs. Locked Fields
 
-| Field                   | Editable? | Reason for Lock / Edit                                                                 |
-| ----------------------- | --------- | -------------------------------------------------------------------------------------- |
-| Contract ID             | ❌ Locked  | System-generated; acts as a unique transaction identifier for the entire lifecycle.     |
-| Customer / GMA Ref      | ❌ Locked  | The contract is legally bound to the specific customer and approved GMA source document. |
-| Original Value          | ❌ Locked  | Kept as a baseline reference to calculate variance and trigger approval workflows.      |
-| Start Date              | ❌ Locked  | Contract has already commenced; backdating or shifting start date is not permitted.   |
-| Renewal Type            | ✅ Yes     | Renewal strategy can be adjusted anytime before contract expiry.                        |
-| End Date                | ✅ Yes     | Allows for contract extensions or mid-cycle adjustments to the duration.                |
-| Service Selection       | ✅ Yes     | Dynamic scope management; allows upgrading or downgrading services per site.            |
-| Add/Remove Site         | ✅ Yes     | Accommodates physical expansion or decommissioning of customer locations.             |
-| Revised Sale Value      | ✅ Yes     | Mandatory for financial amendments; must stay positive and align with total scope.      |
-| Service Frequency       | ✅ Yes     | Operational flexibility to change visit cadence (e.g., Monthly to Weekly).              |
-| Service Days / Time     | ✅ Yes     | Client-driven schedule adjustments for technician visits.                              |
-| Technician Group        | ✅ Yes     | Resource management; allows reassignment of teams for better service delivery.         |
-| Payment Schedule        | ✅ Yes     | Must be recalculated if total contract value or duration changes.                      |
-| Amendment Reason        | ✅ Required| Essential for audit trail and tracking the "Why" behind legal/financial changes.       |
+| Field               | Editable?   | Reason for Lock / Edit                                                                   |
+| ------------------- | ----------- | ---------------------------------------------------------------------------------------- |
+| Contract ID         | ❌ Locked   | System-generated; acts as a unique transaction identifier for the entire lifecycle.      |
+| Customer / GMA Ref  | ❌ Locked   | The contract is legally bound to the specific customer and approved GMA source document. |
+| Original Value      | ❌ Locked   | Kept as a baseline reference to calculate variance and trigger approval workflows.       |
+| Start Date          | ❌ Locked   | Contract has already commenced; backdating or shifting start date is not permitted.      |
+| Renewal Type        | ✅ Yes      | Renewal strategy can be adjusted anytime before contract expiry.                         |
+| End Date            | ✅ Yes      | Allows for contract extensions or mid-cycle adjustments to the duration.                 |
+| Service Selection   | ✅ Yes      | Dynamic scope management; allows upgrading or downgrading services per site.             |
+| Add/Remove Site     | ✅ Yes      | Accommodates physical expansion or decommissioning of customer locations.                |
+| Revised Sale Value  | ✅ Yes      | Mandatory for financial amendments; must stay positive and align with total scope.       |
+| Service Frequency   | ✅ Yes      | Operational flexibility to change visit cadence (e.g., Monthly to Weekly).               |
+| Service Days / Time | ✅ Yes      | Client-driven schedule adjustments for technician visits.                                |
+| Technician Group    | ✅ Yes      | Resource management; allows reassignment of teams for better service delivery.           |
+| Payment Schedule    | ✅ Yes      | Must be recalculated if total contract value or duration changes.                        |
+| Amendment Reason    | ✅ Required | Essential for audit trail and tracking the "Why" behind legal/financial changes.         |
 
 ---
 
 ## Validation Rules
 
-| Validation                         | Rule                                                              |
-| ---------------------------------- | ----------------------------------------------------------------- |
-| End Date > Today                   | Cannot set End Date to past or today                              |
-| Revised Value > 0                  | Sum of all service sale values must be positive                   |
-| Value Variance Check               | If |Revised – Original| > 10% of Original, triggers re-approval  |
-| Site / Service Selection           | Must have at least one active site and service                    |
-| Service Sale Value Alignment        | Individual service values must sum to the revised contract total  |
-| Amendment Reason Required          | Must select a reason from the dropdown                            |
-| Remarks Required (if Other)        | Free-text remark mandatory for "Other" reason                     |
+| Validation                   | Rule                                                             |
+| ---------------------------- | ---------------------------------------------------------------- | ------------------ | --------------------------------------- |
+| End Date > Today             | Cannot set End Date to past or today                             |
+| Revised Value > 0            | Sum of all service sale values must be positive                  |
+| Value Variance Check         | If                                                               | Revised – Original | > 10% of Original, triggers re-approval |
+| Site / Service Selection     | Must have at least one active site and service                   |
+| Service Sale Value Alignment | Individual service values must sum to the revised contract total |
+| Amendment Reason Required    | Must select a reason from the dropdown                           |
+| Remarks Required (if Other)  | Free-text remark mandatory for "Other" reason                    |
 
 ---
 
@@ -9843,22 +10517,22 @@ An interface to handle mid-cycle changes to an active contract. Pre-filled with 
 
 Every amendment triggers an **audit log entry** recording:
 
-| Log Field         | Value                                             |
-| ----------------- | ------------------------------------------------- |
-| Amended By        | Logged-in user ID and name                        |
-| Amended On        | Timestamp                                         |
+| Log Field         | Value                                                   |
+| ----------------- | ------------------------------------------------------- |
+| Amended By        | Logged-in user ID and name                              |
+| Amended On        | Timestamp                                               |
 | Amendment Type    | Selected reason (Site Addition, Value Adjustment, etc.) |
-| Fields Changed    | List of changed fields with old → new values      |
-| Approval Required | Yes / No (based on variance threshold)            |
+| Fields Changed    | List of changed fields with old → new values            |
+| Approval Required | Yes / No (based on variance threshold)                  |
 
 ---
 
 ## Form Actions
 
-| Button              | Description                                                                     |
-| ------------------- | ------------------------------------------------------------------------------- |
-| **Save Amendment**  | Validates changes, saves the amendment, records audit log. Triggers re-approval if value variance > 10%. |
-| **Cancel**          | Discards changes and returns to the Contract Detail view.                       |
+| Button             | Description                                                                                              |
+| ------------------ | -------------------------------------------------------------------------------------------------------- |
+| **Save Amendment** | Validates changes, saves the amendment, records audit log. Triggers re-approval if value variance > 10%. |
+| **Cancel**         | Discards changes and returns to the Contract Detail view.                                                |
 
 ---
 
@@ -9917,37 +10591,37 @@ An early closure mechanism for terminating an active contract before its schedul
 
 ## Termination Fields
 
-| Field                    | Type     | Required | Options / Validation                                                          |
-| ------------------------ | -------- | -------- | ----------------------------------------------------------------------------- |
-| Effective Closure Date   | Date     | Yes      | Must be ≥ Today and ≤ Original End Date                                       |
-| Reason Code              | Dropdown | Yes      | Customer Relocated / Payment Default / Service Dissatisfaction / Mutual Agreement / Business Closure / Other |
-| Additional Remarks       | Text Area| No       | Max 500 characters; required if Reason = Other                                |
+| Field                  | Type      | Required | Options / Validation                                                                                         |
+| ---------------------- | --------- | -------- | ------------------------------------------------------------------------------------------------------------ |
+| Effective Closure Date | Date      | Yes      | Must be ≥ Today and ≤ Original End Date                                                                      |
+| Reason Code            | Dropdown  | Yes      | Customer Relocated / Payment Default / Service Dissatisfaction / Mutual Agreement / Business Closure / Other |
+| Additional Remarks     | Text Area | No       | Max 500 characters; required if Reason = Other                                                               |
 
 ---
 
 ## Validation Rules
 
-| Validation                    | Rule                                                                   |
-| ----------------------------- | ---------------------------------------------------------------------- |
-| Closure Date ≥ Today          | Cannot backdate the termination                                        |
-| Closure Date ≤ End Date       | Cannot terminate beyond the original contract end                      |
-| Reason Code Required          | Must select a reason from the dropdown                                 |
-| Remarks (if Other)            | Mandatory free-text when "Other" is selected                           |
-| Open SO Resolution            | System warns about open SOs; user must acknowledge or resolve          |
+| Validation              | Rule                                                          |
+| ----------------------- | ------------------------------------------------------------- |
+| Closure Date ≥ Today    | Cannot backdate the termination                               |
+| Closure Date ≤ End Date | Cannot terminate beyond the original contract end             |
+| Reason Code Required    | Must select a reason from the dropdown                        |
+| Remarks (if Other)      | Mandatory free-text when "Other" is selected                  |
+| Open SO Resolution      | System warns about open SOs; user must acknowledge or resolve |
 
 ---
 
 ## System Behaviour on Termination
 
-| Trigger                        | System Action                                                              |
-| ------------------------------ | -------------------------------------------------------------------------- |
-| Confirm Termination clicked    | Contract status set to **Terminated**                                       |
-| Effective Closure Date applied | All future scheduled SOs after this date are cancelled or prevented         |
-| Open SOs                       | Existing Open SOs can be auto-cancelled or left for manual resolution       |
-| Service scheduling halted      | Operations notified to stop dispatching for this contract's sites           |
-| Future SO generation stopped   | System cron no longer creates SOs for this contract                         |
-| Audit log                      | Termination event logged with Reason, Closure Date, user, and timestamp     |
-| Module 18 updated              | Contract status change reflected in Customer's Tab 2 (Contract Logs)        |
+| Trigger                        | System Action                                                           |
+| ------------------------------ | ----------------------------------------------------------------------- |
+| Confirm Termination clicked    | Contract status set to **Terminated**                                   |
+| Effective Closure Date applied | All future scheduled SOs after this date are cancelled or prevented     |
+| Open SOs                       | Existing Open SOs can be auto-cancelled or left for manual resolution   |
+| Service scheduling halted      | Operations notified to stop dispatching for this contract's sites       |
+| Future SO generation stopped   | System cron no longer creates SOs for this contract                     |
+| Audit log                      | Termination event logged with Reason, Closure Date, user, and timestamp |
+| Module 18 updated              | Contract status change reflected in Customer's Tab 2 (Contract Logs)    |
 
 ---
 
@@ -9955,13 +10629,13 @@ An early closure mechanism for terminating an active contract before its schedul
 
 ## RBAC – Role-Based Access Control
 
-| Role              | List View (19.1)         | Create Contract (19.2) | View Details (19.3) | Edit / Amend (19.4) | Terminate (19.5) |
-| ----------------- | ------------------------ | ---------------------- | ------------------- | ------------------- | ---------------- |
-| Sales Person      | View (own branch)        | ✅                      | ✅                   | ❌                   | ❌                |
-| Sales Manager     | View (own branch / team) | ✅                      | ✅                   | ✅                   | ✅                |
-| Branch Manager    | View (own branch)        | ✅                      | ✅                   | ✅                   | ✅                |
-| Head Ops / Admin  | View (all branches)      | ✅                      | ✅                   | ✅                   | ✅                |
-| Finance Auditor   | View (all – read-only)   | ❌                      | ✅                   | ❌                   | ❌                |
+| Role             | List View (19.1)         | Create Contract (19.2) | View Details (19.3) | Edit / Amend (19.4) | Terminate (19.5) |
+| ---------------- | ------------------------ | ---------------------- | ------------------- | ------------------- | ---------------- |
+| Sales Person     | View (own branch)        | ✅                     | ✅                  | ❌                  | ❌               |
+| Sales Manager    | View (own branch / team) | ✅                     | ✅                  | ✅                  | ✅               |
+| Branch Manager   | View (own branch)        | ✅                     | ✅                  | ✅                  | ✅               |
+| Head Ops / Admin | View (all branches)      | ✅                     | ✅                  | ✅                  | ✅               |
+| Finance Auditor  | View (all – read-only)   | ❌                     | ✅                  | ❌                  | ❌               |
 
 ---
 
@@ -10049,18 +10723,16 @@ MODULE 19: CONTRACT MANAGEMENT
 
 ## Data Flow Table
 
-| Source Module  | Data Provided                                                 | Used In (Contract Mgmt)                                |
-| -------------- | ------------------------------------------------------------- | ------------------------------------------------------ |
-| **Module 17**  | Approved GMA (Customer, Sites, Services, Costs, GM%, Branch)  | Section 1: Auto-population of all GMA-sourced fields   |
-| **Module 18**  | Customer ID, Name, Billing Address, Sites                     | Section 1: Customer reference; Section 4: Add Site pool|
-| **Module 7**   | Branch list (Active branches)                                 | Branch reference from GMA                              |
-| **Module 8**   | Technician Teams / Groups                                     | Section 3: Assigned Technician Group dropdown          |
-| **Module 19**  | Contract ID, Terms, Payment Schedule, Sites                   | Module 20: Source for auto-SO generation               |
-| **Module 20**  | Sales Orders linked to this contract                          | 19.3 Tab 2: SO Schedule (Billing Log)                  |
-
+| Source Module | Data Provided                                                | Used In (Contract Mgmt)                                 |
+| ------------- | ------------------------------------------------------------ | ------------------------------------------------------- |
+| **Module 17** | Approved GMA (Customer, Sites, Services, Costs, GM%, Branch) | Section 1: Auto-population of all GMA-sourced fields    |
+| **Module 18** | Customer ID, Name, Billing Address, Sites                    | Section 1: Customer reference; Section 4: Add Site pool |
+| **Module 7**  | Branch list (Active branches)                                | Branch reference from GMA                               |
+| **Module 8**  | Technician Teams / Groups                                    | Section 3: Assigned Technician Group dropdown           |
+| **Module 19** | Contract ID, Terms, Payment Schedule, Sites                  | Module 20: Source for auto-SO generation                |
+| **Module 20** | Sales Orders linked to this contract                         | 19.3 Tab 2: SO Schedule (Billing Log)                   |
 
 =================================================================================
-
 
 # 🎯 MODULE 20: SALES ORDER (SO) MANAGEMENT
 
@@ -10106,13 +10778,13 @@ A comprehensive dashboard displaying all Sales Orders (execution mandates) in th
 │                                                                              │
 │  SALES ORDER TABLE                                                           │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
-│  │SO Number    │Customer        │Order Type     │Total Value│SO Date  │Status││
-│  │─────────────┼────────────────┼───────────────┼───────────┼─────────┼──────││
-│  │SO-2026-0112 │ABC Corporation │Svc Contract   │₹ 51,000   │01 Apr 26│✅ Open││
-│  │SO-2026-0087 │ABC Corporation │Svc Contract   │₹ 51,000   │01 Jan 26│✅ Fulf││
-│  │SO-2026-0043 │XYZ Hotel       │One-Time Svc   │₹ 8,500    │15 Jan 26│✅ Fulf││
-│  │SO-2026-0038 │PQR Foods       │Product Sale   │₹ 12,200   │10 Jan 26│💰 Blld││
-│  │SO-2026-0022 │DEF Mall        │Svc Contract   │₹ 15,000   │01 Jan 26│❌ Cncl││
+│  │SO Number    │Customer        │Type     │Sites│Total Value│SO Date  │Status││
+│  │─────────────┼────────────────┼─────────┼─────┼───────────┼─────────┼──────││
+│  │SO-2026-0112 │ABC Corporation │Contract │ 3   │₹ 51,000   │01 Apr 26│✅ Open││
+│  │SO-2026-0087 │ABC Corporation │Contract │ 3   │₹ 51,000   │01 Jan 26│✅ Fulf││
+│  │SO-2026-0043 │XYZ Hotel       │One-Time │ 1   │₹ 8,500    │15 Jan 26│✅ Fulf││
+│  │SO-2026-0038 │PQR Foods       │Product  │ N/A │₹ 12,200   │10 Jan 26│💰 Blld││
+│  │SO-2026-0022 │DEF Mall        │Contract │ 2   │₹ 15,000   │01 Jan 26│❌ Cncl││
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
@@ -10136,32 +10808,33 @@ A comprehensive dashboard displaying all Sales Orders (execution mandates) in th
 
 ## Table View Fields
 
-| Field       | Type         | Description                                                   |
-| ----------- | ------------ | ------------------------------------------------------------- |
-| SO Number   | Text (Auto)  | System-generated unique ID (e.g., SO-2026-0112)               |
-| Customer Name   | Text     | Customer name from Module 18                                  |
-| Branch Name | Text         | Branch name from Module 7                                     |
-| Order Type  | Badge        | Service Contract / One-Time Service / Product Sale                 |
-| Total Value | Currency     | Total SO amount including taxes (₹)                           |
-| SO Date     | Date         | Date the SO was generated                                     |
-| Status      | Badge        | Draft / Open / Fulfilled / Billed / Cancelled                 |
-| Actions     | Button Group | [View] [Edit] [Download PDF] [Cancel]                                        |
+| Field         | Type         | Description                                        |
+| ------------- | ------------ | -------------------------------------------------- |
+| SO Number     | Text (Auto)  | System-generated unique ID (e.g., SO-2026-0112)    |
+| Customer Name | Text         | Customer name from Module 18                       |
+| Branch Name   | Text         | Branch name from Module 7                          |
+| Order Type    | Badge        | Service Contract / One-Time Service / Product Sale |
+| Total Value   | Currency     | Total SO amount including taxes (₹)                |
+| SO Date       | Date         | Date the SO was generated                          |
+| Status        | Badge        | Draft / Open / Fulfilled / Billed / Cancelled      |
+| Actions       | Button Group | [View] [Edit] [Download PDF] [Cancel]              |
 
 ---
 
 ## Filters
 
-| Filter     | Type         | Options                                                       |
-| ---------- | ------------ | ------------------------------------------------------------- |
-| Order Type | Multi-select | Service Contract / One-Time Service / Product Sale                 |
-| Status     | Multi-select | Draft / Open / Fulfilled / Billed / Cancelled                 |
-| Date Range | Date Range   | From – To (SO creation date)                                  |
+| Filter     | Type         | Options                                            |
+| ---------- | ------------ | -------------------------------------------------- |
+| Order Type | Multi-select | Service Contract / One-Time Service / Product Sale |
+| Status     | Multi-select | Draft / Open / Fulfilled / Billed / Cancelled      |
+| Date Range | Date Range   | From – To (SO creation date)                       |
 
 ---
 
 ## Search
 
 Searchable by:
+
 - SO Number
 - Customer Name
 - Branch Name
@@ -10170,19 +10843,19 @@ Searchable by:
 
 ## Actions (Table Row)
 
-| Action     | Condition                                       | Description                                           |
-| ---------- | ----------------------------------------------- | ----------------------------------------------------- |
-| **View**   | All statuses                                    | Opens the SO Detail dashboard (Screen 20.3)           |
-| **Edit**   | Status = Draft or Open; no Job Cards generated  | Opens the Edit SO form (Screen 20.4)                  |
-| **Cancel** | Status = Draft or Open; no execution begun      | Opens the Cancellation dialog (Screen 20.5)           |
+| Action     | Condition                                      | Description                                 |
+| ---------- | ---------------------------------------------- | ------------------------------------------- |
+| **View**   | All statuses                                   | Opens the SO Detail dashboard (Screen 20.3) |
+| **Edit**   | Status = Draft or Open; no Job Cards generated | Opens the Edit SO form (Screen 20.4)        |
+| **Cancel** | Status = Draft or Open; no execution begun     | Opens the Cancellation dialog (Screen 20.5) |
 
 ---
 
 ## Form Actions
 
-| Action                     | Description                                               |
-| -------------------------- | --------------------------------------------------------- |
-| **+ Generate Sales Order** | Opens the **Add / Generate SO Form** (Screen 20.2)        |
+| Action                     | Description                                        |
+| -------------------------- | -------------------------------------------------- |
+| **+ Generate Sales Order** | Opens the **Add / Generate SO Form** (Screen 20.2) |
 
 ---
 
@@ -10238,38 +10911,90 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 │                                                                              │
 │  SECTION 2: DYNAMIC SCOPE & EXECUTION (SITE-WISE)                            │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  ━━━ FOR SERVICES (Contract / One-Time) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ │
-│  │  (Auto-fetched from source OR manually added for standalone)            │ │
+│  │  ━━━ IF ORDER TYPE = SERVICE CONTRACT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ │
+│  │  (All Sites, Services, and Chemicals are auto-fetched from Contract)    │ │
 │  │                                                                         │ │
-│  │  SITE 1: Head Office (SITE-00312)                                       │ │
+│  │  SITE 1: Head Office (SITE-00312)                       [Remove Site]   │ │
 │  │  ┌───────────────────────────────────────────────────────────────────┐  │ │
-│  │  │ SERVICE 1: Cockroach Treatment                                    │  │ │
+│  │  │ Address: [Andheri East, Mumbai                     ]              │  │ │
+│  │  │ City: [Mumbai]        State: [▼ Maharashtra ▼]                    │  │ │
+│  │  │ Country: [▼ India ▼]                                              │  │ │
+│  │  │ Google Map URL: [📍 Link                           ]              │  │ │
+│  │  │ Category: [▼ Commercial ▼]                                        │  │ │
+│  │  │ Sub-Category: [▼ Internal ▼]                                      │  │ │
+│  │  │ Area (sqft): [3,500]                                              │  │ │
+│  │  │ Contact Person*: [Rajesh          ] Mobile*: [+919876543210]      │  │ │
+│  │  │ (Site & Contact fields auto-fetch but remain editable for dispatch)│  │ │
+│  │  │                                                                   │  │ │
+│  │  │ SERVICE 1: Cockroach Treatment                     (Read-Only)    │  │ │
+│  │  │ ┌────────┬─────────┬────────┬───────┬───────┬─────────┬─────────┐ │  │ │
+│  │  │ │Visits  │UnitPr(₹)│SQFT    │HSN    │Tax %  │Tax Amt  │Total(₹) │ │  │ │
+│  │  │ ├────────┼─────────┼────────┼───────┼───────┼─────────┼─────────┤ │  │ │
+│  │  │ │[ 12 ]  │ 3,250   │3,500   │996490 │18%    │ 7,020   │ 46,020  │ │  │ │
+│  │  │ └────────┴─────────┴────────┴───────┴───────┴─────────┴─────────┘ │  │ │
+│  │  │ (Visits are editable; Unit Price is fixed from Contract)          │  │ │
+│  │  │                                                                   │  │ │
+│  │  │  ─── CONSUMABLE CHEMICALS (Read-only from Contract) ───────────── │  │ │
+│  │  │  ┌────────────┬─────┬────┬────────┬──────────────┬──────┬───────┐│ │
+│  │  │  │Product Name│Code │UOM │Coverage│ Req. Qty     │Price │Cost   ││ │
+│  │  │  ├────────────┼─────┼────┼────────┼──────────────┼──────┼───────┤│ │
+│  │  │  │Alpha Cyper.│P-001│ ml │ 1200   │ 120 ml       │₹4.20 │₹504   ││ │
+│  │  │  └────────────┴─────┴────┴────────┴──────────────┴──────┴───────┘│ │
+│  │  └───────────────────────────────────────────────────────────────────┘  │ │
+│  │                                                                         │ │
+│  │  💡 [DEV NOTE FOR BEGINNERS - MULTI-SITE LOOP]:                       │ │
+│  │  If the Contract covers multiple sites, the above UI block will         │ │
+│  │  dynamically loop to render SITE 2, SITE 3, etc. below each other.      │ │
+│  │  Each site will auto-load its respective Address, Services, and         │ │
+│  │  Chemical configurations inherited from the Contract.                   │ │
+│  │                                                                         │ │
+│  │  ━━━ IF ORDER TYPE = ONE-TIME SERVICE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ │
+│  │  (If Source = GMA/Quotation: Auto-fetched like Contract)                │ │
+│  │  (If Source = Standalone: All fields must be manually added below)      │ │
+│  │                                                                         │ │
+│  │  SITE 1: [Search / Enter Site Name]                     [Remove Site]   │ │
+│  │  ┌───────────────────────────────────────────────────────────────────┐  │ │
+│  │  │ Address: [________________________________]                       │  │ │
+│  │  │ City:    [________________]  State: [▼ Select State ▼]            │  │ │
+│  │  │ Country: [▼ Select Country ▼] (Default: India)                     │  │ │
+│  │  │ Google Map URL: [________________________________]                │  │ │
+│  │  │ Category*:     [▼ Residential / Commercial / Industrial ▼]        │  │ │
+│  │  │ Sub-Category*: [▼ Internal / External ▼]                          │  │ │
+│  │  │ Area (sqft)*: [________]                                          │  │ │
+│  │  │ Contact Person*: [________________] Mobile*: [+91__________]      │  │ │
+│  │  │                                                                   │  │ │
+│  │  │ SERVICE 1: [▼ Select Service / Cockroach Treatment ▼]             │  │ │
 │  │  │ ┌────────┬──────────┬────────┬───────┬───────┬─────────┬────────┐ │  │ │
 │  │  │ │Visits  │Unit Price│SQFT    │HSN    │Tax %  │Tax Amt  │Total   │ │  │ │
 │  │  │ ├────────┼──────────┼────────┼───────┼───────┼─────────┼────────┤ │  │ │
-│  │  │ │[ 12 ]  │₹ 3,250   │3,500   │996490 │18%    │₹ 7,020  │₹ 46,020│ │  │ │
+│  │  │ │[ 1  ]  │[₹ 3,250] │[3,500] │996490 │18%    │₹ 585    │₹ 3,835 │ │  │ │
 │  │  │ └────────┴──────────┴────────┴───────┴───────┴─────────┴────────┘ │  │ │
-│  │  │                                                                  │  │ │
-│  │  │  ─── CONSUMABLE CHEMICALS (Read-only from Source) ─────────────  │  │ │
-│  │  │  ┌────────────────────┬────────┬──────┬─────────┐              │  │ │
-│  │  │  │ Chemical Name      │ HSN    │ UOM  │ Req Qty │              │  │ │
-│  │  │  ├────────────────────┼────────┼──────┼─────────┤              │  │ │
-│  │  │  │ Alpha Cyper.       │ 3808   │ ml   │ 120 ml  │              │  │ │
-│  │  │  │ Fipronil Gel       │ 3808   │ tube │ 2 tubes │              │  │ │
-│  │  │  └────────────────────┴────────┴──────┴─────────┘              │  │ │
-│  │  │                                                                  │  │ │
+│  │  │  ─── CONSUMABLE CHEMICALS (Manual Entry for Standalone) ───────── │ │
+│  │  │  (Auto-fetched from Module 12 based on selected pest/service type)   │ │
+│  │  │  ┌────────────┬─────┬────┬────────┬──────────────┬──────┬───────┐│ │
+│  │  │  │Product Name│Code │UOM │Coverage│ Req. Qty     │Price │Cost   ││ │
+│  │  │  ├────────────┼─────┼────┼────────┼──────────────┼──────┼───────┤│ │
+│  │  │  │Alpha Cyper.│P-001│ ml │ 1200   │ [120] ml     │₹4.20 │₹504   ││ │
+│  │  │  ├────────────┼─────┼────┼────────┼──────────────┼──────┼───────┤│ │
+│  │  │  │Fipronil Gel│P-003│tube│ 1200   │ [2] tubes    │₹220  │₹440   ││ │
+│  │  │  ├────────────┴─────┴────┴────────┴──────────────┴──────┴───────┤│ │
+│  │  │  │ [+ Add Chemical]                                             ││ │
+│  │  │  └──────────────────────────────────────────────────────────────┘│ │
+│  │  │                                                                  │ │
 │  │  │ [Remove Service]                                                 │  │ │
 │  │  └───────────────────────────────────────────────────────────────────┘  │ │
 │  │  [+ ADD SERVICE TO THIS SITE]                                           │ │
 │  │                                                                         │ │
-│  │  [+ ADD ANOTHER SITE]                                                    │ │
+│  │  [+ ADD ANOTHER SITE]                                                   │ │
 │  │                                                                         │ │
-│  │  ━━━ FOR PRODUCTS (Product Sale) ━━━━━━━━━━━━━━━━───────────────────━  │ │
+│  │  ━━━ IF ORDER TYPE = PRODUCT SALE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ │
 │  │  ┌───────────────────────────────────────────────────────────────────┐  │ │
 │  │  │#│Product        │Qty │Unit Pr. (₹)     │HSN  │Tax% │Line Total│  │ │
 │  │  │─┼───────────────┼────┼─────────────────┼─────┼─────┼──────────│  │ │
 │  │  │1│Alpha Cyperm.  │[ 5]│[₹ 1,200] (Edit) │3808 │18%  │₹ 7,080   │  │ │
 │  │  │2│Fipronil Gel   │[20]│[₹ 220]   (Edit) │3808 │18%  │₹ 5,192   │  │ │
+│  │  ├─┴───────────────┴────┴─────────────────┴─────┴─────┴──────────┤  │ │
+│  │  │ [+ Add Product]                                                 │  │ │
 │  │  └───────────────────────────────────────────────────────────────────┘  │ │
 │  │                                                                         │ │
 │  │  ═══ ORDER TOTAL SUMMARY ═══════════════════════════════════════════  │ │
@@ -10313,29 +11038,32 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 ## Section 1: Order Source & Type Fields
 
 ### A. Service Contract
-| Field | Type | Required | Options / Validation | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **Select Contract** | Search | Yes | Active contracts from Module 19 | Triggers auto-fill |
-| **Billing Period** | Dropdown | Yes | Unused periods from contract schedule | |
-| **Contract ID** | Text | System | Auto-filled (Read-only) | |
-| **Customer Name** | Text | System | Auto-filled (Read-only) | |
-| **Customer ID** | Text | System | Auto-filled (Read-only) | |
+
+| Field               | Type     | Required | Options / Validation                  | Notes              |
+| :------------------ | :------- | :------- | :------------------------------------ | :----------------- |
+| **Select Contract** | Search   | Yes      | Active contracts from Module 19       | Triggers auto-fill |
+| **Billing Period**  | Dropdown | Yes      | Unused periods from contract schedule |                    |
+| **Contract ID**     | Text     | System   | Auto-filled (Read-only)               |                    |
+| **Customer Name**   | Text     | System   | Auto-filled (Read-only)               |                    |
+| **Customer ID**     | Text     | System   | Auto-filled (Read-only)               |                    |
 
 #### B. One-Time Service
-| Field | Type | Required | Options / Validation | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **Source Type** | Radio | Yes | From Quotation / Standalone | |
-| **Select Source** | Search | Cond. | Approved Quotations (Module 16) | Required if Source = Quotation |
-| **Select Customer** | Search | Cond. | Active customers from Module 18 | Required if Source = Standalone |
-| **Service Type** | Text | System | Auto-filled (Read-only) | |
-| **Quoted Value** | Currency | System | Auto-filled (Read-only) | |
+
+| Field               | Type     | Required | Options / Validation            | Notes                           |
+| :------------------ | :------- | :------- | :------------------------------ | :------------------------------ |
+| **Source Type**     | Radio    | Yes      | From Quotation / Standalone     |                                 |
+| **Select Source**   | Search   | Cond.    | Approved Quotations (Module 16) | Required if Source = Quotation  |
+| **Select Customer** | Search   | Cond.    | Active customers from Module 18 | Required if Source = Standalone |
+| **Service Type**    | Text     | System   | Auto-filled (Read-only)         |                                 |
+| **Quoted Value**    | Currency | System   | Auto-filled (Read-only)         |                                 |
 
 #### C. Product Sale
-| Field | Type | Required | Options / Validation | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **Select Customer** | Search | Yes | Active customers from Module 18 | |
-| **SO Date** | Date | Yes | Default: Today | |
-| **Branch** | Dropdown | Yes | Active branches from Module 7 | |
+
+| Field               | Type     | Required | Options / Validation            | Notes |
+| :------------------ | :------- | :------- | :------------------------------ | :---- |
+| **Select Customer** | Search   | Yes      | Active customers from Module 18 |       |
+| **SO Date**         | Date     | Yes      | Default: Today                  |       |
+| **Branch**          | Dropdown | Yes      | Active branches from Module 7   |       |
 
 > **Note:** For **Service Contract** orders, the system only shows contracts with unused billing periods. If all billing periods already have SOs, the contract will not appear in the search. For **One-Time Service**, only Quotations / GMAs that have not yet been converted to an SO are shown.
 
@@ -10343,62 +11071,127 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 
 ## Section 2: Line Items Fields
 
-### Service Line Items (Site-Wise Configuration)
+### A. CONDITION: SERVICE CONTRACT
 
-| Field           | Type            | Required | Validation / Notes                                                              |
-| --------------- | --------------- | -------- | ------------------------------------------------------------------------------- |
-| Site Name       | Search/Text     | Yes      | Auto-fetched from source OR manually entered for standalone                     |
-| Country         | Dropdown        | Yes      | Country list (Default: India); auto-fetched from source if available. **Required** |
-| Google Map URL  | URL             | Yes      | Valid URL format; auto-fetched from source if available. **Required for execution** |
-| Service Name    | Search Dropdown | Yes      | Select from Module 12 (Services) if standalone; auto-fetched if linked          |
-| Qty (Visits)    | Number          | Yes      | Number of visits for this SO; editable, must be > 0                             |
-| Unit Price (₹)  | Currency        | Yes      | Price per visit; auto from contract/GMA; Read-only for linked; editable for standalone |
-| HSN/SAC Code    | Auto-filled     | System   | Service Accounting Code for tax calculation (from Module 9)                     |
-| Tax %           | Auto-filled     | System   | GST rate from HSN/SAC code (Module 9)                                           |
-| Tax Amount (₹)  | Auto-calculated | System   | `Qty × Unit Price × Tax %`                                                      |
-| Line Total (₹)  | Auto-calculated | System   | `(Qty × Unit Price) + Tax Amount`                                               |
+_(Sites, Services, and Chemicals are auto-fetched from the Contract, but Site details and Qty remain editable for execution/dispatch flexibility)_
 
-### Chemical Line Items (Read-Only from Source)
+#### 1. Site configuration fields (Auto-fetched & Editable)
 
-| Field           | Type            | Required | Validation / Notes                                                              |
-| --------------- | --------------- | -------- | ------------------------------------------------------------------------------- |
-| Chemical Name   | Auto-filled     | System   | Fetched from Module 12 (Service Config) or Source Contract/GMA                  |
-| HSN             | Auto-filled     | System   | From Product Master (Module 10)                                                 |
-| UOM             | Auto-filled     | System   | Base unit (ml, Ltr, tube, etc.) from Module 10                                  |
-| Req Qty         | Auto-filled     | System   | Quantity required per visit as per approved GMA/Contract                        |
+| Field                   | Type          | Required | Validation / Notes                                               |
+| ----------------------- | ------------- | -------- | ---------------------------------------------------------------- |
+| Site Name               | Display       | System   | Auto-fetched from Contract Site Master; Read-only title.         |
+| Address                 | Text Area     | Yes      | Auto-fetched but **Editable** for dispatch accuracy.             |
+| City, State, Country    | Text/Dropdown | Yes      | Auto-fetched but **Editable**.                                   |
+| Google Map URL          | URL           | Yes      | Auto-fetched but **Editable** (Required for execution dispatch). |
+| Category / Sub-Cat      | Dropdown      | Yes      | Auto-fetched but **Editable**.                                   |
+| Area (sqft)             | Number        | Yes      | Auto-fetched but **Editable**.                                   |
+| Contact Person & Mobile | Text/Phone    | Yes      | Auto-fetched but **Editable** (site-specific point of contact).  |
 
-### Product Line Items (Product Sale)
+#### 2. Service Line Items Grid
 
-| Field              | Type            | Required | Validation / Notes                                                       |
-| ------------------ | --------------- | -------- | ------------------------------------------------------------------------ |
-| Product Name       | Search Dropdown | Yes      | Select from Module 10 Product Master (active products only)              |
-| Product Code       | Auto-filled     | System   | Read-only; from Module 10                                                |
-| UOM                | Auto-filled     | System   | Base unit of measure from Module 10 (ml / Ltr / gm / kg / Nos / Tube)   |
-| Qty                | Number          | Yes      | Must be > 0                                                              |
-| Unit Price (₹)     | Currency        | Yes      | Defaults to **Selling Price** from Module 10; editable for custom manual pricing |
-| HSN Code           | Auto-filled     | System   | From Module 10 product master → Module 9 tax config                      |
-| Tax %              | Auto-filled     | System   | GST rate from HSN code (Module 9)                                        |
-| Tax Amount (₹)     | Auto-calculated | System   | `Qty × Unit Price × Tax%`                                                |
-| Line Total (₹)     | Auto-calculated | System   | `(Qty × Unit Price) + Tax Amount`                                        |
+| Field          | Type           | Required | Validation / Notes                                                          |
+| -------------- | -------------- | -------- | --------------------------------------------------------------------------- |
+| Service Name   | Display (Link) | System   | Fixed from Contract Service Master (Read-only).                             |
+| Visits (Qty)   | Number         | Yes      | Auto-fetched from billing schedule but **Editable** for ad-hoc adjustments. |
+| Unit Price (₹) | Display        | System   | **Read-only** (Fixed from Contract Financials).                             |
+| SQFT           | Number         | Auto     | Inherited from Site Configuration above.                                    |
+| HSN            | System         | Auto     | Service Accounting Code fetched from Contract/Module 12.                    |
+| Tax %          | System         | Auto     | GST rate based on HSN.                                                      |
+| Tax Amt        | Currency       | Auto     | `(Visits × Unit Price) × Tax %`                                             |
+| Total (₹)      | Currency       | Auto     | `(Visits × Unit Price) + Tax Amt`                                           |
+
+#### 3. Consumable Chemicals Grid
+
+_(Read-only: Fixed from Contract definitions to ensure strict material audit trail for recurring services.)_
+
+| Field        | Type     | Required | Validation / Notes                             |
+| ------------ | -------- | -------- | ---------------------------------------------- |
+| Product Name | Display  | System   | Read-only (Fixed from Contract Service norms). |
+| Code         | System   | Auto     | From Product Master (Module 10).               |
+| UOM          | System   | Auto     | Base unit (ml, Ltr, Tube, etc.).               |
+| Coverage     | System   | Auto     | Standard SQFT coverage per unit.               |
+| Req. Qty     | Number   | System   | Auto-calculated: `Area (sqft) ÷ Coverage`.     |
+| Price        | Currency | Auto     | Fixed Contract inventory price.                |
+| Cost         | Currency | Auto     | `Req. Qty × Price`.                            |
+
+### B. CONDITION: ONE-TIME SERVICE
+
+_(If Source = Quotation/GMA, behaves similar to Contract. If Source = Standalone, fully manual entry.)_
+
+#### 1. Site configuration fields
+
+| Field                   | Type          | Required | Validation / Notes                                          |
+| ----------------------- | ------------- | -------- | ----------------------------------------------------------- |
+| Site Name               | Search/Text   | Yes      | Select existing from Customer Master OR Add New.            |
+| Address                 | Text Area     | Yes      | **Required** for dispatch.                                  |
+| City, State, Country    | Text/Dropdown | Yes      | Standard location tracking.                                 |
+| Google Map URL          | URL           | Yes      | Valid URL format; **Required for execution**                |
+| Category / Sub-Cat      | Dropdown      | Yes      | Residential/Commercial/Industrial, Internal/External        |
+| Area (sqft)             | Number        | Yes      | Used for chemical coverage calculation and capacity mapping |
+| Contact Person & Mobile | Text/Phone    | Yes      | Site-specific contact (Required for execution/dispatch)     |
+
+#### 2. Service Line Items Grid
+
+| Field          | Type            | Required | Validation / Notes                                        |
+| -------------- | --------------- | -------- | --------------------------------------------------------- |
+| Service Name   | Search Dropdown | Yes      | Select from Module 12 (Services) if standalone            |
+| Visits (Qty)   | Number          | Yes      | Number of visits for this SO; must be > 0                 |
+| Unit Price (₹) | Currency        | Yes      | Editable for standalone; Auto-fetched from GMA if linked. |
+| SQFT           | Number          | Auto     | Inherited from Site Configuration above.                  |
+| HSN            | System          | Auto     | Service Accounting Code fetched from Module 12.           |
+| Tax %          | System          | Auto     | GST rate based on HSN.                                    |
+| Tax Amt        | Currency        | Auto     | `(Visits × Unit Price) × Tax %`                           |
+| Total          | Currency        | Auto     | `(Visits × Unit Price) + Tax Amt`                         |
+
+#### 3. Consumable Chemicals Grid
+
+_(Auto-fetched from Module 12 based on the pest type defined in the Service Grid above, but numbers remain editable for Standalone SOs to account for site differences.)_
+
+| Field        | Type            | Required | Validation / Notes                                                              |
+| ------------ | --------------- | -------- | ------------------------------------------------------------------------------- |
+| Product Name | Search Dropdown | Cond.    | Inherited from Module 12 default norms; dispatcher can add more items manually. |
+| Code         | System          | Auto     | From Product Master (Module 10).                                                |
+| UOM          | System          | Auto     | Base unit (ml, Ltr, Tube, etc.).                                                |
+| Coverage     | System          | Auto     | Standard SQFT coverage per unit (from Module 12 config).                        |
+| Req. Qty     | Number          | Yes      | Base calculation: `Area (sqft) ÷ Coverage`. **Editable** by dispatcher.         |
+| Price        | Currency        | Auto     | Cost equivalent price from Module 10 stock.                                     |
+| Cost         | Currency        | Auto     | `Req. Qty × Price`. Triggers job margin deduction.                              |
+
+**Note:** If you doesn't understand the above table, please refer to the screen layout above.
+
+### C. CONDITION: PRODUCT SALE
+
+| Field          | Type            | Required | Validation / Notes                                                               |
+| -------------- | --------------- | -------- | -------------------------------------------------------------------------------- |
+| Product Name   | Search Dropdown | Yes      | Select from Module 10 Product Master (active products only)                      |
+| Product Code   | Auto-filled     | System   | Read-only; from Module 10                                                        |
+| UOM            | Auto-filled     | System   | Base unit of measure from Module 10 (ml / Ltr / gm / kg / Nos / Tube)            |
+| Qty            | Number          | Yes      | Must be > 0                                                                      |
+| Unit Price (₹) | Currency        | Yes      | Defaults to **Selling Price** from Module 10; editable for custom manual pricing |
+| HSN Code       | Auto-filled     | System   | From Module 10 product master → Module 9 tax config                              |
+| Tax %          | Auto-filled     | System   | GST rate from HSN code (Module 9)                                                |
+| Tax Amount (₹) | Auto-calculated | System   | `Qty × Unit Price × Tax%`                                                        |
+| Line Total (₹) | Auto-calculated | System   | `(Qty × Unit Price) + Tax Amount`                                                |
+| Add Product    | Button          | System   | Add Product                                                                      |
 
 ### Order Total Summary (Auto-Calculated)
 
-| Field          | Type            | Description                                         |
-| -------------- | --------------- | --------------------------------------------------- |
-| Sub-Total (₹)  | Auto-calculated | Sum of all line items before tax                    |
-| Discount (₹)   | Currency        | Optional; flat or percentage discount               |
-| Tax Total (₹)  | Auto-calculated | Sum of all line-item tax amounts                    |
-| Grand Total (₹)| Auto-calculated | `Sub-Total – Discount + Tax Total`                  |
+| Field           | Type            | Description                           |
+| --------------- | --------------- | ------------------------------------- |
+| Sub-Total (₹)   | Auto-calculated | Sum of all line items before tax      |
+| Discount (₹)    | Currency        | Optional; flat or percentage discount |
+| Tax Total (₹)   | Auto-calculated | Sum of all line-item tax amounts      |
+| Grand Total (₹) | Auto-calculated | `Sub-Total – Discount + Tax Total`    |
 
 ---
 
 ## 💡 Note: How `[+ Add Site]` and `[+ Add Service]` Works
 
-- **`[+ Add Site]`**: A single Sales Order can cover multiple physical locations for the customer. Adding a new site creates a fresh site-block where specific services can be assigned. 
+- **`[+ Add Site]`**: A single Sales Order can cover multiple physical locations for the customer. Adding a new site creates a fresh site-block where specific services can be assigned.
+- **Standalone Orders (Crucial for Data Flow)**: When a Standalone SO is created without a prior Contract or GMA, the user must define the Site Configuration (**Address, Area, Category**) and Service Details (**Chemicals, SQFT**) directly within this SO form. This ensures that downstream task generation (Module 21) has all necessary context to execute the job correctly.
 - **`[+ Add Service to this Site]`**: Within a single Site, a customer may require multiple different treatments (e.g., Cockroach + Termite). Adding a service inside a site spins up a fresh line item for that specific treatment at that specific location.
 - **Linked Orders**: If the SO is linked to a Contract or GMA, the system auto-populates all Site/Service blocks based on the source record. The user can remove sites/services or adjust quantities but cannot add new service types not present in the source.
-- **Standalone Orders**: The user has full freedom to add any number of sites and select any services from the Service Master (Module 12).
-- **Consumable Chemicals**: These are automatically pulled from the source GMA or Contract and are displayed in read-only mode to ensure the service is executed exactly as scoped and approved.
+- **Consumable Chemicals**: Auto-pulled and read-only for Linked Orders. For Standalone SOs, users must manually add consumable chemicals aligned with the selected service to ensure proper inventory tracking and execution.
 - **Product Pricing**: For product-only sales, the system defaults to the **Selling Price** from the Product Master (Module 10). However, the price is editable to allow for ad-hoc custom quotes.
 
 ---
@@ -10407,59 +11200,59 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 
 ## Section 3: Delivery / Execution Terms Fields
 
-| Field             | Type      | Required | Options / Validation                                         | Notes                                           |
-| ----------------- | --------- | -------- | ------------------------------------------------------------ | ----------------------------------------------- |
-| Execution Notes   | Text Area | No       | Max 500 characters                                           | Operational instructions for the dispatch team  |
-| Delivery Address  | Dropdown  | No       | Customer's registered sites (Module 18) / Custom             | Default: primary site                           |
-| Custom Address    | Text      | Cond.    | Required if Delivery Address = Custom; min 10 chars          | Full address for non-registered delivery        |
-| City              | Text      | Cond.    | Required if Custom; min 3 chars                              | Delivery city                                   |
-| State             | Dropdown  | Cond.    | Indian states list                                           | Delivery state                                  |
-| Pincode           | Number    | No       | 6-digit numeric                                              | Optional                                        |
-| Country           | Dropdown  | Yes      | Country list (Default: India)                                | **Required** for delivery/execution              |
-| Google Map URL    | URL       | Yes      | Valid URL format (e.g., https://maps.google.com/...)          | **Required** for execution & dispatch            |
-| Priority Level    | Dropdown  | No       | Normal / Urgent / Critical                                   | Determines dispatch priority in Operations      |
-| Expected Delivery | Date      | No       | Must be ≥ SO Date                                            | Target date for service / product delivery      |
+| Field             | Type      | Required | Options / Validation                                 | Notes                                          |
+| ----------------- | --------- | -------- | ---------------------------------------------------- | ---------------------------------------------- |
+| Execution Notes   | Text Area | No       | Max 500 characters                                   | Operational instructions for the dispatch team |
+| Delivery Address  | Dropdown  | No       | Customer's registered sites (Module 18) / Custom     | Default: primary site                          |
+| Custom Address    | Text      | Cond.    | Required if Delivery Address = Custom; min 10 chars  | Full address for non-registered delivery       |
+| City              | Text      | Cond.    | Required if Custom; min 3 chars                      | Delivery city                                  |
+| State             | Dropdown  | Cond.    | Indian states list                                   | Delivery state                                 |
+| Pincode           | Number    | No       | 6-digit numeric                                      | Optional                                       |
+| Country           | Dropdown  | Yes      | Country list (Default: India)                        | **Required** for delivery/execution            |
+| Google Map URL    | URL       | Yes      | Valid URL format (e.g., https://maps.google.com/...) | **Required** for execution & dispatch          |
+| Priority Level    | Dropdown  | No       | Normal / Urgent / Critical                           | Determines dispatch priority in Operations     |
+| Expected Delivery | Date      | No       | Must be ≥ SO Date                                    | Target date for service / product delivery     |
 
 ---
 
 ## Form Actions
 
-| Button          | Description                                                                          |
-| --------------- | ------------------------------------------------------------------------------------ |
-| **Save as Draft** | Saves the SO without releasing. Status = Draft. Can be edited freely.              |
-| **Save & Open** | Validates all sections, saves the SO with Status = Open, and makes it available for Operations dispatch. |
-| **Cancel**      | Discards all entries and returns to the SO Master List.                               |
+| Button            | Description                                                                                              |
+| ----------------- | -------------------------------------------------------------------------------------------------------- |
+| **Save as Draft** | Saves the SO without releasing. Status = Draft. Can be edited freely.                                    |
+| **Save & Open**   | Validates all sections, saves the SO with Status = Open, and makes it available for Operations dispatch. |
+| **Cancel**        | Discards all entries and returns to the SO Master List.                                                  |
 
 ---
 
 ## Validation Rules
 
-| Validation                        | Rule                                                                      |
-| --------------------------------- | ------------------------------------------------------------------------- |
-| Order Type Required               | Must select Service Contract, One-Time, or Product Sale                        |
-| Source Required                   | Must select a valid contract / quotation / customer based on type         |
-| At Least 1 Line Item              | Minimum one service or product line item required                         |
-| Qty > 0                          | All line item quantities must be positive                                 |
-| Unit Price > 0                   | All line item prices must be positive                                     |
-| Grand Total > 0                  | Final order value must be positive after discounts                        |
-| No Duplicate Billing Period       | For Contract, cannot create two SOs for the same billing period and contract   |
-| SO Date Required                 | Must have a valid SO date                                                 |
-| Branch Required                  | Must have an assigned branch                                              |
+| Validation                  | Rule                                                                         |
+| --------------------------- | ---------------------------------------------------------------------------- |
+| Order Type Required         | Must select Service Contract, One-Time, or Product Sale                      |
+| Source Required             | Must select a valid contract / quotation / customer based on type            |
+| At Least 1 Line Item        | Minimum one service or product line item required                            |
+| Qty > 0                     | All line item quantities must be positive                                    |
+| Unit Price > 0              | All line item prices must be positive                                        |
+| Grand Total > 0             | Final order value must be positive after discounts                           |
+| No Duplicate Billing Period | For Contract, cannot create two SOs for the same billing period and contract |
+| SO Date Required            | Must have a valid SO date                                                    |
+| Branch Required             | Must have an assigned branch                                                 |
 
 ---
 
 ## System Behaviours on Save
 
-| Trigger                         | System Action                                                                     |
-| ------------------------------- | --------------------------------------------------------------------------------- |
-| Contract selected (Contract)         | Auto-populates customer details, sites, services, and pricing from Module 19      |
-| Quotation/GMA selected (One-Time)| Auto-populates service details and pricing from Module 16/17                      |
-| Customer selected (Product)     | Auto-populates billing address from Module 18                                     |
-| Product selected                | Fetches UOM, HSN Code, Sale Price from Module 10 Product Master                   |
-| Save & Open clicked             | Status → Open; SO visible to Operations for dispatch                              |
-| Contract SO created                  | Linked to contract billing log (Module 19 → Tab 2); fulfilment tracker updated   |
-| One-Time SO created             | Quotation / GMA marked as "SO Generated" to prevent duplicate SOs                |
-| Tax calculation                 | HSN/SAC codes auto-fetch tax rates; tax amounts computed in real-time             |
+| Trigger                           | System Action                                                                  |
+| --------------------------------- | ------------------------------------------------------------------------------ |
+| Contract selected (Contract)      | Auto-populates customer details, sites, services, and pricing from Module 19   |
+| Quotation/GMA selected (One-Time) | Auto-populates service details and pricing from Module 16/17                   |
+| Customer selected (Product)       | Auto-populates billing address from Module 18                                  |
+| Product selected                  | Fetches UOM, HSN Code, Sale Price from Module 10 Product Master                |
+| Save & Open clicked               | Status → Open; SO visible to Operations for dispatch                           |
+| Contract SO created               | Linked to contract billing log (Module 19 → Tab 2); fulfilment tracker updated |
+| One-Time SO created               | Quotation / GMA marked as "SO Generated" to prevent duplicate SOs              |
+| Tax calculation                   | HSN/SAC codes auto-fetch tax rates; tax amounts computed in real-time          |
 
 ---
 
@@ -10514,11 +11307,13 @@ Displays the complete order breakdown — header details, source reference, and 
 │  Priority      : Normal                 Expected Date: 30 Jun 2026         │
 │                                                                              │
 │  ─── LINE ITEMS (SITE-WISE) ────────────────────────────────────────────────  │
-│  SITE 1: Head Office (SITE-00312) | Country: India | 🔗 Map URL              │
+│  SITE 1: Head Office (SITE-00312)                                            │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Contact: Rajesh Kumar (+91 98765 43210) | 🔗 Map URL                     ││
+│  │                                                                          ││
 │  │ SERVICE 1: Cockroach Treatment                                           ││
 │  │ ┌────────┬──────────┬────────┬───────┬───────┬──────────┬──────────┐     ││
-│  │ │ Qty    │ Unit Pr. │ SQFT   │ HSN   │ Tax%  │ Tax Amt  │ Total    │     ││
+│  │ │ Visits │ Unit Pr. │ SQFT   │ HSN   │ Tax%  │ Tax Amt  │ Total    │     ││
 │  │ ├────────┼──────────┼────────┼───────┼───────┼──────────┼──────────┤     ││
 │  │ │ 12     │ ₹ 3,250  │ 3,500  │ 996490│ 18%   │ ₹ 7,020  │ ₹ 46,020 │     ││
 │  │ └────────┴──────────┴────────┴───────┴───────┴──────────┴──────────┘     ││
@@ -10531,16 +11326,24 @@ Displays the complete order breakdown — header details, source reference, and 
 │  │ │ Fipronil Gel         │ 3808    │ tube   │ 2 tubes   │                  ││
 │  │ └──────────────────────┴─────────┴────────┴───────────┘                  ││
 │  └──────────────────────────────────────────────────────────────────────────┘│
-│  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
-│  SITE 2: Warehouse (SITE-00313) | Country: India | 🔗 Map URL  [▸ Click to View]                            │
+│  SITE 2: Warehouse (SITE-00313)                               [▸ Click to Expand] │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Contact: Suresh Patel (+91 98765 01234) | 🔗 Map URL                     ││
+│  │ (Service details collapsed by default in View Mode)                        ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
 │  ━━━ FOR PRODUCTS (Product Sale) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━   │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
 │  │#│Product        │Qty │Unit Pr. │HSN  │Tax% │Tax Amt │Line Total│           ││
 │  │─┼───────────────┼────┼─────────┼─────┼─────┼────────┼──────────│           ││
 │  │1│Alpha Cyperm.  │ 5  │₹ 1,200  │3808 │18%  │₹ 1,080 │₹ 7,080   │           ││
+│  │2│Fipronil Gel   │ 20 │₹ 220    │3808 │18%  │₹ 792   │₹ 5,192   │           ││
 │  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  💡 **[DEV NOTE FOR BEGINNERS — MULTI-SITE LOOP]**                          │
+│  The **SITE-WISE LINE ITEMS** block must dynamically loop for every site linked to the SO.  │
+│  Example: If a contract has 5 sites, duplicate the SITE block 5 times vertically.           │
 │                                                                              │
 │  ─── ORDER TOTAL ─────────────────────────────────────────────────────────  │
 │  Sub-Total   : ₹ 61,300                                                     │
@@ -10560,53 +11363,56 @@ Displays the complete order breakdown — header details, source reference, and 
 
 ## Order Header Fields (Read-Only)
 
-| Field          | Type     | Description                                              |
-| -------------- | -------- | -------------------------------------------------------- |
-| SO Number      | Display  | Unique SO identifier                                     |
-| SO Date        | Date     | Date the SO was generated                                |
-| Customer       | Display  | Customer name from Module 18                             |
-| Customer ID    | Display  | Unique customer reference                                |
-| Order Type     | Display  | Service Contract / One-Time Service / Product Sale            |
-| Contract Ref   | Link     | Contract ID (Contract only); navigates to Module 19           |
-| Billing Period | Display  | Period this SO covers (Contract only)                         |
-| Branch         | Display  | Servicing / dispatch branch                              |
-| Priority       | Display  | Normal / Urgent / Critical                               |
-| Expected Date  | Date     | Target completion date                                   |
+| Field          | Type    | Description                                         |
+| -------------- | ------- | --------------------------------------------------- |
+| SO Number      | Display | Unique SO identifier                                |
+| SO Date        | Date    | Date the SO was generated                           |
+| Customer       | Display | Customer name from Module 18                        |
+| Customer ID    | Display | Unique customer reference                           |
+| Order Type     | Display | Service Contract / One-Time Service / Product Sale  |
+| Contract Ref   | Link    | Contract ID (Contract only); navigates to Module 19 |
+| Billing Period | Display | Period this SO covers (Contract only)               |
+| Branch         | Display | Servicing / dispatch branch                         |
+| Priority       | Display | Normal / Urgent / Critical                          |
+| Expected Date  | Date    | Target completion date                              |
 
 ---
 
 ## Line Item Grid Fields (Read-Only)
 
-| Field           | Type     | Description                                             |
-| --------------- | -------- | ------------------------------------------------------- |
-| #               | Number   | Line item sequence number                               |
-| Description     | Display  | Service name or Product name                            |
-| Site            | Display  | Site for service delivery (service orders only)         |
-| Country         | Display  | Country of the site                                     |
-| Google Map URL  | Link     | Clickable Google Maps link for the site                 |
-| Qty             | Number   | Visits (service) or units (product)                     |
-| UOM             | Display  | Visits / Ltr / Nos / Tube / kg etc.                     |
-| Unit Price (₹)  | Currency | Per-unit price                                          |
-| HSN/SAC Code    | Display  | Tax classification code                                 |
-| Tax %           | Display  | GST percentage                                          |
-| Tax Amount (₹)  | Currency | Computed tax for this line                              |
-| Line Total (₹)  | Currency | `(Qty × Unit Price) + Tax`                              |
+| Field          | Type     | Description                               |
+| -------------- | -------- | ----------------------------------------- |
+| #              | Number   | Line item sequence number                 |
+| Description    | Display  | Service name or Product name              |
+| Site Name      | Display  | Name of the site (e.g., Head Office)      |
+| Site ID        | Display  | System ID (e.g., SITE-00312)              |
+| Site Contact   | Display  | Person of contact for this site visit     |
+| Contact Mobile | Display  | Phone number for site coordination        |
+| Google Map URL | Link     | Clickable Google Maps link for the site   |
+| Visits / Qty   | Number   | Total visits (service) or units (product) |
+| UOM            | Display  | Visits / Ltr / Nos / Tube / kg etc.       |
+| Unit Price (₹) | Currency | Per-unit price                            |
+| HSN/SAC Code   | Display  | Tax classification code                   |
+| Tax %          | Display  | GST percentage                            |
+| Tax Amount (₹) | Currency | Computed tax for this line                |
+| Line Total (₹) | Currency | `(Qty × Unit Price) + Tax`                |
 
 ---
 
 ## Order Total Fields (Read-Only)
 
-| Field         | Type     | Description                          |
-| ------------- | -------- | ------------------------------------ |
-| Sub-Total     | Currency | Sum of all pre-tax line totals       |
-| Discount      | Currency | Any applied discount                 |
-| Tax Total     | Currency | Sum of all line-item taxes           |
-| Grand Total   | Currency | Final payable amount                 |
+| Field       | Type     | Description                    |
+| ----------- | -------- | ------------------------------ |
+| Sub-Total   | Currency | Sum of all pre-tax line totals |
+| Discount    | Currency | Any applied discount           |
+| Tax Total   | Currency | Sum of all line-item taxes     |
+| Grand Total | Currency | Final payable amount           |
 
 ---
 
 ================================================================================
 [Note: It is depends on Module 21 or Task allocation module]
+
 # 20.3.2 Tab 2: Execution & Delivery Status
 
 **Description:**
@@ -10651,39 +11457,39 @@ Tracks the downstream release of the Sales Order. Shows whether Job Cards (for s
 
 ## Service Execution Grid Fields (Read-Only)
 
-| Field          | Type    | Description                                                  |
-| -------------- | ------- | ------------------------------------------------------------ |
-| Job Card ID    | Link    | Unique job card reference; navigates to Operations module    |
-| Site           | Display | Site where service is performed                              |
-| Scheduled Date | Date    | Planned service date                                         |
-| Technician     | Display | Assigned technician name                                     |
-| Status         | Badge   | Planned / In Progress / Done / Cancelled                     |
-| Actions        | Button  | [View] — opens the job card detail in Operations module      |
+| Field          | Type    | Description                                               |
+| -------------- | ------- | --------------------------------------------------------- |
+| Job Card ID    | Link    | Unique job card reference; navigates to Operations module |
+| Site           | Display | Site where service is performed                           |
+| Scheduled Date | Date    | Planned service date                                      |
+| Technician     | Display | Assigned technician name                                  |
+| Status         | Badge   | Planned / In Progress / Done / Cancelled                  |
+| Actions        | Button  | [View] — opens the job card detail in Operations module   |
 
 ---
 
 ## Product Delivery Grid Fields (Read-Only)
 
-| Field          | Type    | Description                                           |
-| -------------- | ------- | ----------------------------------------------------- |
-| Challan ID     | Link    | Delivery Challan reference; navigates to dispatch     |
-| Product        | Display | Product name from the SO line item                    |
-| Qty            | Number  | Quantity dispatched                                   |
-| Dispatch Date  | Date    | Date of product dispatch                              |
-| Delivery Addr  | Display | Destination address                                   |
-| Status         | Badge   | Pending / In Transit / Delivered / Returned           |
+| Field         | Type    | Description                                       |
+| ------------- | ------- | ------------------------------------------------- |
+| Challan ID    | Link    | Delivery Challan reference; navigates to dispatch |
+| Product       | Display | Product name from the SO line item                |
+| Qty           | Number  | Quantity dispatched                               |
+| Dispatch Date | Date    | Date of product dispatch                          |
+| Delivery Addr | Display | Destination address                               |
+| Status        | Badge   | Pending / In Transit / Delivered / Returned       |
 
 ---
 
 ## Execution Summary Fields (Auto-Calculated)
 
-| Field            | Type     | Description                                     |
-| ---------------- | -------- | ----------------------------------------------- |
-| Total Job Cards  | Number   | Count of all generated job cards                |
-| Completed        | Number   | Job cards with Status = Done                    |
-| Total Challans   | Number   | Count of all delivery challans                  |
-| Dispatched       | Number   | Challans with Status = In Transit or Delivered  |
-| Overall Progress | Progress | Percentage of completed execution items          |
+| Field            | Type     | Description                                    |
+| ---------------- | -------- | ---------------------------------------------- |
+| Total Job Cards  | Number   | Count of all generated job cards               |
+| Completed        | Number   | Job cards with Status = Done                   |
+| Total Challans   | Number   | Count of all delivery challans                 |
+| Dispatched       | Number   | Challans with Status = In Transit or Delivered |
+| Overall Progress | Progress | Percentage of completed execution items        |
 
 > **Note:** This tab is **read-only**. Job Cards and Delivery Challans are created and managed by the **Operations & Dispatch** module. This tab provides the commercial team visibility into whether the SO's execution has started, which gates the Edit and Cancel actions.
 
@@ -10714,8 +11520,12 @@ Allows modification of a Sales Order before it is released to Operations or whil
 │                                                                              │
 │  SECTION 2: DYNAMIC SCOPE & LINE ITEMS                                       │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  SITE 1: Head Office (SITE-00312) | Country: India | 🔗 Map URL           │ │
+│  │  ━━━ IF ORDER TYPE = SERVICE CONTRACT / ONE-TIME ━━━━━━━━━━━━━━━━━━━━━━  │ │
+│  │  SITE 1: Head Office (SITE-00312)                                        │ │
 │  │  ┌───────────────────────────────────────────────────────────────────┐  │ │
+│  │  │ Contact Name  : [Rajesh Kumar         ] (Edit for Dispatch)       │  │ │
+│  │  │ Contact Mobile: [+91 98765 43210      ]                           │  │ │
+│  │  │                                                                  │  │ │
 │  │  │ SERVICE 1: Cockroach Treatment                                    │  │ │
 │  │  │ ┌────────┬──────────┬────────┬───────┬───────┬─────────┬────────┐ │  │ │
 │  │  │ │Visits  │Unit Price│SQFT    │HSN    │Tax %  │Tax Amt  │Total   │ │  │ │
@@ -10734,12 +11544,20 @@ Allows modification of a Sales Order before it is released to Operations or whil
 │  │  │ [Remove Service]                                                 │  │ │
 │  │  └───────────────────────────────────────────────────────────────────┘  │ │
 │  │                                                                         │ │
-│  │  ━━━ FOR PRODUCTS (Product Sale) ━━━━━━━━━━━━━━━━───────────────────━  │ │
+│  │  ━━━ IF ORDER TYPE = PRODUCT SALE ━━━━━━━━━━━━━━━━───────────────────━  │ │
 │  │  ┌───────────────────────────────────────────────────────────────────┐  │ │
 │  │  │#│Product        │Qty │Unit Pr. (₹)     │HSN  │Tax% │Line Total│  │ │
 │  │  │─┼───────────────┼────┼─────────────────┼─────┼─────┼──────────│  │ │
 │  │  │1│Alpha Cyperm.  │[ 5]│[₹ 1,200] (Edit) │3808 │18%  │₹ 7,080   │  │ │
+│  │  │2│Fipronil Gel   │[20]│[₹ 220]   (Edit) │3808 │18%  │₹ 5,192   │  │ │
+│  │  ├─┴───────────────┴────┴─────────────────┴─────┴─────┴──────────┤  │ │
+│  │  │ [+ Add Product]                                                 │  │ │
 │  │  └───────────────────────────────────────────────────────────────────┘  │ │
+│  │                                                                         │ │
+│  │                                                                         │ │
+│  │  💡 **[DEV NOTE FOR BEGINNERS — MULTI-SITE LOOP]**                          │ │
+│  │  Just like the Add Form, the **SITE-WISE LINE ITEMS** sections must be rendered using a loop  │ │
+│  │  over the inherited source data (Contract/GMA/Standalone).                  │ │
 │  │                                                                         │ │
 │  │  Editable Fields: Qty, Unit Price                                       │ │
 │  │                                                                         │ │
@@ -10767,46 +11585,47 @@ Allows modification of a Sales Order before it is released to Operations or whil
 
 ## Editable vs. Locked Fields
 
-| Field                   | Editable? | Notes                                                              |
-| ----------------------- | --------- | ------------------------------------------------------------------ |
-| SO Number               | ❌ Locked  | System-generated; immutable                                        |
-| Customer / Contract Ref | ❌ Locked  | Source data cannot be changed                                      |
-| Order Type              | ❌ Locked  | Cannot change the order type after creation                        |
-| SO Date                 | ❌ Locked  | Historical record; cannot be modified                              |
-| Branch                  | ❌ Locked  | Cannot change once created                                         |
-| Line Item Qty           | ✅ Yes     | Can increase/decrease visit counts (if standalone) or product quantities |
-| Line Item Unit Price    | ✅ Yes     | Only for standalone orders OR within approved variance for linked orders |
-| Consumable Chemicals    | ❌ Locked  | Pulled from source GMA/Contract; cannot be edited in SO           |
-| Chemical Substitution   | ❌ Locked  | Substitution must be handled at the source (Contract/GMA)           |
-| Discount                | ✅ Yes     | Can add / modify flat or percentage discount                       |
-| Execution Notes         | ✅ Yes     | Free-text operational instructions                                 |
-| Priority Level          | ✅ Yes     | Can escalate or de-escalate                                        |
-| Expected Delivery Date  | ✅ Yes     | Can adjust target completion date                                  |
-| Country                 | ✅ Yes     | Dropdown; can change country for delivery/execution                |
-| Google Map URL          | ✅ Yes     | Editable URL; required for dispatch                                |
+| Field                   | Editable? | Notes                                                                    |
+| ----------------------- | --------- | ------------------------------------------------------------------------ |
+| SO Number               | ❌ Locked | System-generated; immutable                                              |
+| Customer / Contract Ref | ❌ Locked | Source data cannot be changed                                            |
+| Order Type              | ❌ Locked | Cannot change the order type after creation                              |
+| SO Date                 | ❌ Locked | Historical record; cannot be modified                                    |
+| Branch                  | ❌ Locked | Cannot change once created                                               |
+| Site Contact            | ✅ Yes    | **Propagated to Task**; crucial for coordinator to update per visit      |
+| Contact Mobile          | ✅ Yes    | **Propagated to Task**; must be 10 digits                                |
+| Line Item Visits/Qty    | ✅ Yes    | Can increase/decrease visit counts (if standalone) or product quantities |
+| Line Item Unit Price    | ✅ Yes    | Only for standalone orders OR within approved variance for linked orders |
+| Consumable Chemicals    | ❌ Locked | Pulled from source GMA/Contract; cannot be edited in SO                  |
+| Chemical Substitution   | ❌ Locked | Substitution must be handled at the source (Contract/GMA)                |
+| Discount                | ✅ Yes    | Can add / modify flat or percentage discount                             |
+| Execution Notes         | ✅ Yes    | Free-text operational instructions                                       |
+| Priority Level          | ✅ Yes    | Can escalate or de-escalate                                              |
+| Expected Delivery Date  | ✅ Yes    | Can adjust target completion date                                        |
+| Google Map URL          | ✅ Yes    | Editable URL; required for dispatch                                      |
 
 ---
 
 ## Validation Rules
 
-| Validation                          | Rule                                                                    |
-| ----------------------------------- | ----------------------------------------------------------------------- |
-| Status must be Draft or Open        | Edit fails if Status = Fulfilled, Billed, or Cancelled                  |
-| No Job Cards generated              | Edit is **completely blocked** if any Job Cards exist for this SO       |
-| No Delivery Challans dispatched     | Edit is **completely blocked** if any Challans exist for this SO        |
-| Qty > 0                            | All line item quantities must remain positive                           |
-| Unit Price > 0                     | All prices must remain positive                                         |
-| Grand Total > 0                    | Order value must remain positive after discounts                        |
-| Chemical substitution      | ❌ Disallowed | Substitution must be handled at the Contract/GMA level, not in SO |
+| Validation                      | Rule                                                              |
+| ------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------- |
+| Status must be Draft or Open    | Edit fails if Status = Fulfilled, Billed, or Cancelled            |
+| No Job Cards generated          | Edit is **completely blocked** if any Job Cards exist for this SO |
+| No Delivery Challans dispatched | Edit is **completely blocked** if any Challans exist for this SO  |
+| Qty > 0                         | All line item quantities must remain positive                     |
+| Unit Price > 0                  | All prices must remain positive                                   |
+| Grand Total > 0                 | Order value must remain positive after discounts                  |
+| Chemical substitution           | ❌ Disallowed                                                     | Substitution must be handled at the Contract/GMA level, not in SO |
 
 ---
 
 ## Form Actions
 
-| Button            | Description                                                                     |
-| ----------------- | ------------------------------------------------------------------------------- |
-| **Save Changes**  | Validates all edits, recalculates totals, saves the updated SO                  |
-| **Cancel**        | Discards unsaved changes and returns to the SO Detail view                      |
+| Button           | Description                                                    |
+| ---------------- | -------------------------------------------------------------- |
+| **Save Changes** | Validates all edits, recalculates totals, saves the updated SO |
+| **Cancel**       | Discards unsaved changes and returns to the SO Detail view     |
 
 ---
 
@@ -10841,7 +11660,7 @@ A mechanism to void a Sales Order. Cancellation is only possible before executio
 └───────────────────────────────────────────────────────┘
 ```
 
-*When cancellation is blocked:*
+_When cancellation is blocked:_
 
 ```
 ┌───────────────────────────────────────────────────────┐
@@ -10867,47 +11686,47 @@ A mechanism to void a Sales Order. Cancellation is only possible before executio
 
 ## Cancellation Prerequisite Check for backend and frontend
 
-| Check                   | Condition to Block                                          | Error Message                                               |
-| ----------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
-| Job Cards Generated     | Any Job Card exists for this SO                             | "X Job Card(s) already generated. Cannot cancel."           |
-| Challans Dispatched     | Any Delivery Challan exists for this SO                     | "Products have been dispatched. Cannot cancel."              |
-| Pushed to Invoicing     | SO has been linked to an invoice                            | "SO is linked to Invoice. Contact Finance."                 |
-| Status = Fulfilled/Billed| SO already completed                                       | "Fulfilled/Billed orders cannot be cancelled."              |
+| Check                     | Condition to Block                      | Error Message                                     |
+| ------------------------- | --------------------------------------- | ------------------------------------------------- |
+| Job Cards Generated       | Any Job Card exists for this SO         | "X Job Card(s) already generated. Cannot cancel." |
+| Challans Dispatched       | Any Delivery Challan exists for this SO | "Products have been dispatched. Cannot cancel."   |
+| Pushed to Invoicing       | SO has been linked to an invoice        | "SO is linked to Invoice. Contact Finance."       |
+| Status = Fulfilled/Billed | SO already completed                    | "Fulfilled/Billed orders cannot be cancelled."    |
 
 ---
 
 ## Cancellation Form Fields
 
-| Field                | Type     | Required    | Options / Validation                                                                 |
-| -------------------- | -------- | ----------- | ------------------------------------------------------------------------------------ |
-| Cancellation Reason  | Dropdown | Yes         | Customer Request / Duplicate Order / Incorrect Line Items / Contract Terminated / Service No Longer Required / Other |
-| Additional Remarks   | Text Area| No          | Max 500 characters; required if Reason = Other                                       |
+| Field               | Type      | Required | Options / Validation                                                                                                 |
+| ------------------- | --------- | -------- | -------------------------------------------------------------------------------------------------------------------- |
+| Cancellation Reason | Dropdown  | Yes      | Customer Request / Duplicate Order / Incorrect Line Items / Contract Terminated / Service No Longer Required / Other |
+| Additional Remarks  | Text Area | No       | Max 500 characters; required if Reason = Other                                                                       |
 
 ---
 
 ## Validation Rules
 
-| Validation                    | Rule                                                            |
-| ----------------------------- | --------------------------------------------------------------- |
-| No Job Cards                  | Cancellation blocked if any Job Card exists for this SO         |
-| No Challans                   | Cancellation blocked if any Delivery Challan dispatched         |
-| Not in Invoicing              | Cancellation blocked if SO linked to an invoice                 |
-| Status = Draft or Open        | Only Draft and Open SOs can be cancelled                        |
-| Reason Required               | Must select a reason from the dropdown                          |
-| Remarks (if Other)            | Mandatory free-text when "Other" is selected                    |
+| Validation             | Rule                                                    |
+| ---------------------- | ------------------------------------------------------- |
+| No Job Cards           | Cancellation blocked if any Job Card exists for this SO |
+| No Challans            | Cancellation blocked if any Delivery Challan dispatched |
+| Not in Invoicing       | Cancellation blocked if SO linked to an invoice         |
+| Status = Draft or Open | Only Draft and Open SOs can be cancelled                |
+| Reason Required        | Must select a reason from the dropdown                  |
+| Remarks (if Other)     | Mandatory free-text when "Other" is selected            |
 
 ---
 
 ## System Behaviour on Cancellation
 
-| Trigger                         | System Action                                                                |
-| ------------------------------- | ---------------------------------------------------------------------------- |
-| Confirm Cancellation clicked    | SO status set to **Cancelled**                                                |
-| Svc Contract billing period freed   | For Service Contract SOs, the billing period becomes available for re-generation |
-| Operations notified             | SO removed from dispatch queue; no future Job Cards generated                |
-| Contract billing log updated    | Module 19 → Tab 2 reflects the cancelled SO with updated fulfilment tracker  |
-| Customer history updated        | Module 18 → Tab 3 reflects the cancelled status                              |
-| Audit log                       | Cancellation event logged with Reason, Timestamp, and user who acted         |
+| Trigger                           | System Action                                                                    |
+| --------------------------------- | -------------------------------------------------------------------------------- |
+| Confirm Cancellation clicked      | SO status set to **Cancelled**                                                   |
+| Svc Contract billing period freed | For Service Contract SOs, the billing period becomes available for re-generation |
+| Operations notified               | SO removed from dispatch queue; no future Job Cards generated                    |
+| Contract billing log updated      | Module 19 → Tab 2 reflects the cancelled SO with updated fulfilment tracker      |
+| Customer history updated          | Module 18 → Tab 3 reflects the cancelled status                                  |
+| Audit log                         | Cancellation event logged with Reason, Timestamp, and user who acted             |
 
 ---
 
@@ -10915,14 +11734,14 @@ A mechanism to void a Sales Order. Cancellation is only possible before executio
 
 ## RBAC – Role-Based Access Control
 
-| Role              | List View (20.1)         | Generate SO (20.2) | View Details (20.3) | Edit SO (20.4)  | Cancel SO (20.5)  |
-| ----------------- | ------------------------ | ------------------ | ------------------- | --------------- | ----------------- |
-| Sales Person      | View (own branch)        | ✅                  | ✅                   | ✅ (own SOs)     | ❌                 |
-| Sales Manager     | View (own branch / team) | ✅                  | ✅                   | ✅               | ✅                 |
-| Branch Manager    | View (own branch)        | ✅                  | ✅                   | ✅               | ✅                 |
-| Head Ops / Admin  | View (all branches)      | ✅                  | ✅                   | ✅               | ✅                 |
-| Finance Auditor   | View (all – read-only)   | ❌                  | ✅                   | ❌               | ❌                 |
-| System (Cron)     | —                        | ✅ (Auto Svc Contract)   | —                   | —               | —                 |
+| Role             | List View (20.1)         | Generate SO (20.2)     | View Details (20.3) | Edit SO (20.4) | Cancel SO (20.5) |
+| ---------------- | ------------------------ | ---------------------- | ------------------- | -------------- | ---------------- |
+| Sales Person     | View (own branch)        | ✅                     | ✅                  | ✅ (own SOs)   | ❌               |
+| Sales Manager    | View (own branch / team) | ✅                     | ✅                  | ✅             | ✅               |
+| Branch Manager   | View (own branch)        | ✅                     | ✅                  | ✅             | ✅               |
+| Head Ops / Admin | View (all branches)      | ✅                     | ✅                  | ✅             | ✅               |
+| Finance Auditor  | View (all – read-only)   | ❌                     | ✅                  | ❌             | ❌               |
+| System (Cron)    | —                        | ✅ (Auto Svc Contract) | —                   | —              | —                |
 
 ---
 
@@ -11025,21 +11844,18 @@ MODULE 20: SALES ORDER MANAGEMENT
 
 ## Data Flow Table
 
-| Source Module  | Data Provided                                                 | Used In (SO Management)                                      |
-| -------------- | ------------------------------------------------------------- | ------------------------------------------------------------ |
-| **Module 19**  | Active Contract (customer, sites, services, payment schedule) | Section 1: Svc Contract source; auto-generates SOs per billing period |
-| **Module 17**  | Approved GMA (services, costs, sites, GM%)                    | Section 1: One-Time Service source                           |
-| **Module 16**  | Approved Quotation (services, pricing)                        | Section 1: One-Time Service source                           |
-| **Module 18**  | Customer ID, Name, Sites, Billing Address                     | Section 1: Customer details; Section 3: Delivery address     |
-| **Module 10**  | Product Name, Code, UOM, Sale Price, HSN Code                 | Section 2: Product line items for Product Sale orders        |
-| **Module 9**   | HSN/SAC codes, GST rates                                      | Section 2: Tax calculation on all line items                 |
-| **Module 7**   | Branch list (Active branches)                                 | Section 1: Branch assignment                                 |
-| **Module 20**  | SO Number, Status, Line Items, Execution Status               | Operations (Job Cards), Invoicing, Module 18 Tab 3, Module 19 Tab 2 |
-
+| Source Module | Data Provided                                                 | Used In (SO Management)                                               |
+| ------------- | ------------------------------------------------------------- | --------------------------------------------------------------------- |
+| **Module 19** | Active Contract (customer, sites, services, payment schedule) | Section 1: Svc Contract source; auto-generates SOs per billing period |
+| **Module 17** | Approved GMA (services, costs, sites, GM%)                    | Section 1: One-Time Service source                                    |
+| **Module 16** | Approved Quotation (services, pricing)                        | Section 1: One-Time Service source                                    |
+| **Module 18** | Customer ID, Name, Sites, Billing Address                     | Section 1: Customer details; Section 3: Delivery address              |
+| **Module 10** | Product Name, Code, UOM, Sale Price, HSN Code                 | Section 2: Product line items for Product Sale orders                 |
+| **Module 9**  | HSN/SAC codes, GST rates                                      | Section 2: Tax calculation on all line items                          |
+| **Module 7**  | Branch list (Active branches)                                 | Section 1: Branch assignment                                          |
+| **Module 20** | SO Number, Status, Line Items, Execution Status               | Operations (Job Cards), Invoicing, Module 18 Tab 3, Module 19 Tab 2   |
 
 ================================================================================================
-
-
 
 # 📊 COMPLETE DATA FLOW DIAGRAM — MODULE 1 TO MODULE 20
 
@@ -11399,25 +12215,93 @@ MODULE 20: SALES ORDER MANAGEMENT
 
 ## CONDITIONAL DATA FLOW SUMMARY TABLE
 
-| Condition                                  | Source Module | Data Sent                                     | Target Module | Action                                          |
-| ------------------------------------------ | ------------ | --------------------------------------------- | ------------- | ----------------------------------------------- |
-| Lead Status = Qualified                    | M15          | Lead details, contact info                    | M16, M17      | Create Quotation or GMA sheet                   |
-| Lead Status = Won                          | M15          | Full lead record                              | M18           | Convert to Customer                             |
-| Quotation Status = Accepted                | M16          | Quoted services, pricing, sites               | M19           | Trigger Contract creation                       |
-| GMA Status = Approved (GM ≥ 40%)          | M17          | Full GMA sheet (auto-approved)                | M19           | Create Contract (80% data auto-inherited)       |
-| GMA Status = Approved (GM < 40%)          | M17          | GMA sheet (manually approved by Mgr/CEO)      | M19           | Create Contract after approval                  |
-| Contract Status = Active                   | M19          | Contract terms, billing periods, sites        | M20           | Auto-generate SO per billing period (cron)      |
-| Contract Billing Period = Unbilled         | M19          | Billing period details                        | M20           | SO created for that specific period             |
-| SO Order Type = Service Contract           | M20          | Uses Contract (M19) as source                 | Operations    | Site-wise service execution                     |
-| SO Order Type = One-Time + Linked          | M20          | Uses Quotation (M16) or GMA (M17) as source   | Operations    | One-time service dispatch                       |
-| SO Order Type = One-Time + Standalone      | M20          | Manual entry, Customer (M18) reference         | Operations    | Standalone service                              |
-| SO Order Type = Product Sale               | M20          | Products from M10, Customer from M18           | Inventory     | Product dispatch from M11 stock                 |
-| SO Status = Open                           | M20          | SO details, line items                        | M21+          | Job Card generation, dispatch                   |
-| SO Status = Fulfilled                      | M20          | Completed SO                                  | Billing       | Invoice generation                              |
-| SO Status = Cancelled                      | M20          | Cancellation record                           | M19           | Free billing period on Contract                 |
-| PO Status = Received                       | M14          | Received items, quantities                    | M11           | Add to Central/Branch stock                     |
-| Product Created/Updated                    | M10          | Product details, HSN, prices                  | M11,M14,M20   | Available for stock, PO, and SO                 |
-| HSN Code Created/Updated                   | M9           | Tax rates, HSN code                           | M10,M16-M20   | Auto-populate tax on all transactions           |
+| Condition                             | Source Module | Data Sent                                   | Target Module | Action                                     |
+| ------------------------------------- | ------------- | ------------------------------------------- | ------------- | ------------------------------------------ |
+| Lead Status = Qualified               | M15           | Lead details, contact info                  | M16, M17      | Create Quotation or GMA sheet              |
+| Lead Status = Won                     | M15           | Full lead record                            | M18           | Convert to Customer                        |
+| Quotation Status = Accepted           | M16           | Quoted services, pricing, sites             | M19           | Trigger Contract creation                  |
+| GMA Status = Approved (GM ≥ 40%)      | M17           | Full GMA sheet (auto-approved)              | M19           | Create Contract (80% data auto-inherited)  |
+| GMA Status = Approved (GM < 40%)      | M17           | GMA sheet (manually approved by Mgr/CEO)    | M19           | Create Contract after approval             |
+| Contract Status = Active              | M19           | Contract terms, billing periods, sites      | M20           | Auto-generate SO per billing period (cron) |
+| Contract Billing Period = Unbilled    | M19           | Billing period details                      | M20           | SO created for that specific period        |
+| SO Order Type = Service Contract      | M20           | Uses Contract (M19) as source               | Operations    | Site-wise service execution                |
+| SO Order Type = One-Time + Linked     | M20           | Uses Quotation (M16) or GMA (M17) as source | Operations    | One-time service dispatch                  |
+| SO Order Type = One-Time + Standalone | M20           | Manual entry, Customer (M18) reference      | Operations    | Standalone service                         |
+| SO Order Type = Product Sale          | M20           | Products from M10, Customer from M18        | Inventory     | Product dispatch from M11 stock            |
+| SO Status = Open                      | M20           | SO details, line items                      | M21+          | Job Card generation, dispatch              |
+| SO Status = Fulfilled                 | M20           | Completed SO                                | Billing       | Invoice generation                         |
+| SO Status = Cancelled                 | M20           | Cancellation record                         | M19           | Free billing period on Contract            |
+| PO Status = Received                  | M14           | Received items, quantities                  | M11           | Add to Central/Branch stock                |
+| Product Created/Updated               | M10           | Product details, HSN, prices                | M11,M14,M20   | Available for stock, PO, and SO            |
+| HSN Code Created/Updated              | M9            | Tax rates, HSN code                         | M10,M16-M20   | Auto-populate tax on all transactions      |
 
 ---
 
+# END-TO-END DATA FLOW ARCHITECTURE (MODULE 15 TO 20)
+
+This section maps the precise field-level data inheritance across the pre-sales, sales, and execution modules to ensure complete data integrity without manual re-entry.
+
+## 1. Lead (M15) ➔ Customer (M18) Conversion
+
+When a Lead is marked as "Won", a new Customer Master record is automatically instantiated.
+
+- **Fields Transferred (Auto-Mapped):**
+  - `Lead Company/Name` ➔ `Customer Name`
+  - `Contact Person` ➔ `Primary Contact Name`
+  - `Phone / Email` ➔ `Primary Contact Phone & Email`
+  - `Address, City, State, Pincode` ➔ `Billing Address` & `Site 1 Address`
+  - `Lead Source` ➔ `Customer Acquisition Source`
+  - `GST / PAN` (if captured in Lead) ➔ `Tax Details`
+- **System Action:** Auto-generates a unique `Customer ID` (e.g., CUST-0001).
+
+## 2. Lead (M15) / Customer (M18) ➔ Quotation (M16)
+
+Quotations are generated for Qualified Leads or existing Customers.
+
+- **Fields Transferred (Auto-Mapped):**
+  - `Lead / Customer Name & ID` ➔ `Quoted To Header`
+  - `Lead Requirement Details` ➔ Suggests initial `Service Types`
+- **Follow-up Linkage:** Generating a Quotation automatically spawns a Follow-up task in M15 linked to the `Quotation ID`. Tracking "Accepted/Rejected" in Follow-ups dynamically synchronizes with the M16 Quotation Status.
+
+## 3. Quotation (M16) ➔ GMA (M17) [Profitability Analysis]
+
+For commercial jobs requiring gross margin scrutiny, an approved Quotation acts as the skeleton for the GMA.
+
+- **Fields Transferred (Auto-Mapped):**
+  - `Sites, Categories & Areas (sqft)` ➔ `GMA Site Configuration`
+  - `Services Quoted` ➔ `GMA Service Matrix`
+  - `Quoted Value (Top-line)` ➔ `Revenue Field`
+- **New Data Layered in GMA:** Operations adds backend costs (Chemical Base Cost inherited from M10/M12 limits, Labor Costs, Transport) to calculate the strict `Gross Margin %`.
+
+## 4. Quotation (M16) / GMA (M17) ➔ Contract (M19)
+
+Once a Quotation is Accepted (residential) or a GMA is Financially Approved (commercial), it triggers Contract Creation.
+
+- **Fields Transferred (Auto-Mapped):**
+  - `Customer ID & Billing Info` ➔ `Contract Header`
+  - `Total Value & Tax %` ➔ `Financial Terms`
+  - `Sites, Addresses, Map URLs, Areas` ➔ `Contract Execution Sites`
+  - `Assigned Services, Frequencies` ➔ `Contract Service Line Items`
+  - `Target Chemicals, UOM, Req. Qty` ➔ `Consumable Chemicals Array` (Locks supply chain planning)
+- **New Data Layered in Contract:** The Account Manager defines the `Contract Start/End Date` and configures the `Billing Cycle` (e.g., Quarterly) to map out future invoices.
+
+## 5. Contract (M19) ➔ Auto-Generated Sales Order (M20)
+
+For recurring business, the system cron automatically generates Sales Orders (SOs) targeting the active Billing Schedule.
+
+- **Fields Transferred (Auto-Mapped strictly as Read-Only):**
+  - `Contract ID & Customer Name` ➔ `Section 1: Source Details`
+  - `Site Name, Full Address, Category` ➔ `Section 2: Sites`
+  - `Executable Services` ➔ `Section 2: Service Line Items`
+  - `Allocated Chemicals & Qty` ➔ `Section 2: Chemicals` (Triggers accurate inventory deduction)
+- **Editable Exceptions:** Only the `Execution Contact Person/Mobile` and `Quantity of Visits` remain editable to provide dispatch flexibility for that specific generation cycle.
+
+## 6. One-Time SO (Standalone) ➔ Sales Order (M20)
+
+For rapid ad-hoc dispatch where no Quotation, GMA, or Contract exists.
+
+- **Data Flow:**
+  - Auto-fetches `Customer Header` from M18.
+  - **Manual Entry Required:** All Site parameters (Address, Map URL, Area, Category) must be typed in natively.
+  - **System Assists:** Fetching a Service from M12 auto-loads the required `Chemical Norms`, but the user must calculate the total `Req. Qty` against the manual Area (sqft).
+- **Outcome:** Provides a fast-track bypass to generate immediate tickets while strictly enforcing the capture of all critical Site & Chemical data to preserve M21 Task Generation integrity.
