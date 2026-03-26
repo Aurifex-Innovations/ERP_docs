@@ -10106,13 +10106,13 @@ A comprehensive dashboard displaying all Sales Orders (execution mandates) in th
 │                                                                              │
 │  SALES ORDER TABLE                                                           │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
-│  │SO Number    │Customer        │Order Type     │Total Value│SO Date  │Status││
-│  │─────────────┼────────────────┼───────────────┼───────────┼─────────┼──────││
-│  │SO-2026-0112 │ABC Corporation │Svc Contract   │₹ 51,000   │01 Apr 26│✅ Open││
-│  │SO-2026-0087 │ABC Corporation │Svc Contract   │₹ 51,000   │01 Jan 26│✅ Fulf││
-│  │SO-2026-0043 │XYZ Hotel       │One-Time Svc   │₹ 8,500    │15 Jan 26│✅ Fulf││
-│  │SO-2026-0038 │PQR Foods       │Product Sale   │₹ 12,200   │10 Jan 26│💰 Blld││
-│  │SO-2026-0022 │DEF Mall        │Svc Contract   │₹ 15,000   │01 Jan 26│❌ Cncl││
+│  │SO Number    │Customer        │Type     │Sites│Total Value│SO Date  │Status││
+│  │─────────────┼────────────────┼─────────┼─────┼───────────┼─────────┼──────││
+│  │SO-2026-0112 │ABC Corporation │Contract │ 3   │₹ 51,000   │01 Apr 26│✅ Open││
+│  │SO-2026-0087 │ABC Corporation │Contract │ 3   │₹ 51,000   │01 Jan 26│✅ Fulf││
+│  │SO-2026-0043 │XYZ Hotel       │One-Time │ 1   │₹ 8,500    │15 Jan 26│✅ Fulf││
+│  │SO-2026-0038 │PQR Foods       │Product  │ N/A │₹ 12,200   │10 Jan 26│💰 Blld││
+│  │SO-2026-0022 │DEF Mall        │Contract │ 2   │₹ 15,000   │01 Jan 26│❌ Cncl││
 │  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
@@ -10488,7 +10488,7 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 | Tax %              | Auto-filled     | System   | GST rate from HSN code (Module 9)                                        |
 | Tax Amount (₹)     | Auto-calculated | System   | `Qty × Unit Price × Tax%`                                                |
 | Line Total (₹)     | Auto-calculated | System   | `(Qty × Unit Price) + Tax Amount`                                        |
-| Add Product        | Button          | Yes      | Add Product                                                              |
+| Add Product        | Button          | System   | Add Product                                                              |
 
 ### Order Total Summary (Auto-Calculated)
 
@@ -10623,11 +10623,13 @@ Displays the complete order breakdown — header details, source reference, and 
 │  Priority      : Normal                 Expected Date: 30 Jun 2026         │
 │                                                                              │
 │  ─── LINE ITEMS (SITE-WISE) ────────────────────────────────────────────────  │
-│  SITE 1: Head Office (SITE-00312) | Country: India | 🔗 Map URL              │
+│  SITE 1: Head Office (SITE-00312)                                            │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Contact: Rajesh Kumar (+91 98765 43210) | 🔗 Map URL                     ││
+│  │                                                                          ││
 │  │ SERVICE 1: Cockroach Treatment                                           ││
 │  │ ┌────────┬──────────┬────────┬───────┬───────┬──────────┬──────────┐     ││
-│  │ │ Qty    │ Unit Pr. │ SQFT   │ HSN   │ Tax%  │ Tax Amt  │ Total    │     ││
+│  │ │ Visits │ Unit Pr. │ SQFT   │ HSN   │ Tax%  │ Tax Amt  │ Total    │     ││
 │  │ ├────────┼──────────┼────────┼───────┼───────┼──────────┼──────────┤     ││
 │  │ │ 12     │ ₹ 3,250  │ 3,500  │ 996490│ 18%   │ ₹ 7,020  │ ₹ 46,020 │     ││
 │  │ └────────┴──────────┴────────┴───────┴───────┴──────────┴──────────┘     ││
@@ -10640,16 +10642,24 @@ Displays the complete order breakdown — header details, source reference, and 
 │  │ │ Fipronil Gel         │ 3808    │ tube   │ 2 tubes   │                  ││
 │  │ └──────────────────────┴─────────┴────────┴───────────┘                  ││
 │  └──────────────────────────────────────────────────────────────────────────┘│
-│  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
-│  SITE 2: Warehouse (SITE-00313) | Country: India | 🔗 Map URL  [▸ Click to View]                            │
+│  SITE 2: Warehouse (SITE-00313)                               [▸ Click to Expand] │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Contact: Suresh Patel (+91 98765 01234) | 🔗 Map URL                     ││
+│  │ (Service details collapsed by default in View Mode)                        ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
 │                                                                              │
 │  ━━━ FOR PRODUCTS (Product Sale) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━   │
 │  ┌──────────────────────────────────────────────────────────────────────────┐│
 │  │#│Product        │Qty │Unit Pr. │HSN  │Tax% │Tax Amt │Line Total│           ││
 │  │─┼───────────────┼────┼─────────┼─────┼─────┼────────┼──────────│           ││
 │  │1│Alpha Cyperm.  │ 5  │₹ 1,200  │3808 │18%  │₹ 1,080 │₹ 7,080   │           ││
+│  │2│Fipronil Gel   │ 20 │₹ 220    │3808 │18%  │₹ 792   │₹ 5,192   │           ││
 │  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  💡 **[DEV NOTE FOR BEGINNERS — MULTI-SITE LOOP]**                          │
+│  The **SITE-WISE LINE ITEMS** block must dynamically loop for every site linked to the SO.  │
+│  Example: If a contract has 5 sites, duplicate the SITE block 5 times vertically.           │
 │                                                                              │
 │  ─── ORDER TOTAL ─────────────────────────────────────────────────────────  │
 │  Sub-Total   : ₹ 61,300                                                     │
@@ -10690,10 +10700,12 @@ Displays the complete order breakdown — header details, source reference, and 
 | --------------- | -------- | ------------------------------------------------------- |
 | #               | Number   | Line item sequence number                               |
 | Description     | Display  | Service name or Product name                            |
-| Site            | Display  | Site for service delivery (service orders only)         |
-| Country         | Display  | Country of the site                                     |
+| Site Name       | Display  | Name of the site (e.g., Head Office)                    |
+| Site ID         | Display  | System ID (e.g., SITE-00312)                            |
+| Site Contact    | Display  | Person of contact for this site visit                   |
+| Contact Mobile  | Display  | Phone number for site coordination                      |
 | Google Map URL  | Link     | Clickable Google Maps link for the site                 |
-| Qty             | Number   | Visits (service) or units (product)                     |
+| Visits / Qty    | Number   | Total visits (service) or units (product)                |
 | UOM             | Display  | Visits / Ltr / Nos / Tube / kg etc.                     |
 | Unit Price (₹)  | Currency | Per-unit price                                          |
 | HSN/SAC Code    | Display  | Tax classification code                                 |
@@ -10823,8 +10835,12 @@ Allows modification of a Sales Order before it is released to Operations or whil
 │                                                                              │
 │  SECTION 2: DYNAMIC SCOPE & LINE ITEMS                                       │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  SITE 1: Head Office (SITE-00312) | Country: India | 🔗 Map URL           │ │
+│  │  ━━━ IF ORDER TYPE = SERVICE CONTRACT / ONE-TIME ━━━━━━━━━━━━━━━━━━━━━━  │ │
+│  │  SITE 1: Head Office (SITE-00312)                                        │ │
 │  │  ┌───────────────────────────────────────────────────────────────────┐  │ │
+│  │  │ Contact Name  : [Rajesh Kumar         ] (Edit for Dispatch)       │  │ │
+│  │  │ Contact Mobile: [+91 98765 43210      ]                           │  │ │
+│  │  │                                                                  │  │ │
 │  │  │ SERVICE 1: Cockroach Treatment                                    │  │ │
 │  │  │ ┌────────┬──────────┬────────┬───────┬───────┬─────────┬────────┐ │  │ │
 │  │  │ │Visits  │Unit Price│SQFT    │HSN    │Tax %  │Tax Amt  │Total   │ │  │ │
@@ -10843,12 +10859,20 @@ Allows modification of a Sales Order before it is released to Operations or whil
 │  │  │ [Remove Service]                                                 │  │ │
 │  │  └───────────────────────────────────────────────────────────────────┘  │ │
 │  │                                                                         │ │
-│  │  ━━━ FOR PRODUCTS (Product Sale) ━━━━━━━━━━━━━━━━───────────────────━  │ │
+│  │  ━━━ IF ORDER TYPE = PRODUCT SALE ━━━━━━━━━━━━━━━━───────────────────━  │ │
 │  │  ┌───────────────────────────────────────────────────────────────────┐  │ │
 │  │  │#│Product        │Qty │Unit Pr. (₹)     │HSN  │Tax% │Line Total│  │ │
 │  │  │─┼───────────────┼────┼─────────────────┼─────┼─────┼──────────│  │ │
 │  │  │1│Alpha Cyperm.  │[ 5]│[₹ 1,200] (Edit) │3808 │18%  │₹ 7,080   │  │ │
+│  │  │2│Fipronil Gel   │[20]│[₹ 220]   (Edit) │3808 │18%  │₹ 5,192   │  │ │
+│  │  ├─┴───────────────┴────┴─────────────────┴─────┴─────┴──────────┤  │ │
+│  │  │ [+ Add Product]                                                 │  │ │
 │  │  └───────────────────────────────────────────────────────────────────┘  │ │
+│  │                                                                         │ │
+│  │                                                                         │ │
+│  │  💡 **[DEV NOTE FOR BEGINNERS — MULTI-SITE LOOP]**                          │ │
+│  │  Just like the Add Form, the **SITE-WISE LINE ITEMS** sections must be rendered using a loop  │ │
+│  │  over the inherited source data (Contract/GMA/Standalone).                  │ │
 │  │                                                                         │ │
 │  │  Editable Fields: Qty, Unit Price                                       │ │
 │  │                                                                         │ │
@@ -10883,7 +10907,9 @@ Allows modification of a Sales Order before it is released to Operations or whil
 | Order Type              | ❌ Locked  | Cannot change the order type after creation                        |
 | SO Date                 | ❌ Locked  | Historical record; cannot be modified                              |
 | Branch                  | ❌ Locked  | Cannot change once created                                         |
-| Line Item Qty           | ✅ Yes     | Can increase/decrease visit counts (if standalone) or product quantities |
+| Site Contact            | ✅ Yes     | **Propagated to Task**; crucial for coordinator to update per visit |
+| Contact Mobile          | ✅ Yes     | **Propagated to Task**; must be 10 digits                          |
+| Line Item Visits/Qty    | ✅ Yes     | Can increase/decrease visit counts (if standalone) or product quantities |
 | Line Item Unit Price    | ✅ Yes     | Only for standalone orders OR within approved variance for linked orders |
 | Consumable Chemicals    | ❌ Locked  | Pulled from source GMA/Contract; cannot be edited in SO           |
 | Chemical Substitution   | ❌ Locked  | Substitution must be handled at the source (Contract/GMA)           |
@@ -10891,7 +10917,6 @@ Allows modification of a Sales Order before it is released to Operations or whil
 | Execution Notes         | ✅ Yes     | Free-text operational instructions                                 |
 | Priority Level          | ✅ Yes     | Can escalate or de-escalate                                        |
 | Expected Delivery Date  | ✅ Yes     | Can adjust target completion date                                  |
-| Country                 | ✅ Yes     | Dropdown; can change country for delivery/execution                |
 | Google Map URL          | ✅ Yes     | Editable URL; required for dispatch                                |
 
 ---
