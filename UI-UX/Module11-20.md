@@ -10488,6 +10488,7 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 | Tax %              | Auto-filled     | System   | GST rate from HSN code (Module 9)                                        |
 | Tax Amount (₹)     | Auto-calculated | System   | `Qty × Unit Price × Tax%`                                                |
 | Line Total (₹)     | Auto-calculated | System   | `(Qty × Unit Price) + Tax Amount`                                        |
+| Add Product        | Button          | Yes      | Add Product                                                              |
 
 ### Order Total Summary (Auto-Calculated)
 
