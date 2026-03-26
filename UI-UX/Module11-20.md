@@ -10238,33 +10238,83 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 │                                                                              │
 │  SECTION 2: DYNAMIC SCOPE & EXECUTION (SITE-WISE)                            │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  ━━━ FOR SERVICES (Contract / One-Time) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ │
-│  │  (Auto-fetched from source OR manually added for standalone)            │ │
+│  │  ━━━ IF ORDER TYPE = SERVICE CONTRACT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ │
+│  │  (All Sites, Services, and Chemicals are auto-fetched from Contract)    │ │
 │  │                                                                         │ │
-│  │  SITE 1: Head Office (SITE-00312)                                       │ │
+│  │  SITE 1: Head Office (SITE-00312)                       [Remove Site]   │ │
 │  │  ┌───────────────────────────────────────────────────────────────────┐  │ │
-│  │  │ SERVICE 1: Cockroach Treatment                                    │  │ │
+│  │  │ Address: [Andheri East, Mumbai                     ]              │  │ │
+│  │  │ City: [Mumbai]        State: [▼ Maharashtra ▼]                    │  │ │
+│  │  │ Country: [▼ India ▼]                                              │  │ │
+│  │  │ Google Map URL: [📍 Link                           ]              │  │ │
+│  │  │ Category: [▼ Commercial ▼]                                        │  │ │
+│  │  │ Sub-Category: [▼ Internal ▼]                                      │  │ │
+│  │  │ Area (sqft): [3,500]                                              │  │ │
+│  │  │ Contact Person*: [Rajesh          ] Mobile*: [+919876543210]      │  │ │
+│  │  │ (Site & Contact fields auto-fetch but remain editable for dispatch)│  │ │
+│  │  │                                                                   │  │ │
+│  │  │ SERVICE 1: Cockroach Treatment                     (Read-Only)    │  │ │
+│  │  │ ┌────────┬─────────┬────────┬───────┬───────┬─────────┬─────────┐ │  │ │
+│  │  │ │Visits  │UnitPr(₹)│SQFT    │HSN    │Tax %  │Tax Amt  │Total(₹) │ │  │ │
+│  │  │ ├────────┼─────────┼────────┼───────┼───────┼─────────┼─────────┤ │  │ │
+│  │  │ │[ 12 ]  │ 3,250   │3,500   │996490 │18%    │ 7,020   │ 46,020  │ │  │ │
+│  │  │ └────────┴─────────┴────────┴───────┴───────┴─────────┴─────────┘ │  │ │
+│  │  │ (Visits are editable; Unit Price is fixed from Contract)          │  │ │
+│  │  │                                                                   │  │ │
+│  │  │  ─── CONSUMABLE CHEMICALS (Read-only from Contract) ───────────── │  │ │
+│  │  │  ┌────────────┬─────┬────┬────────┬──────────────┬──────┬───────┐│ │
+│  │  │  │Product Name│Code │UOM │Coverage│ Req. Qty     │Price │Cost   ││ │
+│  │  │  ├────────────┼─────┼────┼────────┼──────────────┼──────┼───────┤│ │
+│  │  │  │Alpha Cyper.│P-001│ ml │ 1200   │ 120 ml       │₹4.20 │₹504   ││ │
+│  │  │  └────────────┴─────┴────┴────────┴──────────────┴──────┴───────┘│ │
+│  │  └───────────────────────────────────────────────────────────────────┘  │ │
+│  │                                                                         │ │
+│  │  💡 [DEV NOTE FOR BEGINNERS - MULTI-SITE LOOP]:                       │ │
+│  │  If the Contract covers multiple sites, the above UI block will         │ │
+│  │  dynamically loop to render SITE 2, SITE 3, etc. below each other.      │ │
+│  │  Each site will auto-load its respective Address, Services, and         │ │
+│  │  Chemical configurations inherited from the Contract.                   │ │
+│  │                                                                         │ │
+│  │  ━━━ IF ORDER TYPE = ONE-TIME SERVICE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ │
+│  │  (If Source = GMA/Quotation: Auto-fetched like Contract)                │ │
+│  │  (If Source = Standalone: All fields must be manually added below)      │ │
+│  │                                                                         │ │
+│  │  SITE 1: [Search / Enter Site Name]                     [Remove Site]   │ │
+│  │  ┌───────────────────────────────────────────────────────────────────┐  │ │
+│  │  │ Address: [________________________________]                       │  │ │
+│  │  │ City:    [________________]  State: [▼ Select State ▼]            │  │ │
+│  │  │ Country: [▼ Select Country ▼] (Default: India)                     │  │ │
+│  │  │ Google Map URL: [________________________________]                │  │ │
+│  │  │ Category*:     [▼ Residential / Commercial / Industrial ▼]        │  │ │
+│  │  │ Sub-Category*: [▼ Internal / External ▼]                          │  │ │
+│  │  │ Area (sqft)*: [________]                                          │  │ │
+│  │  │ Contact Person*: [________________] Mobile*: [+91__________]      │  │ │
+│  │  │                                                                   │  │ │
+│  │  │ SERVICE 1: [▼ Select Service / Cockroach Treatment ▼]             │  │ │
 │  │  │ ┌────────┬──────────┬────────┬───────┬───────┬─────────┬────────┐ │  │ │
 │  │  │ │Visits  │Unit Price│SQFT    │HSN    │Tax %  │Tax Amt  │Total   │ │  │ │
 │  │  │ ├────────┼──────────┼────────┼───────┼───────┼─────────┼────────┤ │  │ │
-│  │  │ │[ 12 ]  │₹ 3,250   │3,500   │996490 │18%    │₹ 7,020  │₹ 46,020│ │  │ │
+│  │  │ │[ 1  ]  │[₹ 3,250] │[3,500] │996490 │18%    │₹ 585    │₹ 3,835 │ │  │ │
 │  │  │ └────────┴──────────┴────────┴───────┴───────┴─────────┴────────┘ │  │ │
-│  │  │                                                                  │  │ │
-│  │  │  ─── CONSUMABLE CHEMICALS (Read-only from Source) ─────────────  │  │ │
-│  │  │  ┌────────────────────┬────────┬──────┬─────────┐              │  │ │
-│  │  │  │ Chemical Name      │ HSN    │ UOM  │ Req Qty │              │  │ │
-│  │  │  ├────────────────────┼────────┼──────┼─────────┤              │  │ │
-│  │  │  │ Alpha Cyper.       │ 3808   │ ml   │ 120 ml  │              │  │ │
-│  │  │  │ Fipronil Gel       │ 3808   │ tube │ 2 tubes │              │  │ │
-│  │  │  └────────────────────┴────────┴──────┴─────────┘              │  │ │
-│  │  │                                                                  │  │ │
+│  │  │  ─── CONSUMABLE CHEMICALS (Manual Entry for Standalone) ───────── │ │
+│  │  │  (Auto-fetched from Module 12 based on selected pest/service type)   │ │
+│  │  │  ┌────────────┬─────┬────┬────────┬──────────────┬──────┬───────┐│ │
+│  │  │  │Product Name│Code │UOM │Coverage│ Req. Qty     │Price │Cost   ││ │
+│  │  │  ├────────────┼─────┼────┼────────┼──────────────┼──────┼───────┤│ │
+│  │  │  │Alpha Cyper.│P-001│ ml │ 1200   │ [120] ml     │₹4.20 │₹504   ││ │
+│  │  │  ├────────────┼─────┼────┼────────┼──────────────┼──────┼───────┤│ │
+│  │  │  │Fipronil Gel│P-003│tube│ 1200   │ [2] tubes    │₹220  │₹440   ││ │
+│  │  │  ├────────────┴─────┴────┴────────┴──────────────┴──────┴───────┤│ │
+│  │  │  │ [+ Add Chemical]                                             ││ │
+│  │  │  └──────────────────────────────────────────────────────────────┘│ │
+│  │  │                                                                  │ │
 │  │  │ [Remove Service]                                                 │  │ │
 │  │  └───────────────────────────────────────────────────────────────────┘  │ │
 │  │  [+ ADD SERVICE TO THIS SITE]                                           │ │
 │  │                                                                         │ │
-│  │  [+ ADD ANOTHER SITE]                                                    │ │
+│  │  [+ ADD ANOTHER SITE]                                                   │ │
 │  │                                                                         │ │
-│  │  ━━━ FOR PRODUCTS (Product Sale) ━━━━━━━━━━━━━━━━───────────────────━  │ │
+│  │  ━━━ IF ORDER TYPE = PRODUCT SALE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ │
 │  │  ┌───────────────────────────────────────────────────────────────────┐  │ │
 │  │  │#│Product        │Qty │Unit Pr. (₹)     │HSN  │Tax% │Line Total│  │ │
 │  │  │─┼───────────────┼────┼─────────────────┼─────┼─────┼──────────│  │ │
@@ -10343,31 +10393,36 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 
 ## Section 2: Line Items Fields
 
-### Service Line Items (Site-Wise Configuration)
+### A. CONDITION: SERVICE CONTRACT
+*(Sites, Services, and Chemicals are auto-fetched from the Contract, but Site details and Qty remain editable for execution/dispatch flexibility)*
 
 | Field           | Type            | Required | Validation / Notes                                                              |
 | --------------- | --------------- | -------- | ------------------------------------------------------------------------------- |
-| Site Name       | Search/Text     | Yes      | Auto-fetched from source OR manually entered for standalone                     |
-| Country         | Dropdown        | Yes      | Country list (Default: India); auto-fetched from source if available. **Required** |
-| Google Map URL  | URL             | Yes      | Valid URL format; auto-fetched from source if available. **Required for execution** |
-| Service Name    | Search Dropdown | Yes      | Select from Module 12 (Services) if standalone; auto-fetched if linked          |
-| Qty (Visits)    | Number          | Yes      | Number of visits for this SO; editable, must be > 0                             |
-| Unit Price (₹)  | Currency        | Yes      | Price per visit; auto from contract/GMA; Read-only for linked; editable for standalone |
-| HSN/SAC Code    | Auto-filled     | System   | Service Accounting Code for tax calculation (from Module 9)                     |
-| Tax %           | Auto-filled     | System   | GST rate from HSN/SAC code (Module 9)                                           |
-| Tax Amount (₹)  | Auto-calculated | System   | `Qty × Unit Price × Tax %`                                                      |
-| Line Total (₹)  | Auto-calculated | System   | `(Qty × Unit Price) + Tax Amount`                                               |
+| Auto-Fetched Site Data | Text / Dropdown | System | Address, City, State, Country, Map URL, Category, Area auto-load but are **Editable** |
+| Contact Person & Mobile | Text/Phone| Yes | Auto-load but are **Editable** for dispatch purposes                            |
+| Service Name    | Read-Only       | System   | Fixed from Contract Service Master.                                             |
+| Qty (Visits)    | Number          | Yes      | Auto-fetched but **Editable** per SO generation (e.g. ad-hoc visit additions)   |
+| Unit Price (₹)  | Currency        | System   | Read-only (Fixed from Contract Financials)                                      |
+| Chemical Items  | Data Table      | System   | Read-only (Fixed from Contract Service definitions)                             |
 
-### Chemical Line Items (Read-Only from Source)
+### B. CONDITION: ONE-TIME SERVICE
+*(If Source = Quotation/GMA, behaves similar to Contract. If Source = Standalone, fully manual entry.)*
 
 | Field           | Type            | Required | Validation / Notes                                                              |
 | --------------- | --------------- | -------- | ------------------------------------------------------------------------------- |
-| Chemical Name   | Auto-filled     | System   | Fetched from Module 12 (Service Config) or Source Contract/GMA                  |
-| HSN             | Auto-filled     | System   | From Product Master (Module 10)                                                 |
-| UOM             | Auto-filled     | System   | Base unit (ml, Ltr, tube, etc.) from Module 10                                  |
-| Req Qty         | Auto-filled     | System   | Quantity required per visit as per approved GMA/Contract                        |
+| Site Name       | Search/Text     | Yes      | Select existing from Customer Master OR Add New.                                |
+| Address         | Text Area       | Yes      | **Required** for dispatch.                                                       |
+| City, State, Country | Text/Dropdown | Yes   | Standard location tracking.                                                     |
+| Google Map URL  | URL             | Yes      | Valid URL format; **Required for execution**                                    |
+| Category / Sub-Cat| Dropdown      | Yes      | Residential/Commercial/Industrial, Internal/External                            |
+| Area (sqft)     | Number          | Yes      | Used for chemical coverage calculation and capacity mapping                     |
+| Contact Person & Mobile | Text/Phone| Yes    | Site-specific contact (Required for execution/dispatch)                         |
+| Service Name    | Search Dropdown | Yes      | Select from Module 12 (Services) if standalone                                  |
+| Qty (Visits)    | Number          | Yes      | Number of visits for this SO; must be > 0                                       |
+| Unit Price (₹)  | Currency        | Yes      | Editable for standalone; Auto-fetched from GMA if linked.                       |
+| Chemical Line Items | Addable Table | Cond.  | Auto-fetched from Module 12 Pest Type. Editable: Calculates `Req Qty` based on Area ÷ Coverage. |
 
-### Product Line Items (Product Sale)
+### C. CONDITION: PRODUCT SALE
 
 | Field              | Type            | Required | Validation / Notes                                                       |
 | ------------------ | --------------- | -------- | ------------------------------------------------------------------------ |
@@ -10395,10 +10450,10 @@ A multi-section form to generate a Sales Order. Can be triggered automatically v
 ## 💡 Note: How `[+ Add Site]` and `[+ Add Service]` Works
 
 - **`[+ Add Site]`**: A single Sales Order can cover multiple physical locations for the customer. Adding a new site creates a fresh site-block where specific services can be assigned. 
+- **Standalone Orders (Crucial for Data Flow)**: When a Standalone SO is created without a prior Contract or GMA, the user must define the Site Configuration (**Address, Area, Category**) and Service Details (**Chemicals, SQFT**) directly within this SO form. This ensures that downstream task generation (Module 21) has all necessary context to execute the job correctly. 
 - **`[+ Add Service to this Site]`**: Within a single Site, a customer may require multiple different treatments (e.g., Cockroach + Termite). Adding a service inside a site spins up a fresh line item for that specific treatment at that specific location.
 - **Linked Orders**: If the SO is linked to a Contract or GMA, the system auto-populates all Site/Service blocks based on the source record. The user can remove sites/services or adjust quantities but cannot add new service types not present in the source.
-- **Standalone Orders**: The user has full freedom to add any number of sites and select any services from the Service Master (Module 12).
-- **Consumable Chemicals**: These are automatically pulled from the source GMA or Contract and are displayed in read-only mode to ensure the service is executed exactly as scoped and approved.
+- **Consumable Chemicals**: Auto-pulled and read-only for Linked Orders. For Standalone SOs, users must manually add consumable chemicals aligned with the selected service to ensure proper inventory tracking and execution.
 - **Product Pricing**: For product-only sales, the system defaults to the **Selling Price** from the Product Master (Module 10). However, the price is editable to allow for ad-hoc custom quotes.
 
 ---
@@ -11421,3 +11476,59 @@ MODULE 20: SALES ORDER MANAGEMENT
 
 ---
 
+# END-TO-END DATA FLOW ARCHITECTURE (MODULE 15 TO 20)
+
+This section maps the precise field-level data inheritance across the pre-sales, sales, and execution modules to ensure complete data integrity without manual re-entry.
+
+## 1. Lead (M15) ➔ Customer (M18) Conversion
+When a Lead is marked as "Won", a new Customer Master record is automatically instantiated.
+* **Fields Transferred (Auto-Mapped):**
+  * `Lead Company/Name` ➔ `Customer Name`
+  * `Contact Person` ➔ `Primary Contact Name`
+  * `Phone / Email` ➔ `Primary Contact Phone & Email`
+  * `Address, City, State, Pincode` ➔ `Billing Address` & `Site 1 Address`
+  * `Lead Source` ➔ `Customer Acquisition Source`
+  * `GST / PAN` (if captured in Lead) ➔ `Tax Details`
+* **System Action:** Auto-generates a unique `Customer ID` (e.g., CUST-0001).
+
+## 2. Lead (M15) / Customer (M18) ➔ Quotation (M16)
+Quotations are generated for Qualified Leads or existing Customers.
+* **Fields Transferred (Auto-Mapped):**
+  * `Lead / Customer Name & ID` ➔ `Quoted To Header`
+  * `Lead Requirement Details` ➔ Suggests initial `Service Types`
+* **Follow-up Linkage:** Generating a Quotation automatically spawns a Follow-up task in M15 linked to the `Quotation ID`. Tracking "Accepted/Rejected" in Follow-ups dynamically synchronizes with the M16 Quotation Status.
+
+## 3. Quotation (M16) ➔ GMA (M17) [Profitability Analysis]
+For commercial jobs requiring gross margin scrutiny, an approved Quotation acts as the skeleton for the GMA.
+* **Fields Transferred (Auto-Mapped):**
+  * `Sites, Categories & Areas (sqft)` ➔ `GMA Site Configuration`
+  * `Services Quoted` ➔ `GMA Service Matrix`
+  * `Quoted Value (Top-line)` ➔ `Revenue Field`
+* **New Data Layered in GMA:** Operations adds backend costs (Chemical Base Cost inherited from M10/M12 limits, Labor Costs, Transport) to calculate the strict `Gross Margin %`.
+
+## 4. Quotation (M16) / GMA (M17) ➔ Contract (M19)
+Once a Quotation is Accepted (residential) or a GMA is Financially Approved (commercial), it triggers Contract Creation.
+* **Fields Transferred (Auto-Mapped):**
+  * `Customer ID & Billing Info` ➔ `Contract Header`
+  * `Total Value & Tax %` ➔ `Financial Terms`
+  * `Sites, Addresses, Map URLs, Areas` ➔ `Contract Execution Sites`
+  * `Assigned Services, Frequencies` ➔ `Contract Service Line Items`
+  * `Target Chemicals, UOM, Req. Qty` ➔ `Consumable Chemicals Array` (Locks supply chain planning)
+* **New Data Layered in Contract:** The Account Manager defines the `Contract Start/End Date` and configures the `Billing Cycle` (e.g., Quarterly) to map out future invoices.
+
+## 5. Contract (M19) ➔ Auto-Generated Sales Order (M20)
+For recurring business, the system cron automatically generates Sales Orders (SOs) targeting the active Billing Schedule.
+* **Fields Transferred (Auto-Mapped strictly as Read-Only):**
+  * `Contract ID & Customer Name` ➔ `Section 1: Source Details`
+  * `Site Name, Full Address, Category` ➔ `Section 2: Sites`
+  * `Executable Services` ➔ `Section 2: Service Line Items`
+  * `Allocated Chemicals & Qty` ➔ `Section 2: Chemicals` (Triggers accurate inventory deduction)
+* **Editable Exceptions:** Only the `Execution Contact Person/Mobile` and `Quantity of Visits` remain editable to provide dispatch flexibility for that specific generation cycle.
+
+## 6. One-Time SO (Standalone) ➔ Sales Order (M20)
+For rapid ad-hoc dispatch where no Quotation, GMA, or Contract exists.
+* **Data Flow:**
+  * Auto-fetches `Customer Header` from M18.
+  * **Manual Entry Required:** All Site parameters (Address, Map URL, Area, Category) must be typed in natively.
+  * **System Assists:** Fetching a Service from M12 auto-loads the required `Chemical Norms`, but the user must calculate the total `Req. Qty` against the manual Area (sqft).
+* **Outcome:** Provides a fast-track bypass to generate immediate tickets while strictly enforcing the capture of all critical Site & Chemical data to preserve M21 Task Generation integrity.
