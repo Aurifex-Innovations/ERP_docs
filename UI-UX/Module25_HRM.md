@@ -864,7 +864,7 @@ Dashboard for HR/Admin to view and manage leave requests **submitted by employee
 
 ================================================================================
 
-# 25.5.1 Leave Request Action Popup
+# 25.5.1 Leave View Action Popup
 
 **Description:**
 Popup opened on View/Action click from the Leave Requests table. Shows full leave details and allows HR/Admin to update status and provide reason.
