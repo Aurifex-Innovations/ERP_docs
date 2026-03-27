@@ -2961,7 +2961,7 @@ When a product is selected from the search dropdown, the system automatically fe
 | Product Code      | Product Master record   |
 | UOM               | Base UOM from Product   |
 | Dilution          | Standard Usage (if set) |
-| Price / UOM (₹)   | **Purchase Price**      |
+| Price / UOM (₹)   | **Purchase Price**(editable )     |
 
 > The **Price / UOM** is editable — the admin can override the fetched price if a negotiated rate applies for this service.
 
@@ -3117,7 +3117,44 @@ When a product is selected from the search dropdown, the system automatically fe
 | 28  | Visits/Month (Reference)    | Section 4 – Chemicals             | Summary field (below table)               | Auto-filled (Read Only)     | System   | —                               | From Service Frequency                                      |
 | 29  | Total Chemical Cost / Visit | Section 4 – Chemical Cost Summary | Summary field (below table)               | Auto-calculated (Read Only) | System   | ₹0                              | Sum of all rows' Cost/Visit                                 |
 | 30  | Total Chemical Cost / Month | Section 4 – Chemical Cost Summary | Summary field (below table)               | Auto-calculated (Read Only) | System   | ₹0                              | Sum of all rows' Est. Cost/Month                            |
-| 31  | **[+ Add Custom Chemical]** | Section 4 → Chemical Table        | 🔘 **Add Button** (adds new chemical row) | Button → New Row + Popup    | No       | Always visible                  | See **[+ Add] Button Guide** below                          |
+
+**System Behavior — On Product Selection**
+
+When a product is selected from the search dropdown, the system automatically fetches and fills:
+
+| Field Auto-Filled | Source in Module 10     |
+| ----------------- | ----------------------- |
+| Product Code      | Product Master record   |
+| UOM               | Base UOM from Product   |
+| Dilution          | Standard Usage (if set) |
+| Price / UOM (₹)   | **Purchase Price**(editable      |
+
+> The **Price / UOM** is editable — the admin can override the fetched price if a negotiated rate applies for this service.
+
+**Calculation Rules**
+
+| Calculation           | Formula                                     |
+| --------------------- | ------------------------------------------- |
+| Cost per Visit (₹)    | `Required Qty × Price per UOM`              |
+| Est. Cost / Month (₹) | `Cost per Visit × Visits per Month`         |
+| Total Chemical Cost   | Sum of all chemical rows' Est. Cost / Month |
+
+**Chemical Cost Summary** (displayed below the table, read-only)
+
+| Summary Field                   | Value                                           |
+| ------------------------------- | ----------------------------------------------- |
+| Total Chemical Cost / Visit (₹) | Sum of all Cost/Visit across chemical rows      |
+| Total Chemical Cost / Month (₹) | Sum of all Est. Cost/Month across chemical rows |
+
+> This total is shown to guide the admin when setting the final service price in the **Pricing Configuration** section below.
+
+**Example**
+
+| Product            | UOM | Req. Qty | Price/UOM | Cost/Visit | Visits/Month | Cost/Month |
+| ------------------ | --- | -------- | --------- | ---------- | ------------ | ---------- |
+| Alpha Cypermethrin | ml  | 50 ml    | ₹4.20     | ₹210       | 4            | ₹840       |
+| Chlorpyriphos      | ml  | 30 ml    | ₹3.50     | ₹105       | 4            | ₹420       |
+| **TOTAL**          |     |          |           | **₹315**   |              | **₹1,260** |
 
 ---
 
@@ -3392,53 +3429,7 @@ FLOW: What happens when user clicks [+ Add Custom Treatment Method]
 
 ---
 
-### 🅴 [+ Add Custom Chemical] — Detailed Breakdown
 
-**Location:** Section 4 → Below the Chemical Cost Summary
-**Parent Field:** Chemicals / Products Used table
-
-> **Difference from Product Search:** The "Search Product" field at the top of Section 4 adds chemicals **from Module 10 Product Master** (auto-fills fields). The **[+ Add Custom Chemical]** button allows manual entry of a chemical that may **NOT exist in Product Master** — all fields must be filled manually.
-
-```
-FLOW: What happens when user clicks [+ Add Custom Chemical]
-
-  ┌─────────────────────────────────────────────────────────────┐
-  │  CHEMICAL COST SUMMARY                                      │
-  │  Total Chemical Cost / Visit  : ₹315                        │
-  │  Total Chemical Cost / Month  : ₹1,260                      │
-  │                                                             │
-  │  [+ Add Custom Chemical]  ← USER CLICKS THIS               │
-  └──────────────────────────────┬──────────────────────────────┘
-                                 │
-                                 ▼
-  ┌─────────────────────────────────────────────────────────────┐
-  │  A NEW EMPTY ROW is added to the Chemical Table             │
-  │  (All fields are MANUALLY editable — nothing is auto-filled)│
-  │                                                             │
-  │  ┌────────────┬──────┬─────┬────────┬────────┬───────┬──────────┬──────────┬──────────┬────┐
-  │  │Product Name│ Code │ UOM │Dilution│Coverage│Req Qty│Price/UOM │Cost/Visit│Cost/Month│    │
-  │  ├────────────┼──────┼─────┼────────┼────────┼───────┼──────────┼──────────┼──────────┼────┤
-  │  │[__________]│[____]│[___]│[______]│[______]│[_____]│[________]│ Auto     │ Auto     │[🗑]│
-  │  └────────────┴──────┴─────┴────────┴────────┴───────┴──────────┴──────────┴──────────┴────┘
-  └─────────────────────────────────────────────────────────────┘
-```
-
-**Fields in the new manual row:**
-
-| Field                 | UI Type               | Required | Validation                               |
-| --------------------- | --------------------- | -------- | ---------------------------------------- |
-| Product Name          | Text Input (manual)   | Yes      | Free-text entry for custom chemical name |
-| Product Code          | Text Input (manual)   | No       | User-defined code (no auto-fetch)        |
-| UOM                   | Dropdown (manual)     | Yes      | ml / Ltr / gm / kg / Nos                 |
-| Dilution              | Number Input          | Yes      | Standard dilution dose                   |
-| Coverage (SQFT)       | Number Input          | Yes      | Area covered per dose                    |
-| Required Qty          | Number Input          | Yes      | Must be > 0                              |
-| Price / UOM (₹)       | Number Input (manual) | Yes      | User enters price manually               |
-| Cost / Visit (₹)      | Auto-calculated       | System   | = Req. Qty × Price/UOM                   |
-| Est. Cost / Month (₹) | Auto-calculated       | System   | = Cost/Visit × Visits/Month              |
-| 🗑 Delete             | Icon Button           | —        | Removes this row                         |
-
----
 
 ### 🅵 [+ Add Custom Property Type] — Detailed Breakdown
 
@@ -3660,9 +3651,9 @@ FLOW: What happens when user clicks [+ Add Pricing for Custom Service Category]
 │   │   ├── Est. Cost / Month ₹ (Auto-calculated)
 │   │   └── 🗑 Delete Row
 │   ├── Chemical Cost Summary (Read-Only)
-│   │   ├── Total Chemical Cost / Visit
-│   │   └── Total Chemical Cost / Month
-│   └── [+ Add Custom Chemical] → Adds manual row: { All fields editable }
+│      ├── Total Chemical Cost / Visit
+│      └── Total Chemical Cost / Month
+│  
 │
 ├── Section 5: PRICING CONFIGURATION
 │   ├── Pricing Reference Banner (Read-Only from Section 4)
