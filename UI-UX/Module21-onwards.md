@@ -391,93 +391,212 @@ A multi-step form to create service tasks. Opens with **two tabs** — tasks sou
 
 ---
 
-## Step 1: Source & Service Selection
+## Tab 1 — From Sales Order (SO): Field Descriptions
 
-| Field        | Type     | Required | Description                                           |
-| ------------ | -------- | -------- | ----------------------------------------------------- |
-| Branch       | Dropdown | Yes      | Select servicing branch                               |
-| Search SO    | Search   | Yes      | Search by SO Number or Customer Name                  |
-| Service Grid | Grid     | Yes      | Select line items (SO, Customer, Service, Site, Freq) |
+### Step 1: Source & Service Selection
 
----
+| Field     | Type                  | Required | Validation                | Description                                                                                                                                     |
+| --------- | --------------------- | -------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Branch    | Dropdown              | Yes      | From Module 7 branch list | Select the servicing branch. Filters the SO search to show only orders under the selected branch.                                               |
+| Search SO | Search (Autocomplete) | Yes      | Must select a valid SO    | Searchable dropdown — type SO Number or Customer Name. On selection, the Service Grid below populates with all service line items from that SO. |
 
-## Step 2: Schedule & Assignment Fields
+#### Service Grid (Multi-Select from Selected SO)
 
-| Field               | Type      | Required | Validation                        | Description                                     |
-| ------------------- | --------- | -------- | --------------------------------- | ----------------------------------------------- |
-| Category            | Display   | Auto     | From GMA/SO service definition    | Service Category (e.g. General Pest Control)    |
-| Sub-category        | Display   | Auto     | From GMA/SO service definition    | Service Sub-category (e.g. Cockroach Mgmt)      |
-| Area (SQFT)         | Display   | Auto     | From GMA/SO service definition    | Total area to be treated (read-only)            |
-| Site Contact        | Text      | Yes      | Auto-fetched from SO/Customer     | **[Editable]** Point of contact for the tech    |
-| Contact Mobile      | Phone     | Yes      | Valid 10-digit number             | **[Editable]** Contact number for execution     |
-| Scheduled Date      | Date      | Yes      | Cannot be past date               | Task execution date                             |
-| Start Time          | Time      | Yes      | Must be before End Time           | Task start time                                 |
-| End Time            | Time      | Yes      | Must be after Start Time          | Task end time                                   |
-| Duration            | Display   | Auto     | Auto-calculated                   | End Time – Start Time                           |
-| Role                | Dropdown  | Yes      | From Module 8 role definitions    | Filters the employee list (cascading)           |
-| Available Employees | Multi-sel | Yes      | At least one must be selected     | Cascading from Role; shows only available techs |
-| Primary Technician  | Dropdown  | Yes      | Must be one of selected employees | Main responsible person for the task            |
-| Conflict Check      | Indicator | Auto     | System checks tech schedules      | Visual indicator (✅ No conflicts / ⚠ Conflict) |
-| Task Notes          | Textarea  | No       | Max 500 chars                     | Additional instructions (Step 3)                |
-| Priority            | Dropdown  | Yes      | Normal / Urgent / Critical        | Task priority level (Step 3)                    |
+> Appears after an SO is selected. The manager checks ☑ one or more rows to create tasks from them. Each checked row becomes an independent task card in Step 2.
+
+| Column       | Type     | Description                                                                                                          |
+| ------------ | -------- | -------------------------------------------------------------------------------------------------------------------- |
+| ☑ (Checkbox) | Checkbox | Select / deselect a service line item. At least one must be selected to proceed.                                     |
+| SO Number    | Display  | Sales Order number (e.g. SO-2026-0112). Read-only — from Module 20.                                                  |
+| Customer     | Display  | Customer name linked to the SO (from Module 18). Read-only.                                                          |
+| Service      | Display  | Service type / name (e.g. Cockroach Treatment, Termite Control). Read-only — from GMA / Module 17.                   |
+| Site         | Display  | Site or location name where the service is to be performed (e.g. Head Office, Lobby). Read-only — from SO line item. |
+| Frequency    | Display  | Service frequency as defined in the contract / SO (e.g. Weekly, Monthly, Quarterly). Read-only.                      |
+
+**Footer Indicator:** `Selected: N service line items` — live count of checked rows.
 
 ---
 
-## Materials / Chemicals Fields (Auto-Fetched, Editable)
+### Step 2: Schedule, Assign & Materials (Per Selected SO in above section)
 
-> **Data Source:** When a SO line item is selected (Tab 1) or a service is identified from a ticket (Tab 2), the system auto-fetches the chemical/product list from the **GMA Sheet (Module 17)** and **SO line items (Module 20)**. HSN, UOM, and Standard Qty are pre-filled; the manager can **edit Req Qty, add new rows, or remove rows**.
+> A **separate task card** is generated for each selected service line item from Step 1. All fields below repeat per task card. The section header shows the service name, site, and SO number for clarity (e.g. _"TASK 1: Cockroach Treatment @ Head Office (SO-2026-0112)"_).
 
-| Field              | Type    | Required | Validation                          | Description                                   |
-| ------------------ | ------- | -------- | ----------------------------------- | --------------------------------------------- |
-| Chemical / Product | Display | Auto     | From GMA/SO service definition      | Auto-fetched chemical or product name         |
-| HSN                | Display | Auto     | From Module 10 master data          | HSN/SAC code (read-only)                      |
-| UOM                | Display | Auto     | From Module 10 master data          | Unit of measurement (read-only)               |
-| Std Qty            | Display | Auto     | From GMA/SO                         | Standard quantity per service (read-only)     |
-| Req Qty            | Number  | Yes      | Must be ≥ 0; numeric only           | Editable — manager can adjust per task need   |
-| + Add Material     | Button  | —        | Chemical must exist in Module 10/11 | Manually add extra materials not in auto-list |
-| 🗑 Remove Selected | Button  | —        | Cannot remove if only 1 row remains | Remove unnecessary materials from the list    |
+#### Sub-Section 2A: Service Information (Read-Only)
+
+| Field        | Type    | Required | Source                                  | Description                                                                                                |
+| ------------ | ------- | -------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Category     | Display | Auto     | GMA / SO service definition (Module 17) | Service category (e.g. General Pest Control). Read-only — auto-filled from the selected service line item. |
+| Sub-category | Display | Auto     | GMA / SO service definition (Module 17) | Service sub-category (e.g. Cockroach Management). Read-only — auto-filled.                                 |
+| Area (SQFT)  | Display | Auto     | GMA / SO service definition (Module 17) | Total area in square feet to be treated. Read-only — fetched from GMA sheet or SO line item.               |
+
+#### Sub-Section 2B: Schedule & Contact (Editable)
+
+| Field          | Type          | Required | Validation                                     | Description                                                                                                                   |
+| -------------- | ------------- | -------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Scheduled Date | Date Picker   | Yes      | Cannot be a past date                          | Date on which the task is to be executed. Defaults to the current calendar date.                                              |
+| Start Time     | Time Dropdown | Yes      | Must be before End Time                        | Scheduled start time for this task (e.g. 08:00).                                                                              |
+| End Time       | Time Dropdown | Yes      | Must be after Start Time                       | Scheduled end time for this task (e.g. 10:00).                                                                                |
+| Duration       | Display       | Auto     | Auto-calculated (End Time − Start Time)        | Computed duration displayed as hours/minutes (e.g. "2 hours"). Read-only.                                                     |
+| Site Contact   | Text Input    | Yes      | Auto-fetched from SO/Customer record; editable | Name of the on-site point of contact for the technician. Pre-filled from the SO customer record but the manager can override. |
+| Contact Mobile | Phone Input   | Yes      | Valid 10-digit mobile number                   | Mobile number of the site contact. Pre-filled from SO/Customer; editable.                                                     |
+
+#### Sub-Section 2C: Technician Assignment
+
+| Field               | Type                    | Required | Validation                                              | Description                                                                                                                                                                                                                   |
+| ------------------- | ----------------------- | -------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Role                | Dropdown                | Yes      | Must select a role from Module 8 role definitions       | **Cascading filter:** On selection (e.g. Technician, Senior Technician, Supervisor), the "Available Employees" list below refreshes to show only employees with that role who are active and free on the scheduled date/time. |
+| Available Employees | Multi-Select Checkboxes | Yes      | At least one employee must be selected                  | Cascading from _Role_ — shows only technicians of the selected role who have no conflicting tasks on the scheduled date/time. Multiple employees can be selected (one primary + others as support).                           |
+| Primary Technician  | Dropdown                | Yes      | Must be one of the selected employees above             | Designates the main responsible technician for the task. The dropdown is populated only from the employees already checked in "Available Employees".                                                                          |
+| Conflict Check      | Indicator (Auto)        | Auto     | System checks the schedules of all selected technicians | Visual status indicator. Displays ✅ **No conflicts detected** or ⚠ **Conflict: "[Tech Name] is assigned to TASK-XXXX at this time"**. If conflicts are detected, the system blocks task creation until resolved.             |
+
+#### Sub-Section 2D: Materials / Chemicals (Auto-Fetched, Editable)
+
+> **Data Source:** When a SO line item is selected, the system auto-fetches the chemical/product list from the **GMA Sheet (Module 17)** and **SO line items (Module 20)**. HSN, UOM, and Standard Qty are pre-filled; the manager can **edit Req Qty, add new rows, or remove rows**.
+
+| Field                | Type         | Required | Validation                                            | Description                                                                                                                         |
+| -------------------- | ------------ | -------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Chemical / Product   | Display      | Auto     | From GMA/SO service definition                        | Name of the chemical or product (e.g. Alpha Cypermethrin, Fipronil Gel, Bait Station). Read-only — auto-fetched.                    |
+| HSN                  | Display      | Auto     | From Module 10 master data                            | HSN/SAC code for taxation (e.g. 3808, 3926). Read-only.                                                                             |
+| UOM                  | Display      | Auto     | From Module 10 master data                            | Unit of measurement (e.g. ml, tube, nos). Read-only.                                                                                |
+| Std Qty              | Display      | Auto     | From GMA/SO                                           | Standard quantity required per service as defined in the GMA/SO (e.g. 120 ml). Read-only — serves as a reference for the manager.   |
+| Req Qty              | Number Input | Yes      | Must be ≥ 0; numeric only                             | **Editable** — the actual quantity the manager wants to allocate for this task. Defaults to Std Qty but can be adjusted up or down. |
+| [+ Add Material]     | Button       | —        | Added chemical must exist in Module 10/11 master data | Opens a search/select dialog to manually add extra materials not in the auto-fetched list.                                          |
+| [🗑 Remove Selected] | Button       | —        | Cannot remove if only 1 material row remains          | Removes selected material row(s) from the list. Disabled when only one row exists.                                                  |
 
 ---
 
-## Re-Task Specific Fields
+### Step 3: Additional Notes
 
-| Field            | Type    | Required | Description                              |
-| ---------------- | ------- | -------- | ---------------------------------------- |
-| Source Type      | Radio   | Yes      | Customer Ticket / Manual Entry           |
-| Ticket ID        | Search  | Cond.    | Required if Source = Customer Ticket     |
-| Linked SO        | Display | Auto     | Original SO reference (read-only)        |
-| Customer         | Display | Auto     | Customer Name from linked source         |
-| Category         | Display | Auto     | Service Category from source service     |
-| Sub-category     | Display | Auto     | Service Sub-cat from source service      |
-| Original Service | Display | Auto     | The service name linked to the ticket    |
-| Site             | Display | Auto     | Site name linked to the original service |
-| Complaint Reason | Display | Auto     | The reason text from the customer ticket |
+| Field      | Type     | Required | Validation                         | Description                                                                                                                              |
+| ---------- | -------- | -------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Task Notes | Textarea | No       | Max 500 characters                 | Free-text area for additional instructions, special care notes, or site-specific information (e.g. "Special care for server room area"). |
+| Priority   | Dropdown | Yes      | Values: Normal / Urgent / Critical | Task priority level. Determines sort order and visual emphasis in the Daily Task View. Default: Normal.                                  |
+
+---
+
+## Tab 2 — From Customer Tickets (Re-Task): Field Descriptions
+
+### Step 1: Select Source
+
+#### Source Type Selection
+
+| Field       | Type         | Required | Validation      | Description                                                                                                                                                                                |
+| ----------- | ------------ | -------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Source Type | Radio Button | Yes      | Must select one | Determines how the Re-Task is sourced. Two options: **(•) Customer Ticket** or **( ) Manual Entry**. Default: Customer Ticket. Selecting an option conditionally shows/hides fields below. |
+
+---
+
+#### Condition A — When Source Type = **Customer Ticket**
+
+> All fields below auto-fill from the selected ticket and its linked SO/service records. These are **read-only display** fields.
+
+| Field              | Type                  | Required | Validation                                      | Description                                                                                                                              |
+| ------------------ | --------------------- | -------- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Search Ticket      | Search (Autocomplete) | Yes      | Must select a valid ticket                      | Searchable dropdown — type Ticket ID or Customer Name. On selection, all fields below auto-populate from the linked ticket and SO data.  |
+| Linked SO (if any) | Display               | Auto     | Auto-filled from ticket record                  | The original Sales Order number linked to this complaint (e.g. SO-2026-0087). Read-only. If no SO is linked, displays "—".               |
+| Customer           | Display               | Auto     | Auto-filled from ticket/SO                      | Customer name linked to the ticket source (e.g. XYZ Hotel). Read-only.                                                                   |
+| Category           | Display               | Auto     | Auto-filled from source service (GMA/Module 17) | Service category of the original service (e.g. General Pest Control). Read-only.                                                         |
+| Sub-category       | Display               | Auto     | Auto-filled from source service (GMA/Module 17) | Service sub-category of the original service (e.g. Cockroach Management). Read-only.                                                     |
+| Original Service   | Display               | Auto     | Auto-filled from ticket/SO line item            | The specific service name linked to the ticket (e.g. Rodent Control). Read-only.                                                         |
+| Site               | Display               | Auto     | Auto-filled from ticket/SO                      | Site name where the original service was performed (e.g. Lobby). Read-only.                                                              |
+| Complaint Reason   | Display               | Auto     | Auto-filled from ticket                         | The customer's complaint text from the ticket (e.g. "Rodents seen again within 2 days"). Read-only — shown as reference for the manager. |
+
+---
+
+#### Condition B — When Source Type = **Manual Entry**
+
+> When no customer ticket exists (e.g. internal re-service decision, follow-up visit), the manager can manually enter all details. All fields below become **editable inputs** instead of auto-filled displays.
+
+| Field              | Type                  | Required | Validation                                           | Description                                                                                                                              |
+| ------------------ | --------------------- | -------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Customer           | Search (Autocomplete) | Yes      | Must select a valid customer from Module 18          | Searchable dropdown to select the customer. On selection, the Site dropdown below filters to show only sites belonging to this customer. |
+| Site               | Dropdown              | Yes      | Filtered by selected Customer (from Module 18 sites) | Select the site/location where the re-service will be performed. Options are filtered based on the selected Customer.                    |
+| Category           | Dropdown              | Yes      | From GMA / Module 17 service definitions             | Select the service category (e.g. General Pest Control, Specialized Service).                                                            |
+| Sub-category       | Dropdown              | Yes      | Cascading from Category (Module 17)                  | Select the service sub-category. Options filter based on the selected Category (e.g. Cockroach Management under General Pest Control).   |
+| Original Service   | Dropdown              | Yes      | Cascading from Sub-category (Module 17)              | Select the specific service (e.g. Rodent Control). Options filter based on the selected Sub-category.                                    |
+| Linked SO (if any) | Search (Autocomplete) | No       | Must be a valid SO for the selected Customer         | Optional — if re-service is related to an existing Sales Order, the manager can search and link it. Leave blank if not applicable.       |
+| Complaint / Reason | Textarea              | No       | Max 500 characters                                   | Free-text to describe the reason for the manual re-task (e.g. "Follow-up visit as per manager instruction", "Preventive re-service").    |
+
+---
+
+### Step 2: Task Details (Editable)
+
+> Whether the source is a Customer Ticket or Manual Entry, Step 2 fields are always **editable**. When sourced from a ticket, these fields are **pre-filled from the ticket/SO data** but can be changed. When sourced via Manual Entry, fields are populated from Step 1 selections.
+
+#### Sub-Section 2A: Service & Location
+
+| Field        | Type     | Required | Validation                                           | Description                                                                                                                                                                                                                    |
+| ------------ | -------- | -------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Service Type | Dropdown | Yes      | From Module 17 service definitions                   | The service to be performed for the Re-Task. **Pre-filled** from source ticket/Step 1 selection but editable — the manager may change the service type if needed (e.g. upgrading Rodent Control to a comprehensive treatment). |
+| Site         | Dropdown | Yes      | Sites belonging to the selected customer (Module 18) | The location where the re-service will be performed. **Pre-filled** from source but editable.                                                                                                                                  |
+
+#### Sub-Section 2B: Schedule & Contact
+
+| Field          | Type          | Required | Validation                                     | Description                                                                              |
+| -------------- | ------------- | -------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Site Contact   | Text Input    | Yes      | Auto-fetched from SO/Customer record; editable | Name of the on-site point of contact. Pre-filled from source data; manager can override. |
+| Contact Mobile | Phone Input   | Yes      | Valid 10-digit mobile number                   | Mobile number of site contact. Pre-filled from source data; editable.                    |
+| Scheduled Date | Date Picker   | Yes      | Cannot be a past date                          | Date on which the re-task is to be executed.                                             |
+| Start Time     | Time Dropdown | Yes      | Must be before End Time                        | Scheduled start time for the re-task.                                                    |
+| End Time       | Time Dropdown | Yes      | Must be after Start Time                       | Scheduled end time for the re-task.                                                      |
+
+#### Sub-Section 2C: Technician Assignment
+
+| Field               | Type                    | Required | Validation                                        | Description                                                                                                                  |
+| ------------------- | ----------------------- | -------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Role                | Dropdown                | Yes      | Must select a role from Module 8 role definitions | Cascading filter for technician selection (e.g. Senior Technician, Technician, Supervisor).                                  |
+| Available Employees | Multi-Select Checkboxes | Yes      | At least one employee must be selected            | Cascading from _Role_ — shows only technicians of the selected role who are active and available on the scheduled date/time. |
+| Primary Technician  | Dropdown                | Yes      | Must be one of the selected employees above       | Main responsible technician for the re-task. Populated only from checked employees.                                          |
+
+#### Sub-Section 2D: Materials / Chemicals (Auto-Fetched, Editable)
+
+> **Data Source:** Auto-fetched from the **original SO/service linked** to the ticket (Condition A) or from the **GMA sheet based on Step 1 service selections** (Condition B). HSN, UOM, and Standard Qty are pre-filled; the manager can **edit Req Qty, add new rows, or remove rows**.
+
+| Field                | Type         | Required | Validation                          | Description                                                           |
+| -------------------- | ------------ | -------- | ----------------------------------- | --------------------------------------------------------------------- |
+| Chemical / Product   | Display      | Auto     | From GMA/SO service definition      | Auto-fetched chemical or product name. Read-only.                     |
+| HSN                  | Display      | Auto     | From Module 10 master data          | HSN/SAC code (read-only).                                             |
+| UOM                  | Display      | Auto     | From Module 10 master data          | Unit of measurement (read-only).                                      |
+| Std Qty              | Display      | Auto     | From GMA/SO                         | Standard quantity per service (read-only).                            |
+| Req Qty              | Number Input | Yes      | Must be ≥ 0; numeric only           | **Editable** — manager can adjust per task need. Defaults to Std Qty. |
+| [+ Add Material]     | Button       | —        | Chemical must exist in Module 10/11 | Manually add extra materials not in auto-list.                        |
+| [🗑 Remove Selected] | Button       | —        | Cannot remove if only 1 row remains | Remove unnecessary materials from the list.                           |
+
+#### Sub-Section 2E: Additional Notes
+
+| Field      | Type     | Required | Validation                         | Description                                                                                                 |
+| ---------- | -------- | -------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Task Notes | Textarea | No       | Max 500 characters                 | Additional instructions for the re-task (e.g. "Re-service due to complaint").                               |
+| Priority   | Dropdown | Yes      | Values: Normal / Urgent / Critical | Task priority level. Default: **Urgent** for ticket-sourced re-tasks; **Normal** for manual entry re-tasks. |
 
 ---
 
 ## Validation Rules
 
-| Validation                | Rule                                                        |
-| ------------------------- | ----------------------------------------------------------- |
-| Time slot overlap         | System checks if selected technician has a conflicting task |
-| Date validity             | Cannot be in the past                                       |
-| Start < End               | Start time must be before end time                          |
-| Role → Employee cascade   | Employee list filtered by role; only active employees shown |
-| At least 1 technician     | Minimum one technician must be assigned                     |
-| Primary in selected list  | Primary must be one of the multi-selected employees         |
-| SO line not yet tasked    | Warns if service line already has a task for the same date  |
-| Material Qty ≥ 0          | Required qty cannot be negative                             |
-| Material from master data | Added materials must exist in Module 10/11                  |
+| Validation                                             | Rule                                                                                                          |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| Time slot overlap                                      | System checks if selected technician has a conflicting task                                                   |
+| Date validity                                          | Cannot be in the past                                                                                         |
+| Start < End                                            | Start time must be before end time                                                                            |
+| Role → Employee cascade                                | Employee list filtered by role; only active employees shown                                                   |
+| At least 1 technician                                  | Minimum one technician must be assigned                                                                       |
+| Primary in selected list                               | Primary must be one of the multi-selected employees                                                           |
+| SO line not yet tasked                                 | Warns if service line already has a task for the same date                                                    |
+| Material Qty ≥ 0                                       | Required qty cannot be negative                                                                               |
+| Material from master data                              | Added materials must exist in Module 10/11                                                                    |
+| **[Tab 2 — Customer Ticket]** Ticket required          | If Source Type = Customer Ticket, a valid ticket must be selected                                             |
+| **[Tab 2 — Manual Entry]** Customer & Service required | If Source Type = Manual Entry, Customer, Site, Category, Sub-category, and Original Service are all mandatory |
+| **[Tab 2 — Manual Entry]** Cascading dropdowns         | Sub-category cascades from Category; Original Service cascades from Sub-category                              |
 
 ---
 
 ## Form Actions
 
-| Button             | Description                                                                   |
-| ------------------ | ----------------------------------------------------------------------------- |
-| **Create Tasks**   | Validates, checks conflicts, creates task records, returns to Daily Task View |
-| **Create Re-Task** | Same as above but marks task type as Re-Task                                  |
-| **Cancel**         | Discards form and returns to previous screen                                  |
+| Button             | Applicable Tab       | Description                                                                                                                                       |
+| ------------------ | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Create Tasks**   | Tab 1 (From SO)      | Validates all task cards, checks technician conflicts, creates task records (one per selected service line item), and returns to Daily Task View. |
+| **Create Re-Task** | Tab 2 (From Tickets) | Same as above but marks the task type as **Re-Task** and links it to the source ticket/manual reason.                                             |
+| **Cancel**         | Both Tabs            | Discards form data and returns to the previous screen (Daily Task View or Calendar Dashboard).                                                    |
 
 ---
 
@@ -586,26 +705,26 @@ Read-only screen showing the complete breakdown of a task — customer info, ser
 
 ## Task Execution Fields (Read-Only)
 
-| Field             | Type     | Description                                               |
-| ----------------- | -------- | --------------------------------------------------------- |
-| Task ID           | Display  | **[Auto-generated]** Unique task ID                       |
-| Task Type         | Badge    | **[System-set]** Normal / Re-Task                         |
-| Service Mode      | Badge    | **[Auto-fetched]** Contract Base / One-Time Service       |
-| Pest(s) Treated   | Display  | **[Auto-fetched]** Target pests                           |
-| Area (SQFT)       | Display  | **[Auto-fetched]** Total area covered/treated             |
+| Field             | Type     | Description                                                     |
+| ----------------- | -------- | --------------------------------------------------------------- |
+| Task ID           | Display  | **[Auto-generated]** Unique task ID                             |
+| Task Type         | Badge    | **[System-set]** Normal / Re-Task                               |
+| Service Mode      | Badge    | **[Auto-fetched]** Contract Base / One-Time Service             |
+| Pest(s) Treated   | Display  | **[Auto-fetched]** Target pests                                 |
+| Area (SQFT)       | Display  | **[Auto-fetched]** Total area covered/treated                   |
 | Status            | Badge    | **[System-driven]** Pending / In Progress / Completed / Overdue |
-| Priority          | Badge    | **[Auto/Manual]** Normal / Urgent / Critical              |
-| Scheduled Date    | Date     | **[Manual Update]** Planned execution date                |
-| Time Slot         | Display  | **[Manual Update]** Start – End time                      |
-| Primary Tech      | Display  | **[Manual Update]** Main technician + role                |
-| Support Techs     | Display  | **[Manual Update]** Additional technicians                |
-| Started At        | DateTime | **[System-captured]** Actual start timestamp              |
-| Completed At      | DateTime | **[System-captured]** Actual completion timestamp         |
-| Actual Duration   | Display  | **[System-calculated]** Real time taken                   |
-| Completion Note   | Text     | **[Tech Input]** Technician's service notes               |
-| Photos            | Image    | **[Tech Input]** Before/after/treatment images            |
-| Customer Rating   | Display  | **[Customer Input]** Star rating (1–5)                    |
-| Customer Feedback | Text     | **[Customer Input]** Written feedback                     |
+| Priority          | Badge    | **[Auto/Manual]** Normal / Urgent / Critical                    |
+| Scheduled Date    | Date     | **[Manual Update]** Planned execution date                      |
+| Time Slot         | Display  | **[Manual Update]** Start – End time                            |
+| Primary Tech      | Display  | **[Manual Update]** Main technician + role                      |
+| Support Techs     | Display  | **[Manual Update]** Additional technicians                      |
+| Started At        | DateTime | **[System-captured]** Actual start timestamp                    |
+| Completed At      | DateTime | **[System-captured]** Actual completion timestamp               |
+| Actual Duration   | Display  | **[System-calculated]** Real time taken                         |
+| Completion Note   | Text     | **[Tech Input]** Technician's service notes                     |
+| Photos            | Image    | **[Tech Input]** Before/after/treatment images                  |
+| Customer Rating   | Display  | **[Customer Input]** Star rating (1–5)                          |
+| Customer Feedback | Text     | **[Customer Input]** Written feedback                           |
 
 ---
 
@@ -620,13 +739,13 @@ Read-only screen showing the complete breakdown of a task — customer info, ser
 
 ## Materials / Chemicals Detail (View)
 
-| Field         | Type    | Description                                                |
-| ------------- | ------- | ---------------------------------------------------------- |
-| Chemical Name | Display | **[Auto-fetched]** Name of the material used               |
-| HSN           | Display | **[Auto-fetched]** HSN code for tax reporting              |
-| UOM           | Display | **[Auto-fetched]** Unit of measurement                     |
-| Required Qty  | Display | **[Auto-fetched]** Planned quantity from task creation     |
-| Used Qty      | Display | **[Tech Input]** Actual quantity logged by technician      |
+| Field         | Type    | Description                                            |
+| ------------- | ------- | ------------------------------------------------------ |
+| Chemical Name | Display | **[Auto-fetched]** Name of the material used           |
+| HSN           | Display | **[Auto-fetched]** HSN code for tax reporting          |
+| UOM           | Display | **[Auto-fetched]** Unit of measurement                 |
+| Required Qty  | Display | **[Auto-fetched]** Planned quantity from task creation |
+| Used Qty      | Display | **[Tech Input]** Actual quantity logged by technician  |
 
 ---
 
@@ -716,18 +835,18 @@ Editable form for modifying a task that has not yet been completed. Allows chang
 
 ## Editable Fields (Manual Update)
 
-| Field               | Type      | Required | Validation                        | Description                                          |
-| ------------------- | --------- | -------- | --------------------------------- | ---------------------------------------------------- |
-| Scheduled Date      | Date      | Yes      | Cannot be past date               | **[Manual Update]** Task execution date              |
-| Start Time          | Time      | Yes      | Must be before End Time           | **[Manual Update]** Task start time                  |
-| End Time            | Time      | Yes      | Must be after Start Time          | **[Manual Update]** Task end time                    |
-| Site Contact        | Text      | Yes      | Required                          | **[Manual Update]** Site point of contact            |
-| Contact Mobile      | Phone     | Yes      | Valid 10-digit number             | **[Manual Update]** Mobile string for dispatcher     |
-| Role                | Dropdown  | Yes      | From Module 8 role definitions    | **[Manual Update]** Cascading filter for employees   |
-| Available Employees | Multi-sel | Yes      | At least one selected             | **[Auto-filtered/Manual Select]** Multi-select       |
-| Primary Technician  | Dropdown  | Yes      | Must be one of selected employees | **[Manual Update]** Main responsible person          |
-| Priority            | Dropdown  | Yes      | Normal / Urgent / Critical        | **[Manual Update]** Task priority                    |
-| Task Notes          | Textarea  | No       | Max 500 chars                     | **[Manual Update]** Additional instructions          |
+| Field               | Type      | Required | Validation                        | Description                                        |
+| ------------------- | --------- | -------- | --------------------------------- | -------------------------------------------------- |
+| Scheduled Date      | Date      | Yes      | Cannot be past date               | **[Manual Update]** Task execution date            |
+| Start Time          | Time      | Yes      | Must be before End Time           | **[Manual Update]** Task start time                |
+| End Time            | Time      | Yes      | Must be after Start Time          | **[Manual Update]** Task end time                  |
+| Site Contact        | Text      | Yes      | Required                          | **[Manual Update]** Site point of contact          |
+| Contact Mobile      | Phone     | Yes      | Valid 10-digit number             | **[Manual Update]** Mobile string for dispatcher   |
+| Role                | Dropdown  | Yes      | From Module 8 role definitions    | **[Manual Update]** Cascading filter for employees |
+| Available Employees | Multi-sel | Yes      | At least one selected             | **[Auto-filtered/Manual Select]** Multi-select     |
+| Primary Technician  | Dropdown  | Yes      | Must be one of selected employees | **[Manual Update]** Main responsible person        |
+| Priority            | Dropdown  | Yes      | Normal / Urgent / Critical        | **[Manual Update]** Task priority                  |
+| Task Notes          | Textarea  | No       | Max 500 chars                     | **[Manual Update]** Additional instructions        |
 
 ---
 
@@ -1086,15 +1205,15 @@ The primary command center for tracking the workforce. By default, it shows **Li
 
 ## Dashboard Filters & Feed Fields
 
-| Field              | Type      | Description                                                |
-| ------------------ | --------- | ---------------------------------------------------------- |
-| Date Selector      | Date      | Default: Today (Live). Select past dates for historical Map.|
-| Technician Name    | Link      | Clicks through to Technician Travel Log (22.2).            |
-| Current Location   | Display   | Nearest address or specific Site Name (from Module 21).    |
-| Feed Tabs          | Tab       | Toggle between Active techs map vs Offline techs list      |
-| Current Status     | Badge     | Travelling / On Site / Idle / Offline.                     |
-| Customer & Service | Display   | Linked Customer Name and specific Service Type.            |
-| Active Task        | Link      | Current Module 21 Task ID (if On Site or Travelling to it).|
+| Field              | Type    | Description                                                  |
+| ------------------ | ------- | ------------------------------------------------------------ |
+| Date Selector      | Date    | Default: Today (Live). Select past dates for historical Map. |
+| Technician Name    | Link    | Clicks through to Technician Travel Log (22.2).              |
+| Current Location   | Display | Nearest address or specific Site Name (from Module 21).      |
+| Feed Tabs          | Tab     | Toggle between Active techs map vs Offline techs list        |
+| Current Status     | Badge   | Travelling / On Site / Idle / Offline.                       |
+| Customer & Service | Display | Linked Customer Name and specific Service Type.              |
+| Active Task        | Link    | Current Module 21 Task ID (if On Site or Travelling to it).  |
 
 ---
 
@@ -1156,27 +1275,27 @@ A unified, comprehensive profile of a specific technician's logistics data. Mana
 
 ## Profile Filter Fields
 
-| Field           | Type     | Description                                                          |
-| --------------- | -------- | -------------------------------------------------------------------- |
-| Period Selector | Dropdown | **[Manual Select]** Select Daily, Weekly, or Monthly view.           |
-| Date Selector   | Control  | **[Manual Select]** Selects the specific date, week, or month to analyze. |
+| Field           | Type     | Description                                                                   |
+| --------------- | -------- | ----------------------------------------------------------------------------- |
+| Period Selector | Dropdown | **[Manual Select]** Select Daily, Weekly, or Monthly view.                    |
+| Date Selector   | Control  | **[Manual Select]** Selects the specific date, week, or month to analyze.     |
 | Summary Stats   | Display  | **[Auto-calculated]** Aggregated Distance, Time, and Tasks for chosen period. |
 
 ---
 
 ## Timeline & Tabular Log Fields (Read-Only)
 
-| Field            | Type    | Description                                                          |
-| ---------------- | ------- | -------------------------------------------------------------------- |
-| Date             | Display | **[System-generated]** Tracking Date.                                |
-| Departure Point  | Display | **[Auto-fetched]** Origin site or generic location (e.g., Branch).   |
-| Destination      | Display | **[Auto-fetched]** Destination Site Name or Geo-location address.    |
-| Customer         | Display | **[Auto-fetched]** Associated Customer Name and specific Service Type.|
-| Task ID          | Modal   | **[Auto-fetched]** Click Task to view details (Status, Category, Techs). |
-| Distance         | Display | **[System-calculated]** GPS calculated travel distance for that segment. |
+| Field            | Type    | Description                                                                |
+| ---------------- | ------- | -------------------------------------------------------------------------- |
+| Date             | Display | **[System-generated]** Tracking Date.                                      |
+| Departure Point  | Display | **[Auto-fetched]** Origin site or generic location (e.g., Branch).         |
+| Destination      | Display | **[Auto-fetched]** Destination Site Name or Geo-location address.          |
+| Customer         | Display | **[Auto-fetched]** Associated Customer Name and specific Service Type.     |
+| Task ID          | Modal   | **[Auto-fetched]** Click Task to view details (Status, Category, Techs).   |
+| Distance         | Display | **[System-calculated]** GPS calculated travel distance for that segment.   |
 | Start & End Time | Display | **[System-captured]** Timestamps marking the departure and arrival bounds. |
-| Duration         | Display | **[System-calculated]** Total time computed between Start and End.   |
-| Status           | Badge   | **[System-driven]** On-Site, Travelling, Idle.                       |
+| Duration         | Display | **[System-calculated]** Total time computed between Start and End.         |
+| Status           | Badge   | **[System-driven]** On-Site, Travelling, Idle.                             |
 
 ---
 
@@ -1293,24 +1412,24 @@ The primary command center for the Support Team. Provides a high-visibility data
 
 ## Table Columns
 
-| Field         | Type    | Description                                                    |
-| ------------- | ------- | -------------------------------------------------------------- |
-| Ticket ID     | Link    | `TKT-YYYY-NNNN`. Clicks to 23.3 Detail View.                   |
-| Customer Name | Display | Name of the Customer.                                          |
-| Branch Name   | Display | Name of Branch                                                 |
-| SO No         | Display | Associated Sales Order (if applicable).                        |
+| Field         | Type    | Description                                                                                                  |
+| ------------- | ------- | ------------------------------------------------------------------------------------------------------------ |
+| Ticket ID     | Link    | `TKT-YYYY-NNNN`. Clicks to 23.3 Detail View.                                                                 |
+| Customer Name | Display | Name of the Customer.                                                                                        |
+| Branch Name   | Display | Name of Branch                                                                                               |
+| SO No         | Display | Associated Sales Order (if applicable).                                                                      |
 | Task ID       | Link    | Linked Task from Module 21 (`TASK-YYYY-NNNN`). Clicks to Module 21 Task Detail. Shows `—` if no task linked. |
-| Priority      | Display | Ticket Priority.                                               |
-| Status        | Display | Standard lifecycle: `[Open, Assigned, In Progress, Paused, Resolved, Closed]`.                                     |
-| SLA Stage     | Badge   | Color-coded visual of SLA health (Safe/Risk/Breach).           |
-| SLA Timer     | Display | Live countdown (e.g. `22h 10m` remaining, `-02h 15m` overdue). |
-| Actions       | Button  | `[👁 View]` — Opens Ticket Detail View (Screen 23.3).          |
+| Priority      | Display | Ticket Priority.                                                                                             |
+| Status        | Display | Standard lifecycle: `[Open, Assigned, In Progress, Paused, Resolved, Closed]`.                               |
+| SLA Stage     | Badge   | Color-coded visual of SLA health (Safe/Risk/Breach).                                                         |
+| SLA Timer     | Display | Live countdown (e.g. `22h 10m` remaining, `-02h 15m` overdue).                                               |
+| Actions       | Button  | `[👁 View]` — Opens Ticket Detail View (Screen 23.3).                                                        |
 
 ## Actions (Table Row)
 
-| Action   | Icon | Condition    | Description                                      |
-| -------- | ---- | ------------ | ------------------------------------------------ |
-| **View** | 👁   | All statuses | Opens Ticket Detail View (Screen 23.3)           |
+| Action   | Icon | Condition    | Description                            |
+| -------- | ---- | ------------ | -------------------------------------- |
+| **View** | 👁   | All statuses | Opens Ticket Detail View (Screen 23.3) |
 
 ---
 
@@ -1358,6 +1477,7 @@ The data-entry screen for new complaints or service requests. Auto-calculates SL
 
 > [!NOTE]
 > **Cascading Selection Logic:**
+>
 > - **Customer Select** ➔ Fetches all **Sales Orders (SO)** of that customer.
 > - **SO Select** ➔ Fetches all **Tasks** of that specific SO from Module 21.
 
@@ -1365,20 +1485,20 @@ The data-entry screen for new complaints or service requests. Auto-calculates SL
 
 ## Field Table
 
-| Field         | Type     | Required | Validation                        | Description                                                                                        |
-| ------------- | -------- | -------- | --------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Customer      | Search   | Yes      | Must select from Module 18        | Linked Customer Profile.                                                                           |
-| Related SO    | Dropdown | No       | Filtered by selected Customer     | Links ticket to Sales Order context: `[List of user's active SO-YYYY-NNNN]`.                       |
+| Field         | Type     | Required | Validation                        | Description                                                                                                                                   |
+| ------------- | -------- | -------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Customer      | Search   | Yes      | Must select from Module 18        | Linked Customer Profile.                                                                                                                      |
+| Related SO    | Dropdown | No       | Filtered by selected Customer     | Links ticket to Sales Order context: `[List of user's active SO-YYYY-NNNN]`.                                                                  |
 | Related Task  | Dropdown | No       | Filtered by selected Customer/SO  | Links ticket to Task context from Module 21: `[List of TASK-YYYY-NNNN for selected Customer/SO]`. Shows tasks that are Completed/In Progress. |
-| Reported By   | Text     | Yes      | —                                 | Name of the person reporting the issue.                                                            |
-| Phone Number  | Text     | Yes      | Valid Phone format                | Contact number for callbacks.                                                                      |
-| Ticket Type   | Dropdown | Yes      | Values from Admin config          | Issue category: `[Complaint - Re-emergence, Complaint - Staff, Query - Billing, Query - Service]`. |
-| Priority      | Dropdown | Yes      | Auto-sets based on Type, editable | Drives the SLA timer: `[Normal, High, Urgent, Critical]`.                                          |
-| Subject       | Text     | Yes      | Max 100 chars                     | Short summary of the issue.                                                                        |
-| Description   | Textarea | Yes      | Max 1000 chars                    | Full details of the complaint.                                                                     |
-| Expected Date | Date     | Yes      | Cannot be past date               | Manager manually asserts proper resolution date.                                                   |
-| Expected Time | Time     | Yes      | —                                 | Manager manually asserts proper resolution time.                                                   |
-| Attachments   | File     | No       | Max 5 files, 5MB each             | Image/PDF evidence of the issue.                                                                   |
+| Reported By   | Text     | Yes      | —                                 | Name of the person reporting the issue.                                                                                                       |
+| Phone Number  | Text     | Yes      | Valid Phone format                | Contact number for callbacks.                                                                                                                 |
+| Ticket Type   | Dropdown | Yes      | Values from Admin config          | Issue category: `[Complaint - Re-emergence, Complaint - Staff, Query - Billing, Query - Service]`.                                            |
+| Priority      | Dropdown | Yes      | Auto-sets based on Type, editable | Drives the SLA timer: `[Normal, High, Urgent, Critical]`.                                                                                     |
+| Subject       | Text     | Yes      | Max 100 chars                     | Short summary of the issue.                                                                                                                   |
+| Description   | Textarea | Yes      | Max 1000 chars                    | Full details of the complaint.                                                                                                                |
+| Expected Date | Date     | Yes      | Cannot be past date               | Manager manually asserts proper resolution date.                                                                                              |
+| Expected Time | Time     | Yes      | —                                 | Manager manually asserts proper resolution time.                                                                                              |
+| Attachments   | File     | No       | Max 5 files, 5MB each             | Image/PDF evidence of the issue.                                                                                                              |
 
 ---
 
@@ -1437,20 +1557,20 @@ The core workspace for Support Agents. It presents the entire context of the tic
 
 ## Ticket Details (Read-Only)
 
-| Field       | Type    | Description                                                     |
-| ----------- | ------- | --------------------------------------------------------------- |
-| Subject     | Display | **[Auto-fetched]** Short description of the issue.              |
-| Customer    | Display | **[Auto-fetched]** Customer name (from Module 18).              |
-| SO No       | Link    | **[Auto-fetched]** Linked Sales Order.                          |
-| Task ID     | Link    | **[Auto-fetched]** Linked Module 21 Task ID.                    |
-| Type        | Display | **[Auto-fetched]** Complaint / Request / Inquiry.               |
-| Created     | Display | **[System-generated]** Timestamp of ticket creation.            |
-| Caller      | Display | **[Auto-fetched]** Contact person and number.                   |
-| Description | Text    | **[Auto-fetched]** Full issue details.                          |
-| Status      | Badge   | **[System-driven]** Current ticket status.                      |
-| Priority    | Badge   | **[System-driven]** Priority level (determines SLA).            |
-| Assigned To | Display | **[Auto-fetched]** Current Support Agent handling the ticket.   |
-| Esc. Lvl    | Badge   | **[System-driven]** Current Escalation Level (L1/L2/L3).        |
+| Field       | Type    | Description                                                   |
+| ----------- | ------- | ------------------------------------------------------------- |
+| Subject     | Display | **[Auto-fetched]** Short description of the issue.            |
+| Customer    | Display | **[Auto-fetched]** Customer name (from Module 18).            |
+| SO No       | Link    | **[Auto-fetched]** Linked Sales Order.                        |
+| Task ID     | Link    | **[Auto-fetched]** Linked Module 21 Task ID.                  |
+| Type        | Display | **[Auto-fetched]** Complaint / Request / Inquiry.             |
+| Created     | Display | **[System-generated]** Timestamp of ticket creation.          |
+| Caller      | Display | **[Auto-fetched]** Contact person and number.                 |
+| Description | Text    | **[Auto-fetched]** Full issue details.                        |
+| Status      | Badge   | **[System-driven]** Current ticket status.                    |
+| Priority    | Badge   | **[System-driven]** Priority level (determines SLA).          |
+| Assigned To | Display | **[Auto-fetched]** Current Support Agent handling the ticket. |
+| Esc. Lvl    | Badge   | **[System-driven]** Current Escalation Level (L1/L2/L3).      |
 
 ---
 
@@ -1600,10 +1720,10 @@ Fired by the Support Agent or Manager as the final, immutable step to permanentl
 
 ## Screen Logic & Validation
 
-| Field            | Type     | Required | Description                                                         |
-| ---------------- | -------- | -------- | ------------------------------------------------------------------- |
-| Close Reason     | Dropdown | Yes      | Standardized categorical reason for closing the ticket permanently. |
-| Closure Remarks  | Textarea | Yes      | Final notes wrapping up the entire ticket lifecycle.                |
+| Field           | Type     | Required | Description                                                         |
+| --------------- | -------- | -------- | ------------------------------------------------------------------- |
+| Close Reason    | Dropdown | Yes      | Standardized categorical reason for closing the ticket permanently. |
+| Closure Remarks | Textarea | Yes      | Final notes wrapping up the entire ticket lifecycle.                |
 
 ---
 
@@ -1995,11 +2115,11 @@ Form for employees to submit a new petty cash expense claim. Captures expense de
 
 ## Section 2: Supporting Documents Fields
 
-| Field              | Type        | Required | Validation                              | Description                         |
-| ------------------ | ----------- | -------- | --------------------------------------- | ----------------------------------- |
-| Bill / Receipt     | File Upload | Yes      | Min 1 file; PDF, JPG, PNG; Max 5MB each | Proof of expense (up to 5 files)    |
-| Upload More         | Button     | Yes      | Min 1 file; PDF, JPG, PNG; Max 5MB each | Can be add more file when 1 file is already uploaded (up to 5 files)       |
-| Justification Note | Textarea    | No       | Max 500 chars                           | Additional context for the approver |
+| Field              | Type        | Required | Validation                              | Description                                                          |
+| ------------------ | ----------- | -------- | --------------------------------------- | -------------------------------------------------------------------- |
+| Bill / Receipt     | File Upload | Yes      | Min 1 file; PDF, JPG, PNG; Max 5MB each | Proof of expense (up to 5 files)                                     |
+| Upload More        | Button      | Yes      | Min 1 file; PDF, JPG, PNG; Max 5MB each | Can be add more file when 1 file is already uploaded (up to 5 files) |
+| Justification Note | Textarea    | No       | Max 500 chars                           | Additional context for the approver                                  |
 
 ---
 
@@ -2161,37 +2281,37 @@ Read-only detail screen showing the complete breakdown of a petty cash request. 
 
 ## View-Only Fields
 
-| Field            | Type     | Description                                                          |
-| ---------------- | -------- | -------------------------------------------------------------------- |
-| Request ID       | Display  | **[System-generated]** Unique request ID                             |
-| Status           | Badge    | **[System-driven]** Current lifecycle status                         |
-| Category         | Display  | **[Auto-fetched]** Expense category                                  |
-| Expense Date     | Date     | **[Auto-fetched]** Expense date range (From – To)                    |
-| Amount (₹)       | Currency | **[Auto-fetched]** Claimed amount                                    |
-| Description      | Text     | **[Auto-fetched]** Expense description                               |
-| Related Task     | Link     | **[Auto-fetched]** Task reference (navigates to Module 21)           |
-| Related SO       | Link     | **[Auto-fetched]** Sales Order reference (navigates to Module 20)    |
-| Bills / Receipts | File     | **[Auto-fetched]** Click to view/download uploaded documents         |
-| Justification    | Text     | **[Auto-fetched]** Context for the expense                           |
-| Payment Mode     | Display  | **[Auto-fetched]** Bank Transfer / UPI (from Section 3)              |
-| Account Holder   | Display  | **[Auto-fetched]** Name on account                                   |
-| Bank Name        | Display  | **[Auto-fetched]** Employee's bank                                   |
-| Account Number   | Display  | **[Auto-fetched]** Bank account number                               |
-| IFSC Code        | Display  | **[Auto-fetched]** Bank branch IFSC code                             |
-| Pre-Approved?    | Badge    | **[Auto-fetched]** Yes / No (from Section 4)                         |
-| Approval Status  | Badge    | **[System-driven]** Pending / Approved / Rejected / Returned         |
-| Reviewed By      | Display  | **[Auto-fetched]** Name of the reviewing manager                     |
-| Review Date      | Date     | **[Auto-fetched]** When the review was performed                     |
-| Approved Amount  | Currency | **[Auto-fetched]** Amount approved (may differ from requested)       |
-| Reviewer Remarks | Text     | **[Auto-fetched]** Notes from the approver                           |
-| Payment Status   | Badge    | **[System-driven]** Not Processed / Processed                        |
-| Payment Mode     | Display  | **[Auto-fetched]** Actual mode used for payment (from Finance)       |
-| Transaction Ref  | Display  | **[Auto-fetched]** Payment transaction reference (after payment)     |
-| Payment Date     | Date     | **[Auto-fetched]** When payment was made                             |
-| Submitted By     | Display  | **[Auto-fetched]** Name and role of requester                        |
-| Submitted Date   | DateTime | **[System-captured]** When the request was submitted                 |
-| Branch name      | Display  | **[Auto-fetched]** Requester's branch                                |
-| Sent To          | Display  | **[Auto-fetched]** Recipients of the request                         |
+| Field            | Type     | Description                                                       |
+| ---------------- | -------- | ----------------------------------------------------------------- |
+| Request ID       | Display  | **[System-generated]** Unique request ID                          |
+| Status           | Badge    | **[System-driven]** Current lifecycle status                      |
+| Category         | Display  | **[Auto-fetched]** Expense category                               |
+| Expense Date     | Date     | **[Auto-fetched]** Expense date range (From – To)                 |
+| Amount (₹)       | Currency | **[Auto-fetched]** Claimed amount                                 |
+| Description      | Text     | **[Auto-fetched]** Expense description                            |
+| Related Task     | Link     | **[Auto-fetched]** Task reference (navigates to Module 21)        |
+| Related SO       | Link     | **[Auto-fetched]** Sales Order reference (navigates to Module 20) |
+| Bills / Receipts | File     | **[Auto-fetched]** Click to view/download uploaded documents      |
+| Justification    | Text     | **[Auto-fetched]** Context for the expense                        |
+| Payment Mode     | Display  | **[Auto-fetched]** Bank Transfer / UPI (from Section 3)           |
+| Account Holder   | Display  | **[Auto-fetched]** Name on account                                |
+| Bank Name        | Display  | **[Auto-fetched]** Employee's bank                                |
+| Account Number   | Display  | **[Auto-fetched]** Bank account number                            |
+| IFSC Code        | Display  | **[Auto-fetched]** Bank branch IFSC code                          |
+| Pre-Approved?    | Badge    | **[Auto-fetched]** Yes / No (from Section 4)                      |
+| Approval Status  | Badge    | **[System-driven]** Pending / Approved / Rejected / Returned      |
+| Reviewed By      | Display  | **[Auto-fetched]** Name of the reviewing manager                  |
+| Review Date      | Date     | **[Auto-fetched]** When the review was performed                  |
+| Approved Amount  | Currency | **[Auto-fetched]** Amount approved (may differ from requested)    |
+| Reviewer Remarks | Text     | **[Auto-fetched]** Notes from the approver                        |
+| Payment Status   | Badge    | **[System-driven]** Not Processed / Processed                     |
+| Payment Mode     | Display  | **[Auto-fetched]** Actual mode used for payment (from Finance)    |
+| Transaction Ref  | Display  | **[Auto-fetched]** Payment transaction reference (after payment)  |
+| Payment Date     | Date     | **[Auto-fetched]** When payment was made                          |
+| Submitted By     | Display  | **[Auto-fetched]** Name and role of requester                     |
+| Submitted Date   | DateTime | **[System-captured]** When the request was submitted              |
+| Branch name      | Display  | **[Auto-fetched]** Requester's branch                             |
+| Sent To          | Display  | **[Auto-fetched]** Recipients of the request                      |
 
 ---
 
@@ -2377,20 +2497,20 @@ Dedicated approval screen for managers and supervisors to review a petty cash re
 
 ## Request Details (Read-Only)
 
-| Field          | Type     | Description                                             |
-| -------------- | -------- | ------------------------------------------------------- |
-| Request ID     | Display  | **[Auto-fetched]** Unique request reference             |
-| Employee       | Display  | **[Auto-fetched]** Name, role of requesting employee    |
-| Branch         | Display  | **[Auto-fetched]** Employee's branch                    |
-| Submitted On   | DateTime | **[Auto-fetched]** When the request was submitted       |
-| Category       | Display  | **[Auto-fetched]** Expense category                     |
-| Expense Date   | Date     | **[Auto-fetched]** Expense date range (From – To)       |
-| Amount (₹)     | Currency | **[Auto-fetched]** Claimed amount                       |
-| Description    | Text     | **[Auto-fetched]** Expense description                  |
-| Related Task   | Link     | **[Auto-fetched]** Task reference (if linked)           |
-| Related SO     | Link     | **[Auto-fetched]** SO reference (if linked)             |
-| Prior Approval | Display  | **[Auto-fetched]** Yes/No + approver name if Yes        |
-| Bills/Receipts | Files    | **[Auto-fetched]** Clickable document links             |
+| Field          | Type     | Description                                          |
+| -------------- | -------- | ---------------------------------------------------- |
+| Request ID     | Display  | **[Auto-fetched]** Unique request reference          |
+| Employee       | Display  | **[Auto-fetched]** Name, role of requesting employee |
+| Branch         | Display  | **[Auto-fetched]** Employee's branch                 |
+| Submitted On   | DateTime | **[Auto-fetched]** When the request was submitted    |
+| Category       | Display  | **[Auto-fetched]** Expense category                  |
+| Expense Date   | Date     | **[Auto-fetched]** Expense date range (From – To)    |
+| Amount (₹)     | Currency | **[Auto-fetched]** Claimed amount                    |
+| Description    | Text     | **[Auto-fetched]** Expense description               |
+| Related Task   | Link     | **[Auto-fetched]** Task reference (if linked)        |
+| Related SO     | Link     | **[Auto-fetched]** SO reference (if linked)          |
+| Prior Approval | Display  | **[Auto-fetched]** Yes/No + approver name if Yes     |
+| Bills/Receipts | Files    | **[Auto-fetched]** Clickable document links          |
 
 ---
 
@@ -2497,17 +2617,17 @@ Finance team form to process payment for approved petty cash requests. Captures 
 
 ## Approved Request Summary (Read-Only)
 
-| Field            | Type     | Description                                           |
-| ---------------- | -------- | ----------------------------------------------------- |
-| Request ID       | Display  | **[Auto-fetched]** Unique request reference           |
-| Employee         | Display  | **[Auto-fetched]** Employee name and role             |
-| Branch           | Display  | **[Auto-fetched]** Employee's branch                  |
-| Category         | Display  | **[Auto-fetched]** Expense type                       |
-| Expense Date     | Date     | **[Auto-fetched]** Expense date range (From – To)     |
-| Requested Amount | Currency | **[Auto-fetched]** Original claimed amount            |
-| Approved Amount  | Currency | **[Auto-fetched]** Amount approved by manager         |
-| Approved By      | Display  | **[Auto-fetched]** Name of the approving manager      |
-| Approved On      | DateTime | **[Auto-fetched]** Date/time of approval              |
+| Field            | Type     | Description                                       |
+| ---------------- | -------- | ------------------------------------------------- |
+| Request ID       | Display  | **[Auto-fetched]** Unique request reference       |
+| Employee         | Display  | **[Auto-fetched]** Employee name and role         |
+| Branch           | Display  | **[Auto-fetched]** Employee's branch              |
+| Category         | Display  | **[Auto-fetched]** Expense type                   |
+| Expense Date     | Date     | **[Auto-fetched]** Expense date range (From – To) |
+| Requested Amount | Currency | **[Auto-fetched]** Original claimed amount        |
+| Approved Amount  | Currency | **[Auto-fetched]** Amount approved by manager     |
+| Approved By      | Display  | **[Auto-fetched]** Name of the approving manager  |
+| Approved On      | DateTime | **[Auto-fetched]** Date/time of approval          |
 
 ---
 
