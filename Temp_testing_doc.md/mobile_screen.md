@@ -134,7 +134,7 @@
 ┌────────────────────────────────────────────┐
 │  [← Back]       FORGOT PASSWORD            │
 │                                            │
-│     Enter your registered Account ID,      │
+│     Enter your registered                  │
 │     Email, or Phone Number to receive      │
 │     a password reset OTP.                  │
 │                                            │
