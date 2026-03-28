@@ -68,6 +68,9 @@
 │     Account ID*                            │
 │     [________________________]             │
 │                                            │
+│     Username*                              │
+│     [________________________]             │
+│                                            │
 │     Password*                              │
 │     [________________________] [👁]        │
 │                                            │
@@ -81,11 +84,13 @@
 └────────────────────────────────────────────┘
 ```
 
-## Screen Fields
+## Screen Components / Fields
 
-| Field | Type | Required | Validation | Description |
+| Element / Field | Type | Required | Validation | Description |
 | --- | --- | --- | --- | --- |
-| Account ID | Text Input | Yes | Must match existing IAM user record | Company-issued unique Account ID (provided by Admin via Module 8) |
+| Page Header | Header | — | — | Contains Company Logo Area |
+| Account ID | Text Input | Yes | Must match existing IAM user record | Company-issued unique Account ID |
+| Username | Text Input | Yes | Must match IAM user record | User's unique username |
 | Password | Password Input | Yes | Minimum 8 characters | User's secret password, masked by default |
 | Show/Hide Password | Toggle Icon (👁) | — | — | Toggles password visibility |
 | Forgot Password | Text Link | — | — | Navigates to Forgot Password screen (1.1) |
@@ -387,7 +392,7 @@ Same card structure as described in [Screen 2 → Section 2.3](#23-todays-tasks-
 | Extra Field | Type | Description |
 | --- | --- | --- |
 | Priority Badge | Badge | 🔴 Urgent / 🟡 High / 🟢 Normal — from Module 21 |
-| Date Group Header | Section Header | Tasks grouped by scheduled date (e.g., "23 Mar 2026 (Today)", "24 Mar 2026 (Tomorrow)", "25 Mar 2026 (Tuesday)"). Displays full date with day label. For today and tomorrow, special labels are appended. Past dates show the weekday name. Each group header separates tasks visually with a horizontal rule and bold date text. If no tasks exist for a date, the group is not shown |
+| Date Group Header | Section Header | Tasks grouped by scheduled date (e.g., "23 Mar 2026 (Today)", "24 Mar 2026 (Tomorrow)", "25 Mar 2026 (Tuesday)"). Displays full date with day label. For today and tomorrow, special text is appended in brackets. Past dates show the weekday name. Each group header separates tasks visually with a horizontal rule and bold date text. The grouped tasks can be collapsed/expanded by tapping on the header. If no tasks exist for a date within the filtered range, the group header is completely hidden from the view to save screen space |
 
 **Card Tap Action:** Opens Task Detail Page (Screen 8).
 
@@ -448,10 +453,11 @@ Same card structure as described in [Screen 2 → Section 2.3](#23-todays-tasks-
 
 ## Screen Components
 
-### 5.1 Calendar Grid
+### 5.1 Header & Calendar Grid
 
-| Element | Type | Description |
+| Element / Field | Type | Description |
 | --- | --- | --- |
+| Page Header | Header | "CALENDAR" title bar showing the current viewing month |
 | Month Navigation | Arrows (◀ ▶) | Navigate to previous/next month |
 | View Toggle | Dropdown | Monthly / Weekly view |
 | Date Cells | Tap-able Grid | Each cell shows attendance status (color) and task count badge |
@@ -531,7 +537,15 @@ Appears when a date cell is tapped:
 
 ## Screen Components
 
-### 6.1 Leave Balance Summary
+### 6.1 Header & Top Controls
+
+| Element / Field | Type | Description |
+| --- | --- | --- |
+| Page Header | Header | "LEAVE" title bar |
+| Search Icon (🔍) | Icon | Tap to search leave records by reason or date |
+| Filter Icon (⚙️) | Icon | Tap to open advanced filter options |
+
+### 6.2 Leave Balance Summary
 
 | Field | Type | Description | Source |
 | --- | --- | --- | --- |
@@ -539,7 +553,7 @@ Appears when a date cell is tapped:
 | Sick Leave (SL) | Display | Used / Total allocation | Module 6 → Module 8 → Module 25 |
 | Paid Leave (PL) | Display | Used / Total allocation | Module 6 → Module 8 → Module 25 |
 
-### 6.2 Leave Filters (Tabs)
+### 6.3 Leave Filters (Tabs)
 
 | Tab | Filter |
 | --- | --- |
@@ -871,8 +885,9 @@ Appears when a date cell is tapped:
 
 ### 8.1 Task Header
 
-| Field | Type | Description | Source |
+| Element / Field | Type | Description | Source |
 | --- | --- | --- | --- |
+| Page Header | Header | "TASK-YYYY-NNNN" title with Back and View Map buttons | — |
 | Task ID | Display | Unique task identifier | Module 21 |
 | Status | Badge | Pending / In Progress / Completed / Overdue | Module 21 |
 | Priority | Badge | Normal / High / Urgent / Critical | Module 21 |
@@ -979,8 +994,9 @@ Appears when a date cell is tapped:
 
 ## Screen Components
 
-| Element | Type | Description |
+| Element / Field | Type | Description |
 | --- | --- | --- |
+| Page Header | Header | "NAVIGATE TO SITE" title with back button |
 | Map | Interactive Map View | Shows real-time GPS position of technician and destination pin with route line |
 | ETA | Display (Auto) | Estimated Time of Arrival (system-calculated) |
 | Distance | Display (Auto) | Route distance in km |
@@ -1037,8 +1053,9 @@ Appears when a date cell is tapped:
 
 ## Screen Fields
 
-| Element | Type | Description |
+| Element / Field | Type | Description |
 | --- | --- | --- |
+| Page Header | Header | "VERIFY IDENTITY" title with Cancel button |
 | Camera Viewfinder | Live Camera (Front) | Front-facing camera is activated automatically |
 | GPS Location | Display (Auto) | Current GPS location shown as overlay on camera |
 | Timestamp | Display (Auto) | Current date and time stamped on the photo |
@@ -1128,6 +1145,8 @@ Appears when a date cell is tapped:
 │                                              │
 │  Photos uploaded: 2 / 5                      │
 │                                              │
+│  [🗑 Delete Photos]                           │
+│                                              │
 │  ┌──────────────────────────────────────┐    │
 │  │         [CONTINUE →]                 │    │
 │  └──────────────────────────────────────┘    │
@@ -1137,12 +1156,14 @@ Appears when a date cell is tapped:
 
 ## Screen Fields
 
-| Element | Type | Description |
+| Element / Field | Type | Description |
 | --- | --- | --- |
+| Page Header | Header | "BEFORE SERVICE PHOTOS" with back button |
 | Task ID | Display (Read-only) | Current Task ID being executed (if shown in header) |
 | Photo Thumbnails | Image Grid | Preview thumbnails of captured photos |
 | Add Button (+) | Camera Trigger | Opens camera to capture additional photos |
 | Photo Counter | Display | "X / 5" counter showing uploaded vs max |
+| Delete Photos Button | Button | Initiates the multi-step delete flow (see below) |
 
 ## Validation Rules
 
@@ -1159,8 +1180,18 @@ Appears when a date cell is tapped:
 | Action | Trigger | Behaviour |
 | --- | --- | --- |
 | **Capture Photo** | Tap + or empty slot | Opens camera → captures photo → adds to grid |
-| **Delete Photo** | Long-press on thumbnail | Confirmation → removes photo from grid |
+| **Delete Photos** | Tap 🗑 Delete Photos button | Enters selection mode (see Delete Flow below) |
 | **Continue** | Tap button | Validates minimum 1 photo → Navigates to After Service Photos (Screen 12) |
+
+## Delete Photo Flow (Multi-Step)
+
+| Step | Screen State | User Action |
+| --- | --- | --- |
+| **Step 1: Tap Delete** | User taps the "🗑 Delete Photos" button | Photo grid switches to **selection mode** — each photo shows a checkbox overlay |
+| **Step 2: Select Photos** | User taps on one or more photos to select them for deletion | Selected photos show a ☑ check mark and a highlighted border. A counter shows "X selected". [Cancel Selection] and [🗑 Delete Selected] buttons appear |
+| **Step 3: Tap Delete Selected** | User taps "🗑 Delete Selected" button | A **confirmation popup** appears: "Are you sure you want to delete X selected photo(s)? This action cannot be undone." with [Delete] and [Cancel] buttons |
+| **Step 4: Confirm Delete** | User taps "Delete" on the confirmation popup | Selected photos are permanently removed from the grid. Photo counter updates. Grid exits selection mode. Success toast: "X photo(s) deleted." |
+| **Cancel at any step** | User taps "Cancel Selection" or "Cancel" on popup | Selection is cleared, grid returns to normal view. No photos are deleted |
 
 ---
 
@@ -1198,8 +1229,9 @@ Appears when a date cell is tapped:
 
 ## Screen Fields
 
-| Element | Type | Description |
+| Element / Field | Type | Description |
 | --- | --- | --- |
+| Page Header | Header | "AFTER SERVICE PHOTOS" title with back button |
 | Task ID | Display (Read-only) | Current Task ID being executed |
 | After Service Photos | Image Grid | Mandatory post-service photo grid (up to 5 photos) |
 | Photo Counter | Display | "X / 5" counter showing uploaded vs max |
@@ -1301,6 +1333,12 @@ Appears when a date cell is tapped:
 ```
 
 ## Form Fields
+
+### 13.0 Header
+
+| Element / Field | Type | Description |
+| --- | --- | --- |
+| Page Header | Header | "SERVICE EXECUTION" title with back button and Task ID |
 
 ### 13.1 Service Block (Repeatable — One per Service)
 
@@ -1437,32 +1475,38 @@ Each service block contains the following fields:
 └──────────────────────────────────────────────┘
 ```
 
-## Form Fields
+## Screen Components / Form Fields
 
-### 14.1 Structural Gaps / Pest Entry Points
+### 14.1 Header & Top Controls
+
+| Element / Field | Type | Description |
+| --- | --- | --- |
+| Page Header | Header | "TECHNICIAN OBSERVATIONS" with back button and Task ID |
+
+### 14.2 Structural Gaps / Pest Entry Points
 
 | Field | Type | Required | Validation | Description |
 | --- | --- | --- | --- | --- |
 | Found? | Radio (Yes/No) | Yes | Must select one | Whether structural gaps or pest entry points were observed |
-| Checkbox Options | Multi-select Checkboxes | Conditional | Required if "Yes" selected; at least one must be checked | Predefined list of common structural issues |
+| Checkbox Options | Multi-select Checkboxes | Conditional | Required if "Yes" selected; at least one must be checked | Options: Gaps in door frames, Cracks in walls, Open drainage / pipes, Broken window seals, Gaps in ceiling, Cable entry points, Other |
 | Other (specify) | Text Input | Conditional | Required if "Other" is checked | Free-text for unlisted observations |
 | Location / Area | Textarea | Conditional | Required if "Yes" selected; Min 5, Max 500 chars | Specific location where gaps/entry points were found |
 
-### 14.2 Hygiene & Sanitation
+### 14.3 Hygiene & Sanitation
 
 | Field | Type | Required | Validation | Description |
 | --- | --- | --- | --- | --- |
 | Found? | Radio (Yes/No) | Yes | Must select one | Whether hygiene or sanitation issues were observed |
-| Checkbox Options | Multi-select Checkboxes | Conditional | Required if "Yes" selected; at least one must be checked | Predefined list of common hygiene issues |
+| Checkbox Options | Multi-select Checkboxes | Conditional | Required if "Yes" selected; at least one must be checked | Options: Food residue found, Stagnant water present, Improper waste management, General cleanliness issue, Garbage accumulation, Other |
 | Other (specify) | Text Input | Conditional | Required if "Other" is checked | Free-text for unlisted observations |
 | Location / Area | Textarea | Conditional | Required if "Yes" selected; Min 5, Max 500 chars | Specific location where hygiene issues were found |
 
-### 14.3 Pest Sighting
+### 14.4 Pest Sighting
 
 | Field | Type | Required | Validation | Description |
 | --- | --- | --- | --- | --- |
 | Observed? | Radio (Yes/No) | Yes | Must select one | Whether active pest sightings were observed during service |
-| Checkbox Options | Multi-select Checkboxes | Conditional | Required if "Yes" selected; at least one must be checked | Predefined list of pest sighting indicators |
+| Checkbox Options | Multi-select Checkboxes | Conditional | Required if "Yes" selected; at least one must be checked | Options: Live pests seen, Droppings / excrement found, Egg casings / nests, Gnaw marks / damage, Dead pests found, Other |
 | Other (specify) | Text Input | Conditional | Required if "Other" is checked | Free-text for unlisted sighting types |
 | Location / Area | Textarea | Conditional | Required if "Yes" selected; Min 5, Max 500 chars | Specific location/area where pests were sighted |
 
@@ -1521,6 +1565,12 @@ Each service block contains the following fields:
 ```
 
 ## Form Fields
+
+### 15.0 Header
+
+| Element / Field | Type | Description |
+| --- | --- | --- |
+| Page Header | Header | "TECHNICIAN INFO & NOTES" title with back button and Task ID |
 
 ### 15.1 Technician Details (Read-only)
 
@@ -1614,18 +1664,21 @@ Each service block contains the following fields:
 │  ┌──────────────────────────────────────┐    │
 │  │   [📄 SUBMIT SERVICE REPORT]         │    │
 │  └──────────────────────────────────────┘    │
-│                                              │
-│  [Skip Verification → requires reason]       │
 └──────────────────────────────────────────────┘
 ```
 
 ## Form Fields
 
+### 16.0 Header
+
+| Element / Field | Type | Description |
+| --- | --- | --- |
+| Page Header | Header | "CUSTOMER VERIFICATION" with back button and Task ID |
+
 ### 16.1 Customer Details & OTP
 
 | Field | Type | Required | Validation | Description |
 | --- | --- | --- | --- | --- |
-| Task Header | Task ID | Display (Read-only) | — | Current Task ID being executed |
 | Customer Name | Text Input | Yes | Pre-filled from task, editable. Min 2 chars | The name of the person verifying the service on-site |
 | Mobile Number | Phone Input | Yes | Valid 10-digit mobile number | The mobile number to receive the validation OTP |
 | OTP Input | 4-digit OTP | Yes | Must match sent OTP | OTP entered by the technician after receiving it from the customer |
@@ -1648,7 +1701,6 @@ Auto-generated checklist showing completion status of all task execution steps. 
 | **Send OTP** | Tap button | Sends 4-digit OTP via SMS to the entered Mobile Number. Starts 3-minute expiry timer |
 | **Resend OTP** | Tap link (after 60s cooldown) | Resends a new OTP. Previous OTP is invalidated |
 | **Submit Service Report** | Tap button | Validates OTP + all steps are complete → Confirms via dialog: "Submit service report and mark task as completed?" → On confirm: Task Status → Completed in Module 21; Stock deducted from Module 11; Service report generated; GPS tracking stops for this task. Returns to Home Dashboard (Screen 2) with success toast: "Service report submitted successfully!" |
-| **Skip Verification** | Tap link | Opens popup: "Reason for skipping OTP verification*" (textarea, mandatory). Allows proceeding to submit without OTP but logs the skip reason for audit |
 
 ## OTP Business Rules
 
@@ -1657,7 +1709,6 @@ Auto-generated checklist showing completion status of all task execution steps. 
 | OTP Expiry | OTP is valid for 3 minutes |
 | Max Attempts | Maximum 3 OTP verification attempts. After 3 failures → must resend |
 | Resend Cooldown | "Resend OTP" available only after 60 seconds |
-| Skip Audit | If verification is skipped, the reason is logged in audit trail and flagged for manager review |
 
 ## Post-Submission System Actions
 
@@ -1731,6 +1782,20 @@ Auto-generated checklist showing completion status of all task execution steps. 
 | **Share** | Share service report via WhatsApp, Email, or other apps |
 | **Download PDF** | Downloads the service report as a PDF document |
 
+## Screen Components / Fields
+
+| Element / Field | Type | Description |
+| --- | --- | --- |
+| Page Header | Header | "SERVICE REPORT" title with Task ID |
+| Day-wise Grouping | Group Header | Groups reports by day (e.g., "Today", "23 Mar 2026") when viewed in history |
+| Task Summary | Section | Customer, Site, Date, Time, Duration, and Technician details |
+| Chemicals Used | Section | List of chemicals and quantities used |
+| Treatment | Section | Treatment method and target pest types |
+| Observations | Section | Structural gaps, hygiene issues, and pest sightings logged |
+| Photos | Thumbnail Grid | Scrollable list of captured photos (Before/After/Treatment) |
+| Customer Feedback | Section | Star rating, text feedback, and OTP verification status |
+| Notes | Text | Additional technician notes |
+
 ## All Fields (Read-only)
 
 All fields from Screens 12–16 are displayed in read-only format, consolidated into a single scrollable report view.
@@ -1775,6 +1840,12 @@ All fields from Screens 12–16 are displayed in read-only format, consolidated 
 │  [Mark All as Read]                          │
 └──────────────────────────────────────────────┘
 ```
+
+## Screen Components
+
+| Element / Field | Type | Description |
+| --- | --- | --- |
+| Page Header | Header | "NOTIFICATIONS" title with back button |
 
 ## Notification Types
 
@@ -1836,14 +1907,17 @@ All fields from Screens 12–16 are displayed in read-only format, consolidated 
 └──────────────────────────────────────────────┘
 ```
 
-## Features
+## Screen Components & Features
 
-| Feature | Description |
-| --- | --- |
-| Quick Action Buttons | Pre-defined shortcuts for common queries |
-| Free Text Input | Type any question related to services, chemicals, safety |
-| Context-Aware | Can reference the technician's current tasks and assigned chemicals |
-| Help Desk | Quick link to contact the branch manager or support team |
+| Element / Feature | Type | Description |
+| --- | --- | --- |
+| Page Header | Header | "ASSISTANT" title with back button |
+| Quick Action Buttons | Button Row | Pre-defined shortcuts for common queries: [My Tasks], [Chemical Info], [Safety Tips], [Help Desk] |
+| Chat Thread | Message List | Scrollable history of user questions and bot responses |
+| Free Text Input | Text Box | Type any question related to services, chemicals, safety |
+| Send Button (➤) | Icon Button | Submits the typed question to the chatbot |
+| Context-Aware | Backend Logic | Can reference the technician's current tasks and assigned chemicals |
+| Help Desk | Quick Link | Quick link to contact the branch manager or support team |
 
 ---
 
