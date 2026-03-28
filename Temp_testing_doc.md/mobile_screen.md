@@ -133,7 +133,7 @@
 │     Email, or Phone Number to receive      │
 │     a password reset OTP.                  │
 │                                            │
-│     Account ID / Email / Phone*            │
+│     Email / Phone*                         │
 │     [________________________]             │
 │                                            │
 │     ┌──────────────────────────────────┐   │
@@ -148,7 +148,7 @@
 
 | Field | Type | Required | Validation | Description |
 | --- | --- | --- | --- | --- |
-| Account ID / Email / Phone | Text Input | Yes | Must match an existing IAM record (Account ID, registered email, or registered phone number) | User enters their Account ID, registered email, or registered 10-digit phone number |
+|Email / Phone | Text Input | Yes | Must match an existing IAM record (Account ID, registered email, or registered phone number) | User enters their Account ID, registered email, or registered 10-digit phone number |
 
 ## Actions
 
