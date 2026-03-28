@@ -729,17 +729,18 @@ Appears when a date cell is tapped:
 └──────────────────────────────────────────────┘
 ```
 
-## Screen Sections & Fields (Read-Only)
+## Screen Components
 
-| Section | Key Fields Displayed | Source Module |
+| Element / Field | Type | Description |
 | --- | --- | --- |
-| **1. Basic Info** | Profile Photo, EMP ID, Full Name, Email, Contact No, Alt No, Status, Date of Joining, Employment Type | Module 8 |
-| **2. Org Info** | Department, Designation, Role, Branch, Reporting Manager | Module 8 / 7 |
-| **3. Address Info** | Current and Permanent Address (Line 1/2, City, State, Country, Pincode) | Module 8 |
-| **4. Salary Info** | Salary Type, Basic, HRA, Allowances, Incentives, Deductions, Net Salary. **Hidden** if user lacks salary view permissions | Module 25 |
-| **5. Bank Info** | Bank Name, Masked Account Number, Account Holder, IFSC Code, UPI ID | Module 8 |
-| **6. Documents** | List of uploaded documents (Gov ID, Address, Contract) with Download 📥 and View 👁 actions | Module 8 |
-| **7. Leave Summary**| CL, SL, PL balances (Used/Total), Total Leaves Taken | Module 25 |
+| Page Header | Header | "PROFILE" title with Edit button |
+| 1. Basic Info | Section (Read-only) | Profile Photo, EMP ID, Full Name, Email, Contact No, Alt No, Status, Date of Joining, Employment Type |
+| 2. Org Info | Section (Read-only) | Department, Designation, Role, Branch, Reporting Manager |
+| 3. Address Info | Section (Read-only) | Current and Permanent Address (Line 1/2, City, State, Country, Pincode) |
+| 4. Salary Info | Section (Read-only) | Salary Type, Basic, HRA, Allowances, Incentives, Deductions, Net Salary. **Hidden** if user lacks salary view permissions |
+| 5. Bank Info | Section (Read-only) | Bank Name, Masked Account Number, Account Holder, IFSC Code, UPI ID |
+| 6. Documents | Section (Read-only) | List of uploaded documents (Gov ID, Address, Contract) with Download 📥 and View 👁 actions |
+| 7. Leave Summary | Section (Read-only) | CL, SL, PL balances (Used/Total), Total Leaves Taken |
 
 ## Actions
 
