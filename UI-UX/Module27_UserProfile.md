@@ -145,19 +145,19 @@ A comprehensive, section-wise profile page displaying all relevant information a
 
 | Field             | Type              | Required | Validation                    | Description                                                        | Source              |
 | ----------------- | ----------------- | -------- | ----------------------------- | ------------------------------------------------------------------ | ------------------- |
-| Profile Photo     | Image             | No       | JPG/PNG, Max 2MB              | Employee's profile photograph                                       | Module 8            |
+| Profile Photo     | Display (Image)   | No       | JPG/PNG, Max 2MB              | Employee's profile photograph                                       | Module 8            |
 | EMP ID            | Display           | Auto     | System-generated, unique      | Unique employee identifier (e.g., EMP-00124)                       | Module 8            |
-| First Name        | Text Input        | Yes      | Min 2 chars, Max 50 chars     | Employee's first name                                               | Module 8            |
-| Last Name         | Text Input        | Yes      | Min 1 char, Max 50 chars      | Employee's last name                                                | Module 8            |
+| First Name        | Display           | Yes      | Min 2 chars, Max 50 chars     | Employee's first name                                               | Module 8            |
+| Last Name         | Display           | Yes      | Min 1 char, Max 50 chars      | Employee's last name                                                | Module 8            |
 | Full Name         | Display (Auto)    | Auto     | Auto-generated                | Concatenation of First Name + Last Name                             | Calculated          |
-| Email             | Email Input       | Yes      | Valid email format, unique     | Official email used for login and communication                     | Module 8            |
-| Contact Number    | Phone Input       | Yes      | Valid 10-digit mobile number   | Primary phone number                                                | Module 8            |
-| Alternate Number  | Phone Input       | No       | Valid 10-digit mobile number   | Backup contact number                                               | Module 8            |
+| Email             | Display           | Yes      | Valid email format, unique     | Official email used for login and communication                     | Module 8            |
+| Contact Number    | Display           | Yes      | Valid 10-digit mobile number   | Primary phone number                                                | Module 8            |
+| Alternate Number  | Display           | No       | Valid 10-digit mobile number   | Backup contact number                                               | Module 8            |
 | Account ID        | Display           | Auto     | Unique, from IAM               | Login credential used for application authentication               | Module 1 (IAM)      |
 | Password          | Display (Masked)  | —        | ●●●●●●●● (always masked)      | Login password — never shown in plain text                          | Module 1 (IAM)      |
-| Status            | Badge             | Auto     | 🟢 Active / 🔴 Inactive       | Current employment status                                           | Module 8            |
-| Date of Joining   | Date              | Yes      | Cannot be future date          | Date the employee joined the company                                | Module 8            |
-| Employment Type   | Badge             | Yes      | Permanent / Contract / Intern  | Type of employment engagement                                       | Module 8            |
+| Status            | Display (Badge)   | Auto     | 🟢 Active / 🔴 Inactive       | Current employment status                                           | Module 8            |
+| Date of Joining   | Display           | Yes      | Cannot be future date          | Date the employee joined the company                                | Module 8            |
+| Employment Type   | Display (Badge)   | Yes      | Permanent / Contract / Intern  | Type of employment engagement                                       | Module 8            |
 
 ---
 
@@ -165,32 +165,32 @@ A comprehensive, section-wise profile page displaying all relevant information a
 
 | Field                      | Type            | Required | Validation                         | Description                                                                                   | Source           |
 | -------------------------- | --------------- | -------- | ---------------------------------- | --------------------------------------------------------------------------------------------- | ---------------- |
-| Department                 | Dropdown        | Yes      | Must select from configured list   | Business unit (Operations, Sales, Admin, etc.)                                                | Module 8         |
-| Designation                | Dropdown        | Yes      | Must select from configured list   | Job title (e.g., Senior Pest Control Technician)                                              | Module 8         |
-| Role                       | Dropdown        | Yes      | Must select from system roles      | System role controlling RBAC permissions                                                       | Module 1 (IAM)   |
-| Branch                     | Dropdown        | Yes      | Must select from active branches   | Assigned branch for operations                                                                 | Module 7 → 8     |
-| Reporting Manager          | Search Dropdown | Yes      | Must be an active employee         | Direct supervisor or manager                                                                   | Module 8         |
-| Is Application User        | Checkbox        | —        | Boolean (Yes/No)                   | If enabled, user accesses only the mobile app; ERP module permissions are disabled             | Module 1 (IAM)   |
+| Department                 | Display         | Yes      | Must select from configured list   | Business unit (Operations, Sales, Admin, etc.)                                                | Module 8         |
+| Designation                | Display         | Yes      | Must select from configured list   | Job title (e.g., Senior Pest Control Technician)                                              | Module 8         |
+| Role                       | Display         | Yes      | Must select from system roles      | System role controlling RBAC permissions                                                       | Module 1 (IAM)   |
+| Branch                     | Display         | Yes      | Must select from active branches   | Assigned branch for operations                                                                 | Module 7 → 8     |
+| Reporting Manager          | Display         | Yes      | Must be an active employee         | Direct supervisor or manager                                                                   | Module 8         |
+| Is Application User        | Display (Yes/No)| —        | Boolean (Yes/No)                   | If enabled, user accesses only the mobile app; ERP module permissions are disabled             | Module 1 (IAM)   |
 
 ---
 
-## Section 3: Address Information
+## Section 3: Address Information (Read-Only)
 
 | Field                       | Type       | Required    | Validation              | Description                                              | Source    |
 | --------------------------- | ---------- | ----------- | ----------------------- | -------------------------------------------------------- | --------- |
-| Current Address Line 1      | Text Input | Yes         | Min 5 chars, Max 200    | Primary address line                                     | Module 8  |
-| Current Address Line 2      | Text Input | No          | Max 200 chars           | Additional address information (landmark, floor, etc.)   | Module 8  |
-| City                        | Text Input | Yes         | Min 2 chars             | City of residence                                        | Module 8  |
-| State                       | Dropdown   | Yes         | From predefined list    | State / Province                                         | Module 8  |
-| Country                     | Dropdown   | Yes         | Default: India          | Country of residence                                     | Module 8  |
-| Pincode                     | Text Input | Yes         | 6-digit numeric         | Postal code                                              | Module 8  |
-| Same as Current (Checkbox)  | Checkbox   | —           | Boolean                 | If checked, auto-copies current address to permanent     | Module 8  |
-| Permanent Address Line 1    | Text Input | Conditional | Required if checkbox off| Permanent residential address line 1                     | Module 8  |
-| Permanent Address Line 2    | Text Input | No          | Max 200 chars           | Additional permanent address details                     | Module 8  |
-| Permanent City              | Text Input | Conditional | Required if checkbox off| Permanent address city                                   | Module 8  |
-| Permanent State             | Dropdown   | Conditional | Required if checkbox off| Permanent address state                                  | Module 8  |
-| Permanent Country           | Dropdown   | Conditional | Default: India          | Permanent address country                                | Module 8  |
-| Permanent Pincode           | Text Input | Conditional | 6-digit numeric         | Permanent address postal code                            | Module 8  |
+| Current Address Line 1      | Display    | Yes         | Min 5 chars, Max 200    | Primary address line                                     | Module 8  |
+| Current Address Line 2      | Display    | No          | Max 200 chars           | Additional address information (landmark, floor, etc.)   | Module 8  |
+| City                        | Display    | Yes         | Min 2 chars             | City of residence                                        | Module 8  |
+| State                       | Display    | Yes         | From predefined list    | State / Province                                         | Module 8  |
+| Country                     | Display    | Yes         | Default: India          | Country of residence                                     | Module 8  |
+| Pincode                     | Display    | Yes         | 6-digit numeric         | Postal code                                              | Module 8  |
+| Same as Current (Checkbox)  | Display    | —           | Boolean                 | If checked, auto-copies current address to permanent     | Module 8  |
+| Permanent Address Line 1    | Display    | Conditional | Required if checkbox off| Permanent residential address line 1                     | Module 8  |
+| Permanent Address Line 2    | Display    | No          | Max 200 chars           | Additional permanent address details                     | Module 8  |
+| Permanent City              | Display    | Conditional | Required if checkbox off| Permanent address city                                   | Module 8  |
+| Permanent State             | Display    | Conditional | Required if checkbox off| Permanent address state                                  | Module 8  |
+| Permanent Country           | Display    | Conditional | Default: India          | Permanent address country                                | Module 8  |
+| Permanent Pincode           | Display    | Conditional | 6-digit numeric         | Permanent address postal code                            | Module 8  |
 
 ---
 
@@ -198,15 +198,15 @@ A comprehensive, section-wise profile page displaying all relevant information a
 
 | Field            | Type              | Required | Validation              | Description                                              | Source                |
 | ---------------- | ----------------- | -------- | ----------------------- | -------------------------------------------------------- | --------------------- |
-| Salary Type      | Dropdown          | Yes      | CTC / Fixed / Hourly    | Payment model for this employee                          | Module 6 → Module 25  |
-| Basic Salary     | Currency          | Yes      | ≥ 0                     | Base monthly salary                                      | Module 25 (Salary)    |
-| HRA              | Currency          | No       | ≥ 0                     | House Rent Allowance                                     | Module 25 (Salary)    |
-| Other Allowance  | Currency          | No       | ≥ 0                     | Additional company allowances                            | Module 25 (Salary)    |
-| Incentive        | Currency          | No       | ≥ 0                     | Performance-based bonus                                  | Module 25 (Salary)    |
-| Deductions       | Currency          | No       | ≥ 0                     | Total deductions (tax, benefits, etc.)                   | Module 25 (Salary)    |
-| PF Applicable    | Checkbox (Read)   | —        | ✅ Yes / ❌ No           | Whether Provident Fund deduction applies                 | Module 6 → Module 25  |
-| ESI Applicable   | Checkbox (Read)   | —        | ✅ Yes / ❌ No           | Whether Employee State Insurance applies                 | Module 6 → Module 25  |
-| TDS Applicable   | Checkbox (Read)   | —        | ✅ Yes / ❌ No           | Whether Tax Deduction at Source applies                  | Module 6 → Module 25  |
+| Salary Type      | Display           | Yes      | CTC / Fixed / Hourly    | Payment model for this employee                          | Module 6 → Module 25  |
+| Basic Salary     | Display (Currency)| Yes      | ≥ 0                     | Base monthly salary                                      | Module 25 (Salary)    |
+| HRA              | Display (Currency)| No       | ≥ 0                     | House Rent Allowance                                     | Module 25 (Salary)    |
+| Other Allowance  | Display (Currency)| No       | ≥ 0                     | Additional company allowances                            | Module 25 (Salary)    |
+| Incentive        | Display (Currency)| No       | ≥ 0                     | Performance-based bonus                                  | Module 25 (Salary)    |
+| Deductions       | Display (Currency)| No       | ≥ 0                     | Total deductions (tax, benefits, etc.)                   | Module 25 (Salary)    |
+| PF Applicable    | Display (Yes/No)  | —        | ✅ Yes / ❌ No           | Whether Provident Fund deduction applies                 | Module 6 → Module 25  |
+| ESI Applicable   | Display (Yes/No)  | —        | ✅ Yes / ❌ No           | Whether Employee State Insurance applies                 | Module 6 → Module 25  |
+| TDS Applicable   | Display (Yes/No)  | —        | ✅ Yes / ❌ No           | Whether Tax Deduction at Source applies                  | Module 6 → Module 25  |
 
 ---
 
@@ -214,23 +214,23 @@ A comprehensive, section-wise profile page displaying all relevant information a
 
 | Field              | Type             | Required | Validation               | Description                                  | Source    |
 | ------------------ | ---------------- | -------- | ------------------------ | -------------------------------------------- | --------- |
-| Bank Name          | Text Input       | Yes      | Min 3 chars              | Bank used for salary payments                | Module 8  |
+| Bank Name          | Display          | Yes      | Min 3 chars              | Bank used for salary payments                | Module 8  |
 | Account Number     | Display (Masked) | Yes      | Partially masked display | Employee's bank account number               | Module 8  |
-| Account Holder Name| Text Input       | Yes      | Min 2 chars              | Name as per bank records                     | Module 8  |
-| IFSC Code          | Text Input       | Yes      | 11-char alphanumeric     | Bank branch identification code              | Module 8  |
-| UPI ID             | Text Input       | No       | Valid UPI format         | Digital payment identifier (optional)        | Module 8  |
+| Account Holder Name| Display          | Yes      | Min 2 chars              | Name as per bank records                     | Module 8  |
+| IFSC Code          | Display          | Yes      | 11-char alphanumeric     | Bank branch identification code              | Module 8  |
+| UPI ID             | Display          | No       | Valid UPI format         | Digital payment identifier (optional)        | Module 8  |
 
 ---
 
-## Section 6: Documents
+## Section 6: Documents (Read-Only)
 
 | Field                    | Type        | Required | Validation                   | Description                                      | Source    |
 | ------------------------ | ----------- | -------- | ---------------------------- | ------------------------------------------------ | --------- |
-| Government ID Proof      | File Upload | Yes      | PDF/JPG/PNG, Max 5MB         | Aadhaar / PAN / Voter ID or equivalent           | Module 8  |
-| Address Proof            | File Upload | Yes      | PDF/JPG/PNG, Max 5MB         | Utility bill, rental agreement, etc.             | Module 8  |
-| Employment Contract      | File Upload | Yes      | PDF only, Max 10MB           | Signed employment agreement                       | Module 8  |
-| Education Certificates   | File Upload | No       | PDF/JPG/PNG, Max 5MB         | Qualification / degree certificates               | Module 8  |
-| Other Documents          | File Upload | No       | PDF/JPG/PNG, Max 5MB each    | Any additional employee documentation             | Module 8  |
+| Government ID Proof      | Display (Link)| Yes      | PDF/JPG/PNG, Max 5MB         | Aadhaar / PAN / Voter ID or equivalent           | Module 8  |
+| Address Proof            | Display (Link)| Yes      | PDF/JPG/PNG, Max 5MB         | Utility bill, rental agreement, etc.             | Module 8  |
+| Employment Contract      | Display (Link)| Yes      | PDF only, Max 10MB           | Signed employment agreement                       | Module 8  |
+| Education Certificates   | Display (Link)| No       | PDF/JPG/PNG, Max 5MB         | Qualification / degree certificates               | Module 8  |
+| Other Documents          | Display (Link)| No       | PDF/JPG/PNG, Max 5MB each    | Any additional employee documentation             | Module 8  |
 
 ### Document Actions (View Mode)
 
