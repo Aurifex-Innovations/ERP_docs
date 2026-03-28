@@ -382,7 +382,7 @@ Same layout as View Mode, but applicable fields become editable. Accessible by t
 
 | Section                  | Editable Fields                                                          | Always Read-Only Fields                                   |
 | ------------------------ | ------------------------------------------------------------------------ | --------------------------------------------------------- |
-| 1. Basic Info            | First Name, Last Name, Email, Contact, Alt Number, Employment Type       | EMP ID, Full Name (auto), Account ID, Password, Status    |
+| 1. Basic Info            | First Name, Last Name, Email, Contact, Alt Number, Employment Type       | EMP ID, Full Name (auto), Account ID, Password, Status ,Date of joining    |
 | 2. Organization Info     | Department, Designation, Role, Branch, Reporting Mgr, App User           | —                                                         |
 | 3. Address               | All address fields                                                       | —                                                         |
 | 4. Salary                | All salary fields                                                        | —                                                         |
