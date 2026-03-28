@@ -125,21 +125,19 @@
 
 ---
 
-## Screen Layout
-
 ```
 ┌────────────────────────────────────────────┐
 │  [← Back]       FORGOT PASSWORD            │
 │                                            │
-│     Enter your registered Account ID       │
-│     or Email to receive a password         │
-│     reset link.                            │
+│     Enter your registered Account ID,      │
+│     Email, or Phone Number to receive      │
+│     a password reset OTP.                  │
 │                                            │
-│     Account ID / Email*                    │
+│     Account ID / Email / Phone*            │
 │     [________________________]             │
 │                                            │
 │     ┌──────────────────────────────────┐   │
-│     │       SEND RESET LINK            │   │
+│     │       SEND RESET OTP             │   │
 │     └──────────────────────────────────┘   │
 │                                            │
 │     [← Back to Sign In]                   │
@@ -150,14 +148,23 @@
 
 | Field | Type | Required | Validation | Description |
 | --- | --- | --- | --- | --- |
-| Account ID / Email | Text Input | Yes | Must match an existing IAM record | User enters their Account ID or registered email |
+| Account ID / Email / Phone | Text Input | Yes | Must match an existing IAM record (Account ID, registered email, or registered phone number) | User enters their Account ID, registered email, or registered 10-digit phone number |
 
 ## Actions
 
 | Action | Trigger | System Behaviour |
 | --- | --- | --- |
-| **Send Reset Link** | Tap button | Validates the input against IAM records. If match found → sends OTP/reset link to registered email/phone. Shows success toast: "Password reset link sent to your registered email." |
+| **Send Reset OTP** | Tap button | Validates the input against IAM records. If match found → sends OTP to registered email AND phone. Shows success toast: "OTP sent to your registered email / phone." If no match → error: "No account found with the provided details." |
 | **Back** | Tap ← icon | Returns to Login screen (Screen 1) |
+
+## Error Messages
+
+| Condition | Message |
+| --- | --- |
+| Empty field | "Please enter your Account ID, Email, or Phone Number." |
+| No match found | "No account found with the provided details. Please check and try again." |
+| Invalid phone format | "Please enter a valid 10-digit phone number." |
+| OTP send failure | "Failed to send OTP. Please try again." |
 
 ---
 
@@ -310,7 +317,7 @@
 
 ```
 ┌──────────────────────────────────────────────┐
-│  SERVICES                        [🔍] [⚙️]   │
+│  SERVICES                        [🔍] [🔽]   │
 │                                              │
 │  ┌──────────────────────────────────────┐    │
 │  │ [Assigned (4)]  │  [Completed (12)]  │    │
@@ -355,7 +362,7 @@
 | --- | --- | --- |
 | Title | Text | "SERVICES" |
 | Search Icon (🔍) | Icon | Opens search bar for searching by Task ID, Customer Name, or Service Type |
-| Filter Icon (⚙️) | Icon | Opens filter panel |
+| Filter Icon (🔽) | Icon | Opens filter panel with dropdown options |
 
 ### 4.2 Tabs
 
@@ -380,7 +387,7 @@ Same card structure as described in [Screen 2 → Section 2.3](#23-todays-tasks-
 | Extra Field | Type | Description |
 | --- | --- | --- |
 | Priority Badge | Badge | 🔴 Urgent / 🟡 High / 🟢 Normal — from Module 21 |
-| Date Group Header | Section Header | Tasks grouped by scheduled date |
+| Date Group Header | Section Header | Tasks grouped by scheduled date (e.g., "23 Mar 2026 (Today)", "24 Mar 2026 (Tomorrow)", "25 Mar 2026 (Tuesday)"). Displays full date with day label. For today and tomorrow, special labels are appended. Past dates show the weekday name. Each group header separates tasks visually with a horizontal rule and bold date text. If no tasks exist for a date, the group is not shown |
 
 **Card Tap Action:** Opens Task Detail Page (Screen 8).
 
@@ -628,10 +635,10 @@ Appears when a date cell is tapped:
 
 ---
 
-# Screen 7: Profile Page
+# Screen 7: Profile Page (View Mode)
 
-**Source Reference:** Module 25 – HRM (Employee Management), Module 8 – Employee Master, Module 6 – Salary & Leave Configuration
-**Purpose:** View personal profile, attendance summary, leave records, and salary information.
+**Source Reference:** Module 27 – User Profile
+**Purpose:** View a comprehensive, read-only 360-degree profile of the logged-in employee (Self-View). Structured into 7 standard sections matching the web ERP.
 
 ---
 
@@ -639,98 +646,164 @@ Appears when a date cell is tapped:
 
 ```
 ┌──────────────────────────────────────────────┐
-│  PROFILE                          [⚙️ Edit]  │
+│  PROFILE                          [✏️ Edit]  │
 │                                              │
-│  ┌──────────────────────────────────────┐    │
-│  │         [👤 Profile Photo]           │    │
-│  │         Ravi S.                      │    │
-│  │         EMP-00124                    │    │
-│  │         Technician | Mumbai Branch   │    │
-│  │         📱 9876543210               │    │
-│  │         📧 ravi.s@company.com       │    │
-│  └──────────────────────────────────────┘    │
+│  ┌─ 1. BASIC USER INFORMATION ────────────┐  │
+│  │  [👤 Profile Photo]                    │  │
+│  │  EMP-00124 | Ravi Sharma               │  │
+│  │  ravi.s@company.com                    │  │
+│  │  📱 9876543210  |  Alt: 9123456789     │  │
+│  │  Status: 🟢 Active                      │  │
+│  │  Joined: 15 Jun 2024 (Permanent)       │  │
+│  └────────────────────────────────────────┘  │
 │                                              │
-│  ┌──────────────────────────────────────┐    │
-│  │ [📊 Attendance] [🏖️ Leave] [💰 Salary]│    │
-│  └──────────────────────────────────────┘    │
+│  ┌─ 2. ORGANIZATION INFORMATION ──────────┐  │
+│  │  Dept        : Operations              │  │
+│  │  Role        : Senior Technician       │  │
+│  │  Branch      : Mumbai — Andheri        │  │
+│  │  Manager     : Anil K.                 │  │
+│  └────────────────────────────────────────┘  │
 │                                              │
-│  ─── ATTENDANCE SUMMARY (Mar 2026) ──────    │
-│  Present: 18 | Absent: 1 | Late: 2          │
-│  Leave: 1 | Week Off: 8                     │
-│  Avg Working Hours: 8h 24m                   │
+│  ┌─ 3. ADDRESS INFORMATION ───────────────┐  │
+│  │  Current Address:                      │  │
+│  │  42, Shanti Nagar, Andheri West        │  │
+│  │  Mumbai, Maharashtra, India - 400058   │  │
+│  │                                        │  │
+│  │  Permanent Address:                    │  │
+│  │  (Same as Current)                     │  │
+│  └────────────────────────────────────────┘  │
 │                                              │
-│  ─── LEAVE BALANCE ──────────────────────    │
-│  CL: 8/12  |  SL: 5/6  |  PL: 10/15        │
+│  ┌─ 4. SALARY INFORMATION ────────────────┐  │
+│  │  Salary Type : CTC                     │  │
+│  │  Basic Salary: ₹20,000                 │  │
+│  │  HRA         : ₹5,000                  │  │
+│  │  Allowances  : ₹3,000                  │  │
+│  │  Incentive   : ₹2,000                  │  │
+│  │  Deductions  : ₹2,500                  │  │
+│  │  PF: ✅ | ESI: ✅ | TDS: ❌              │  │
+│  │  [📥 Download Latest Salary Slip]       │  │
+│  └────────────────────────────────────────┘  │
 │                                              │
-│  ─── SALARY DETAILS (Feb 2026) ──────────    │
-│  Basic Salary  : ₹20,000                    │
-│  HRA           : ₹5,000                     │
-│  Allowances    : ₹3,000                     │
-│  Deductions    : ₹2,500                     │
-│  Net Salary    : ₹25,500                    │
-│  Status        : ✅ Paid                     │
-│  [📥 Download Salary Slip]                   │
+│  ┌─ 5. BANK INFORMATION ──────────────────┐  │
+│  │  Bank   : State Bank of India          │  │
+│  │  Acct No: ●●●●●●●●4321                 │  │
+│  │  Holder : Ravi Sharma                  │  │
+│  │  IFSC   : SBIN0001234                  │  │
+│  │  UPI    : ravi.s@sbi                   │  │
+│  └────────────────────────────────────────┘  │
 │                                              │
-│  ┌──────────────────────────────────────┐    │
-│  │           [🚪 LOGOUT]                │    │
-│  └──────────────────────────────────────┘    │
+│  ┌─ 6. DOCUMENTS ─────────────────────────┐  │
+│  │  Gov ID Proof       : ✅ [📥][👁]       │  │
+│  │  Address Proof      : ✅ [📥][👁]       │  │
+│  │  Employ. Contract   : ✅ [📥][👁]       │  │
+│  │  Education Certs    : ✅ [📥][👁]       │  │
+│  │  Other Docs         : ❌ Pending        │  │
+│  └────────────────────────────────────────┘  │
+│                                              │
+│  ┌─ 7. LEAVE SUMMARY ─────────────────────┐  │
+│  │  CL Balance: 8/12                      │  │
+│  │  SL Balance: 5/6                       │  │
+│  │  PL Balance: 10/15                     │  │
+│  │  Total Leaves Taken: 4                 │  │
+│  └────────────────────────────────────────┘  │
+│                                              │
+│  ┌────────────────────────────────────────┐  │
+│  │           [🚪 LOGOUT]                  │  │
+│  └────────────────────────────────────────┘  │
 │                                              │
 │  [Bottom Navigation Bar]                     │
 └──────────────────────────────────────────────┘
 ```
 
-## Screen Sections
+## Screen Sections & Fields (Read-Only)
 
-### 7.1 Personal Details (Read-only)
-
-| Field | Type | Description | Source |
-| --- | --- | --- | --- |
-| Profile Photo | Image | Employee photo | Module 8 |
-| Full Name | Display | Employee full name | Module 8 |
-| Employee ID | Display | Unique EMP ID (e.g., EMP-00124) | Module 8 |
-| Role | Display | Assigned role (Technician / Senior Technician) | Module 8 |
-| Branch | Display | Assigned branch name | Module 7 → Module 8 |
-| Phone | Display | Registered mobile number | Module 8 |
-| Email | Display | Registered email | Module 8 |
-
-### 7.2 Section Tabs
-
-| Tab | Content |
-| --- | --- |
-| **Attendance** | Monthly attendance summary with counts |
-| **Leave** | Leave balance overview (links to Screen 6) |
-| **Salary** | Monthly salary breakdown with download option |
-
-### 7.3 Attendance Summary
-
-| Field | Type | Description |
+| Section | Key Fields Displayed | Source Module |
 | --- | --- | --- |
-| Month/Year Selector | Dropdown | Select month for summary view |
-| Present Count | Display | Total present days |
-| Absent Count | Display | Total absent days |
-| Late Count | Display | Total late arrival days |
-| Leave Count | Display | Total approved leave days |
-| Week Off Count | Display | Total week offs |
-| Avg Working Hours | Display | Average daily working hours |
+| **1. Basic Info** | Profile Photo, EMP ID, Full Name, Email, Contact No, Alt No, Status, Date of Joining, Employment Type | Module 8 |
+| **2. Org Info** | Department, Designation, Role, Branch, Reporting Manager | Module 8 / 7 |
+| **3. Address Info** | Current and Permanent Address (Line 1/2, City, State, Country, Pincode) | Module 8 |
+| **4. Salary Info** | Salary Type, Basic, HRA, Allowances, Incentives, Deductions, Net Salary. **Hidden** if user lacks salary view permissions | Module 25 |
+| **5. Bank Info** | Bank Name, Masked Account Number, Account Holder, IFSC Code, UPI ID | Module 8 |
+| **6. Documents** | List of uploaded documents (Gov ID, Address, Contract) with Download 📥 and View 👁 actions | Module 8 |
+| **7. Leave Summary**| CL, SL, PL balances (Used/Total), Total Leaves Taken | Module 25 |
 
-### 7.4 Salary Details
+## Actions
 
-| Field | Type | Description | Source |
-| --- | --- | --- | --- |
-| Month/Year Selector | Dropdown | Select month for salary view | — |
-| Basic Salary | Currency (Read-only) | Base salary component | Module 25 – Salary (25.2) |
-| HRA | Currency (Read-only) | House Rent Allowance | Module 25 – Salary |
-| Allowances | Currency (Read-only) | Sum of all allowance components | Module 25 – Salary |
-| Deductions | Currency (Read-only) | Sum of all deduction components (PF, ESI, TDS) | Module 25 – Salary |
-| Net Salary | Currency (Read-only) | Final payable amount | Module 25 – Salary |
-| Payment Status | Badge | Paid / Unpaid | Module 25 – Salary |
-| Download Salary Slip | Button | Downloads PDF salary slip | Module 25 (RBAC: Employee can download own only) |
-
-### 7.5 Logout
-
-| Action | System Behaviour |
+| Action | Behaviour |
 | --- | --- |
+| **Edit** | Opens **Screen 7.1: Edit Profile** (Self-Edit mode) |
+| **Download Salary Slip** | Downloads the latest month's PDF salary slip |
 | **Logout** | Confirmation popup: "Are you sure you want to logout?" → On confirm: Clears session, stops GPS tracking, redirects to Login (Screen 1) |
+
+---
+
+# Screen 7.1: Edit Profile
+
+**Source Reference:** Module 27 – User Profile (Edit Mode)
+**Purpose:** Allows the logged-in user to update their own contact information, address, bank details, and upload missing documents (Self-Edit Rules).
+
+---
+
+## Screen Layout
+
+```
+┌──────────────────────────────────────────────┐
+│  [← Cancel]       EDIT PROFILE     [💾 Save] │
+│                                              │
+│  ┌─ 1. BASIC USER INFORMATION ────────────┐  │
+│  │  First Name: Ravi (read-only)          │  │
+│  │  Email: ravi.s@company (read-only)     │  │
+│  │  Contact No*: [9876543210________]     │  │
+│  │  Alt No     : [9123456789________]     │  │
+│  └────────────────────────────────────────┘  │
+│  (Org, Salary, Leave sections read-only)     │
+│                                              │
+│  ┌─ 3. ADDRESS INFORMATION ───────────────┐  │
+│  │  Current Address Line 1*:              │  │
+│  │  [42, Shanti Nagar, Andheri West___]   │  │
+│  │  City*:    [Mumbai___________]         │  │
+│  │  State*:   [▼ Maharashtra ▼__]         │  │
+│  │  Pincode*: [400058___________]         │  │
+│  │                                        │  │
+│  │  [☑] Same as Current Address           │  │
+│  └────────────────────────────────────────┘  │
+│                                              │
+│  ┌─ 5. BANK INFORMATION ──────────────────┐  │
+│  │  Bank Name   : [State Bank of India]   │  │
+│  │  Account No  : [123456784321_______]   │  │
+│  │  Holder Name : [Ravi Sharma________]   │  │
+│  │  IFSC Code   : [SBIN0001234________]   │  │
+│  │  UPI ID      : [ravi.s@sbi_________]   │  │
+│  └────────────────────────────────────────┘  │
+│                                              │
+│  ┌─ 6. DOCUMENTS ─────────────────────────┐  │
+│  │  Gov ID Proof       : ✅ Uploaded       │  │
+│  │  Address Proof      : ✅ Uploaded       │  │
+│  │  Other Docs         : ❌ Pending        │  │
+│  │  [📤 UPLOAD NEW DOCUMENT]               │  │
+│  └────────────────────────────────────────┘  │
+└──────────────────────────────────────────────┘
+```
+
+## Form Fields (Self-Edit Permitted Fields)
+
+| Section | Editable Fields | Validation Rules |
+| --- | --- | --- |
+| **1. Basic Info** | Contact Number, Alternate Number | Valid 10-digit mobile number |
+| **2. Org Info** | None (Read-only) | — |
+| **3. Address Info** | Current & Permanent Address (Line 1, 2, City, State, Pincode), "Same as Current" checkbox | Pincode must be 6-digits. Address Line 1, City, State required |
+| **4. Salary Info** | None (Read-only) | — |
+| **5. Bank Info** | Bank Name, Account No (unmasked in edit), Holder Name, IFSC Code, UPI ID | IFSC must be 11-char alphanumeric |
+| **6. Documents** | Upload Gov ID, Address Proof, Education Certs, Other Docs | Max 5MB per file (PDF/JPG/PNG). Note: 
+| **7. Leave Summary**| None (Read-onEmployment Contract cannot be uploaded by self |ly) | — |
+
+## Actions
+
+| Action | Behaviour |
+| --- | --- |
+| **Upload Document** | Opens standard mobile file picker / camera. Validates file size. Uploads file with status indicating success |
+| **Save** | Validates all editable fields → Saves to database → Updates profile → Returns to Screen 7 with success toast: "Profile updated successfully." |
+| **Cancel** | Discards changes → Returns to Screen 7 |
 
 ---
 
@@ -1108,7 +1181,6 @@ Appears when a date cell is tapped:
 │  Upload photos of the treated area after     │
 │  completing service. (Min 1, Max 5)          │
 │                                              │
-│  ─── AFTER SERVICE PHOTOS* ──────────────    │
 │  ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐    │
 │  │ 📸   │  │ 📸   │  │  +   │  │      │    │
 │  │After1│  │After2│  │ Add  │  │      │    │
@@ -1116,11 +1188,7 @@ Appears when a date cell is tapped:
 │  └──────┘  └──────┘  └──────┘  └──────┘    │
 │  Photos uploaded: 2 / 5                      │
 │                                              │
-│  ─── TREATMENT PHOTOS (Optional) ────────    │
-│  ┌──────┐  ┌──────┐                         │
-│  │ 📸   │  │  +   │                         │
-│  │Treat1│  │ Add  │                         │
-│  └──────┘  └──────┘                         │
+│  [🗑 Delete Photos]                           │
 │                                              │
 │  ┌──────────────────────────────────────┐    │
 │  │         [CONTINUE →]                 │    │
@@ -1132,10 +1200,10 @@ Appears when a date cell is tapped:
 
 | Element | Type | Description |
 | --- | --- | --- |
-| Task Header | Task ID | Display (Read-only) | Current Task ID being executed |
-| After Service Photos | Image Grid | Mandatory post-service photo grid (same rules as Before Photos) |
-| Treatment Photos | Image Grid | Optional photos of treated areas / chemical application |
+| Task ID | Display (Read-only) | Current Task ID being executed |
+| After Service Photos | Image Grid | Mandatory post-service photo grid (up to 5 photos) |
 | Photo Counter | Display | "X / 5" counter showing uploaded vs max |
+| Delete Photos Button | Button | Initiates the multi-step delete flow (see below) |
 
 ## Validation Rules
 
@@ -1146,23 +1214,32 @@ Appears when a date cell is tapped:
 | Camera Only | Photos must be captured live (no gallery upload) |
 | File Format | JPG, PNG only (Max 5MB per photo) — from Module 21.6 |
 | GPS Embedded | Each photo includes GPS metadata |
-| Treatment Photos | Optional; max 3 treatment photos allowed |
 
 ## Actions
 
 | Action | Trigger | Behaviour |
 | --- | --- | --- |
 | **Capture Photo** | Tap + or empty slot | Opens camera → captures photo → adds to grid |
-| **Delete Photo** | Long-press on thumbnail | Confirmation → removes photo from grid |
+| **Delete Photos** | Tap 🗑 Delete Photos button | Enters selection mode (see Delete Flow below) |
 | **Continue** | Tap button | Validates minimum 1 after-service photo → Navigates to Service Execution Form (Screen 13) |
 | **Back** | Tap ← | Returns to Before Service Photos (Screen 11) — data saved in draft |
 
+## Delete Photo Flow (Multi-Step)
+
+| Step | Screen State | User Action |
+| --- | --- | --- |
+| **Step 1: Tap Delete** | User taps the "🗑 Delete Photos" button | Photo grid switches to **selection mode** — each photo shows a checkbox overlay |
+| **Step 2: Select Photos** | User taps on one or more photos to select them for deletion | Selected photos show a ☑ check mark and a highlighted border. A counter shows "X selected". [Cancel Selection] and [🗑 Delete Selected] buttons appear |
+| **Step 3: Tap Delete Selected** | User taps "🗑 Delete Selected" button | A **confirmation popup** appears: "Are you sure you want to delete X selected photo(s)? This action cannot be undone." with [Delete] and [Cancel] buttons |
+| **Step 4: Confirm Delete** | User taps "Delete" on the confirmation popup | Selected photos are permanently removed from the grid. Photo counter updates. Grid exits selection mode. Success toast: "X photo(s) deleted." |
+| **Cancel at any step** | User taps "Cancel Selection" or "Cancel" on popup | Selection is cleared, grid returns to normal view. No photos are deleted |
+
 ---
 
-# Screen 13: Service Execution Form
+# Screen 13: Service Execution Form (Multi-Service)
 
 **Source Reference:** Module 21 – Task Completion & Material Log (21.6), Module 12 – Services
-**Purpose:** Core data entry form for recording the actual service performed, chemicals used, treatment methods, and pest types covered.
+**Purpose:** Core data entry form for recording the actual service performed. Supports **multiple services per task**, with per-service details including pest infestation level, location, treatment methods, and chemicals/products used.
 
 ---
 
@@ -1173,49 +1250,49 @@ Appears when a date cell is tapped:
 │  [← Back]     SERVICE EXECUTION              │
 │  Task: TASK-2026-0201                        │
 │                                              │
-│  ─── ACTUAL EXECUTION TIME ──────────────    │
+│  ─── SERVICE 1 ──────────────── [🗑 Remove]  │
 │  ┌──────────────────────────────────────┐    │
-│  │  Start Time* : [▼ 08:05 AM ▼]       │    │
-│  │  End Time*   : [▼ 09:45 AM ▼]       │    │
-│  │  Duration    : 1h 40m (auto)         │    │
+│  │  Service Name*:                      │    │
+│  │  [▼ Cockroach Treatment ▼]           │    │
+│  │                                      │    │
+│  │  Level of Pest Infestation*:         │    │
+│  │  [◉ High]  [○ Medium]  [○ Low]      │    │
+│  │                                      │    │
+│  │  Location / Area*:                   │    │
+│  │  [Kitchen area, storage room, and   ]│    │
+│  │  [server room behind reception desk ]│    │
+│  │                                      │    │
+│  │  Method of Treatment*:               │    │
+│  │  [▼ Select Methods ▼]               │    │
+│  │  ☑ Spraying                          │    │
+│  │  ☑ Gel Application                   │    │
+│  │  ☐ Baiting                           │    │
+│  │  ☐ Fogging                           │    │
+│  │  ☐ Fumigation                        │    │
+│  │  ☐ Dusting                           │    │
+│  │  ☐ Trapping                          │    │
+│  │                                      │    │
+│  │  ─── Chemicals & Products Used ───   │    │
+│  │  ┌────────────────────────────────┐  │    │
+│  │  │ Material │ Dil(R/U) │ Qty(R/U) │  │    │
+│  │  │──────────┼──────────┼──────────│  │    │
+│  │  │ Alpha C. │ 1:50/[__]│ 120/[__] │  │    │
+│  │  │ Fipronil │ N/A /[__]│   2/[__] │  │    │
+│  │  └────────────────────────────────┘  │    │
+│  │  [+ Add Chemical]                    │    │
+│  │                                      │    │
+│  │  Pesticides & Monitoring Trap Codes: │    │
+│  │  [PCT-001, MTC-004, MTC-012     ]   │    │
 │  └──────────────────────────────────────┘    │
 │                                              │
-│  ─── CHEMICALS / MATERIALS USED ─────────    │
+│  ─── SERVICE 2 ──────────────── [🗑 Remove]  │
 │  ┌──────────────────────────────────────┐    │
-│  │ Chemical          │ Req. │ Used*     │    │
-│  │───────────────────┼──────┼──────────│    │
-│  │ Alpha Cypermethrin │ 120ml│ [110 ] ml│    │
-│  │ Fipronil Gel      │ 2    │ [2   ] tu│    │
-│  └──────────────────────────────────────┘    │
-│  [+ Add Extra Material]                      │
-│                                              │
-│  ⚠ Used materials will be deducted from      │
-│    your branch stock automatically.          │
-│                                              │
-│  ─── METHOD OF TREATMENT ────────────────    │
-│  ┌──────────────────────────────────────┐    │
-│  │  Method*: [▼ Spraying ▼]            │    │
-│  │    • Spraying                        │    │
-│  │    • Gel Application                 │    │
-│  │    • Baiting                         │    │
-│  │    • Fogging                         │    │
-│  │    • Fumigation                      │    │
-│  │    • Dusting                         │    │
-│  │    • Trapping                        │    │
+│  │  Service Name*:                      │    │
+│  │  [▼ Rodent Management ▼]             │    │
+│  │  (Same fields as Service 1)          │    │
 │  └──────────────────────────────────────┘    │
 │                                              │
-│  ─── PEST TYPE COVERED ──────────────────    │
-│  ┌──────────────────────────────────────┐    │
-│  │  ☑ Cockroaches                       │    │
-│  │  ☐ Ants                              │    │
-│  │  ☐ Rodents                           │    │
-│  │  ☐ Mosquitoes                        │    │
-│  │  ☑ Bed Bugs                          │    │
-│  │  ☐ Termites                          │    │
-│  │  ☐ Flies                             │    │
-│  │  ☐ Spiders                           │    │
-│  │  ☐ Other: [__________]              │    │
-│  └──────────────────────────────────────┘    │
+│  [+ ADD ANOTHER SERVICE]                     │
 │                                              │
 │  ┌──────────────────────────────────────┐    │
 │  │         [CONTINUE →]                 │    │
@@ -1225,53 +1302,64 @@ Appears when a date cell is tapped:
 
 ## Form Fields
 
-### 13.1 Actual Execution Time
+### 13.1 Service Block (Repeatable — One per Service)
+
+Each service block contains the following fields:
 
 | Field | Type | Required | Validation | Source |
 | --- | --- | --- | --- | --- |
-| Task ID | Display (Read-only) | — | — | Current Task ID being executed |
-| Actual Start Time | Time Picker | Yes | Must be ≤ Actual End Time | Module 21.6 |
-| Actual End Time | Time Picker | Yes | Must be ≥ Actual Start Time | Module 21.6 |
-| Actual Duration | Display (Auto) | Auto | End – Start auto-calculated | Module 21.6 |
+| Service Name | Dropdown | Yes | Must select from available services linked to this task or from Module 12 service list | Module 12 → Module 21 |
+| Level of Pest Infestation | Radio (Single-select) | Yes | Must select one: High / Medium / Low | Module 21.6 |
+| Location / Area | Textarea | Yes | Min 5 chars, Max 500 chars | Module 21.6 |
+| Method of Treatment | Multi-Checkbox Dropdown | Yes | Must select at least one method | Module 12 |
+| Pesticides & Monitoring Trap Codes | Text Input | No | Comma-separated codes (e.g., PCT-001, MTC-004) | Module 21.6 |
 
-### 13.2 Chemicals / Materials Used
+**Method of Treatment Options:**
+
+| Option | Description |
+| --- | --- |
+| Spraying | Chemical spray application |
+| Gel Application | Gel-based pest treatment |
+| Baiting | Bait station placement |
+| Fogging | Area fogging / misting |
+| Fumigation | Sealed area fumigation |
+| Dusting | Powder-based application |
+| Trapping | Physical trap placement |
+
+### 13.2 Chemicals & Products Table (Per Service)
 
 | Field | Type | Required | Validation | Source |
 | --- | --- | --- | --- | --- |
-| Chemical Name | Display (Read-only) | — | Pre-populated from task creation | Module 12 → Module 21 |
-| HSN Code | Display (Read-only) | — | Auto-fetched (hidden but stored) | Module 10 |
+| Chemical / Product Name | Dropdown | Yes | Select from assigned materials or Module 11 stock | Module 12 → Module 21 |
+| HSN Code | Display (hidden) | — | Auto-fetched | Module 10 |
 | UOM | Display (Read-only) | — | Unit of Measure | Module 10 |
-| Required Qty | Display (Read-only) | — | Assigned quantity | Module 21 |
-| Actually Used Qty | Number Input | Yes | Must be ≥ 0; cannot exceed branch stock | Module 21.6 |
+| Required Dilution | Display (Read-only) | — | Pre-filled from task/service | Module 21 |
+| Used Dilution | Text Input | No | Format: "1:XX" or "N/A" | User Input |
+| Required Quantity | Display (Read-only) | — | Pre-filled from task/service | Module 21 |
+| Used Quantity | Number Input | Yes | Must be ≥ 0; cannot exceed branch stock | User Input |
 
 **Stock Deduction Logic (Module 11 integration):**
 
 | Event | System Behaviour |
 | --- | --- |
-| Form submitted | "Actually Used" quantities are auto-deducted from branch stock (Module 11) |
-| Extra material added | System checks availability in branch stock before allowing |
+| Form submitted | "Quantity Used" values across all services are summed and auto-deducted from branch stock (Module 11) |
+| Extra chemical added | System checks availability in branch stock before allowing |
 | Qty exceeds stock | Warning: "Insufficient stock for [Chemical Name] at [Branch]" |
 | Qty = 0 | No deduction; row kept for record purposes |
 
-### 13.3 Method of Treatment
+### 13.3 Multi-Service Controls
 
-| Field | Type | Required | Validation |
-| --- | --- | --- | --- |
-| Method | Dropdown (Single/Multi-select) | Yes | Must select at least one method |
-
-### 13.4 Pest Type Covered
-
-| Field | Type | Required | Validation |
-| --- | --- | --- | --- |
-| Pest Types | Checkboxes (Multi-select) | Yes | Must select at least one pest type |
-| Other (specify) | Text Input | Conditional | Required if "Other" is checked |
+| Action | Behaviour |
+| --- | --- |
+| **+ Add Another Service** | Adds a new empty service block below the existing ones |
+| **🗑 Remove** | Removes the service block (confirmation required). At least 1 service must remain |
+| **+ Add Chemical** | Adds a new row to the Chemicals & Products table within that service |
 
 ## Actions
 
 | Action | Behaviour |
 | --- | --- |
-| **Add Extra Material** | Opens a picker to add chemicals not in the pre-assigned list (from Module 11 stock) |
-| **Continue** | Validates all required fields → Navigates to Technician Observations (Screen 14) |
+| **Continue** | Validates all required fields across all service blocks → Navigates to Technician Observations (Screen 14) |
 | **Back** | Returns to After Service Photos (Screen 12) — data is saved in draft |
 
 ---
@@ -1279,7 +1367,7 @@ Appears when a date cell is tapped:
 # Screen 14: Technician Observations
 
 **Source Reference:** Module 21 – Task Completion, Field Observation requirements
-**Purpose:** Capture the technician's professional observations about site conditions, pest entry points, and hygiene issues.
+**Purpose:** Capture the technician's professional observations during service. Structured into **3 key observation points**, each with a checkbox toggle and a mandatory location/area text field.
 
 ---
 
@@ -1287,44 +1375,60 @@ Appears when a date cell is tapped:
 
 ```
 ┌──────────────────────────────────────────────┐
-│  [← Back]     OBSERVATIONS                   │
+│  [← Back]     TECHNICIAN OBSERVATIONS        │
 │  Task: TASK-2026-0201                        │
 │                                              │
-│  ─── STRUCTURAL OBSERVATIONS ────────────    │
+│  ─── 1. STRUCTURAL GAPS / PEST ENTRY ────    │
 │  ┌──────────────────────────────────────┐    │
+│  │  Structural gaps or pest entry       │    │
+│  │  points found?                       │    │
+│  │  [◉ Yes]  [○ No]                    │    │
+│  │                                      │    │
 │  │  ☑ Gaps in door frames              │    │
 │  │  ☐ Cracks in walls                  │    │
-│  │  ☑ Open drainage/pipes              │    │
+│  │  ☑ Open drainage / pipes            │    │
 │  │  ☐ Broken window seals             │    │
 │  │  ☐ Gaps in ceiling                  │    │
+│  │  ☐ Cable entry points              │    │
 │  │  ☐ Other: [__________]             │    │
+│  │                                      │    │
+│  │  Location / Area*:                   │    │
+│  │  [Main entrance door frame and      ]│    │
+│  │  [drainage pipe near kitchen area   ]│    │
 │  └──────────────────────────────────────┘    │
 │                                              │
-│  ─── PEST ENTRY POINTS ─────────────────    │
+│  ─── 2. HYGIENE & SANITATION ─────────────   │
 │  ┌──────────────────────────────────────┐    │
-│  │  ☑ Main entrance                    │    │
-│  │  ☐ Kitchen area                     │    │
-│  │  ☑ Storage room                     │    │
-│  │  ☐ Bathroom/washroom               │    │
-│  │  ☐ Server room / utility area       │    │
-│  │  ☐ Other: [__________]             │    │
-│  └──────────────────────────────────────┘    │
-│                                              │
-│  ─── HYGIENE & SANITATION ───────────────    │
-│  ┌──────────────────────────────────────┐    │
+│  │  Hygiene or sanitation issues found? │    │
+│  │  [◉ Yes]  [○ No]                    │    │
+│  │                                      │    │
 │  │  ☑ Food residue found               │    │
 │  │  ☐ Stagnant water present           │    │
 │  │  ☐ Improper waste management        │    │
 │  │  ☐ General cleanliness issue        │    │
+│  │  ☐ Garbage accumulation             │    │
 │  │  ☐ Other: [__________]             │    │
+│  │                                      │    │
+│  │  Location / Area*:                   │    │
+│  │  [Kitchen counter and storage room  ]│    │
+│  │  [near the back exit               ]│    │
 │  └──────────────────────────────────────┘    │
 │                                              │
-│  ─── PEST SIGHTINGS ────────────────────    │
+│  ─── 3. PEST SIGHTING ────────────────────   │
 │  ┌──────────────────────────────────────┐    │
-│  │  Location of sighting*:             │    │
-│  │  [Near reception desk, behind the   ]    │
-│  │  [water cooler and under storage    ]    │
-│  │  [cabinet in server room.           ]    │
+│  │  Active pest sighting observed?      │    │
+│  │  [◉ Yes]  [○ No]                    │    │
+│  │                                      │    │
+│  │  ☑ Live pests seen                  │    │
+│  │  ☐ Droppings / excrement found      │    │
+│  │  ☐ Egg casings / nests              │    │
+│  │  ☐ Gnaw marks / damage             │    │
+│  │  ☐ Dead pests found                 │    │
+│  │  ☐ Other: [__________]             │    │
+│  │                                      │    │
+│  │  Location / Area*:                   │    │
+│  │  [Near reception desk, behind the   ]│    │
+│  │  [water cooler and storage cabinet  ]│    │
 │  └──────────────────────────────────────┘    │
 │                                              │
 │  ┌──────────────────────────────────────┐    │
@@ -1335,27 +1439,46 @@ Appears when a date cell is tapped:
 
 ## Form Fields
 
-| Section | Field | Type | Required | Description |
+### 14.1 Structural Gaps / Pest Entry Points
+
+| Field | Type | Required | Validation | Description |
 | --- | --- | --- | --- | --- |
-| Header | Task ID | Display (Read-only) | — | Current Task ID being executed |
-| Structural Observations | Checkbox list | Multi-select checkboxes | At least one selection recommended | List of structural gaps |
-| Pest Entry Points | Checkbox list | Multi-select checkboxes | At least one selection recommended | Locations where pests enter |
-| Hygiene & Sanitation | Checkbox list | Multi-select checkboxes | Optional | Cleanliness issues observed |
-| Pest Sightings Location | Textarea | Free text | Yes (Min 10 chars, Max 500 chars) | Specific locations of pests |
+| Found? | Radio (Yes/No) | Yes | Must select one | Whether structural gaps or pest entry points were observed |
+| Checkbox Options | Multi-select Checkboxes | Conditional | Required if "Yes" selected; at least one must be checked | Predefined list of common structural issues |
+| Other (specify) | Text Input | Conditional | Required if "Other" is checked | Free-text for unlisted observations |
+| Location / Area | Textarea | Conditional | Required if "Yes" selected; Min 5, Max 500 chars | Specific location where gaps/entry points were found |
+
+### 14.2 Hygiene & Sanitation
+
+| Field | Type | Required | Validation | Description |
+| --- | --- | --- | --- | --- |
+| Found? | Radio (Yes/No) | Yes | Must select one | Whether hygiene or sanitation issues were observed |
+| Checkbox Options | Multi-select Checkboxes | Conditional | Required if "Yes" selected; at least one must be checked | Predefined list of common hygiene issues |
+| Other (specify) | Text Input | Conditional | Required if "Other" is checked | Free-text for unlisted observations |
+| Location / Area | Textarea | Conditional | Required if "Yes" selected; Min 5, Max 500 chars | Specific location where hygiene issues were found |
+
+### 14.3 Pest Sighting
+
+| Field | Type | Required | Validation | Description |
+| --- | --- | --- | --- | --- |
+| Observed? | Radio (Yes/No) | Yes | Must select one | Whether active pest sightings were observed during service |
+| Checkbox Options | Multi-select Checkboxes | Conditional | Required if "Yes" selected; at least one must be checked | Predefined list of pest sighting indicators |
+| Other (specify) | Text Input | Conditional | Required if "Other" is checked | Free-text for unlisted sighting types |
+| Location / Area | Textarea | Conditional | Required if "Yes" selected; Min 5, Max 500 chars | Specific location/area where pests were sighted |
 
 ## Actions
 
 | Action | Behaviour |
 | --- | --- |
-| **Continue** | Validates → Navigates to Additional Details (Screen 15) |
-| **Back** | Returns to After Service Photos (Screen 13) — data is saved in draft |
+| **Continue** | Validates all 3 observation sections → Navigates to Technician Info & Notes (Screen 15) |
+| **Back** | Returns to Service Execution Form (Screen 13) — data is saved in draft |
 
 ---
 
-# Screen 15: Additional Details & Notes
+# Screen 15: Technician Info & Notes
 
 **Source Reference:** Module 21 – Task Completion (21.6)
-**Purpose:** Capture technician's final notes and confirm technician assignment details for the service report.
+**Purpose:** Capture the technician's own details, completion notes, and confirm technician assignment for the service report.
 
 ---
 
@@ -1363,22 +1486,32 @@ Appears when a date cell is tapped:
 
 ```
 ┌──────────────────────────────────────────────┐
-│  [← Back]     ADDITIONAL DETAILS             │
+│  [← Back]     TECHNICIAN INFO & NOTES        │
 │  Task: TASK-2026-0201                        │
-│                                              │
-│  ─── COMPLETION NOTES ───────────────────    │
-│  ┌──────────────────────────────────────┐    │
-│  │  Completion Notes*:                  │    │
-│  │  [Treated all areas including server ]    │
-│  │  [room and storage. Applied gel in   ]    │
-│  │  [kitchen cabinets and spray near    ]    │
-│  │  [drainage outlets.                  ]    │
-│  └──────────────────────────────────────┘    │
 │                                              │
 │  ─── TECHNICIAN DETAILS ─────────────────    │
 │  ┌──────────────────────────────────────┐    │
 │  │  Primary Technician : Ravi S. (You)  │    │
+│  │  EMP ID             : EMP-00124      │    │
+│  │  Role               : Technician     │    │
+│  │  Branch             : Mumbai Branch  │    │
 │  │  Support Technicians: Anjali M.      │    │
+│  └──────────────────────────────────────┘    │
+│                                              │
+│  ─── ACTUAL EXECUTION TIME ──────────────    │
+│  ┌──────────────────────────────────────┐    │
+│  │  Start Time* : [▼ 08:05 AM ▼]       │    │
+│  │  End Time*   : [▼ 09:45 AM ▼]       │    │
+│  │  Duration    : 1h 40m (auto)         │    │
+│  └──────────────────────────────────────┘    │
+│                                              │
+│  ─── COMPLETION NOTES ───────────────────    │
+│  ┌──────────────────────────────────────┐    │
+│  │  Notes*:                             │    │
+│  │  [Treated all areas including server ]│    │
+│  │  [room and storage. Applied gel in   ]│    │
+│  │  [kitchen cabinets and spray near    ]│    │
+│  │  [drainage outlets.                  ]│    │
 │  └──────────────────────────────────────┘    │
 │                                              │
 │  ┌──────────────────────────────────────┐    │
@@ -1389,12 +1522,29 @@ Appears when a date cell is tapped:
 
 ## Form Fields
 
+### 15.1 Technician Details (Read-only)
+
+| Field | Type | Description | Source |
+| --- | --- | --- | --- |
+| Primary Technician | Display (Read-only) | Main responsible technician name (highlighted if current user) | Module 21 |
+| EMP ID | Display (Read-only) | Employee ID of the primary technician | Module 8 |
+| Role | Display (Read-only) | Current role assignment | Module 8 |
+| Branch | Display (Read-only) | Assigned branch name | Module 7 → Module 8 |
+| Support Technicians | Display (Read-only) | Additional technicians assigned (if any) | Module 21 |
+
+### 15.2 Actual Execution Time
+
 | Field | Type | Required | Validation | Source |
 | --- | --- | --- | --- | --- |
-| Task ID | Display (Read-only) | — | — | Current Task ID being executed |
+| Actual Start Time | Time Picker | Yes | Must be ≤ Actual End Time | Module 21.6 |
+| Actual End Time | Time Picker | Yes | Must be ≥ Actual Start Time | Module 21.6 |
+| Actual Duration | Display (Auto) | Auto | End – Start auto-calculated | Module 21.6 |
+
+### 15.3 Completion Notes
+
+| Field | Type | Required | Validation | Source |
+| --- | --- | --- | --- | --- |
 | Completion Notes | Textarea | Yes | Min 10 chars, Max 1000 chars | Module 21.6 |
-| Primary Technician | Display (Read-only) | — | Pre-populated from task assignment | Module 21 |
-| Support Technicians | Display (Read-only) | — | Pre-populated from task assignment | Module 21 |
 
 ## Actions
 
@@ -1418,12 +1568,12 @@ Appears when a date cell is tapped:
 │  [← Back]     CUSTOMER VERIFICATION          │
 │  Task: TASK-2026-0201                        │
 │                                              │
-│  ─── CUSTOMER DETAILS ───────────────────    │
+│  ─── CUSTOMER DETAILS (For OTP) ─────────    │
 │  ┌──────────────────────────────────────┐    │
 │  │  Customer Name*:                     │    │
 │  │  [Suresh Kumar________________]      │    │
 │  │                                      │    │
-│  │  Contact Number*:                    │    │
+│  │  Mobile Number*:                     │    │
 │  │  [+91 9876543210_____________]       │    │
 │  └──────────────────────────────────────┘    │
 │                                              │
@@ -1456,7 +1606,7 @@ Appears when a date cell is tapped:
 │  │  ● Service Execution      ✅        │    │
 │  │  ● After Photos (2)       ✅        │    │
 │  │  ● Observations           ✅        │    │
-│  │  ● Additional Notes       ✅        │    │
+│  │  ● Tech notes & Time      ✅        │    │
 │  │  ● Customer Verified      ✅        │    │
 │  │  ● Customer Feedback      ✅        │    │
 │  └──────────────────────────────────────┘    │
@@ -1476,9 +1626,9 @@ Appears when a date cell is tapped:
 | Field | Type | Required | Validation | Description |
 | --- | --- | --- | --- | --- |
 | Task Header | Task ID | Display (Read-only) | — | Current Task ID being executed |
-| Customer Name | Text Input | Yes | Pre-filled, editable. Min 2 chars | Site contact person's name (editable in case a different person is present) |
-| Contact Number | Phone Input | Yes | Valid 10-digit mobile number | Phone number to receive OTP |
-| OTP Input | 4-digit OTP | Yes | Must match sent OTP | OTP entered by customer or technician after customer dictates |
+| Customer Name | Text Input | Yes | Pre-filled from task, editable. Min 2 chars | The name of the person verifying the service on-site |
+| Mobile Number | Phone Input | Yes | Valid 10-digit mobile number | The mobile number to receive the validation OTP |
+| OTP Input | 4-digit OTP | Yes | Must match sent OTP | OTP entered by the technician after receiving it from the customer |
 
 ### 16.2 Customer Feedback (Voice of Customer)
 
@@ -1489,13 +1639,13 @@ Appears when a date cell is tapped:
 
 ### 16.3 Submission Summary Checklist
 
-Auto-generated checklist showing completion status of all task execution steps. All items must show ✅ before submission is enabled.
+Auto-generated checklist showing completion status of all task execution steps. All items must show ✅ before submission is enabled. Note that "Additional Notes" in the checklist was updated to "Tech notes & Time" to map to the new Screen 15.
 
 ## Actions
 
 | Action | Trigger | System Behaviour |
 | --- | --- | --- |
-| **Send OTP** | Tap button | Sends 4-digit OTP via SMS to the entered contact number. Starts 3-minute expiry timer |
+| **Send OTP** | Tap button | Sends 4-digit OTP via SMS to the entered Mobile Number. Starts 3-minute expiry timer |
 | **Resend OTP** | Tap link (after 60s cooldown) | Resends a new OTP. Previous OTP is invalidated |
 | **Submit Service Report** | Tap button | Validates OTP + all steps are complete → Confirms via dialog: "Submit service report and mark task as completed?" → On confirm: Task Status → Completed in Module 21; Stock deducted from Module 11; Service report generated; GPS tracking stops for this task. Returns to Home Dashboard (Screen 2) with success toast: "Service report submitted successfully!" |
 | **Skip Verification** | Tap link | Opens popup: "Reason for skipping OTP verification*" (textarea, mandatory). Allows proceeding to submit without OTP but logs the skip reason for audit |
