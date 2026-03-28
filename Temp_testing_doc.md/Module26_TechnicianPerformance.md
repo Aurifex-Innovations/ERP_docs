@@ -351,6 +351,7 @@ A comprehensive, read-only performance profile of a single technician. Shows per
 | Avg Hours / Day      | Hours   | Total Working Hours ÷ Present Days                                              | Calculated                  |
 | Avg Task Time        | Hours   | Task Execution Hours ÷ Tasks Completed                                          | Calculated                  |
 | Travel Time (est.)   | Hours   | Total Working Hours − Task Execution Hours (approximate travel + transit time)  | Calculated                  |
+| Idle / Gap Time      | Hours   | Time spent without an active task or estimated travel (computed from gaps)      | Calculated                  |
 | Utilization Rate     | Percent | (Task Execution Hours ÷ Total Working Hours) × 100                              | Calculated                  |
 
 
