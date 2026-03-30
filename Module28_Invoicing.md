@@ -637,16 +637,48 @@ Used to reduce the value of a previously issued and sent invoice. Common scenari
 
 ---
 
-## Screen Fields
+### 1. ORIGINAL INVOICE
+| Field Name     | Description                                                              |
+| -------------- | ------------------------------------------------------------------------ |
+| Invoice Number | Reference of the original invoice for which credit note is being created |
+| Customer Name  | Name of the customer associated with the invoice                         |
+| Invoice Amount | Total amount of the original invoice                                     |
+| Pending Amount | Remaining unpaid amount of the invoice                                   |
 
-| Field            | Type       | Required | Description                                        |
-| ---------------- | ---------- | -------- | -------------------------------------------------- |
-| Original Invoice | Display    | Auto     | Reference invoice details (read-only)              |
-| Credit Note Date | Date       | Yes      | Date of credit note (cannot be before invoice date)|
-| Reason           | Dropdown   | Yes      | Predefined reasons for credit                      |
-| Remarks          | Textarea   | No       | Additional explanation                             |
-| Line Item Select | Checkbox   | Yes      | Select which items to credit (min 1)               |
-| Credit Amount    | Number     | Auto     | Auto-calculated based on selected items            |
+
+### 2. Credit Note Details
+| Field Name       | Description                                                                             |
+| ---------------- | --------------------------------------------------------------------------------------- |
+| Credit Note Date | Date on which the credit note is issued                                                 |
+| Reason           | Reason for issuing the credit note (Pricing Error, Service Issue, Partial Return, etc.) |
+| Remarks          | Additional comments or explanation for the credit note                                  |
+
+
+### 3. Line items to credit 
+| Field Name           | Description                                                 |
+| -------------------- | ----------------------------------------------------------- |
+| Select Item Checkbox | Allows user to select which line items to include in credit |
+| Description          | Name or description of the service/product                  |
+| Quantity             | Number of units for the item                                |
+| Rate                 | Price per unit of the item                                  |
+| Tax %                | Applicable tax percentage on the item                       |
+| Original Amount      | Original billed amount for the item                         |
+| Credit Amount        | Amount to be credited for the selected item                 |
+
+
+### 4. Credit Summary
+| Field Name              | Description                                       |
+| ----------------------- | ------------------------------------------------- |
+| Total Credit Amount     | Total amount being credited across selected items |
+| Adjusted Invoice Amount | Remaining invoice amount after applying credit    |
+
+
+### 5. Actions
+| Field Name        | Description                                        |
+| ----------------- | -------------------------------------------------- |
+| Issue Credit Note | Confirms and generates the credit note             |
+| Cancel            | Cancels the process and returns to previous screen |
+
 
 ---
 
