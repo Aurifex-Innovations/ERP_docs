@@ -144,7 +144,7 @@ Searchable by:
 | **Delete**         | Button | Draft only             | Deletes draft invoice after confirmation               |
 | **Approve & Send** | Button | Draft only             | Finalizes invoice, updates Ledger, sends to customer   |
 | **Record Payment** | Button | Sent / Partial / Overdue | Redirects to Module 30 with invoice pre-selected      |
-| **Send**           | Button | Sent / Overdue         | Re-send invoice via Email / WhatsApp                   |
+| **Resend**           | Button | Sent / Overdue         | Re-send invoice via Email / WhatsApp                   |
 | **PDF**            | Button | Sent / Paid            | Download invoice as PDF                                |
 | **Receipt**        | Button | Paid                   | View/download payment receipt from Module 30           |
 
