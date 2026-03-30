@@ -454,19 +454,89 @@ A read-only screen showing the complete invoice with all details — customer in
 
 ---
 
-## View Fields
+### 1. HEADER
 
-| Field         | Type    | Description                                                |
-| ------------- | ------- | ---------------------------------------------------------- |
-| Status        | Badge   | Current invoice status                                     |
-| From / To     | Display | Company details and Customer details side by side          |
-| Invoice No    | Text    | System-generated number                                    |
-| SO Reference  | Link    | Clickable link to Sales Order (Module 20)                  |
-| Contract Ref  | Link    | Clickable link to Contract (Module 19)                     |
-| Line Items    | Table   | All billed items with HSN, rate, tax, and amount           |
-| Tax Summary   | Summary | Subtotal, Discounts, CGST/SGST/IGST breakdown             |
-| Payment History| Table  | Linked receipts from Module 30                             |
-| Audit Log     | List    | Chronological log of all actions on this invoice           |
+| Field Name    | Description                                            |
+| ------------- | ------------------------------------------------------ |
+| Invoice Title | Displays invoice detail heading with invoice number    |
+| Status        | Current status of invoice (Draft, Sent, Paid, Overdue) |
+| Due Date      | Final date by which payment should be completed        |
+
+
+### 2. FROM (Company Details)
+| Field Name     | Description                                      |
+| -------------- | ------------------------------------------------ |
+| Company Name   | Name of the service provider issuing the invoice |
+| GSTIN (From)   | GST identification number of the issuing company |
+| Address (From) | Full address of the issuing company              |
+| State (From)   | State of the issuing company                     |
+
+
+### 3. TO (Customer Details)
+| Field Name    | Description                               |
+| ------------- | ----------------------------------------- |
+| Customer Name | Name of the client receiving the invoice  |
+| GSTIN (To)    | GST identification number of the customer |
+| Address (To)  | Full address of the customer              |
+| State (To)    | State of the customer                     |
+
+
+### 4. Invoice Info
+| Field Name              | Description                            |
+| ----------------------- | -------------------------------------- |
+| Invoice Number          | Unique identifier of the invoice       |
+| Invoice Date            | Date when the invoice is generated     |
+| SO Reference            | Linked sales order reference           |
+| Credit Period           | Allowed payment duration in days       |
+| Contract Reference      | Linked contract reference              |
+| Due Date (Info Section) | Calculated or defined payment due date |
+
+
+### 5. Line Items
+| Field Name   | Description                          |
+| ------------ | ------------------------------------ |
+| Sr No        | Serial number of line item           |
+| Description  | Service or product description       |
+| HSN/SAC Code | Tax classification code              |
+| Quantity     | Number of units                      |
+| Rate         | Price per unit                       |
+| Discount %   | Discount applied on item             |
+| Tax %        | Applicable tax percentage            |
+| Amount       | Final calculated amount for the item |
+
+
+### 6. Tax Summary
+
+| Field Name     | Description                           |
+| -------------- | ------------------------------------- |
+| Subtotal       | Total amount before discount and tax  |
+| Discount       | Total discount applied                |
+| Taxable Amount | Amount after discount before tax      |
+| CGST           | Central GST amount                    |
+| SGST           | State GST amount                      |
+| IGST           | Integrated GST amount (if applicable) |
+| Grand Total    | Final payable amount                  |
+
+
+### 7. Payment History
+| Field Name     | Description                             |
+| -------------- | --------------------------------------- |
+| Receipt Number | Unique payment receipt identifier       |
+| Payment Date   | Date of payment received                |
+| Payment Amount | Amount paid                             |
+| Payment Mode   | Mode of payment (Cash, Bank, UPI, etc.) |
+| Remarks        | Additional notes regarding payment      |
+
+
+### 8. Audit Log
+
+| Field Name           | Description                                           |
+| -------------------- | ----------------------------------------------------- |
+| Activity Date & Time | Timestamp of action performed                         |
+| Activity Description | Description of action (Created, Approved, Sent, etc.) |
+| Performed By         | User who performed the action                         |
+| Status Change        | Status associated with the activity                   |
+
 
 ---
 
