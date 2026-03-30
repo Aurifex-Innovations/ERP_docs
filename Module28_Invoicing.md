@@ -203,8 +203,13 @@ Form screen to create a new sales invoice. Supports two creation modes: **(1) Fr
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
 │  │ Creation Mode*: (•) From Sales Order    ( ) Direct Invoice           │  │
 │  │                                                                       │  │
+│  │ ── If "From Sales Order" selected ──                                  │  │
 │  │ Sales Order*  : [🔍 Search SO # / Customer ▼]     [FETCH DETAILS]    │  │
 │  │               (Shows only SOs with status = Confirmed/In Progress)    │  │
+│  │                                                                       │  │
+│  │ ── If "Direct Invoice" selected ──                                    │  │
+│  │ Customer*     : [🔍 Search Customer Name / Code ▼]  [FETCH DETAILS]  │  │
+│  │               (Fetches billing details from Module 18)                │  │
 │  └───────────────────────────────────────────────────────────────────────┘  │
 │                                                                              │
 │  INVOICE DETAILS                                                             │
@@ -225,16 +230,16 @@ Form screen to create a new sales invoice. Supports two creation modes: **(1) Fr
 │  └───────────────────────────────────────────────────────────────────────┘  │
 │                                                                              │
 │  LINE ITEMS (Editable Grid)                                                  │
-│  ┌───┬────────────┬────────┬─────┬──────┬──────┬──────┬─────┬────────────┐  │
-│  │Sr │Description │HSN/SAC │Qty  │UOM   │Rate  │Disc% │Tax% │Amount      │  │
-│  │───┼────────────┼────────┼─────┼──────┼──────┼──────┼─────┼────────────│  │
-│  │ 1 │Cockroach   │998531  │  1  │Visit │2,500 │ 0%   │18%  │₹ 2,950    │  │
-│  │   │Treatment   │        │     │      │      │      │     │            │  │
-│  │ 2 │Termite     │998531  │  1  │Visit │5,000 │ 5%   │18%  │₹ 5,605    │  │
-│  │   │Control     │        │     │      │      │      │     │            │  │
-│  │ 3 │Rodent Bait │392690  │  5  │Nos   │  200 │ 0%   │12%  │₹ 1,120    │  │
-│  │   │Box         │        │     │      │      │      │     │            │  │
-│  └───┴────────────┴────────┴─────┴──────┴──────┴──────┴─────┴────────────┘  │
+│  ┌───┬──────┬────────────┬────────┬─────┬──────┬──────┬──────┬─────┬───────┐  │
+│  │Sr │Type  │Description │HSN/SAC │Qty  │UOM   │Rate  │Disc% │Tax% │Amount │  │
+│  │───┼──────┼────────────┼────────┼─────┼──────┼──────┼──────┼─────┼───────│  │
+│  │ 1 │Svc   │Cockroach   │998531  │  1  │ —    │2,500 │ 0%   │18%  │₹2,950│  │
+│  │   │      │Treatment   │        │     │      │      │      │     │      │  │
+│  │ 2 │Svc   │Termite     │998531  │  1  │ —    │5,000 │ 5%   │18%  │₹5,605│  │
+│  │   │      │Control     │        │     │      │      │      │     │      │  │
+│  │ 3 │Prod  │Rodent Bait │392690  │  5  │PKT   │  200 │ 0%   │12%  │₹1,120│  │
+│  │   │      │Box         │        │     │      │      │      │     │      │  │
+│  └───┴──────┴────────────┴────────┴─────┴──────┴──────┴──────┴─────┴───────┘  │
 │  [+ ADD LINE ITEM]    [🗑 REMOVE SELECTED]                                   │
 │                                                                              │
 │  TAX BREAKDOWN                                                               │
@@ -270,7 +275,8 @@ Form screen to create a new sales invoice. Supports two creation modes: **(1) Fr
 | Field          | Type         | Required | Description                                           |
 | -------------- | ------------ | -------- | ----------------------------------------------------- |
 | Creation Mode  | Radio        | Yes      | From Sales Order / Direct Invoice                     |
-| Sales Order    | Search       | Cond.    | Required if mode = From SO. Fetches SO details        |
+| Sales Order    | Search       | Cond.    | Required if mode = From SO. Fetches SO details. Hidden if mode = Direct |
+| Customer       | Search       | Cond.    | Required if mode = Direct. Search by Name/Code. Fetches billing details from Module 18. Hidden if mode = From SO |
 | Invoice Type   | Dropdown     | Yes      | Tax Invoice / Proforma Invoice                        |
 | Invoice Date   | Date Picker  | Yes      | Defaults to today. Cannot be future date              |
 | Credit Period  | Number       | Yes      | Days allowed for payment (default from Contract)      |
@@ -281,18 +287,21 @@ Form screen to create a new sales invoice. Supports two creation modes: **(1) Fr
 
 ## Screen Fields: Customer Details
 
-| Field           | Type    | Required | Description                                         |
-| --------------- | ------- | -------- | --------------------------------------------------- |
-| Customer Name   | Display | Auto     | Fetched from Module 18                              |
-| GSTIN           | Display | Auto     | Customer's GST number from Module 18                |
-| Billing Address | Display | Auto     | Default billing address from Module 18              |
-| State           | Display | Auto     | Customer state (determines CGST/SGST vs IGST)      |
-| Contact Person  | Display | Auto     | Primary contact from Module 18                      |
+| Field           | Type     | Required | Description                                         |
+| --------------- | -------- | -------- | --------------------------------------------------- |
+| Customer Name   | Display  | Auto     | Fetched from Module 18 — Customer Master            |
+| GSTIN           | Display  | Auto     | Customer's GST number from Module 18                |
+| Billing Address | Display  | Auto     | Default billing address from Module 18              |
+| State           | Dropdown | Auto     | **Default:** Auto-fetched from Module 18 billing address. **User can override** via `[Change ▼]` to select a different state (e.g., for inter-branch billing). Changing state **re-triggers tax logic** (CGST/SGST ↔ IGST). Options: All Indian states & UTs from Module 9 (Tax Config) |
+| Contact Person  | Display  | Auto     | Primary contact from Module 18                      |
+
+> **Data Source:** The entire Customer Details section is auto-populated when a Sales Order is fetched (mode = From SO) or when a Customer is selected (mode = Direct). All data originates from **Module 18 — Customer Master** (billing address, GSTIN, contact). The State field additionally references **Module 9 — Tax Configuration** for the dropdown list and for determining CGST/SGST vs IGST split.
 
 ---
 
 ## Screen Fields: Line Items Grid
 
+<<<<<<< HEAD
 | Field       | Type    | Required | Description                                           |
 | ----------- | ------- | -------- | ----------------------------------------------------- |
 | Sr. No      | Number  | Auto     | Sequential row number                                 |
@@ -304,6 +313,104 @@ Form screen to create a new sales invoice. Supports two creation modes: **(1) Fr
 | Discount %  | Number  | No       | Line-level discount percentage (default 0)            |
 | Tax %       | Number  | Auto     | GST rate from Module 9 based on HSN/SAC code         |
 | Amount      | Number  | Auto     | Calculated: (Qty × Rate - Discount) + Tax            |
+=======
+| Field       | Type     | Required | Description                                           |
+| ----------- | -------- | -------- | ----------------------------------------------------- |
+| Sr. No      | Number   | Auto     | Sequential row number                                 |
+| Type        | Tag/Badge| Auto     | Indicates item source: **Svc** (Service — Module 12) or **Prod** (Product — Module 10). Auto-determined when item is added from SO; user selects when adding manually |
+| Description | Text     | Yes      | **Product:** `productName` from Module 10. **Service:** `serviceName` from Module 12. Auto-filled from SO line items if linked; manual entry for direct invoices |
+| HSN/SAC     | Text     | Yes      | **Product:** `hsnCode` from Module 10. **Service:** SAC code from Module 12 service category. Auto-fetched based on selected item |
+| Qty         | Number   | Yes      | Quantity of items. Default 1 for services. For products, must be ≤ available stock (Module 10) |
+| UOM         | Dropdown | Auto     | **Product only:** `baseUom` from Module 10 — Options: `LTR` / `KG` / `GRAM` / `ML` / `SET` / `PKT`. **Service:** UOM is not applicable (shows `—`), as services are billed per visit/contract from Module 12 pricing model |
+| Rate        | Number   | Yes      | **Product:** `sellingPrice` from Module 10. **Service:** Rate determined by Module 12 `priceType` (Fixed / Area-Based / Inspection). Auto-filled from SO, editable by user |
+| Discount %  | Number   | No       | Line-level discount percentage (default 0)            |
+| Tax %       | Number   | Auto     | GST rate from Module 9 (Tax Config) based on HSN/SAC code |
+| Amount      | Number   | Auto     | Calculated: (Qty × Rate − Discount) + Tax            |
+
+> **Data Source Mapping:**
+> - **From SO (Mode = From Sales Order):** Line items auto-populated from **Module 20 — Sales Order** line items. Each SO line item already references either a Product (Module 10) or Service (Module 12), so all fields (Description, HSN/SAC, UOM, Rate) are pre-filled.
+> - **Direct Invoice (Mode = Direct):** User manually searches and selects items from **Module 10 — Product Master** or **Module 12 — Service Master**. On selection, Description, HSN/SAC, UOM, and Rate are auto-fetched from the respective module.
+> - **UOM Note:** UOM applies only to products (physical goods measured in LTR, KG, GRAM, ML, SET, PKT as defined in Module 10). Services are priced per visit/contract via Module 12 pricing models and do not use physical measurement UOM.
+
+**Grid Action Buttons (Below the line items table):**
+
+| Button                | Action                                                                        |
+| --------------------- | ----------------------------------------------------------------------------- |
+| **[+ ADD LINE ITEM]** | Opens the **Add Line Item Modal** (see below) to search and select from Module 10/12. |
+| **[🗑 REMOVE SELECTED]** | Removes the currently selected/highlighted row(s). Disabled if no row is selected. At least 1 line item must remain (cannot remove all rows) |
+
+### Add Line Item Modal (Popup)
+
+**Description:**
+Triggered by clicking `[+ ADD LINE ITEM]`. Allows the user to specify whether they are adding a Service or a Product, search the respective master data (Module 12 or Module 10), preview the details, and add it to the invoice grid.
+
+**Modal Wireframe:**
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  ADD LINE ITEM                                               [X] │
+│  ──────────────────────────────────────────────────────────────  │
+│                                                                  │
+│  Item Type*  :  (•) Service          ( ) Product                 │
+│                 (Fetches Mod 12)     (Fetches Mod 10)            │
+│  Search Item*:  [🔍 Search by Name / Code ▼]                     │
+│                                                                  │
+│  ────────────────── ITEM DETAILS & PRICING ────────────────────  │
+│  Name           : Termite Barrier                                │
+│  SAC/HSN        : 998531                                         │
+│  Tax %          : 18%                                            │
+│                                                                  │
+│  ── Dynamic Form Based on Price Type (From Mod 12) ────────────  │
+│                                                                  │
+│  == [IF Service Price Type = FIXED_PRICE] =====================  │
+│  Category       : [▼ Residential (Internal/External) ]           │
+│  Property Type  : [▼ 1BHK ]                                      │
+│  Predefined Rate: ₹ 1,500                                        │
+│  ==============================================================  │
+│                                                                  │
+│  == [IF Service Price Type = AREA_BASED] ======================  │
+│  Category       : [▼ Commercial (Internal/External)  ]           │
+│  Base Price     : ₹ 500.00                                       │
+│  Rate Per Sq.Ft : ₹ 2.00                                         │
+│  Input Area*    : [   1000  ] SQFT                               │
+│  Calculated     : ₹ 500 + (1000 × ₹ 2) = ₹ 2,500                 │
+│  ==============================================================  │
+│                                                                  │
+│  == [IF Service Price Type = INSPECTION_BASED] ================  │
+│  Inspection Fee : ₹ 500 (Final price quoted after visit)         │
+│  ==============================================================  │
+│                                                                  │
+│  == [IF Service Price Type = CUSTOM] ==========================  │
+│  Config Name    : [▼ Select Custom Config (e.g. Warehouse) ]     │
+│  Rate           : — (Manual Entry Required)                      │
+│  ==============================================================  │
+│                                                                  │
+│  == [IF Item Type = Product] ==================================  │
+│  UOM            : LTR / KG / Nos (From Mod 10)                   │
+│  Selling Price  : ₹ 1,200        (From Mod 10)                   │
+│  Stock Available: 50             (From Mod 11 Inventory)         │
+│  ==============================================================  │
+│                                                                  │
+│  Final Rate (₹)*: [  2500  ] (Editable override / manual input)  │
+│  Quantity*      : [  1     ]                                     │
+│  ──────────────────────────────────────────────────────────────  │
+│                                                                  │
+│                   [CANCEL]    [ADD TO INVOICE]                   │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+**Modal Fields & Actions:**
+
+| Field / Action | Description |
+| -------------- | ----------- |
+| **Item Type** | Radio buttons. Defaults to Service. Dictates which API is called for the search field below. |
+| **Search Item** | Auto-complete search. If Type=Service, searches **Module 12** active services. If Type=Product, searches **Module 10** active inventory products. |
+| **Item Details** | Read-only preview showing Name, SAC/HSN, UOM, and Tax%. |
+| **Pricing Calculation** | **Dynamic Form Based on Price Type (From Mod 12):**<br><br>• **FIXED PRICE:** Renders dropdown for Category (Residential/Commercial) and Property Type (1BHK, 2BHK, Small Office). Auto-fetches the predefined rate.<br><br>• **AREA_BASED:** Renders dropdown for Category. Shows the predefined `Base Price` + `Rate per SQFT`. Renders an `Input Area (SQFT)` field. Auto-calculates `Base Price + (Area × Rate)`.<br><br>• **INSPECTION_BASED:** Shows only the flat `Inspection Fee`.<br><br>• **CUSTOM:** Renders custom configuration dropdown fields mapped from Module 12. Prompt user for manual rate entry. |
+| **Final Rate (₹)** | **Editable Input.** Auto-populated based on the `Pricing Calculation` logic above. The user can keep the calculated rate or manually override it (e.g., negotiated discount). If a Product is selected, it defaults to the `sellingPrice` (Mod 10). |
+| **Quantity** | Input field for quantity. Defaults to 1. For products, system validates against available stock in Module 10 (or warns about negative inventory). |
+| **[ADD TO INVOICE]**| Closes modal and appends the selected item, calculated/overridden rate, and quantity as a new row at the Invoice Line Items grid. |
+| **[CANCEL] / [X]** | Closes modal without making changes to the grid. |
+>>>>>>> 697ebee (Module 28 is done)
 
 ---
 
@@ -433,12 +540,15 @@ A read-only screen showing the complete invoice with all details — customer in
 │  │ GRAND TOTAL       : ₹ 10,561                                │            │
 │  └──────────────────────────────────────────────────────────────┘            │
 │                                                                              │
-│  PAYMENT HISTORY                                                             │
-│  ┌──────────┬──────────┬──────────┬────────────┬──────────────────────────┐  │
-│  │Receipt # │Date      │Amount    │Mode        │Remarks                   │  │
-│  │──────────┼──────────┼──────────┼────────────┼──────────────────────────│  │
-│  │(No payments received yet)                                              │  │
-│  └──────────┴──────────┴──────────┴────────────┴──────────────────────────┘  │
+│  TRANSACTION LEDGER (PAYMENTS & ADJUSTMENTS)                                 │
+│  ┌──────────┬────────────┬──────────────────┬──────────────┬──────────────┐  │
+│  │Date      │Type        │Reference #       │Credit Amount │Running Bal   │  │
+│  │──────────┼────────────┼──────────────────┼──────────────┼──────────────│  │
+│  │ 15 Mar   │ Invoice    │ INV-10024        │     —        │ ₹ 10,000      │  │
+│  │ 18 Mar   │ Payment    │ RCPT-8021        │ ₹ 5,000      │ ₹ 5,000       │  │
+│  │ 20 Mar   │ Adjustment │ CN-5001          │ ₹ 5,000      │ ₹ 0           │  │
+│  └──────────┴────────────┴──────────────────┴──────────────┴──────────────┘  │
+│  [+ RECORD PAYMENT] (To Mod 30)   [+ ISSUE CREDIT NOTE] (To 28.5)            │
 │                                                                              │
 │  AUDIT LOG                                                                   │
 │  ┌──────────────────────────────────────────────────────────────────────┐    │
@@ -446,7 +556,7 @@ A read-only screen showing the complete invoice with all details — customer in
 │  │ 15 Mar 2026 11:15 — Approved & Sent by Priya Patel                 │    │
 │  └──────────────────────────────────────────────────────────────────────┘    │
 │                                                                              │
-│  [📥 DOWNLOAD PDF]  [✉ RESEND]  [🧾 RECORD PAYMENT]  [📄 CREDIT NOTE]     │
+│  [📥 DOWNLOAD PDF]  [✉ RESEND]  [🧾 RECORD PAYMENT]                        │
 │  [🔙 BACK TO LIST]                                                          │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
@@ -518,15 +628,17 @@ A read-only screen showing the complete invoice with all details — customer in
 | Grand Total    | Final payable amount                  |
 
 
-### 7. Payment History
-| Field Name     | Description                             |
-| -------------- | --------------------------------------- |
-| Receipt Number | Unique payment receipt identifier       |
-| Payment Date   | Date of payment received                |
-| Payment Amount | Amount paid                             |
-| Payment Mode   | Mode of payment (Cash, Bank, UPI, etc.) |
-| Remarks        | Additional notes regarding payment      |
+### 7. Transaction Ledger
 
+| Field Name     | Description                                               |
+| -------------- | --------------------------------------------------------- |
+| Date           | Date of the transaction                                   |
+| Type           | Source of transaction (Invoice / Payment / Adjustment)    |
+| Reference #    | Identifying number (INV #, RCPT #, CN #). Clickable.      |
+| Credit Amount  | The amount credited (paid or adjusted) against the invoice|
+| Running Bal    | The remaining pending invoice amount after this line      |
+| **[+ RECORD PAYMENT]** | Button that redirects to **Module 30**           |
+| **[+ ISSUE CREDIT NOTE]** | Button that redirects to **Screen 28.5 (Credit Note)** |
 
 ### 8. Audit Log
 
@@ -537,7 +649,6 @@ A read-only screen showing the complete invoice with all details — customer in
 | Performed By         | User who performed the action                         |
 | Status Change        | Status associated with the activity                   |
 
-
 ---
 
 ## Actions (View Screen)
@@ -547,7 +658,6 @@ A read-only screen showing the complete invoice with all details — customer in
 | **Download PDF**    | Button | Sent / Paid        | Download formatted invoice PDF                   |
 | **Resend**          | Button | Sent / Overdue     | Re-send via Email or WhatsApp                    |
 | **Record Payment**  | Button | Sent / Partial     | Redirect to Module 30 with this invoice          |
-| **Credit Note**     | Button | Sent / Paid        | Opens Credit Note form (Screen 28.5)             |
 | **Back to List**    | Button | All                | Returns to Invoice Dashboard (28.1)              |
 
 ---
@@ -557,7 +667,9 @@ A read-only screen showing the complete invoice with all details — customer in
 # 28.4 Edit Invoice (Draft Only)
 
 **Description:**
-Allows editing of an invoice that is still in **Draft** status. Once an invoice is Approved & Sent, it cannot be edited — a Credit Note must be issued instead. The edit form has the same layout as the Create Invoice form (28.2) with all fields pre-populated.
+Allows editing of an invoice that is still in **Draft** status. Once an invoice is Approved & Sent, it cannot be edited — a Credit Note must be issued instead. The edit form uses the exact same UI, components, and dynamic logic as the **Create Invoice form (28.2)**. 
+
+*Note for Developers: Re-use the 28.2 UI layout strictly. The "Add Line Item" modal with the dynamic `FIXED_PRICE`/`AREA_BASED` configurations from Module 12 behaves identically here, with all existing data pre-populated.*
 
 ---
 
@@ -585,10 +697,10 @@ Allows editing of an invoice that is still in **Draft** status. Once an invoice 
 
 ================================================================================
 
-# 28.5 Credit Note
+# 28.5 Credit Note (Adjustment)
 
 **Description:**
-Used to reduce the value of a previously issued and sent invoice. Common scenarios: customer dispute, partial return, pricing error, or service cancellation. The Credit Note links to the original invoice and adjusts the Customer Ledger.
+Used to reduce the pending value of an issued invoice. This is a simplified manual adjustment ledger entry. It does not require selecting individual line items or an approval workflow. It can be issued manually here, or auto-generated by **Module 30 (Payments)** when a user records a short payment and chooses to "Settle & Close" the remaining balance.
 
 ---
 
@@ -596,7 +708,7 @@ Used to reduce the value of a previously issued and sent invoice. Common scenari
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                         CREATE CREDIT NOTE                                   │
+│                         ISSUE CREDIT NOTE / ADJUSTMENT                       │
 │                                                                              │
 │  ORIGINAL INVOICE                                                            │
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
@@ -606,29 +718,24 @@ Used to reduce the value of a previously issued and sent invoice. Common scenari
 │  │ Pending Amount : ₹ 10,561                                             │  │
 │  └───────────────────────────────────────────────────────────────────────┘  │
 │                                                                              │
-│  CREDIT NOTE DETAILS                                                         │
+│  ADJUSTMENT DETAILS                                                          │
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
 │  │ Credit Note Date* : [📅 28 Mar 2026]                                  │  │
 │  │ Reason*           : [▼ Select Reason ▼]                               │  │
-│  │                     (Pricing Error / Service Issue / Partial Return /  │  │
-│  │                      Full Cancellation / Customer Dispute / Other)     │  │
-│  │ Remarks           : [_____________________________________________]   │  │
+│  │                     (Payment Settlement / Pricing Error / Service      │  │
+│  │                      Issue / Full Cancellation / Other)                │  │
+│  │ Other Reason*     : [_____________________________________________]   │  │
+│  │                     (Visible only when Reason = "Other")               │  │
+│  │ Remarks*           : [_____________________________________________]   │  │
 │  └───────────────────────────────────────────────────────────────────────┘  │
 │                                                                              │
-│  LINE ITEMS TO CREDIT                                                        │
-│  ┌───┬────────────────────┬─────┬──────┬──────┬──────────┬──────────────┐  │
-│  │ ☑ │Description         │Qty  │Rate  │Tax%  │Orig Amt  │Credit Amt    │  │
-│  │───┼────────────────────┼─────┼──────┼──────┼──────────┼──────────────│  │
-│  │ ☑ │Cockroach Treatment │  1  │2,500 │ 18%  │₹ 2,950   │₹ 2,950      │  │
-│  │ ☐ │Termite Control     │  1  │5,000 │ 18%  │₹ 5,605   │—             │  │
-│  │ ☐ │Rodent Bait Box     │  5  │  200 │ 12%  │₹ 1,120   │—             │  │
-│  └───┴────────────────────┴─────┴──────┴──────┴──────────┴──────────────┘  │
-│                                                                              │
-│  CREDIT SUMMARY                                                              │
-│  ┌──────────────────────────────────────────────────────────────┐            │
-│  │ Total Credit Amount  : ₹ 2,950                               │            │
-│  │ Adjusted Invoice Amt : ₹ 10,561 - ₹ 2,950 = ₹ 7,611        │            │
-│  └──────────────────────────────────────────────────────────────┘            │
+│  ADJUSTMENT AMOUNT                                                           │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Adjust Credit Amt*: [ ₹ 10,000 ]                                       │  │
+│  │                                                                       │  │
+│  │ ── Summary ────────────────────────────────────────────────────────── │  │
+│  │ New Pending Amt   : ₹ 10,561 - ₹ 10,000 = ₹ 561                      │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
 │                                                                              │
 │  [ISSUE CREDIT NOTE]    [CANCEL]                                             │
 │                                                                              │
@@ -646,39 +753,14 @@ Used to reduce the value of a previously issued and sent invoice. Common scenari
 | Pending Amount | Remaining unpaid amount of the invoice                                   |
 
 
-### 2. Credit Note Details
-| Field Name       | Description                                                                             |
-| ---------------- | --------------------------------------------------------------------------------------- |
-| Credit Note Date | Date on which the credit note is issued                                                 |
-| Reason           | Reason for issuing the credit note (Pricing Error, Service Issue, Partial Return, Full Cancellation, Customer Dispute, Other) |
-| Remarks          | Additional comments or explanation for the credit note                                  |
-
-
-### 3. Line items to credit 
-| Field Name           | Description                                                 |
-| -------------------- | ----------------------------------------------------------- |
-| Select Item Checkbox | Allows user to select which line items to include in credit |
-| Description          | Name or description of the service/product                  |
-| Quantity             | Number of units for the item                                |
-| Rate                 | Price per unit of the item                                  |
-| Tax %                | Applicable tax percentage on the item                       |
-| Original Amount      | Original billed amount for the item                         |
-| Credit Amount        | Amount to be credited for the selected item                 |
-
-
-### 4. Credit Summary
-| Field Name              | Description                                       |
-| ----------------------- | ------------------------------------------------- |
-| Total Credit Amount     | Total amount being credited across selected items |
-| Adjusted Invoice Amount | Remaining invoice amount after applying credit    |
-
-
-### 5. Actions
-| Field Name        | Description                                        |
-| ----------------- | -------------------------------------------------- |
-| Issue Credit Note | Confirms and generates the credit note             |
-| Cancel            | Cancels the process and returns to previous screen |
-
+### 2. Adjustment Details
+| Field Name       | Type      | Required | Description                                                                             |
+| ---------------- | --------- | -------- | --------------------------------------------------------------------------------------- |
+| Credit Note Date | Date      | Yes      | Date on which the credit note is issued                                                 |
+| Reason           | Dropdown  | Yes      | Reason for the adjustment. Options: Payment Settlement / Pricing Error / Service Issue / Full Cancellation / Other |
+| Other Reason     | Text      | Cond.    | **Visible only when Reason = "Other"**. Free-text reason. Required if Reason = Other    |
+| Remarks          | Textarea  | Yes       | Additional comments or explanation for the credit note                                  |
+| Adjust Credit Amt| Number    | Yes      | The total manual amount to credit against the invoice's pending balance                 |
 
 ---
 
@@ -688,19 +770,19 @@ Used to reduce the value of a previously issued and sent invoice. Common scenari
 | ---------------- | ---------------------------------------------------------- |
 | Credit Note Date | Cannot be before original invoice date                     |
 | Reason           | Must select from dropdown                                  |
-| Line Items       | At least 1 item must be selected                           |
-| Credit Amount    | Cannot exceed original invoice amount                      |
+| Other Reason     | Required if Reason = "Other". Cannot be blank whitespace   |
+| Credit Amount    | Cannot exceed the current `Pending Amount` of the invoice  |
 
 ---
 
-## System Behavior
+## System Behavior & Automation
 
 | Event                      | System Action                                             |
 | -------------------------- | --------------------------------------------------------- |
-| Credit Note issued         | CN number generated (CN-XXXXX)                            |
+| Credit Note issued         | Auto-approved immediately. CN number generated (CN-XXXXX) |
 | Ledger adjustment          | Customer Ledger credited by CN amount                     |
-| Invoice pending reduced    | Original invoice's pending amount reduced                 |
-| GST reversal               | Tax components reversed proportionally                    |
+| Invoice pending reduced    | Original invoice's pending amount reduced by CN amount    |
+| **Auto-Generate via Payment**| If Payment (Module 30) is ₹561 against ₹10,561, user can choose "Settle". System auto-creates a ₹10,000 CN internally. |
 
 ---
 
