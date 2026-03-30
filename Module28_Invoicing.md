@@ -650,7 +650,7 @@ Used to reduce the value of a previously issued and sent invoice. Common scenari
 | Field Name       | Description                                                                             |
 | ---------------- | --------------------------------------------------------------------------------------- |
 | Credit Note Date | Date on which the credit note is issued                                                 |
-| Reason           | Reason for issuing the credit note (Pricing Error, Service Issue, Partial Return, etc.) |
+| Reason           | Reason for issuing the credit note (Pricing Error, Service Issue, Partial Return, Full Cancellation, Customer Dispute, Other) |
 | Remarks          | Additional comments or explanation for the credit note                                  |
 
 
