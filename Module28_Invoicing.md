@@ -301,19 +301,6 @@ Form screen to create a new sales invoice. Supports two creation modes: **(1) Fr
 
 ## Screen Fields: Line Items Grid
 
-<<<<<<< HEAD
-| Field       | Type    | Required | Description                                           |
-| ----------- | ------- | -------- | ----------------------------------------------------- |
-| Sr. No      | Number  | Auto     | Sequential row number                                 |
-| Description | Text    | Yes      | Service/Product name (auto-filled from SO if linked)  |
-| HSN/SAC     | Text    | Yes      | HSN code for products, SAC code for services          |
-| Qty         | Number  | Yes      | Quantity (default 1 for services)                     |
-| UOM         | Text    | Auto     | Unit from Product Master                              |
-| Rate        | Number  | Yes      | Per-unit price (auto from SO, editable)               |
-| Discount %  | Number  | No       | Line-level discount percentage (default 0)            |
-| Tax %       | Number  | Auto     | GST rate from Module 9 based on HSN/SAC code         |
-| Amount      | Number  | Auto     | Calculated: (Qty × Rate - Discount) + Tax            |
-=======
 | Field       | Type     | Required | Description                                           |
 | ----------- | -------- | -------- | ----------------------------------------------------- |
 | Sr. No      | Number   | Auto     | Sequential row number                                 |
@@ -410,7 +397,6 @@ Triggered by clicking `[+ ADD LINE ITEM]`. Allows the user to specify whether th
 | **Quantity** | Input field for quantity. Defaults to 1. For products, system validates against available stock in Module 10 (or warns about negative inventory). |
 | **[ADD TO INVOICE]**| Closes modal and appends the selected item, calculated/overridden rate, and quantity as a new row at the Invoice Line Items grid. |
 | **[CANCEL] / [X]** | Closes modal without making changes to the grid. |
->>>>>>> 697ebee (Module 28 is done)
 
 ---
 
