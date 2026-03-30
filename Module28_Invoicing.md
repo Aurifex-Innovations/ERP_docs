@@ -460,7 +460,7 @@ A read-only screen showing the complete invoice with all details — customer in
 | ------------- | ------- | ---------------------------------------------------------- |
 | Status        | Badge   | Current invoice status                                     |
 | From / To     | Display | Company details and Customer details side by side          |
-| Invoice #     | Text    | System-generated number                                    |
+| Invoice No    | Text    | System-generated number                                    |
 | SO Reference  | Link    | Clickable link to Sales Order (Module 20)                  |
 | Contract Ref  | Link    | Clickable link to Contract (Module 19)                     |
 | Line Items    | Table   | All billed items with HSN, rate, tax, and amount           |
