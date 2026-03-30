@@ -391,93 +391,212 @@ A multi-step form to create service tasks. Opens with **two tabs** — tasks sou
 
 ---
 
-## Step 1: Source & Service Selection
+## Tab 1 — From Sales Order (SO): Field Descriptions
 
-| Field        | Type     | Required | Description                                           |
-| ------------ | -------- | -------- | ----------------------------------------------------- |
-| Branch       | Dropdown | Yes      | Select servicing branch                               |
-| Search SO    | Search   | Yes      | Search by SO Number or Customer Name                  |
-| Service Grid | Grid     | Yes      | Select line items (SO, Customer, Service, Site, Freq) |
+### Step 1: Source & Service Selection
 
----
+| Field     | Type                  | Required | Validation                | Description                                                                                                                                     |
+| --------- | --------------------- | -------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Branch    | Dropdown              | Yes      | From Module 7 branch list | Select the servicing branch. Filters the SO search to show only orders under the selected branch.                                               |
+| Search SO | Search (Autocomplete) | Yes      | Must select a valid SO    | Searchable dropdown — type SO Number or Customer Name. On selection, the Service Grid below populates with all service line items from that SO. |
 
-## Step 2: Schedule & Assignment Fields
+#### Service Grid (Multi-Select from Selected SO)
 
-| Field               | Type      | Required | Validation                        | Description                                     |
-| ------------------- | --------- | -------- | --------------------------------- | ----------------------------------------------- |
-| Category            | Display   | Auto     | From GMA/SO service definition    | Service Category (e.g. General Pest Control)    |
-| Sub-category        | Display   | Auto     | From GMA/SO service definition    | Service Sub-category (e.g. Cockroach Mgmt)      |
-| Area (SQFT)         | Display   | Auto     | From GMA/SO service definition    | Total area to be treated (read-only)            |
-| Site Contact        | Text      | Yes      | Auto-fetched from SO/Customer     | **[Editable]** Point of contact for the tech    |
-| Contact Mobile      | Phone     | Yes      | Valid 10-digit number             | **[Editable]** Contact number for execution     |
-| Scheduled Date      | Date      | Yes      | Cannot be past date               | Task execution date                             |
-| Start Time          | Time      | Yes      | Must be before End Time           | Task start time                                 |
-| End Time            | Time      | Yes      | Must be after Start Time          | Task end time                                   |
-| Duration            | Display   | Auto     | Auto-calculated                   | End Time – Start Time                           |
-| Role                | Dropdown  | Yes      | From Module 8 role definitions    | Filters the employee list (cascading)           |
-| Available Employees | Multi-sel | Yes      | At least one must be selected     | Cascading from Role; shows only available techs |
-| Primary Technician  | Dropdown  | Yes      | Must be one of selected employees | Main responsible person for the task            |
-| Conflict Check      | Indicator | Auto     | System checks tech schedules      | Visual indicator (✅ No conflicts / ⚠ Conflict) |
-| Task Notes          | Textarea  | No       | Max 500 chars                     | Additional instructions (Step 3)                |
-| Priority            | Dropdown  | Yes      | Normal / Urgent / Critical        | Task priority level (Step 3)                    |
+> Appears after an SO is selected. The manager checks ☑ one or more rows to create tasks from them. Each checked row becomes an independent task card in Step 2.
+
+| Column       | Type     | Description                                                                                                          |
+| ------------ | -------- | -------------------------------------------------------------------------------------------------------------------- |
+| ☑ (Checkbox) | Checkbox | Select / deselect a service line item. At least one must be selected to proceed.                                     |
+| SO Number    | Display  | Sales Order number (e.g. SO-2026-0112). Read-only — from Module 20.                                                  |
+| Customer     | Display  | Customer name linked to the SO (from Module 18). Read-only.                                                          |
+| Service      | Display  | Service type / name (e.g. Cockroach Treatment, Termite Control). Read-only — from GMA / Module 17.                   |
+| Site         | Display  | Site or location name where the service is to be performed (e.g. Head Office, Lobby). Read-only — from SO line item. |
+| Frequency    | Display  | Service frequency as defined in the contract / SO (e.g. Weekly, Monthly, Quarterly). Read-only.                      |
+
+**Footer Indicator:** `Selected: N service line items` — live count of checked rows.
 
 ---
 
-## Materials / Chemicals Fields (Auto-Fetched, Editable)
+### Step 2: Schedule, Assign & Materials (Per Selected SO in above section)
 
-> **Data Source:** When a SO line item is selected (Tab 1) or a service is identified from a ticket (Tab 2), the system auto-fetches the chemical/product list from the **GMA Sheet (Module 17)** and **SO line items (Module 20)**. HSN, UOM, and Standard Qty are pre-filled; the manager can **edit Req Qty, add new rows, or remove rows**.
+> A **separate task card** is generated for each selected service line item from Step 1. All fields below repeat per task card. The section header shows the service name, site, and SO number for clarity (e.g. _"TASK 1: Cockroach Treatment @ Head Office (SO-2026-0112)"_).
 
-| Field              | Type    | Required | Validation                          | Description                                   |
-| ------------------ | ------- | -------- | ----------------------------------- | --------------------------------------------- |
-| Chemical / Product | Display | Auto     | From GMA/SO service definition      | Auto-fetched chemical or product name         |
-| HSN                | Display | Auto     | From Module 10 master data          | HSN/SAC code (read-only)                      |
-| UOM                | Display | Auto     | From Module 10 master data          | Unit of measurement (read-only)               |
-| Std Qty            | Display | Auto     | From GMA/SO                         | Standard quantity per service (read-only)     |
-| Req Qty            | Number  | Yes      | Must be ≥ 0; numeric only           | Editable — manager can adjust per task need   |
-| + Add Material     | Button  | —        | Chemical must exist in Module 10/11 | Manually add extra materials not in auto-list |
-| 🗑 Remove Selected | Button  | —        | Cannot remove if only 1 row remains | Remove unnecessary materials from the list    |
+#### Sub-Section 2A: Service Information (Read-Only)
+
+| Field        | Type    | Required | Source                                  | Description                                                                                                |
+| ------------ | ------- | -------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Category     | Display | Auto     | GMA / SO service definition (Module 17) | Service category (e.g. General Pest Control). Read-only — auto-filled from the selected service line item. |
+| Sub-category | Display | Auto     | GMA / SO service definition (Module 17) | Service sub-category (e.g. Cockroach Management). Read-only — auto-filled.                                 |
+| Area (SQFT)  | Display | Auto     | GMA / SO service definition (Module 17) | Total area in square feet to be treated. Read-only — fetched from GMA sheet or SO line item.               |
+
+#### Sub-Section 2B: Schedule & Contact (Editable)
+
+| Field          | Type          | Required | Validation                                     | Description                                                                                                                   |
+| -------------- | ------------- | -------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Scheduled Date | Date Picker   | Yes      | Cannot be a past date                          | Date on which the task is to be executed. Defaults to the current calendar date.                                              |
+| Start Time     | Time Dropdown | Yes      | Must be before End Time                        | Scheduled start time for this task (e.g. 08:00).                                                                              |
+| End Time       | Time Dropdown | Yes      | Must be after Start Time                       | Scheduled end time for this task (e.g. 10:00).                                                                                |
+| Duration       | Display       | Auto     | Auto-calculated (End Time − Start Time)        | Computed duration displayed as hours/minutes (e.g. "2 hours"). Read-only.                                                     |
+| Site Contact   | Text Input    | Yes      | Auto-fetched from SO/Customer record; editable | Name of the on-site point of contact for the technician. Pre-filled from the SO customer record but the manager can override. |
+| Contact Mobile | Phone Input   | Yes      | Valid 10-digit mobile number                   | Mobile number of the site contact. Pre-filled from SO/Customer; editable.                                                     |
+
+#### Sub-Section 2C: Technician Assignment
+
+| Field               | Type                    | Required | Validation                                              | Description                                                                                                                                                                                                                   |
+| ------------------- | ----------------------- | -------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Role                | Dropdown                | Yes      | Must select a role from Module 8 role definitions       | **Cascading filter:** On selection (e.g. Technician, Senior Technician, Supervisor), the "Available Employees" list below refreshes to show only employees with that role who are active and free on the scheduled date/time. |
+| Available Employees | Multi-Select Checkboxes | Yes      | At least one employee must be selected                  | Cascading from _Role_ — shows only technicians of the selected role who have no conflicting tasks on the scheduled date/time. Multiple employees can be selected (one primary + others as support).                           |
+| Primary Technician  | Dropdown                | Yes      | Must be one of the selected employees above             | Designates the main responsible technician for the task. The dropdown is populated only from the employees already checked in "Available Employees".                                                                          |
+| Conflict Check      | Indicator (Auto)        | Auto     | System checks the schedules of all selected technicians | Visual status indicator. Displays ✅ **No conflicts detected** or ⚠ **Conflict: "[Tech Name] is assigned to TASK-XXXX at this time"**. If conflicts are detected, the system blocks task creation until resolved.             |
+
+#### Sub-Section 2D: Materials / Chemicals (Auto-Fetched, Editable)
+
+> **Data Source:** When a SO line item is selected, the system auto-fetches the chemical/product list from the **GMA Sheet (Module 17)** and **SO line items (Module 20)**. HSN, UOM, and Standard Qty are pre-filled; the manager can **edit Req Qty, add new rows, or remove rows**.
+
+| Field                | Type         | Required | Validation                                            | Description                                                                                                                         |
+| -------------------- | ------------ | -------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Chemical / Product   | Display      | Auto     | From GMA/SO service definition                        | Name of the chemical or product (e.g. Alpha Cypermethrin, Fipronil Gel, Bait Station). Read-only — auto-fetched.                    |
+| HSN                  | Display      | Auto     | From Module 10 master data                            | HSN/SAC code for taxation (e.g. 3808, 3926). Read-only.                                                                             |
+| UOM                  | Display      | Auto     | From Module 10 master data                            | Unit of measurement (e.g. ml, tube, nos). Read-only.                                                                                |
+| Std Qty              | Display      | Auto     | From GMA/SO                                           | Standard quantity required per service as defined in the GMA/SO (e.g. 120 ml). Read-only — serves as a reference for the manager.   |
+| Req Qty              | Number Input | Yes      | Must be ≥ 0; numeric only                             | **Editable** — the actual quantity the manager wants to allocate for this task. Defaults to Std Qty but can be adjusted up or down. |
+| [+ Add Material]     | Button       | —        | Added chemical must exist in Module 10/11 master data | Opens a search/select dialog to manually add extra materials not in the auto-fetched list.                                          |
+| [🗑 Remove Selected] | Button       | —        | Cannot remove if only 1 material row remains          | Removes selected material row(s) from the list. Disabled when only one row exists.                                                  |
 
 ---
 
-## Re-Task Specific Fields
+### Step 3: Additional Notes
 
-| Field            | Type    | Required | Description                              |
-| ---------------- | ------- | -------- | ---------------------------------------- |
-| Source Type      | Radio   | Yes      | Customer Ticket / Manual Entry           |
-| Ticket ID        | Search  | Cond.    | Required if Source = Customer Ticket     |
-| Linked SO        | Display | Auto     | Original SO reference (read-only)        |
-| Customer         | Display | Auto     | Customer Name from linked source         |
-| Category         | Display | Auto     | Service Category from source service     |
-| Sub-category     | Display | Auto     | Service Sub-cat from source service      |
-| Original Service | Display | Auto     | The service name linked to the ticket    |
-| Site             | Display | Auto     | Site name linked to the original service |
-| Complaint Reason | Display | Auto     | The reason text from the customer ticket |
+| Field      | Type     | Required | Validation                         | Description                                                                                                                              |
+| ---------- | -------- | -------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Task Notes | Textarea | No       | Max 500 characters                 | Free-text area for additional instructions, special care notes, or site-specific information (e.g. "Special care for server room area"). |
+| Priority   | Dropdown | Yes      | Values: Normal / Urgent / Critical | Task priority level. Determines sort order and visual emphasis in the Daily Task View. Default: Normal.                                  |
+
+---
+
+## Tab 2 — From Customer Tickets (Re-Task): Field Descriptions
+
+### Step 1: Select Source
+
+#### Source Type Selection
+
+| Field       | Type         | Required | Validation      | Description                                                                                                                                                                                |
+| ----------- | ------------ | -------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Source Type | Radio Button | Yes      | Must select one | Determines how the Re-Task is sourced. Two options: **(•) Customer Ticket** or **( ) Manual Entry**. Default: Customer Ticket. Selecting an option conditionally shows/hides fields below. |
+
+---
+
+#### Condition A — When Source Type = **Customer Ticket**
+
+> All fields below auto-fill from the selected ticket and its linked SO/service records. These are **read-only display** fields.
+
+| Field              | Type                  | Required | Validation                                      | Description                                                                                                                              |
+| ------------------ | --------------------- | -------- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Search Ticket      | Search (Autocomplete) | Yes      | Must select a valid ticket                      | Searchable dropdown — type Ticket ID or Customer Name. On selection, all fields below auto-populate from the linked ticket and SO data.  |
+| Linked SO (if any) | Display               | Auto     | Auto-filled from ticket record                  | The original Sales Order number linked to this complaint (e.g. SO-2026-0087). Read-only. If no SO is linked, displays "—".               |
+| Customer           | Display               | Auto     | Auto-filled from ticket/SO                      | Customer name linked to the ticket source (e.g. XYZ Hotel). Read-only.                                                                   |
+| Category           | Display               | Auto     | Auto-filled from source service (GMA/Module 17) | Service category of the original service (e.g. General Pest Control). Read-only.                                                         |
+| Sub-category       | Display               | Auto     | Auto-filled from source service (GMA/Module 17) | Service sub-category of the original service (e.g. Cockroach Management). Read-only.                                                     |
+| Original Service   | Display               | Auto     | Auto-filled from ticket/SO line item            | The specific service name linked to the ticket (e.g. Rodent Control). Read-only.                                                         |
+| Site               | Display               | Auto     | Auto-filled from ticket/SO                      | Site name where the original service was performed (e.g. Lobby). Read-only.                                                              |
+| Complaint Reason   | Display               | Auto     | Auto-filled from ticket                         | The customer's complaint text from the ticket (e.g. "Rodents seen again within 2 days"). Read-only — shown as reference for the manager. |
+
+---
+
+#### Condition B — When Source Type = **Manual Entry**
+
+> When no customer ticket exists (e.g. internal re-service decision, follow-up visit), the manager can manually enter all details. All fields below become **editable inputs** instead of auto-filled displays.
+
+| Field              | Type                  | Required | Validation                                           | Description                                                                                                                              |
+| ------------------ | --------------------- | -------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Customer           | Search (Autocomplete) | Yes      | Must select a valid customer from Module 18          | Searchable dropdown to select the customer. On selection, the Site dropdown below filters to show only sites belonging to this customer. |
+| Site               | Dropdown              | Yes      | Filtered by selected Customer (from Module 18 sites) | Select the site/location where the re-service will be performed. Options are filtered based on the selected Customer.                    |
+| Category           | Dropdown              | Yes      | From GMA / Module 17 service definitions             | Select the service category (e.g. General Pest Control, Specialized Service).                                                            |
+| Sub-category       | Dropdown              | Yes      | Cascading from Category (Module 17)                  | Select the service sub-category. Options filter based on the selected Category (e.g. Cockroach Management under General Pest Control).   |
+| Original Service   | Dropdown              | Yes      | Cascading from Sub-category (Module 17)              | Select the specific service (e.g. Rodent Control). Options filter based on the selected Sub-category.                                    |
+| Linked SO (if any) | Search (Autocomplete) | No       | Must be a valid SO for the selected Customer         | Optional — if re-service is related to an existing Sales Order, the manager can search and link it. Leave blank if not applicable.       |
+| Complaint / Reason | Textarea              | No       | Max 500 characters                                   | Free-text to describe the reason for the manual re-task (e.g. "Follow-up visit as per manager instruction", "Preventive re-service").    |
+
+---
+
+### Step 2: Task Details (Editable)
+
+> Whether the source is a Customer Ticket or Manual Entry, Step 2 fields are always **editable**. When sourced from a ticket, these fields are **pre-filled from the ticket/SO data** but can be changed. When sourced via Manual Entry, fields are populated from Step 1 selections.
+
+#### Sub-Section 2A: Service & Location
+
+| Field        | Type     | Required | Validation                                           | Description                                                                                                                                                                                                                    |
+| ------------ | -------- | -------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Service Type | Dropdown | Yes      | From Module 17 service definitions                   | The service to be performed for the Re-Task. **Pre-filled** from source ticket/Step 1 selection but editable — the manager may change the service type if needed (e.g. upgrading Rodent Control to a comprehensive treatment). |
+| Site         | Dropdown | Yes      | Sites belonging to the selected customer (Module 18) | The location where the re-service will be performed. **Pre-filled** from source but editable.                                                                                                                                  |
+
+#### Sub-Section 2B: Schedule & Contact
+
+| Field          | Type          | Required | Validation                                     | Description                                                                              |
+| -------------- | ------------- | -------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Site Contact   | Text Input    | Yes      | Auto-fetched from SO/Customer record; editable | Name of the on-site point of contact. Pre-filled from source data; manager can override. |
+| Contact Mobile | Phone Input   | Yes      | Valid 10-digit mobile number                   | Mobile number of site contact. Pre-filled from source data; editable.                    |
+| Scheduled Date | Date Picker   | Yes      | Cannot be a past date                          | Date on which the re-task is to be executed.                                             |
+| Start Time     | Time Dropdown | Yes      | Must be before End Time                        | Scheduled start time for the re-task.                                                    |
+| End Time       | Time Dropdown | Yes      | Must be after Start Time                       | Scheduled end time for the re-task.                                                      |
+
+#### Sub-Section 2C: Technician Assignment
+
+| Field               | Type                    | Required | Validation                                        | Description                                                                                                                  |
+| ------------------- | ----------------------- | -------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Role                | Dropdown                | Yes      | Must select a role from Module 8 role definitions | Cascading filter for technician selection (e.g. Senior Technician, Technician, Supervisor).                                  |
+| Available Employees | Multi-Select Checkboxes | Yes      | At least one employee must be selected            | Cascading from _Role_ — shows only technicians of the selected role who are active and available on the scheduled date/time. |
+| Primary Technician  | Dropdown                | Yes      | Must be one of the selected employees above       | Main responsible technician for the re-task. Populated only from checked employees.                                          |
+
+#### Sub-Section 2D: Materials / Chemicals (Auto-Fetched, Editable)
+
+> **Data Source:** Auto-fetched from the **original SO/service linked** to the ticket (Condition A) or from the **GMA sheet based on Step 1 service selections** (Condition B). HSN, UOM, and Standard Qty are pre-filled; the manager can **edit Req Qty, add new rows, or remove rows**.
+
+| Field                | Type         | Required | Validation                          | Description                                                           |
+| -------------------- | ------------ | -------- | ----------------------------------- | --------------------------------------------------------------------- |
+| Chemical / Product   | Display      | Auto     | From GMA/SO service definition      | Auto-fetched chemical or product name. Read-only.                     |
+| HSN                  | Display      | Auto     | From Module 10 master data          | HSN/SAC code (read-only).                                             |
+| UOM                  | Display      | Auto     | From Module 10 master data          | Unit of measurement (read-only).                                      |
+| Std Qty              | Display      | Auto     | From GMA/SO                         | Standard quantity per service (read-only).                            |
+| Req Qty              | Number Input | Yes      | Must be ≥ 0; numeric only           | **Editable** — manager can adjust per task need. Defaults to Std Qty. |
+| [+ Add Material]     | Button       | —        | Chemical must exist in Module 10/11 | Manually add extra materials not in auto-list.                        |
+| [🗑 Remove Selected] | Button       | —        | Cannot remove if only 1 row remains | Remove unnecessary materials from the list.                           |
+
+#### Sub-Section 2E: Additional Notes
+
+| Field      | Type     | Required | Validation                         | Description                                                                                                 |
+| ---------- | -------- | -------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Task Notes | Textarea | No       | Max 500 characters                 | Additional instructions for the re-task (e.g. "Re-service due to complaint").                               |
+| Priority   | Dropdown | Yes      | Values: Normal / Urgent / Critical | Task priority level. Default: **Urgent** for ticket-sourced re-tasks; **Normal** for manual entry re-tasks. |
 
 ---
 
 ## Validation Rules
 
-| Validation                | Rule                                                        |
-| ------------------------- | ----------------------------------------------------------- |
-| Time slot overlap         | System checks if selected technician has a conflicting task |
-| Date validity             | Cannot be in the past                                       |
-| Start < End               | Start time must be before end time                          |
-| Role → Employee cascade   | Employee list filtered by role; only active employees shown |
-| At least 1 technician     | Minimum one technician must be assigned                     |
-| Primary in selected list  | Primary must be one of the multi-selected employees         |
-| SO line not yet tasked    | Warns if service line already has a task for the same date  |
-| Material Qty ≥ 0          | Required qty cannot be negative                             |
-| Material from master data | Added materials must exist in Module 10/11                  |
+| Validation                                             | Rule                                                                                                          |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| Time slot overlap                                      | System checks if selected technician has a conflicting task                                                   |
+| Date validity                                          | Cannot be in the past                                                                                         |
+| Start < End                                            | Start time must be before end time                                                                            |
+| Role → Employee cascade                                | Employee list filtered by role; only active employees shown                                                   |
+| At least 1 technician                                  | Minimum one technician must be assigned                                                                       |
+| Primary in selected list                               | Primary must be one of the multi-selected employees                                                           |
+| SO line not yet tasked                                 | Warns if service line already has a task for the same date                                                    |
+| Material Qty ≥ 0                                       | Required qty cannot be negative                                                                               |
+| Material from master data                              | Added materials must exist in Module 10/11                                                                    |
+| **[Tab 2 — Customer Ticket]** Ticket required          | If Source Type = Customer Ticket, a valid ticket must be selected                                             |
+| **[Tab 2 — Manual Entry]** Customer & Service required | If Source Type = Manual Entry, Customer, Site, Category, Sub-category, and Original Service are all mandatory |
+| **[Tab 2 — Manual Entry]** Cascading dropdowns         | Sub-category cascades from Category; Original Service cascades from Sub-category                              |
 
 ---
 
 ## Form Actions
 
-| Button             | Description                                                                   |
-| ------------------ | ----------------------------------------------------------------------------- |
-| **Create Tasks**   | Validates, checks conflicts, creates task records, returns to Daily Task View |
-| **Create Re-Task** | Same as above but marks task type as Re-Task                                  |
-| **Cancel**         | Discards form and returns to previous screen                                  |
+| Button             | Applicable Tab       | Description                                                                                                                                       |
+| ------------------ | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Create Tasks**   | Tab 1 (From SO)      | Validates all task cards, checks technician conflicts, creates task records (one per selected service line item), and returns to Daily Task View. |
+| **Create Re-Task** | Tab 2 (From Tickets) | Same as above but marks the task type as **Re-Task** and links it to the source ticket/manual reason.                                             |
+| **Cancel**         | Both Tabs            | Discards form data and returns to the previous screen (Daily Task View or Calendar Dashboard).                                                    |
 
 ---
 
@@ -586,26 +705,26 @@ Read-only screen showing the complete breakdown of a task — customer info, ser
 
 ## Task Execution Fields (Read-Only)
 
-| Field             | Type     | Description                                               |
-| ----------------- | -------- | --------------------------------------------------------- |
-| Task ID           | Display  | **[Auto-generated]** Unique task ID                       |
-| Task Type         | Badge    | **[System-set]** Normal / Re-Task                         |
-| Service Mode      | Badge    | **[Auto-fetched]** Contract Base / One-Time Service       |
-| Pest(s) Treated   | Display  | **[Auto-fetched]** Target pests                           |
-| Area (SQFT)       | Display  | **[Auto-fetched]** Total area covered/treated             |
+| Field             | Type     | Description                                                     |
+| ----------------- | -------- | --------------------------------------------------------------- |
+| Task ID           | Display  | **[Auto-generated]** Unique task ID                             |
+| Task Type         | Badge    | **[System-set]** Normal / Re-Task                               |
+| Service Mode      | Badge    | **[Auto-fetched]** Contract Base / One-Time Service             |
+| Pest(s) Treated   | Display  | **[Auto-fetched]** Target pests                                 |
+| Area (SQFT)       | Display  | **[Auto-fetched]** Total area covered/treated                   |
 | Status            | Badge    | **[System-driven]** Pending / In Progress / Completed / Overdue |
-| Priority          | Badge    | **[Auto/Manual]** Normal / Urgent / Critical              |
-| Scheduled Date    | Date     | **[Manual Update]** Planned execution date                |
-| Time Slot         | Display  | **[Manual Update]** Start – End time                      |
-| Primary Tech      | Display  | **[Manual Update]** Main technician + role                |
-| Support Techs     | Display  | **[Manual Update]** Additional technicians                |
-| Started At        | DateTime | **[System-captured]** Actual start timestamp              |
-| Completed At      | DateTime | **[System-captured]** Actual completion timestamp         |
-| Actual Duration   | Display  | **[System-calculated]** Real time taken                   |
-| Completion Note   | Text     | **[Tech Input]** Technician's service notes               |
-| Photos            | Image    | **[Tech Input]** Before/after/treatment images            |
-| Customer Rating   | Display  | **[Customer Input]** Star rating (1–5)                    |
-| Customer Feedback | Text     | **[Customer Input]** Written feedback                     |
+| Priority          | Badge    | **[Auto/Manual]** Normal / Urgent / Critical                    |
+| Scheduled Date    | Date     | **[Manual Update]** Planned execution date                      |
+| Time Slot         | Display  | **[Manual Update]** Start – End time                            |
+| Primary Tech      | Display  | **[Manual Update]** Main technician + role                      |
+| Support Techs     | Display  | **[Manual Update]** Additional technicians                      |
+| Started At        | DateTime | **[System-captured]** Actual start timestamp                    |
+| Completed At      | DateTime | **[System-captured]** Actual completion timestamp               |
+| Actual Duration   | Display  | **[System-calculated]** Real time taken                         |
+| Completion Note   | Text     | **[Tech Input]** Technician's service notes                     |
+| Photos            | Image    | **[Tech Input]** Before/after/treatment images                  |
+| Customer Rating   | Display  | **[Customer Input]** Star rating (1–5)                          |
+| Customer Feedback | Text     | **[Customer Input]** Written feedback                           |
 
 ---
 
@@ -620,13 +739,13 @@ Read-only screen showing the complete breakdown of a task — customer info, ser
 
 ## Materials / Chemicals Detail (View)
 
-| Field         | Type    | Description                                                |
-| ------------- | ------- | ---------------------------------------------------------- |
-| Chemical Name | Display | **[Auto-fetched]** Name of the material used               |
-| HSN           | Display | **[Auto-fetched]** HSN code for tax reporting              |
-| UOM           | Display | **[Auto-fetched]** Unit of measurement                     |
-| Required Qty  | Display | **[Auto-fetched]** Planned quantity from task creation     |
-| Used Qty      | Display | **[Tech Input]** Actual quantity logged by technician      |
+| Field         | Type    | Description                                            |
+| ------------- | ------- | ------------------------------------------------------ |
+| Chemical Name | Display | **[Auto-fetched]** Name of the material used           |
+| HSN           | Display | **[Auto-fetched]** HSN code for tax reporting          |
+| UOM           | Display | **[Auto-fetched]** Unit of measurement                 |
+| Required Qty  | Display | **[Auto-fetched]** Planned quantity from task creation |
+| Used Qty      | Display | **[Tech Input]** Actual quantity logged by technician  |
 
 ---
 
@@ -716,18 +835,18 @@ Editable form for modifying a task that has not yet been completed. Allows chang
 
 ## Editable Fields (Manual Update)
 
-| Field               | Type      | Required | Validation                        | Description                                          |
-| ------------------- | --------- | -------- | --------------------------------- | ---------------------------------------------------- |
-| Scheduled Date      | Date      | Yes      | Cannot be past date               | **[Manual Update]** Task execution date              |
-| Start Time          | Time      | Yes      | Must be before End Time           | **[Manual Update]** Task start time                  |
-| End Time            | Time      | Yes      | Must be after Start Time          | **[Manual Update]** Task end time                    |
-| Site Contact        | Text      | Yes      | Required                          | **[Manual Update]** Site point of contact            |
-| Contact Mobile      | Phone     | Yes      | Valid 10-digit number             | **[Manual Update]** Mobile string for dispatcher     |
-| Role                | Dropdown  | Yes      | From Module 8 role definitions    | **[Manual Update]** Cascading filter for employees   |
-| Available Employees | Multi-sel | Yes      | At least one selected             | **[Auto-filtered/Manual Select]** Multi-select       |
-| Primary Technician  | Dropdown  | Yes      | Must be one of selected employees | **[Manual Update]** Main responsible person          |
-| Priority            | Dropdown  | Yes      | Normal / Urgent / Critical        | **[Manual Update]** Task priority                    |
-| Task Notes          | Textarea  | No       | Max 500 chars                     | **[Manual Update]** Additional instructions          |
+| Field               | Type      | Required | Validation                        | Description                                        |
+| ------------------- | --------- | -------- | --------------------------------- | -------------------------------------------------- |
+| Scheduled Date      | Date      | Yes      | Cannot be past date               | **[Manual Update]** Task execution date            |
+| Start Time          | Time      | Yes      | Must be before End Time           | **[Manual Update]** Task start time                |
+| End Time            | Time      | Yes      | Must be after Start Time          | **[Manual Update]** Task end time                  |
+| Site Contact        | Text      | Yes      | Required                          | **[Manual Update]** Site point of contact          |
+| Contact Mobile      | Phone     | Yes      | Valid 10-digit number             | **[Manual Update]** Mobile string for dispatcher   |
+| Role                | Dropdown  | Yes      | From Module 8 role definitions    | **[Manual Update]** Cascading filter for employees |
+| Available Employees | Multi-sel | Yes      | At least one selected             | **[Auto-filtered/Manual Select]** Multi-select     |
+| Primary Technician  | Dropdown  | Yes      | Must be one of selected employees | **[Manual Update]** Main responsible person        |
+| Priority            | Dropdown  | Yes      | Normal / Urgent / Critical        | **[Manual Update]** Task priority                  |
+| Task Notes          | Textarea  | No       | Max 500 chars                     | **[Manual Update]** Additional instructions        |
 
 ---
 
@@ -1086,15 +1205,15 @@ The primary command center for tracking the workforce. By default, it shows **Li
 
 ## Dashboard Filters & Feed Fields
 
-| Field              | Type      | Description                                                |
-| ------------------ | --------- | ---------------------------------------------------------- |
-| Date Selector      | Date      | Default: Today (Live). Select past dates for historical Map.|
-| Technician Name    | Link      | Clicks through to Technician Travel Log (22.2).            |
-| Current Location   | Display   | Nearest address or specific Site Name (from Module 21).    |
-| Feed Tabs          | Tab       | Toggle between Active techs map vs Offline techs list      |
-| Current Status     | Badge     | Travelling / On Site / Idle / Offline.                     |
-| Customer & Service | Display   | Linked Customer Name and specific Service Type.            |
-| Active Task        | Link      | Current Module 21 Task ID (if On Site or Travelling to it).|
+| Field              | Type    | Description                                                  |
+| ------------------ | ------- | ------------------------------------------------------------ |
+| Date Selector      | Date    | Default: Today (Live). Select past dates for historical Map. |
+| Technician Name    | Link    | Clicks through to Technician Travel Log (22.2).              |
+| Current Location   | Display | Nearest address or specific Site Name (from Module 21).      |
+| Feed Tabs          | Tab     | Toggle between Active techs map vs Offline techs list        |
+| Current Status     | Badge   | Travelling / On Site / Idle / Offline.                       |
+| Customer & Service | Display | Linked Customer Name and specific Service Type.              |
+| Active Task        | Link    | Current Module 21 Task ID (if On Site or Travelling to it).  |
 
 ---
 
@@ -1156,27 +1275,27 @@ A unified, comprehensive profile of a specific technician's logistics data. Mana
 
 ## Profile Filter Fields
 
-| Field           | Type     | Description                                                          |
-| --------------- | -------- | -------------------------------------------------------------------- |
-| Period Selector | Dropdown | **[Manual Select]** Select Daily, Weekly, or Monthly view.           |
-| Date Selector   | Control  | **[Manual Select]** Selects the specific date, week, or month to analyze. |
+| Field           | Type     | Description                                                                   |
+| --------------- | -------- | ----------------------------------------------------------------------------- |
+| Period Selector | Dropdown | **[Manual Select]** Select Daily, Weekly, or Monthly view.                    |
+| Date Selector   | Control  | **[Manual Select]** Selects the specific date, week, or month to analyze.     |
 | Summary Stats   | Display  | **[Auto-calculated]** Aggregated Distance, Time, and Tasks for chosen period. |
 
 ---
 
 ## Timeline & Tabular Log Fields (Read-Only)
 
-| Field            | Type    | Description                                                          |
-| ---------------- | ------- | -------------------------------------------------------------------- |
-| Date             | Display | **[System-generated]** Tracking Date.                                |
-| Departure Point  | Display | **[Auto-fetched]** Origin site or generic location (e.g., Branch).   |
-| Destination      | Display | **[Auto-fetched]** Destination Site Name or Geo-location address.    |
-| Customer         | Display | **[Auto-fetched]** Associated Customer Name and specific Service Type.|
-| Task ID          | Modal   | **[Auto-fetched]** Click Task to view details (Status, Category, Techs). |
-| Distance         | Display | **[System-calculated]** GPS calculated travel distance for that segment. |
+| Field            | Type    | Description                                                                |
+| ---------------- | ------- | -------------------------------------------------------------------------- |
+| Date             | Display | **[System-generated]** Tracking Date.                                      |
+| Departure Point  | Display | **[Auto-fetched]** Origin site or generic location (e.g., Branch).         |
+| Destination      | Display | **[Auto-fetched]** Destination Site Name or Geo-location address.          |
+| Customer         | Display | **[Auto-fetched]** Associated Customer Name and specific Service Type.     |
+| Task ID          | Modal   | **[Auto-fetched]** Click Task to view details (Status, Category, Techs).   |
+| Distance         | Display | **[System-calculated]** GPS calculated travel distance for that segment.   |
 | Start & End Time | Display | **[System-captured]** Timestamps marking the departure and arrival bounds. |
-| Duration         | Display | **[System-calculated]** Total time computed between Start and End.   |
-| Status           | Badge   | **[System-driven]** On-Site, Travelling, Idle.                       |
+| Duration         | Display | **[System-calculated]** Total time computed between Start and End.         |
+| Status           | Badge   | **[System-driven]** On-Site, Travelling, Idle.                             |
 
 ---
 
@@ -1293,24 +1412,24 @@ The primary command center for the Support Team. Provides a high-visibility data
 
 ## Table Columns
 
-| Field         | Type    | Description                                                    |
-| ------------- | ------- | -------------------------------------------------------------- |
-| Ticket ID     | Link    | `TKT-YYYY-NNNN`. Clicks to 23.3 Detail View.                   |
-| Customer Name | Display | Name of the Customer.                                          |
-| Branch Name   | Display | Name of Branch                                                 |
-| SO No         | Display | Associated Sales Order (if applicable).                        |
+| Field         | Type    | Description                                                                                                  |
+| ------------- | ------- | ------------------------------------------------------------------------------------------------------------ |
+| Ticket ID     | Link    | `TKT-YYYY-NNNN`. Clicks to 23.3 Detail View.                                                                 |
+| Customer Name | Display | Name of the Customer.                                                                                        |
+| Branch Name   | Display | Name of Branch                                                                                               |
+| SO No         | Display | Associated Sales Order (if applicable).                                                                      |
 | Task ID       | Link    | Linked Task from Module 21 (`TASK-YYYY-NNNN`). Clicks to Module 21 Task Detail. Shows `—` if no task linked. |
-| Priority      | Display | Ticket Priority.                                               |
-| Status        | Display | Standard lifecycle: `[Open, Assigned, In Progress, Paused, Resolved, Closed]`.                                     |
-| SLA Stage     | Badge   | Color-coded visual of SLA health (Safe/Risk/Breach).           |
-| SLA Timer     | Display | Live countdown (e.g. `22h 10m` remaining, `-02h 15m` overdue). |
-| Actions       | Button  | `[👁 View]` — Opens Ticket Detail View (Screen 23.3).          |
+| Priority      | Display | Ticket Priority.                                                                                             |
+| Status        | Display | Standard lifecycle: `[Open, Assigned, In Progress, Paused, Resolved, Closed]`.                               |
+| SLA Stage     | Badge   | Color-coded visual of SLA health (Safe/Risk/Breach).                                                         |
+| SLA Timer     | Display | Live countdown (e.g. `22h 10m` remaining, `-02h 15m` overdue).                                               |
+| Actions       | Button  | `[👁 View]` — Opens Ticket Detail View (Screen 23.3).                                                        |
 
 ## Actions (Table Row)
 
-| Action   | Icon | Condition    | Description                                      |
-| -------- | ---- | ------------ | ------------------------------------------------ |
-| **View** | 👁   | All statuses | Opens Ticket Detail View (Screen 23.3)           |
+| Action   | Icon | Condition    | Description                            |
+| -------- | ---- | ------------ | -------------------------------------- |
+| **View** | 👁   | All statuses | Opens Ticket Detail View (Screen 23.3) |
 
 ---
 
@@ -1358,6 +1477,7 @@ The data-entry screen for new complaints or service requests. Auto-calculates SL
 
 > [!NOTE]
 > **Cascading Selection Logic:**
+>
 > - **Customer Select** ➔ Fetches all **Sales Orders (SO)** of that customer.
 > - **SO Select** ➔ Fetches all **Tasks** of that specific SO from Module 21.
 
@@ -1365,20 +1485,20 @@ The data-entry screen for new complaints or service requests. Auto-calculates SL
 
 ## Field Table
 
-| Field         | Type     | Required | Validation                        | Description                                                                                        |
-| ------------- | -------- | -------- | --------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Customer      | Search   | Yes      | Must select from Module 18        | Linked Customer Profile.                                                                           |
-| Related SO    | Dropdown | No       | Filtered by selected Customer     | Links ticket to Sales Order context: `[List of user's active SO-YYYY-NNNN]`.                       |
+| Field         | Type     | Required | Validation                        | Description                                                                                                                                   |
+| ------------- | -------- | -------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Customer      | Search   | Yes      | Must select from Module 18        | Linked Customer Profile.                                                                                                                      |
+| Related SO    | Dropdown | No       | Filtered by selected Customer     | Links ticket to Sales Order context: `[List of user's active SO-YYYY-NNNN]`.                                                                  |
 | Related Task  | Dropdown | No       | Filtered by selected Customer/SO  | Links ticket to Task context from Module 21: `[List of TASK-YYYY-NNNN for selected Customer/SO]`. Shows tasks that are Completed/In Progress. |
-| Reported By   | Text     | Yes      | —                                 | Name of the person reporting the issue.                                                            |
-| Phone Number  | Text     | Yes      | Valid Phone format                | Contact number for callbacks.                                                                      |
-| Ticket Type   | Dropdown | Yes      | Values from Admin config          | Issue category: `[Complaint - Re-emergence, Complaint - Staff, Query - Billing, Query - Service]`. |
-| Priority      | Dropdown | Yes      | Auto-sets based on Type, editable | Drives the SLA timer: `[Normal, High, Urgent, Critical]`.                                          |
-| Subject       | Text     | Yes      | Max 100 chars                     | Short summary of the issue.                                                                        |
-| Description   | Textarea | Yes      | Max 1000 chars                    | Full details of the complaint.                                                                     |
-| Expected Date | Date     | Yes      | Cannot be past date               | Manager manually asserts proper resolution date.                                                   |
-| Expected Time | Time     | Yes      | —                                 | Manager manually asserts proper resolution time.                                                   |
-| Attachments   | File     | No       | Max 5 files, 5MB each             | Image/PDF evidence of the issue.                                                                   |
+| Reported By   | Text     | Yes      | —                                 | Name of the person reporting the issue.                                                                                                       |
+| Phone Number  | Text     | Yes      | Valid Phone format                | Contact number for callbacks.                                                                                                                 |
+| Ticket Type   | Dropdown | Yes      | Values from Admin config          | Issue category: `[Complaint - Re-emergence, Complaint - Staff, Query - Billing, Query - Service]`.                                            |
+| Priority      | Dropdown | Yes      | Auto-sets based on Type, editable | Drives the SLA timer: `[Normal, High, Urgent, Critical]`.                                                                                     |
+| Subject       | Text     | Yes      | Max 100 chars                     | Short summary of the issue.                                                                                                                   |
+| Description   | Textarea | Yes      | Max 1000 chars                    | Full details of the complaint.                                                                                                                |
+| Expected Date | Date     | Yes      | Cannot be past date               | Manager manually asserts proper resolution date.                                                                                              |
+| Expected Time | Time     | Yes      | —                                 | Manager manually asserts proper resolution time.                                                                                              |
+| Attachments   | File     | No       | Max 5 files, 5MB each             | Image/PDF evidence of the issue.                                                                                                              |
 
 ---
 
@@ -1425,32 +1545,65 @@ The core workspace for Support Agents. It presents the entire context of the tic
 
 ---
 
-## Screen Components
+### Ticket Header
 
-| Component         | Description                                                                   |
-| ----------------- | ----------------------------------------------------------------------------- |
-| **SLA & Status**  | Live updates of the dual-timers. Flags if the SLA has escalated to L1/L2/L3.  |
-| **Actions Menu**  | Direct triggers for popups covering Assignment, Task mapping, and Resolution. |
-| **Activity Line** | Immutable audit log of all status changes, notes, calls, and task creations.  |
+| Field Name        | Description                                           |
+| ----------------- | ----------------------------------------------------- |
+| Back to Dashboard | Navigates user back to the main dashboard             |
+| Ticket ID         | Unique identifier of the ticket                       |
+| Print / PDF       | Generates printable or downloadable version of ticket |
 
----
 
-## Ticket Details (Read-Only)
+### Ticket Summary
 
-| Field       | Type    | Description                                                     |
-| ----------- | ------- | --------------------------------------------------------------- |
-| Subject     | Display | **[Auto-fetched]** Short description of the issue.              |
-| Customer    | Display | **[Auto-fetched]** Customer name (from Module 18).              |
-| SO No       | Link    | **[Auto-fetched]** Linked Sales Order.                          |
-| Task ID     | Link    | **[Auto-fetched]** Linked Module 21 Task ID.                    |
-| Type        | Display | **[Auto-fetched]** Complaint / Request / Inquiry.               |
-| Created     | Display | **[System-generated]** Timestamp of ticket creation.            |
-| Caller      | Display | **[Auto-fetched]** Contact person and number.                   |
-| Description | Text    | **[Auto-fetched]** Full issue details.                          |
-| Status      | Badge   | **[System-driven]** Current ticket status.                      |
-| Priority    | Badge   | **[System-driven]** Priority level (determines SLA).            |
-| Assigned To | Display | **[Auto-fetched]** Current Support Agent handling the ticket.   |
-| Esc. Lvl    | Badge   | **[System-driven]** Current Escalation Level (L1/L2/L3).        |
+| Field Name          | Description                                        |
+| ------------------- | -------------------------------------------------- |
+| Subject             | Short title describing the issue                   |
+| Customer            | Name of the customer associated with the ticket    |
+| SO No               | Reference number of the related sales order        |
+| Task ID             | Linked task created from the ticket                |
+| Type                | Category of the ticket (Complaint, Service, Query) |
+| Created Date & Time | Date and time when the ticket was created          |
+| Caller Name & Phone | Contact person who raised the issue                |
+| Description         | Detailed explanation of the issue                  |
+
+
+### SLA & Status
+
+| Field Name       | Description                                             |
+| ---------------- | ------------------------------------------------------- |
+| Status           | Current state of the ticket                             |
+| Priority         | Urgency level of the ticket                             |
+| Assigned To      | Support agent responsible for the ticket                |
+| Response SLA     | Indicates if response time target was met               |
+| Resolution SLA   | Indicates if resolution time target was met or breached |
+| Escalation Level | Current escalation stage based on SLA                   |
+
+
+### Actions
+
+| Field Name        | Description                             |
+| ----------------- | --------------------------------------- |
+| Assign / Reassign | Assigns or changes the responsible user |
+| Add Note / Reply  | Adds internal notes or replies          |
+| Convert to Task   | Converts the ticket into a task         |
+| Pause Ticket      | Temporarily pauses the ticket           |
+| Mark Resolved     | Marks the issue as resolved             |
+| Close Ticket      | Closes the ticket permanently           |
+
+
+### Activity Timeline
+
+| Field Name           | Description                                |
+| -------------------- | ------------------------------------------ |
+| Timestamp            | Time when the activity occurred            |
+| Activity Icon        | Visual indicator of activity type          |
+| Activity Description | Details of the activity performed          |
+| User/System          | Indicates who performed the action         |
+| Tags                 | Labels like internal note or system update |
+
+
+
 
 ---
 
@@ -1600,10 +1753,10 @@ Fired by the Support Agent or Manager as the final, immutable step to permanentl
 
 ## Screen Logic & Validation
 
-| Field            | Type     | Required | Description                                                         |
-| ---------------- | -------- | -------- | ------------------------------------------------------------------- |
-| Close Reason     | Dropdown | Yes      | Standardized categorical reason for closing the ticket permanently. |
-| Closure Remarks  | Textarea | Yes      | Final notes wrapping up the entire ticket lifecycle.                |
+| Field           | Type     | Required | Description                                                         |
+| --------------- | -------- | -------- | ------------------------------------------------------------------- |
+| Close Reason    | Dropdown | Yes      | Standardized categorical reason for closing the ticket permanently. |
+| Closure Remarks | Textarea | Yes      | Final notes wrapping up the entire ticket lifecycle.                |
 
 ---
 
@@ -1995,11 +2148,11 @@ Form for employees to submit a new petty cash expense claim. Captures expense de
 
 ## Section 2: Supporting Documents Fields
 
-| Field              | Type        | Required | Validation                              | Description                         |
-| ------------------ | ----------- | -------- | --------------------------------------- | ----------------------------------- |
-| Bill / Receipt     | File Upload | Yes      | Min 1 file; PDF, JPG, PNG; Max 5MB each | Proof of expense (up to 5 files)    |
-| Upload More         | Button     | Yes      | Min 1 file; PDF, JPG, PNG; Max 5MB each | Can be add more file when 1 file is already uploaded (up to 5 files)       |
-| Justification Note | Textarea    | No       | Max 500 chars                           | Additional context for the approver |
+| Field              | Type        | Required | Validation                              | Description                                                          |
+| ------------------ | ----------- | -------- | --------------------------------------- | -------------------------------------------------------------------- |
+| Bill / Receipt     | File Upload | Yes      | Min 1 file; PDF, JPG, PNG; Max 5MB each | Proof of expense (up to 5 files)                                     |
+| Upload More        | Button      | Yes      | Min 1 file; PDF, JPG, PNG; Max 5MB each | Can be add more file when 1 file is already uploaded (up to 5 files) |
+| Justification Note | Textarea    | No       | Max 500 chars                           | Additional context for the approver                                  |
 
 ---
 
@@ -2161,37 +2314,37 @@ Read-only detail screen showing the complete breakdown of a petty cash request. 
 
 ## View-Only Fields
 
-| Field            | Type     | Description                                                          |
-| ---------------- | -------- | -------------------------------------------------------------------- |
-| Request ID       | Display  | **[System-generated]** Unique request ID                             |
-| Status           | Badge    | **[System-driven]** Current lifecycle status                         |
-| Category         | Display  | **[Auto-fetched]** Expense category                                  |
-| Expense Date     | Date     | **[Auto-fetched]** Expense date range (From – To)                    |
-| Amount (₹)       | Currency | **[Auto-fetched]** Claimed amount                                    |
-| Description      | Text     | **[Auto-fetched]** Expense description                               |
-| Related Task     | Link     | **[Auto-fetched]** Task reference (navigates to Module 21)           |
-| Related SO       | Link     | **[Auto-fetched]** Sales Order reference (navigates to Module 20)    |
-| Bills / Receipts | File     | **[Auto-fetched]** Click to view/download uploaded documents         |
-| Justification    | Text     | **[Auto-fetched]** Context for the expense                           |
-| Payment Mode     | Display  | **[Auto-fetched]** Bank Transfer / UPI (from Section 3)              |
-| Account Holder   | Display  | **[Auto-fetched]** Name on account                                   |
-| Bank Name        | Display  | **[Auto-fetched]** Employee's bank                                   |
-| Account Number   | Display  | **[Auto-fetched]** Bank account number                               |
-| IFSC Code        | Display  | **[Auto-fetched]** Bank branch IFSC code                             |
-| Pre-Approved?    | Badge    | **[Auto-fetched]** Yes / No (from Section 4)                         |
-| Approval Status  | Badge    | **[System-driven]** Pending / Approved / Rejected / Returned         |
-| Reviewed By      | Display  | **[Auto-fetched]** Name of the reviewing manager                     |
-| Review Date      | Date     | **[Auto-fetched]** When the review was performed                     |
-| Approved Amount  | Currency | **[Auto-fetched]** Amount approved (may differ from requested)       |
-| Reviewer Remarks | Text     | **[Auto-fetched]** Notes from the approver                           |
-| Payment Status   | Badge    | **[System-driven]** Not Processed / Processed                        |
-| Payment Mode     | Display  | **[Auto-fetched]** Actual mode used for payment (from Finance)       |
-| Transaction Ref  | Display  | **[Auto-fetched]** Payment transaction reference (after payment)     |
-| Payment Date     | Date     | **[Auto-fetched]** When payment was made                             |
-| Submitted By     | Display  | **[Auto-fetched]** Name and role of requester                        |
-| Submitted Date   | DateTime | **[System-captured]** When the request was submitted                 |
-| Branch name      | Display  | **[Auto-fetched]** Requester's branch                                |
-| Sent To          | Display  | **[Auto-fetched]** Recipients of the request                         |
+| Field            | Type     | Description                                                       |
+| ---------------- | -------- | ----------------------------------------------------------------- |
+| Request ID       | Display  | **[System-generated]** Unique request ID                          |
+| Status           | Badge    | **[System-driven]** Current lifecycle status                      |
+| Category         | Display  | **[Auto-fetched]** Expense category                               |
+| Expense Date     | Date     | **[Auto-fetched]** Expense date range (From – To)                 |
+| Amount (₹)       | Currency | **[Auto-fetched]** Claimed amount                                 |
+| Description      | Text     | **[Auto-fetched]** Expense description                            |
+| Related Task     | Link     | **[Auto-fetched]** Task reference (navigates to Module 21)        |
+| Related SO       | Link     | **[Auto-fetched]** Sales Order reference (navigates to Module 20) |
+| Bills / Receipts | File     | **[Auto-fetched]** Click to view/download uploaded documents      |
+| Justification    | Text     | **[Auto-fetched]** Context for the expense                        |
+| Payment Mode     | Display  | **[Auto-fetched]** Bank Transfer / UPI (from Section 3)           |
+| Account Holder   | Display  | **[Auto-fetched]** Name on account                                |
+| Bank Name        | Display  | **[Auto-fetched]** Employee's bank                                |
+| Account Number   | Display  | **[Auto-fetched]** Bank account number                            |
+| IFSC Code        | Display  | **[Auto-fetched]** Bank branch IFSC code                          |
+| Pre-Approved?    | Badge    | **[Auto-fetched]** Yes / No (from Section 4)                      |
+| Approval Status  | Badge    | **[System-driven]** Pending / Approved / Rejected / Returned      |
+| Reviewed By      | Display  | **[Auto-fetched]** Name of the reviewing manager                  |
+| Review Date      | Date     | **[Auto-fetched]** When the review was performed                  |
+| Approved Amount  | Currency | **[Auto-fetched]** Amount approved (may differ from requested)    |
+| Reviewer Remarks | Text     | **[Auto-fetched]** Notes from the approver                        |
+| Payment Status   | Badge    | **[System-driven]** Not Processed / Processed                     |
+| Payment Mode     | Display  | **[Auto-fetched]** Actual mode used for payment (from Finance)    |
+| Transaction Ref  | Display  | **[Auto-fetched]** Payment transaction reference (after payment)  |
+| Payment Date     | Date     | **[Auto-fetched]** When payment was made                          |
+| Submitted By     | Display  | **[Auto-fetched]** Name and role of requester                     |
+| Submitted Date   | DateTime | **[System-captured]** When the request was submitted              |
+| Branch name      | Display  | **[Auto-fetched]** Requester's branch                             |
+| Sent To          | Display  | **[Auto-fetched]** Recipients of the request                      |
 
 ---
 
@@ -2377,20 +2530,20 @@ Dedicated approval screen for managers and supervisors to review a petty cash re
 
 ## Request Details (Read-Only)
 
-| Field          | Type     | Description                                             |
-| -------------- | -------- | ------------------------------------------------------- |
-| Request ID     | Display  | **[Auto-fetched]** Unique request reference             |
-| Employee       | Display  | **[Auto-fetched]** Name, role of requesting employee    |
-| Branch         | Display  | **[Auto-fetched]** Employee's branch                    |
-| Submitted On   | DateTime | **[Auto-fetched]** When the request was submitted       |
-| Category       | Display  | **[Auto-fetched]** Expense category                     |
-| Expense Date   | Date     | **[Auto-fetched]** Expense date range (From – To)       |
-| Amount (₹)     | Currency | **[Auto-fetched]** Claimed amount                       |
-| Description    | Text     | **[Auto-fetched]** Expense description                  |
-| Related Task   | Link     | **[Auto-fetched]** Task reference (if linked)           |
-| Related SO     | Link     | **[Auto-fetched]** SO reference (if linked)             |
-| Prior Approval | Display  | **[Auto-fetched]** Yes/No + approver name if Yes        |
-| Bills/Receipts | Files    | **[Auto-fetched]** Clickable document links             |
+| Field          | Type     | Description                                          |
+| -------------- | -------- | ---------------------------------------------------- |
+| Request ID     | Display  | **[Auto-fetched]** Unique request reference          |
+| Employee       | Display  | **[Auto-fetched]** Name, role of requesting employee |
+| Branch         | Display  | **[Auto-fetched]** Employee's branch                 |
+| Submitted On   | DateTime | **[Auto-fetched]** When the request was submitted    |
+| Category       | Display  | **[Auto-fetched]** Expense category                  |
+| Expense Date   | Date     | **[Auto-fetched]** Expense date range (From – To)    |
+| Amount (₹)     | Currency | **[Auto-fetched]** Claimed amount                    |
+| Description    | Text     | **[Auto-fetched]** Expense description               |
+| Related Task   | Link     | **[Auto-fetched]** Task reference (if linked)        |
+| Related SO     | Link     | **[Auto-fetched]** SO reference (if linked)          |
+| Prior Approval | Display  | **[Auto-fetched]** Yes/No + approver name if Yes     |
+| Bills/Receipts | Files    | **[Auto-fetched]** Clickable document links          |
 
 ---
 
@@ -2497,17 +2650,17 @@ Finance team form to process payment for approved petty cash requests. Captures 
 
 ## Approved Request Summary (Read-Only)
 
-| Field            | Type     | Description                                           |
-| ---------------- | -------- | ----------------------------------------------------- |
-| Request ID       | Display  | **[Auto-fetched]** Unique request reference           |
-| Employee         | Display  | **[Auto-fetched]** Employee name and role             |
-| Branch           | Display  | **[Auto-fetched]** Employee's branch                  |
-| Category         | Display  | **[Auto-fetched]** Expense type                       |
-| Expense Date     | Date     | **[Auto-fetched]** Expense date range (From – To)     |
-| Requested Amount | Currency | **[Auto-fetched]** Original claimed amount            |
-| Approved Amount  | Currency | **[Auto-fetched]** Amount approved by manager         |
-| Approved By      | Display  | **[Auto-fetched]** Name of the approving manager      |
-| Approved On      | DateTime | **[Auto-fetched]** Date/time of approval              |
+| Field            | Type     | Description                                       |
+| ---------------- | -------- | ------------------------------------------------- |
+| Request ID       | Display  | **[Auto-fetched]** Unique request reference       |
+| Employee         | Display  | **[Auto-fetched]** Employee name and role         |
+| Branch           | Display  | **[Auto-fetched]** Employee's branch              |
+| Category         | Display  | **[Auto-fetched]** Expense type                   |
+| Expense Date     | Date     | **[Auto-fetched]** Expense date range (From – To) |
+| Requested Amount | Currency | **[Auto-fetched]** Original claimed amount        |
+| Approved Amount  | Currency | **[Auto-fetched]** Amount approved by manager     |
+| Approved By      | Display  | **[Auto-fetched]** Name of the approving manager  |
+| Approved On      | DateTime | **[Auto-fetched]** Date/time of approval          |
 
 ---
 
@@ -2627,3 +2780,1863 @@ Finance team form to process payment for approved petty cash requests. Captures 
 ---
 
 ================================================================================
+
+# 🎯 MODULE 25: HRM (HUMAN RESOURCE MANAGEMENT)
+
+## Overview
+
+HRM module manages Employee Data, Salary, Attendance, and Leave Management within the ERP system. It acts as a central hub for HR operations — providing a unified view of employee records, enabling month-wise salary management, tracking attendance via calendar integration with Task Management, and handling leave applications with approval workflows.
+
+**Module Connections:**
+
+- **Depends on:** Module 6 (Role Salary & Leave Configuration — role-wise salary structure, incentive config, statutory deductions, leave policy — **PRIMARY CONFIG SOURCE**), Module 8 (Employee Details — employee-level overrides of Module 6 defaults), Module 21 (Task Management — attendance integration via task execution logs), Module 7 (Branch), Module 5 (Roles)
+- **Used by:** Payroll processing, Attendance reports, Leave balance tracking, Management dashboards
+- **Role-Based Access:** Admin / HR roles have full access; Employees can submit leave requests via application
+
+**Dynamic Configuration Flow:**
+```
+Module 6 (Role Config)          Module 8 (Employee Creation)       Module 25 (HRM)
+─────────────────────           ────────────────────────────       ──────────────────
+Admin defines role-wise    →    Role selected → System auto-  →   Salary View auto-fetches
+salary structure, incentive      fetches Module 6 config →         employee's salary config
+config, statutory deductions,    Admin can OVERRIDE per             (from Mod 8, which inherited
+leave policy (CL/SL/PL),        employee → Saved to Employee       from Mod 6). HR can further
+carry forward, approval          record                             edit month-by-month.
+authority, reset cycle
+```
+
+> **Key Principle:** Module 6 sets **role-level defaults**. Module 8 allows **employee-level overrides**. Module 25 uses the **final employee-level values** for month-wise salary processing, attendance tracking, and leave management.
+
+---
+
+The module contains the following screens:
+
+- 25.1 Tab 1: Employee Management (Table View)
+- 25.2 Salary View (Per Employee)
+- 25.2.1 Salary Upload via Excel/CSV
+- 25.3 Attendance View (Per Employee — Calendar)
+- 25.3.1 Attendance Day Popup (View/Edit)
+- 25.3.2 Attendance Upload via Excel/CSV
+- 25.4 Leave Entry Form (Per Employee)
+- 25.5 Tab 2: Leave Requests (All Requests Dashboard)
+- 25.5.1 Leave Request Action Popup
+
+---
+
+================================================================================
+
+# 25.1 Tab 1: Employee Management
+
+**Description:**
+Default landing screen displaying all employees in a table view. Reuses employee fields from Module 8 (Employee Details) with three additional action columns — Salary, Attendance, and Leave — that open detailed sub-screens for each employee.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     HRM - HUMAN RESOURCE MANAGEMENT                          │
+│                                                                              │
+│  [Tab 1: Employee Management ●]           [Tab 2: Leave Requests]           │
+│                                                                              │
+│  ┌─ FILTERS ──────────────────────────────────────────────────────────────┐  │
+│  │ Branch      : [▼ All Branches ▼]       Department : [▼ Dropdown ▼]    │  │
+│  │ Designation : [▼ Dropdown ▼]           Role       : [▼ Dropdown ▼]    │  │
+│  │ Reporting Manager : [🔍 Searchable ▼]                                  │  │
+│  │ Status      : [▼ All / Active / Inactive ▼]                            │  │
+│  │ Created Date: [📅 From] — [📅 To]                                      │  │
+│  │                                                        [Reset Filters] │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  Search: [🔍 Employee ID / Name / Email / Contact Number_______________]    │
+│                                                                              │
+│  EMPLOYEE TABLE                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Emp ID│Employee Name│Email ID│Contact No│Designation│Department│Role     ││
+│  │──────┼─────────────┼────────┼──────────┼───────────┼──────────┼─────────││
+│  │EMP01 │John Doe     │j@..    │9876....  │Manager    │Sales     │Admin    ││
+│  │EMP02 │Jane Smith   │js@..   │9987....  │Technician │Operations│Staff    ││
+│  │EMP03 │Rahul Patel  │rp@..   │9765....  │Executive  │HR        │User     ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Branch│Reporting Manager│Status│Created Date│Salary│Attendance│Leave    ││
+│  │──────┼─────────────────┼──────┼────────────┼──────┼──────────┼─────────││
+│  │HSR   │Suraj Sharma     │Active│24-Jan-2026 │[💰]  │[📅]      │[🏖️]    ││
+│  │BTM   │Rohit Mehta      │Active│21-Jan-2026 │[💰]  │[📅]      │[🏖️]    ││
+│  │Indira│Anil Kumar       │Inact.│20-Jan-2026 │[💰]  │[📅]      │[🏖️]    ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  Pagination:  Previous   1   2   3   ...   10   Next                        │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Employee Table Fields (Reused from Module 8)
+
+| Field             | Type    | Source   | Notes                      |
+| ----------------- | ------- | -------- | -------------------------- |
+| Emp ID            | Text    | Mod 8    | Unique employee identifier |
+| Employee Name     | Text    | Mod 8    | Full name                  |
+| Email ID          | Email   | Mod 8    | Employee email             |
+| Contact Number    | Phone   | Mod 8    | Employee mobile            |
+| Designation       | Text    | Mod 8    | Job title                  |
+| Department        | Text    | Mod 8    | Employee department        |
+| Role              | Text    | Mod 8    | System role assigned       |
+| Branch            | Text    | Mod 8    | Assigned branch            |
+| Reporting Manager | Text    | Mod 8    | Direct reporting manager   |
+| Status            | Badge   | Mod 8    | Active / Inactive          |
+| Created Date      | Date    | Mod 8    | Employee creation date     |
+
+## HRM-Specific Action Columns
+
+| Column     | Type   | Action                                      |
+| ---------- | ------ | ------------------------------------------- |
+| Salary     | Button | Opens Salary View (Screen 25.2)             |
+| Attendance | Button | Opens Attendance Calendar View (Screen 25.3)|
+| Leave      | Button | Opens Leave Entry Form (Screen 25.4)        |
+
+---
+
+## Filters (Same as Module 8)
+
+| Filter             | Type         | Required | Description                                |
+| ------------------ | ------------ | -------- | ------------------------------------------ |
+| Branch             | Multi-select | No       | Filter employees by assigned branch        |
+| Department         | Dropdown     | No       | Filter by department                       |
+| Designation        | Dropdown     | No       | Filter by designation                      |
+| Role               | Dropdown     | No       | Filter by system role                      |
+| Reporting Manager  | Searchable   | No       | Filter by reporting manager                |
+| Status             | Dropdown     | No       | Active / Inactive                          |
+| Created Date Range | Date Range   | No       | Filter employees created within date range |
+
+---
+
+## Search
+
+| Field         | Type | Description                                        |
+| ------------- | ---- | -------------------------------------------------- |
+| Global Search | Text | Search by Employee ID, Name, Email, Contact Number |
+
+---
+
+## System Behaviour
+
+| Event         | System Response                         |
+| ------------- | --------------------------------------- |
+| Apply Filters | Table refreshes with filtered results   |
+| Search        | Filters records based on search keyword |
+| Click Salary  | Opens Salary View for that employee     |
+| Click Attend. | Opens Attendance Calendar for employee  |
+| Click Leave   | Opens Leave Entry Form for employee     |
+
+---
+
+================================================================================
+
+# 25.2 Salary View (Per Employee)
+
+**Description:**
+Detailed salary view for a specific employee. Displays month-wise salary breakdown with editable components, payment status tracking, and salary slip download. Accessible via Salary button in the Employee Management table.
+
+**Dynamic Data Source:** Salary components are auto-fetched from the employee record (Module 8 Step 3), which itself inherits defaults from the Role Configuration (Module 6 Step 2). HR can override any value month-by-month in this view. The Salary Type (CTC / Fixed / Hourly), Incentive Configuration, and Statutory Deduction applicability are all driven by the role config.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to Employee List]        SALARY: EMP01 — John Doe                  │
+│                                   Role: Sales Manager                        │
+│                                                                              │
+│  ┌─ MONTH FILTER ────────────────────────────────────────────────────────┐  │
+│  │ Month : [▼ March ▼]    Year : [▼ 2026 ▼]         [Apply]            │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ─── SALARY INFO (Auto from Module 6 → Module 8) ───────────────────────  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Salary Type     : CTC  (from Role Config — Mod 6 Step 2)               ││
+│  │ Salary Eff From : 01-Jan-2026     Salary Eff To : 31-Dec-2026          ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  ─── SALARY BREAKDOWN (March 2026) ──────────────────────────────────────  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Component              │ Type        │ Amount (₹)                       ││
+│  │────────────────────────┼─────────────┼──────────────────────────────────││
+│  │ EARNINGS                                                                ││
+│  │ Basic Salary           │ Fixed       │ [₹ 25,000____]                   ││
+│  │ HRA                    │ Fixed       │ [₹ 10,000____]                   ││
+│  │ Other Allowance        │ Fixed       │ [₹  5,000____]                   ││
+│  │ Incentive              │ Variable    │ [₹  3,000____]                   ││
+│  │ Deductions (General)   │ Fixed       │ [₹  2,000____]                   ││
+│  │────────────────────────┼─────────────┼──────────────────────────────────││
+│  │ STATUTORY DEDUCTIONS (shown only if applicable — from Mod 6 config)     ││
+│  │ PF                     │ Statutory   │ [₹  3,000____]  ☑ Applicable    ││
+│  │ ESI                    │ Statutory   │ [₹    750____]  ☑ Applicable    ││
+│  │ TDS                    │ Statutory   │ [₹  2,000____]  ☑ Applicable    ││
+│  │ Other Deductions       │ Variable    │ [₹      0____]                   ││
+│  │────────────────────────┼─────────────┼──────────────────────────────────││
+│  │ **GROSS SALARY**       │ Auto        │ ₹ 43,000                         ││
+│  │ **TOTAL DEDUCTIONS**   │ Auto        │ ₹  7,750                         ││
+│  │ **NET SALARY**         │ Auto        │ ₹ 35,250                         ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  ─── INCENTIVE CONFIGURATION (Dynamic — from Module 6 Step 2) ───────────  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Holiday Work Incentive : ☑ Applicable                                   ││
+│  │   • Type               : Fixed                                          ││
+│  │   • Amount             : [₹ 500____]                                    ││
+│  │                                                                          ││
+│  │ Overtime               : ☑ Applicable                                   ││
+│  │   • Type               : Per Hour                                       ││
+│  │   • Shift Type         : Night Shift                                    ││
+│  │   • Shift Incentive    : [₹ ____]                                       ││
+│  │   • Per Hour Pay       : [₹ 150____]                                    ││
+│  │   • Max OT Hours/Month : 40                                             ││
+│  │                                                                          ││
+│  │ OT Hours This Month    : [____] hrs     OT Amount: ₹ ____ (auto-calc)  ││
+│  │ Holiday Days Worked    : [____] days    Holiday Amt: ₹ ____ (auto-calc) ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  ─── STATUS ─────────────────────────────────────────────────────────────  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Payment Status  : [▼ Unpaid ▼]  (Paid / Unpaid / Due)                  ││
+│  │ Reason          : [Late joining — prorated salary________________]      ││
+│  │ Payment Date    : [📅 ________]  (Auto-filled when marked Paid)         ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  [💾 Save Changes]  [✅ Mark as Paid]  [📄 Download Salary Slip]            │
+│  [📤 Upload Salary Data]                                                     │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Salary Info Fields (Read-only — from Module 6 → Module 8)
+
+| Field             | Type     | Source   | Description                                        |
+| ----------------- | -------- | -------- | -------------------------------------------------- |
+| Salary Type       | Display  | Mod 6 S2 | CTC / Fixed / Hourly (from Role Config)            |
+| Salary Eff. From  | Display  | Mod 6 S2 | Salary rule start date                             |
+| Salary Eff. To    | Display  | Mod 6 S2 | Salary rule end date (optional)                    |
+
+> These fields are **read-only** in Module 25. They are configured in Module 6 (Step 2) and inherited via Module 8.
+
+---
+
+## Salary Component Fields (Editable per Month)
+
+| Field            | Type     | Required | Source          | Description                          |
+| ---------------- | -------- | -------- | --------------- | ------------------------------------ |
+| Basic Salary     | Currency | Yes      | Mod 6 S2→Mod 8  | Base salary (role default, editable) |
+| HRA              | Currency | No       | Mod 6 S2→Mod 8  | House Rent Allowance                 |
+| Other Allowance  | Currency | No       | Mod 6 S2→Mod 8  | Additional allowances                |
+| Incentive        | Currency | No       | Mod 6 S2→Mod 8  | Performance incentive                |
+| Deductions (Gen.)| Currency | No       | Mod 6 S2→Mod 8  | Standard deductions from role config |
+| Other Deductions | Currency | No       | HRM (Mod 25)    | Additional month-specific deductions |
+| Gross Salary     | Currency | Auto     | Calculated      | Sum of all earnings                  |
+| Total Deductions | Currency | Auto     | Calculated      | Sum of all deductions + statutory    |
+| Net Salary       | Currency | Auto     | Calculated      | Gross − Total Deductions             |
+
+---
+
+## Statutory Deductions (Conditional — from Module 6 Step 2)
+
+> These fields are **shown only if the corresponding checkbox is marked as applicable** in Module 6 Step 2 role configuration. If not applicable for the employee's role, the row is hidden.
+
+| Field          | Type     | Required    | Source   | Shown When              |
+| -------------- | -------- | ----------- | -------- | ----------------------- |
+| PF Deduction   | Currency | Conditional | Mod 6 S2 | PF Applicable = ☑ Yes   |
+| ESI Deduction  | Currency | Conditional | Mod 6 S2 | ESI Applicable = ☑ Yes  |
+| TDS Deduction  | Currency | Conditional | Mod 6 S2 | TDS Applicable = ☑ Yes  |
+
+---
+
+## Incentive Configuration (Dynamic — from Module 6 Step 2)
+
+> Incentive fields are **shown only if the corresponding incentive type is marked as applicable** in Module 6 Step 2. HR can edit the monthly values (OT hours, holiday days worked).
+
+| Field                             | Type     | Required    | Source          | Description                              |
+| --------------------------------- | -------- | ----------- | --------------- | ---------------------------------------- |
+| Holiday Work Incentive Applicable | Display  | Auto        | Mod 6 S2        | Yes/No (from role config)                |
+| Holiday Work Incentive Type       | Display  | Auto        | Mod 6 S2        | Fixed / Per Day / Per Hour               |
+| Holiday Work Incentive Amount     | Currency | Auto        | Mod 6 S2        | Default amount from role config          |
+| Holiday Days Worked (this month)  | Number   | Cond.       | HRM (Mod 25)    | HR enters actual holiday days worked     |
+| Holiday Incentive Amount          | Currency | Auto        | Calculated      | Days × Amount (auto-calculated)          |
+| Overtime Applicable               | Display  | Auto        | Mod 6 S2        | Yes/No (from role config)                |
+| Overtime Type                     | Display  | Auto        | Mod 6 S2        | Per Hour / Per Shift                     |
+| Overtime Shift Type               | Display  | Auto        | Mod 6 S2        | Shift description                        |
+| Overtime Shift Incentive          | Currency | Auto        | Mod 6 S2        | Shift incentive amount                   |
+| Per Hour Pay                      | Currency | Auto        | Mod 6 S2        | Hourly overtime rate                     |
+| Max OT Hours/Month                | Number   | Auto        | Mod 6 S2        | Monthly OT limit from role config        |
+| OT Hours This Month               | Number   | Cond.       | HRM (Mod 25)    | HR enters actual OT hours worked         |
+| OT Amount                         | Currency | Auto        | Calculated      | Hours × Per Hour Pay (auto-calculated)   |
+
+> **Final Net Salary Calculation:**
+> `Net Salary = (Basic + HRA + Allowance + Incentive + Holiday Incentive Amt + OT Amount) − (Deductions + PF + ESI + TDS + Other Deductions)`
+
+> **Note:** Initial salary values are auto-fetched from the employee record (Module 8 Step 3), which itself inherits defaults from Role Configuration (Module 6 Step 2). HR can override any editable value month-by-month. Read-only config fields (Salary Type, Statutory applicability, Incentive applicability) can only be changed via Module 6.
+
+---
+
+## Status Fields
+
+| Field          | Type     | Required | Options / Validation                    |
+| -------------- | -------- | -------- | --------------------------------------- |
+| Payment Status | Dropdown | Yes      | Paid / Unpaid / Due                     |
+| Reason         | Textarea | Cond.    | Required when status = Unpaid or Due    |
+| Payment Date   | Date     | Cond.    | Auto-filled on "Mark as Paid"; editable |
+
+---
+
+## Form Actions
+
+| Action                 | Condition       | Description                                  |
+| ---------------------- | --------------- | -------------------------------------------- |
+| **Save Changes**       | Always          | Saves edited salary components and status    |
+| **Mark as Paid**       | Status ≠ Paid   | Sets status to Paid, records payment date    |
+| **Download Salary Slip** | Status = Paid | Downloads PDF salary slip for selected month |
+| **Upload Salary Data** | Always          | Opens Upload Popup (Screen 25.2.1)           |
+
+---
+
+## Validation Rules
+
+| Field          | Rule                                              |
+| -------------- | ------------------------------------------------- |
+| Basic Salary   | Required, numeric, minimum 0                      |
+| All amounts    | Numeric, minimum 0                                |
+| Net Salary     | Auto-calculated, cannot be negative               |
+| Payment Status | Required                                          |
+| Reason         | Required if status = Unpaid or Due, min 10 chars  |
+| Salary Slip    | Download enabled only when status = Paid          |
+
+---
+
+================================================================================
+
+# 25.2.1 Salary Upload via Excel/CSV
+
+**Description:**
+Popup modal for bulk uploading salary data via Excel/CSV file. Provides a sample template download for reference.
+
+---
+
+## Popup Layout
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│                  UPLOAD SALARY DATA                  [X Close] │
+│                                                               │
+│  Upload salary data for multiple employees at once.          │
+│                                                               │
+│  ┌───────────────────────────────────────────────────────┐   │
+│  │                                                       │   │
+│  │       📁 Drag & Drop file here                       │   │
+│  │       or [Browse Files]                              │   │
+│  │                                                       │   │
+│  │       Supported: .xlsx, .xls, .csv                   │   │
+│  │       Max size: 10MB                                 │   │
+│  │                                                       │   │
+│  └───────────────────────────────────────────────────────┘   │
+│                                                               │
+│  📥 Download Sample Excel Sheet                              │
+│                                                               │
+│  Selected File: salary_march_2026.xlsx  ✅                    │
+│                                                               │
+│                    [Cancel]    [Upload & Process]             │
+└───────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Upload Fields
+
+| Field               | Type        | Required | Validation                        |
+| ------------------- | ----------- | -------- | --------------------------------- |
+| File Upload         | File Picker | Yes      | .xlsx / .xls / .csv, max 10MB    |
+| Download Sample     | Link/Button | —        | Downloads pre-formatted template  |
+
+> [!IMPORTANT]
+> To ensure correct data processing and avoid system errors, always **Download the Sample Excel Sheet** and enter your data into that pre-formatted template before uploading.
+
+---
+## Sample Excel Columns
+
+| Column             | Description                              |
+| ------------------ | ---------------------------------------- |
+| Emp ID             | Employee ID (must exist)                 |
+| Month              | Salary month (e.g., Mar-2026)            |
+| Basic Salary       | Basic pay amount                         |
+| HRA                | House Rent Allowance                     |
+| Other Allowance    | Additional allowances                    |
+| Incentive          | Incentive amount                         |
+| Deductions         | General deductions                       |
+| PF                 | PF deduction (if applicable)             |
+| ESI                | ESI deduction (if applicable)            |
+| TDS                | TDS deduction (if applicable)            |
+| Other Deductions   | Other deduction amount                   |
+| OT Hours           | Overtime hours worked (if applicable)    |
+| Holiday Days Worked| Holiday days worked (if applicable)      |
+| Payment Status     | Paid / Unpaid / Due                      |
+| Reason             | Reason (if Unpaid/Due)                   |
+
+## System Behaviour
+
+| Event              | Response                                          |
+| ------------------ | ------------------------------------------------- |
+| Upload & Process   | Validates file → shows preview → confirms import  |
+| Invalid Emp ID     | Row flagged with error; skipped                   |
+| Duplicate month    | Warning: existing data will be overwritten         |
+| Success            | Toast: "X records imported successfully"          |
+
+---
+
+================================================================================
+
+# 25.3 Attendance View (Per Employee — Calendar)
+
+**Description:**
+Calendar-based attendance view for a specific employee. Integrates data from Task Management (Module 21 — task execution logs) and Leave records. Each date cell shows attendance status with colour coding. Clicking a date opens a popup for viewing/editing punch-in/out details.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to Employee List]      ATTENDANCE: EMP01 — John Doe               │
+│                                                                              │
+│  ┌─ MONTH FILTER ────────────────────────────────────────────────────────┐  │
+│  │ Month : [▼ March ▼]    Year : [▼ 2026 ▼]         [Apply]            │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │  [◄ Prev Month]         MARCH 2026          [Next Month ►]           │  │
+│  │                                                                       │  │
+│  │  MON    TUE    WED    THU    FRI    SAT    SUN                        │  │
+│  │  ┌──────┬──────┬──────┬──────┬──────┬──────┬──────┐                   │  │
+│  │  │      │      │      │      │      │      │  1   │                   │  │
+│  │  │      │      │      │      │      │      │ 🟡WO │                   │  │
+│  │  ├──────┼──────┼──────┼──────┼──────┼──────┼──────┤                   │  │
+│  │  │  2   │  3   │  4   │  5   │  6   │  7   │  8   │                   │  │
+│  │  │ 🟢P  │ 🟢P  │ 🟢P  │ 🔴A  │ 🟢P  │ 🟢P  │ 🟡WO │                   │  │
+│  │  ├──────┼──────┼──────┼──────┼──────┼──────┼──────┤                   │  │
+│  │  │  9   │ 10   │ 11   │ 12   │ 13   │ 14   │ 15   │                   │  │
+│  │  │ 🟢P  │ 🟢P  │ 🔵L  │ 🔵L  │ 🟢P  │ HD   │ 🟡WO │                   │  │
+│  │  ├──────┼──────┼──────┼──────┼──────┼──────┼──────┤                   │  │
+│  │  │ 16   │ 17   │ 18   │ 19   │ 20   │ 21   │ 22   │                   │  │
+│  │  │ 🟢P  │ 🟢P  │ 🟢P  │ 🟢P  │ 🟢P  │ 🟢P  │ 🟡WO │                   │  │
+│  │  ├──────┼──────┼──────┼──────┼──────┼──────┼──────┤                   │  │
+│  │  │ 23●  │ 24   │ 25   │ 26   │ 27   │ 28   │ 29   │                   │  │
+│  │  │ 🟢P  │      │      │      │      │      │      │                   │  │
+│  │  └──────┴──────┴──────┴──────┴──────┴──────┴──────┘                   │  │
+│  │                                                                       │  │
+│  │  Legend: 🟢P Present  🔴A Absent  🔵L Leave  🟡WO Week Off  HD Holiday│  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  MONTHLY SUMMARY                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Working Days: 22 │ Present: 18 │ Absent: 1 │ Leave: 2 │ Holiday: 1    ││
+│  │ Week Off: 4      │                                                    ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  [+ Add Manual Entry]    [📤 Upload Attendance Data]                         │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Calendar Filters
+
+| Filter | Type     | Required | Description                                |
+| ------ | -------- | -------- | ------------------------------------------ |
+| Month  | Dropdown | Yes      | Select month to view attendance calendar   |
+| Year   | Dropdown | Yes      | Select year to view attendance calendar    |
+
+---
+
+## Calendar Cell Interaction
+
+| Action              | Result                                                |
+| ------------------- | ----------------------------------------------------- |
+| **Click on a date** | Opens Attendance Day Popup (Screen 25.3.1)            |
+| **Hover on date**   | Tooltip: Punch In/Out times, task count from Mod 21   |
+
+---
+
+## Attendance Status Types
+
+| Status    | Code | Color  | Description                           |
+| --------- | ---- | ------ | ------------------------------------- |
+| Present   | P    | 🟢     | Employee was present                  |
+| Absent    | A    | 🔴     | Employee was absent (no leave/task)   |
+| Leave     | L    | 🔵     | Approved leave for this date          |
+| Week Off  | WO   | 🟡     | Weekly off day (from Module 8 config) |
+| Holiday   | HD   | Grey   | Company holiday                       |
+| Half Day  | HD   | Orange | Half-day attendance                   |
+
+---
+
+## Data Sources for Attendance
+
+| Source                  | Data Pulled                                    |
+| ----------------------- | ---------------------------------------------- |
+| Module 21 (Tasks)       | Task execution logs — Started At, Completed At |
+| Module 25 (Leave)       | Approved leave records → mark as Leave         |
+| Module 8 (Employee)     | Weekly off configuration                       |
+| Manual Entry            | HR manually entered punch-in/out               |
+
+---
+
+## Monthly Summary Fields
+
+| Field            | Type   | Description                                |
+| ---------------- | ------ | ------------------------------------------ |
+| Working Days     | Number | Business days in the month                 |
+| Present          | Number | Days employee was present                  |
+| Absent           | Number | Days absent (unmarked, no leave)           |
+| Leave            | Number | Approved leave days                        |
+| Holiday          | Number | Company holidays                           |
+| Week Off         | Number | Weekly off count                           |
+
+---
+
+## Form Actions
+
+| Action                   | Description                                   |
+| ------------------------ | --------------------------------------------- |
+| **+ Add Manual Entry**   | Opens Attendance Day Popup for manual entry    |
+| **Upload Attendance**    | Opens Upload Popup (Screen 25.3.2)            |
+
+---
+
+================================================================================
+
+# 25.3.1 Attendance Day Popup (View/Edit)
+
+**Description:**
+Popup triggered on clicking any date cell in the attendance calendar. Shows punch-in/out times and allows HR to edit or add attendance data manually.
+
+---
+
+## Popup Layout
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│            ATTENDANCE — 23 March 2026 (Monday)       [X Close]│
+│            Employee: EMP01 — John Doe                         │
+│                                                               │
+│  Status: 🟢 Present                                          │
+│                                                               │
+│  ─── PUNCH DETAILS ───────────────────────────────────────   │
+│  Punch In Time*  : [▼ 09:00 AM ▼]                           │
+│  Punch Out Time* : [▼ 06:30 PM ▼]                           │
+│  Total Hours     : 9h 30m (auto-calculated)                  │
+│                                                               │
+│  ─── TASK INTEGRATION (from Module 21) ───────────────────   │
+│  Tasks Assigned  : 3                                         │
+│  Tasks Completed : 2                                         │
+│  Tasks Pending   : 1                                         │
+│                                                               │
+│  ─── NOTES ───────────────────────────────────────────────   │
+│  Description/Notes : [Field work at client site__________]   │
+│                                                               │
+│                     [Cancel]    [Save]                        │
+└───────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Popup Fields
+
+| Field          | Type     | Required | Validation                        |
+| -------------- | -------- | -------- | --------------------------------- |
+| Date           | Display  | Auto     | Selected date (read-only)         |
+| Employee       | Display  | Auto     | Employee name & ID (read-only)    |
+| Punch In Time  | Time     | Yes      | Must be before Punch Out          |
+| Punch Out Time | Time     | Yes      | Must be after Punch In            |
+| Total Hours    | Display  | Auto     | Punch Out − Punch In              |
+| Tasks Assigned | Display  | Auto     | Count from Module 21              |
+| Tasks Completed| Display  | Auto     | Count from Module 21              |
+| Tasks Pending  | Display  | Auto     | Count from Module 21              |
+| Description    | Textarea | No       | Max 500 characters                |
+| status         | Badge    | Auto     | Present, Absent, Leave.           |
+
+---
+
+================================================================================
+
+# 25.3.2 Attendance Upload via Excel/CSV
+
+**Description:**
+Popup modal for bulk uploading monthly attendance data. Same structure as Salary Upload (25.2.1).
+
+---
+
+## Popup Layout
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│              UPLOAD ATTENDANCE DATA                  [X Close] │
+│                                                               │
+│  Upload monthly attendance data for this employee.           │
+│                                                               │
+│  ┌───────────────────────────────────────────────────────┐   │
+│  │       📁 Drag & Drop file here                       │   │
+│  │       or [Browse Files]                              │   │
+│  │                                                       │   │
+│  │       Supported: .xlsx, .xls, .csv                   │   │
+│  │       Max size: 10MB                                 │   │
+│  └───────────────────────────────────────────────────────┘   │
+│                                                               │
+│  📥 Download Sample Excel Sheet                              │
+│                                                               │
+│                    [Cancel]    [Upload & Process]             │
+└───────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Popup Fields
+
+| Field           | Type        | Required | Validation                              | Description                        |
+| --------------- | ----------- | -------- | --------------------------------------- | ---------------------------------- |
+| File Upload     | File Picker | Yes      | .xlsx / .xls / .csv; Max 10MB           | Drag & drop or browse to select    |
+| Download Sample | Link        | —        | —                                       | Download the pre-formatted template|
+
+> [!IMPORTANT]
+> To ensure correct data processing and avoid system errors, always **Download the Sample Excel Sheet** and enter your data into that pre-formatted template before uploading.
+
+---
+
+## Sample Excel Columns(For Backend to create sample Excel)
+
+| Column         | Description                             |
+| -------------- | --------------------------------------- |
+| Emp ID         | Employee ID (must exist in Module 8)    |
+| Date           | Attendance date (DD-MM-YYYY)            |
+| Punch In Time  | Punch in time (HH:MM AM/PM)            |
+| Punch Out Time | Punch out time (HH:MM AM/PM)           |
+| Status         | Present / Absent / Half Day / Week Off  |
+| Notes          | Optional description or remarks         |
+
+---
+
+================================================================================
+
+# 25.4 Leave Entry Form (Per Employee)
+
+**Description:**
+Form to apply for leave on behalf of an employee. Triggered from the Leave button in Tab 1 (Employee Management). Creates a leave record that flows into Tab 2 (Leave Requests) for approval.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to Employee List]        LEAVE APPLICATION                          │
+│                                    Employee: EMP01 — John Doe                │
+│                                                                              │
+│  ─── LEAVE BALANCE (from Module 6 Step 3 → Module 8 Step 4) ─────────────  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Casual Leave (CL) : 8 / 12 remaining                                   ││
+│  │ Sick Leave (SL)   : 5 / 6 remaining                                    ││
+│  │ Paid Leave (PL)   : 10 / 15 remaining                                  ││
+│  │ Annual Allocation : 37 days                                             ││
+│  │ Total Available   : 23 days                                             ││
+│  │                                                                          ││
+│  │ Carry Forward    : ☑ Allowed (Max 10 days)                              ││
+│  │ Approval Auth.   : Director  (from Role Config)                         ││
+│  │ Reset Cycle      : Yearly                                               ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  ─── LEAVE DETAILS ──────────────────────────────────────────────────────  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Leave Type*     : [▼ Casual Leave / Sick Leave / Paid Leave ▼]         ││
+│  │ From Date*      : [📅 ____________]                                     ││
+│  │ To Date*        : [📅 ____________]                                     ││
+│  │ Total Days      : 2 (auto-calculated, excludes week offs & holidays)    ││
+│  │                                                                          ││
+│  │ Description*    : [__________________________________________________] │  │
+│  │                   [Textarea — reason for leave]                          │  │
+│  │                                                                          │  │
+│  │ Status*         : [▼ Approved / Pending / Rejected ▼]                  │  │
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  ─── LEAVE HISTORY ──────────────────────────────────────────────────────  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Leave ID  │Type │From       │To         │Days│Status   │Reason          ││
+│  │──────────┼─────┼───────────┼───────────┼────┼─────────┼────────────────││
+│  │LV-0045   │CL   │11-Mar-26  │12-Mar-26  │2   │✅ Appr. │Family function ││
+│  │LV-0038   │SL   │05-Mar-26  │05-Mar-26  │1   │✅ Appr. │Fever           ││
+│  │LV-0032   │PL   │20-Feb-26  │22-Feb-26  │3   │❌ Rej.  │Travel — denied ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│       [Submit Leave]                                        [Cancel]         │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Leave Form Fields
+
+| Field         | Type     | Required | Validation                                        |
+| ------------- | -------- | -------- | ------------------------------------------------- |
+| Employee ID   | Display  | Auto     | Pre-filled (Read-only)                            |
+| Employee Name | Display  | Auto     | Pre-filled (Read-only)                            |
+| Leave Type    | Dropdown | Yes      | Casual Leave / Sick Leave / Paid Leave             |
+| From Date   | Date     | Yes      | Cannot be past date                               |
+| To Date     | Date     | Yes      | Must be ≥ From Date                               |
+| Total Days  | Display  | Auto     | Calculated: To − From + 1 (excl. week offs/holidays) |
+| Description | Textarea | Yes      | Reason for leave, min 10 characters               |
+| Status      | Dropdown | Yes      | Select status (Approved / Pending / Rejected)      |
+
+## Leave Balance Fields (Read-only — from Module 6 Step 3 → Module 8 Step 4)
+
+> Leave entitlements are configured role-wise in Module 6 (Step 3) and inherited into the employee record via Module 8 (Step 4). Module 25 displays the **current remaining balance** after deducting approved leaves.
+
+| Field                      | Type    | Source          | Description                                |
+| -------------------------- | ------- | --------------- | ------------------------------------------ |
+| Casual Leave (CL)         | Display | Mod 6 S3→Mod 8  | Remaining / Total CL days per year         |
+| Sick Leave (SL)           | Display | Mod 6 S3→Mod 8  | Remaining / Total SL days per year         |
+| Paid Leave (PL)           | Display | Mod 6 S3→Mod 8  | Remaining / Total PL days per year         |
+| Annual Leave Allocation    | Display | Mod 6 S3→Mod 8  | Total annual leave allocation              |
+| Total Available            | Display | Calculated      | Sum of all remaining leaves                |
+| Carry Forward Allowed      | Display | Mod 6 S3        | Yes / No (from role config)                |
+| Max Carry Forward Days     | Display | Mod 6 S3        | Max days that can be carried (if allowed)  |
+| Leave Approval Authority   | Display | Mod 6 S3        | Role responsible for approving leaves      |
+| Leave Reset Cycle          | Display | Mod 6 S3        | Yearly / Monthly / Custom (From–To)        |
+
+## Leave History Fields (Read-only)
+
+| Field    | Type    | Description                                      |
+| -------- | ------- | ------------------------------------------------ |
+| Leave ID | Display | Unique Leave Request ID                          |
+| Type     | Badge   | Leave type (CL / SL / PL)                        |
+| From     | Display | Start date of leave                              |
+| To       | Display | End date of leave                                |
+| Days     | Display | Total working days on leave                      |
+| Status   | Badge   | Current status (Approved / Rejected / Pending)    |
+| Reason   | Display | Description / Reason provided by user            |
+
+## Validation Rules
+
+| Rule                         | Description                                       |
+| ---------------------------- | ------------------------------------------------- |
+| Leave balance check          | Cannot apply if requested days > available balance |
+| Duplicate dates              | Cannot overlap with existing approved leaves       |
+| From ≤ To                    | From Date must be on or before To Date            |
+| Description required         | Minimum 10 characters                             |
+| Weekend/Holiday exclusion    | Auto-exclude from total day count                 |
+
+---
+
+## Form Actions
+
+| Action           | Description                                           |
+| ---------------- | ----------------------------------------------------- |
+| **Submit Leave** | Creates leave record with selected status. **Note:** If status = Pending, it flows to Tab 2 for approval. If Approved/Rejected, it records directly in history. |
+| **Cancel**       | Discards and returns to Employee List                 |
+
+---
+
+================================================================================
+
+# 25.5 Tab 2: Leave Requests
+
+**Description:**
+Dashboard for HR/Admin to view and manage leave requests **submitted by employees via the Mobile App / Self-Service portal**. Manual entries added by HR in Screen 25.4 bypass this queue if marked as Approved/Rejected.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     HRM - HUMAN RESOURCE MANAGEMENT                          │
+│                                                                              │
+│  [Tab 1: Employee Management]           [Tab 2: Leave Requests ●]           │
+│                                                                              │
+│  ┌─ FILTERS ──────────────────────────────────────────────────────────────┐  │
+│  │ Branch      : [▼ All Branches ▼]       Department : [▼ Dropdown ▼]    │  │
+│  │ Status      : [▼ All / Pending / Approved / Rejected ▼]               │  │
+│  │ Leave Type  : [▼ All / CL / SL / PL ▼]                                │  │
+│  │ Date Range  : [📅 From] — [📅 To]                                      │  │
+│  │                                                        [Reset Filters] │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  Search: [🔍 Employee Name / Leave ID / Department_______________]          │
+│                                                                              │
+│  LEAVE REQUESTS TABLE                                                        │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Leave ID │Emp Name    │Department│Leave Type│From       │To         │Days ││
+│  │─────────┼────────────┼──────────┼──────────┼───────────┼───────────┼─────││
+│  │LV-0050  │John Doe    │Sales     │CL        │25-Mar-26  │26-Mar-26  │2    ││
+│  │LV-0049  │Jane Smith  │Operations│SL        │24-Mar-26  │24-Mar-26  │1    ││
+│  │LV-0048  │Rahul Patel │HR        │PL        │27-Mar-26  │31-Mar-26  │3    ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Description            │Status     │Submitted Date    │Actions           ││
+│  │───────────────────────┼───────────┼──────────────────┼──────────────────││
+│  │Family function        │⏳ Pending  │23-Mar-26 10:30   │[View][✅][❌][⏳] ││
+│  │Fever and cold         │⏳ Pending  │23-Mar-26 09:15   │[View][✅][❌][⏳] ││
+│  │Annual vacation trip   │✅ Approved │22-Mar-26 14:00   │[View]            ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  Pagination:  Previous   1   2   3   ...   10   Next                        │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Table Fields
+
+| Field          | Type     | Description                                   |
+| -------------- | -------- | --------------------------------------------- |
+| Leave ID       | Link     | Unique leave request ID (e.g., LV-0050)       |
+| Employee Name  | Display  | Name of employee who submitted leave          |
+| Department     | Display  | Employee's department                         |
+| Leave Type     | Badge    | CL / SL / PL                                  |
+| From Date      | Date     | Leave start date                              |
+| To Date        | Date     | Leave end date                                |
+| Days           | Number   | Total leave days (excl. week offs & holidays)  |
+| Description    | Display  | Reason for leave                              |
+| Status         | Badge    | Pending / Approved / Rejected                 |
+| Submitted Date | DateTime | When the request was submitted                |
+| Actions        | Buttons  | View / Approve / Reject / Mark Pending        |
+
+---
+
+## Actions (Table Row)
+
+| Action           | Icon | Condition         | Description                              |
+| ---------------- | ---- | ----------------- | ---------------------------------------- |
+| **View**         | 👁   | All statuses      | Opens Leave Request Popup (Screen 25.5.1)|
+| **Approve**      | ✅   | Status = Pending  | Approves leave request                   |
+| **Reject**       | ❌   | Status = Pending  | Opens popup with mandatory reason        |
+| **Mark Pending** | ⏳   | Status = Approved/Rejected | Reverts status to Pending       |
+
+---
+
+## Filters
+
+| Filter      | Type     | Options                               |
+| ----------- | -------- | ------------------------------------- |
+| Branch      | Dropdown | All Branches / Specific Branch        |
+| Department  | Dropdown | All / Specific Department             |
+| Status      | Dropdown | All / Pending / Approved / Rejected   |
+| Leave Type  | Dropdown | All / CL / SL / PL                   |
+| Date Range  | Date     | Custom From – To range                |
+
+## Search
+
+| Field         | Type | Description                                        |
+| ------------- | ---- | -------------------------------------------------- |
+| Global Search | Text | Search by Employee Name, Leave ID, Department      |
+
+---
+
+================================================================================
+
+# 25.5.1 Leave View Action Popup
+
+**Description:**
+Popup opened on View/Action click from the Leave Requests table. Shows full leave details and allows HR/Admin to update status and provide reason.
+
+---
+
+## Popup Layout
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│               LEAVE REQUEST DETAILS                  [X Close] │
+│               Leave ID: LV-0050                               │
+│                                                               │
+│  ─── EMPLOYEE INFORMATION ────────────────────────────────   │
+│  Employee Name : John Doe                                    │
+│  Employee ID   : EMP01                                       │
+│  Department    : Sales                                       │
+│  Branch        : HSR                                         │
+│                                                               │
+│  ─── LEAVE DETAILS ──────────────────────────────────────    │
+│  Leave Type    : Casual Leave                                │
+│  From Date     : 25-Mar-2026                                 │
+│  To Date       : 26-Mar-2026                                 │
+│  Total Days    : 2                                           │
+│  Description   : Family function — need 2 days off           │
+│                                                               │
+│  ─── LEAVE BALANCE (from Module 6 → Module 8) ──────────────────────────    │
+│  CL Remaining  : 8 / 12                                     │
+│  SL Remaining  : 5 / 6                                      │
+│  PL Remaining  : 10 / 15                                    │
+│  Annual Alloc. : 37 days                                    │
+│  Carry Forward : Allowed (Max 10)                           │
+│  Approval Auth.: Director                                   │
+│                                                               │
+│  ─── ACTION ─────────────────────────────────────────────    │
+│  Status*       : [▼ Pending / Approved / Rejected ▼]        │
+│  Reason*       : [__________________________________________]│
+│                  (Mandatory if Status = Rejected)            │
+│  Reviewed By   : Auto: Current Logged-in User               │
+│  Review Date   : Auto: Current Date & Time                   │
+│                                                               │
+│           [Cancel]    [Mark Pending]   [Reject]   [Approve]  │
+└───────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Popup Fields
+
+| Field        | Type     | Editable | Validation                             |
+| ------------ | -------- | -------- | -------------------------------------- |
+| Employee Name| Display  | No       | From employee record                   |
+| Employee ID  | Display  | No       | From employee record                   |
+| Department   | Display  | No       | From employee record                   |
+| Branch       | Display  | No       | From employee record                   |
+| Leave Type   | Display  | No       | CL / SL / PL                          |
+| From Date    | Display  | No       | Leave start date                       |
+| To Date      | Display  | No       | Leave end date                         |
+| Total Days   | Display  | No       | Auto-calculated                        |
+| Description  | Display  | No       | Employee's reason                      |
+| Casual Leave (CL) Bal| Display  | No       | Current CL balance (Mod 6 S3 → Mod 8 S4) |
+| Sick Leave (SL) Bal  | Display  | No       | Current SL balance (Mod 6 S3 → Mod 8 S4) |
+| Paid Leave (PL) Bal  | Display  | No       | Current PL balance (Mod 6 S3 → Mod 8 S4) |
+| Annual Alloc.   | Display  | No       | Total annual allocation (Mod 6 S3)       |
+| Carry Forward   | Display  | No       | Allowed/Not (Mod 6 S3)                   |
+| Approval Auth.  | Display  | No       | Role who approves (Mod 6 S3)             |
+| Status          | Dropdown | Yes      | Pending / Approved / Rejected            |
+| Reason          | Textarea | Cond.    | **Mandatory** when Status = Rejected, min 10 chars |
+| Reviewed By     | Display  | Auto     | Logged-in user (auto-captured)           |
+| Review Date     | Display  | Auto     | Current date/time (auto-recorded)        |
+
+---
+
+## Popup Actions
+
+| Action           | Behaviour                                                      |
+| ---------------- | -------------------------------------------------------------- |
+| **Approve**      | Status → Approved; deducts from leave balance; updates calendar |
+| **Reject**       | Status → Rejected; reason required; no balance change          |
+| **Mark Pending** | Status → Pending; resets review info                           |
+| **Cancel**       | Closes popup without changes                                   |
+
+---
+
+================================================================================
+
+# 🔐 Role-Based Access Control (RBAC)
+
+| Feature                    | Super Admin | Admin/HR | Manager | Employee (App User) |
+| -------------------------- | ----------- | -------- | ------- | ------------------- |
+| View Employee Table        | ✅          | ✅       | ✅ (own branch) | ❌           |
+| Edit Salary                | ✅          | ✅       | ❌       | ❌                  |
+| Upload Salary Data         | ✅          | ✅       | ❌       | ❌                  |
+| Download Salary Slip       | ✅          | ✅       | ❌       | ✅ (own only)       |
+| View/Edit Attendance       | ✅          | ✅       | ✅ (own branch) | ❌           |
+| Upload Attendance Data     | ✅          | ✅       | ❌       | ❌                  |
+| Apply Leave (for others)   | ✅          | ✅       | ❌       | ❌                  |
+| Submit Leave Request (own) | ✅          | ✅       | ✅       | ✅                  |
+| Approve/Reject Leave       | ✅          | ✅       | ✅ (own team) | ❌             |
+| View Leave Requests Tab    | ✅          | ✅       | ✅ (own team) | ❌             |
+
+---
+
+================================================================================
+
+# 📋 User Flow Descriptions
+
+## Flow 1: View Employee Salary
+```
+HR logs in → Module 25 → Tab 1 (Employee Management)
+  → Click [💰 Salary] on employee row
+  → Salary View opens → Select Month/Year
+  → View/Edit salary components
+  → Mark as Paid / Download Salary Slip
+```
+
+## Flow 2: Record Attendance
+```
+HR logs in → Module 25 → Tab 1 → Click [📅 Attendance]
+  → Calendar opens → Click on a date
+  → Popup opens → Enter Punch In / Punch Out / Notes
+  → Save → Calendar updates with status
+```
+
+## Flow 3: Apply Leave (HR on behalf of Employee)
+```
+HR logs in → Module 25 → Tab 1 → Click [🏖️ Leave]
+  → Leave Form opens → Select Leave Type, From/To, Description, and **Status**
+  → Submit → If status = Approved, leave balance deducted & attendance updated immediately.
+```
+
+## Flow 4: Employee Submits Leave (via App)
+```
+Employee (App User) logs in → Leave Section
+  → Fill From Date, To Date, Description
+  → Submit → Request appears in Module 25, Tab 2
+```
+
+## Flow 5: Approve/Reject Leave Request
+```
+HR/Admin → Module 25 → Tab 2 (Leave Requests)
+  → View pending requests → Click [View] or action buttons
+  → Popup opens → Review details
+  → Approve: Leave balance deducted, Attendance calendar updated
+  → Reject: Reason mandatory, no balance change
+```
+
+## Flow 6: Bulk Upload Salary Data
+```
+HR → Module 25 → Tab 1 → Click [💰 Salary] on any employee
+  → Click [📤 Upload Salary Data]
+  → Popup opens → Download sample sheet → Fill data
+  → Upload file → System validates & imports
+```
+
+---
+====================================================================================
+
+
+# 🎯 MODULE 26: TECHNICIAN PERFORMANCE & PRODUCTIVITY
+
+## Overview
+
+The Technician Performance & Productivity module provides **Operations Managers, Branch Managers**, and **Company Admins** with a centralized analytics dashboard to evaluate field technician performance. This module is entirely **read-only** — it **does not create new data**. Instead, it aggregates and calculates KPIs from existing operational modules to produce actionable performance insights.
+
+**Module Connections:**
+
+- **Depends on:** Module 21 (Task Management — tasks assigned, completed, overdue, re-tasks), Module 20 (Sales Orders — revenue data), Module 25 (HRM — attendance, working hours), Module 11 (Stock Management — material usage), Module 8 (Employee Master — technician details & roles), Module 7 (Branch — branch assignment)
+- **Used by:** Management Reporting, HR Reviews, Incentive / Bonus Calculations
+- **Data Nature:** 100% computed from existing modules. No manual data entry screens.
+
+---
+
+The module contains the following screens:
+
+- 26.1 Performance Dashboard — Employee Table View (Default)
+- 26.2 Individual Employee Performance View (Detailed)
+
+---
+
+================================================================================
+
+# 26.1 Performance Dashboard — Employee Table View
+
+**Description:**
+The default landing screen for Module 26. Displays a **datatable of all technicians** with computed performance and productivity KPIs. Managers can filter by branch, role, and date range to compare technicians side-by-side. Includes summary KPI cards at the top for a quick organizational overview.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                   TECHNICIAN PERFORMANCE & PRODUCTIVITY                      │
+│                                                                              │
+│  ┌─ FILTERS ──────────────────────────────────────────────────────────────┐  │
+│  │ Branch    : [▼ All Branches ▼]     Role  : [▼ All Roles ▼]            │  │
+│  │ Period    : [▼ This Month ▼]       Date  : [📅 01 Mar] – [📅 31 Mar]  │  │
+│  │ Search    : [🔍 Employee Name / ID___________]     [Reset Filters]    │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ ORG-LEVEL SUMMARY CARDS ──────────────────────────────────────────────┐  │
+│  │ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐   │  │
+│  │ │ 📊 Total     │ │ ✅ Avg       │ │ ⏱ Avg        │ │ ⭐ Avg       │   │  │
+│  │ │ Technicians  │ │ Completion   │ │ Utilization  │ │ Customer     │   │  │
+│  │ │              │ │ Rate         │ │ Rate         │ │ Rating       │   │  │
+│  │ │    24        │ │   87.5%      │ │   72.3%      │ │   4.2 / 5    │   │  │
+│  │ └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘   │  │
+│  │ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐   │  │
+│  │ │ 📋 Total     │ │ 💰 Total     │ │ 🔄 Avg       │ │ 🏆 Top       │   │  │
+│  │ │ Tasks        │ │ Revenue      │ │ Re-Task      │ │ Performer    │   │  │
+│  │ │ Completed    │ │ Generated    │ │ Rate         │ │              │   │  │
+│  │ │    312       │ │  ₹14,85,000  │ │   4.2%       │ │  Ravi S.     │   │  │
+│  │ └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘   │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ EMPLOYEE PERFORMANCE TABLE ───────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │ Rank│ Employee     │ Branch  │ Role        │ Tasks    │ Tasks     │    │  │
+│  │     │              │         │             │ Assigned │ Completed │    │  │
+│  │─────┼──────────────┼─────────┼─────────────┼──────────┼───────────┼    │  │
+│  │  1  │ Ravi S.      │ Mumbai  │ Sr. Tech    │    18    │    17     │    │  │
+│  │  2  │ Anjali M.    │ Mumbai  │ Technician  │    16    │    15     │    │  │
+│  │  3  │ Suresh K.    │ Pune    │ Technician  │    14    │    12     │    │  │
+│  │  4  │ Amit T.      │ Delhi   │ Technician  │    15    │    12     │    │  │
+│  │  5  │ Priya D.     │ Mumbai  │ Sr. Tech    │    12    │    10     │    │  │
+│  │                                                                        │  │
+│  │ Completion│ Utiliz. │ Tasks/ │ Revenue     │ Avg     │ Re-Task │      │  │
+│  │ Rate      │ Rate    │ Day    │ Contributed │ Rating  │ Rate    │Score │  │
+│  │───────────┼─────────┼────────┼─────────────┼─────────┼─────────┼──────│  │
+│  │  94.4%    │  78.5%  │  3.4   │ ₹2,85,000   │ 4.6⭐   │  2.1%   │ 92  │  │
+│  │  93.8%    │  75.2%  │  3.0   │ ₹2,40,000   │ 4.4⭐   │  3.5%   │ 88  │  │
+│  │  85.7%    │  70.1%  │  2.4   │ ₹1,80,000   │ 4.2⭐   │  5.0%   │ 78  │  │
+│  │  80.0%    │  68.3%  │  2.4   │ ₹1,95,000   │ 3.8⭐   │  6.2%   │ 72  │  │
+│  │  83.3%    │  65.0%  │  2.0   │ ₹1,50,000   │ 4.0⭐   │  4.8%   │ 75  │  │
+│  │                                                                        │  │
+│  │ Actions: [👁 View] per row                                              │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│    Shows 1 to 5 of 24 technicians.                [ < Previous | Next > ]    │
+│                                                                              │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Filters
+
+| Filter   | Type                | Options                                                                     |
+| -------- | ------------------- | --------------------------------------------------------------------------- |
+| Branch   | Dropdown            | All Branches / Specific Branch (from Module 7)                             |
+| Role     | Dropdown            | All Roles / Technician / Senior Technician (from Module 8)                 |
+| Period   | Dropdown            | This Week / This Month / This Quarter / Custom Range                       |
+| Date     | Date Range Picker   | From Date – To Date (enabled when Period = Custom Range)                   |
+| Search   | Text (Autocomplete) | Search by Employee Name or Employee ID                                     |
+
+---
+
+## Org-Level Summary Cards (Read-Only)
+
+> These cards display **aggregated KPIs across all filtered technicians** for the selected date range. All values are **auto-calculated**.
+
+| Card                  | Type    | Description                                                                         | Calculation Source                         |
+| --------------------- | ------- | ----------------------------------------------------------------------------------- | ------------------------------------------ |
+| Total Technicians     | Number  | Count of active technicians matching the current filter criteria                     | Module 8 (Active employees with Tech role) |
+| Avg Completion Rate   | Percent | Average of all individual technician completion rates                                | Module 21 (Task statuses)                  |
+| Avg Utilization Rate  | Percent | Average of all individual technician utilization rates                                | Module 21 + Module 25 (Attendance)         |
+| Avg Customer Rating   | Rating  | Average customer rating across all technicians' completed tasks                      | Module 21.6 (Customer Feedback)            |
+| Total Tasks Completed | Number  | Sum of all completed tasks across all filtered technicians                           | Module 21 (Status = Completed)             |
+| Total Revenue         | Currency| Sum of revenue generated from all completed tasks                                   | Module 20 (SO line item values)            |
+| Avg Re-Task Rate      | Percent | Average re-task percentage across all technicians                                    | Module 21 (Type = Re-Task)                 |
+| Top Performer         | Name    | Technician with the highest Performance Score in the selected period                 | Calculated (see Backend Logic)             |
+
+---
+
+## Employee Performance Table — Columns
+
+| Column              | Type           | Sortable | Description                                                                              | Data Source                      |
+| ------------------- | -------------- | -------- | ---------------------------------------------------------------------------------------- | -------------------------------- |
+| Rank                | Number         | No       | Auto-calculated rank based on Performance Score (highest first)                           | Calculated                       |
+| Employee Name       | Display (Link) | Yes      | Technician's full name. Click → opens Individual View (Screen 26.2)                      | Module 8                         |
+| Employee ID         | Display        | Yes      | Unique employee ID (e.g., EMP-00124)                                                     | Module 8                         |
+| Branch              | Display        | Yes      | Assigned branch name                                                                     | Module 7 → Module 8             |
+| Role                | Badge          | Yes      | Technician / Senior Technician                                                           | Module 8                         |
+| Tasks Assigned      | Number         | Yes      | Total tasks assigned to this technician in the selected period                            | Module 21                        |
+| Tasks Completed     | Number         | Yes      | Total tasks with Status = Completed                                                      | Module 21                        |
+| Tasks Pending       | Number         | Yes      | Total tasks with Status = Pending or In Progress                                         | Module 21                        |
+| Tasks Overdue       | Number         | Yes      | Tasks past scheduled date with Status ≠ Completed                                       | Module 21                        |
+| Completion Rate (%) | Percent        | Yes      | (Tasks Completed ÷ Tasks Assigned) × 100                                                 | Calculated                       |
+| Utilization Rate (%)| Percent        | Yes      | (Total Task Hours ÷ Total Working Hours) × 100                                           | Module 21 + Module 25            |
+| Tasks / Day         | Number         | Yes      | Tasks Completed ÷ Total Working Days                                                     | Calculated                       |
+| Revenue Contributed | Currency       | Yes      | Total revenue from tasks where this technician was Primary or Support                    | Module 20 → Module 21           |
+| Avg Customer Rating | Rating (⭐)    | Yes      | Average of all customer ratings for this technician's completed tasks                    | Module 21.6                      |
+| Re-Task Rate (%)    | Percent        | Yes      | (Re-Tasks Count ÷ Tasks Completed) × 100                                                | Module 21                        |
+| Material Efficiency | Percent        | Yes      | (Total Std Qty ÷ Total Actually Used Qty) × 100 — capped at 100%                        | Module 21.6 + Module 11          |
+| Performance Score   | Score (0-100)  | Yes      | Weighted composite score (see Backend Calculation Logic)                                 | Calculated                       |
+| Actions             | Button         | No       | [👁 View] — Opens Individual Employee Performance View (Screen 26.2)                    | —                                |
+
+---
+
+## Table Row Actions
+
+| Action   | Icon | Condition | Description                                           |
+| -------- | ---- | --------- | ----------------------------------------------------- |
+| **View** | 👁   | Always    | Opens Individual Performance View (Screen 26.2)       |
+
+---
+
+
+
+================================================================================
+
+# 26.2 Individual Employee Performance View
+
+**Description:**
+A comprehensive, read-only performance profile of a single technician. Shows personal details, KPI scorecards, task breakdown, revenue details, material usage analysis, customer feedback history, and re-task records. All data is scoped to the selected date range filter.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to Dashboard]              EMPLOYEE PERFORMANCE PROFILE            │
+│                                                                              │
+│  Filters: Period: [▼ This Month ▼]   Date: [📅 01 Mar] – [📅 31 Mar 2026]  │
+│                                                                              │
+│  ┌─ EMPLOYEE INFO ────────────────────────────────────────────────────────┐  │
+│  │  ┌─────┐                                                               │  │
+│  │  │ 👤  │  Ravi S.                  EMP-00124                          │  │
+│  │  │Photo│  Senior Technician        Mumbai Branch                      │  │
+│  │  │     │  📱 9876543210            📧 ravi.s@company.com              │  │
+│  │  └─────┘  Joining Date: 15 Jun 2024   Status: 🟢 Active              │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ KPI SCORECARDS ───────────────────────────────────────────────────────┐  │
+│  │ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐   │  │
+│  │ │ 🏆 Overall   │ │ ✅ Completion│ │ ⏱ Utilization│ │ 📊 Tasks/Day │   │  │
+│  │ │ Score        │ │ Rate         │ │ Rate         │ │              │   │  │
+│  │ │              │ │              │ │              │ │              │   │  │
+│  │ │   92 / 100   │ │   94.4%      │ │   78.5%      │ │    3.4       │   │  │
+│  │ │  🟢 Excellent │ │  🟢 Above Avg│ │  🟢 Good     │ │  🟢 High     │   │  │
+│  │ └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘   │  │
+│  │ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐   │  │
+│  │ │ ⭐ Avg       │ │ 💰 Revenue   │ │ 🧪 Material  │ │ 🔄 Re-Task  │   │  │
+│  │ │ Customer     │ │ Contribution │ │ Efficiency   │ │ Rate         │   │  │
+│  │ │ Rating       │ │              │ │              │ │              │   │  │
+│  │ │  4.6 / 5.0   │ │  ₹2,85,000   │ │   96.2%      │ │   2.1%       │   │  │
+│  │ │  🟢 Excellent │ │  🟢 Top 10%  │ │  🟢 Optimal  │ │  🟢 Low      │   │  │
+│  │ └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘   │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ TASK PERFORMANCE BREAKDOWN ───────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Total Assigned : 18          Completed    : 17                        │  │
+│  │  Pending        : 1           Overdue      : 0                         │  │
+│  │  Normal Tasks   : 15          Re-Tasks     : 2                         │  │
+│  │  On-Time Rate   : 94.1%      (16 of 17 completed within schedule)     │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ TIME & ATTENDANCE ANALYSIS ───────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Working Days     : 22         Present Days  : 20                      │  │
+│  │  Leave Days       : 1          Absent Days   : 0                       │  │
+│  │  Week Offs        : 8          Late Arrivals : 1                       │  │
+│  │  Attendance Rate  : 95.5%     (20 of 21 working days excl. leave)     │  │
+│  │                                                                        │  │
+│  │  Total Working Hrs: 168h       Task Execution Hrs: 131.9h             │  │
+│  │  Avg Hrs / Day    : 8h 24m     Avg Task Time     : 1h 45m             │  │
+│  │  Travel Time (est): 36.1h      Idle / Gap Time   : 0h                 │  │
+│  │  Utilization Rate : 78.5%     (Task Hrs ÷ Working Hrs × 100)          │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ REVENUE CONTRIBUTION ─────────────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Total Revenue Generated : ₹2,85,000                                   │  │
+│  │  As Primary Technician   : ₹2,10,000  (12 tasks)                      │  │
+│  │  As Support Technician   : ₹75,000    (5 tasks, shared proportionally) │  │
+│  │  Avg Revenue / Task      : ₹16,765                                     │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ MATERIAL USAGE EFFICIENCY ────────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │ Chemical / Product    │ Std Qty  │ Actually Used │ Variance │ Eff. %   │  │
+│  │───────────────────────┼──────────┼───────────────┼──────────┼──────────│  │
+│  │ Alpha Cypermethrin     │ 2,040 ml │ 1,870 ml      │ -170 ml  │ 109.1%  │  │
+│  │ Fipronil Gel           │ 34 tubes │ 34 tubes      │ 0        │ 100.0%  │  │
+│  │ Bromadiolone Cake      │ 48 nos   │ 52 nos        │ +4 nos   │ 92.3%   │  │
+│  │ Glue Trap Board        │ 80 nos   │ 78 nos        │ -2 nos   │ 102.6%  │  │
+│  │─────────────────────────────────────────────────────────────────────────│  │
+│  │ Overall Material Efficiency: 96.2%                                     │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ CUSTOMER SATISFACTION ────────────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Average Rating       : ⭐ 4.6 / 5.0                                   │  │
+│  │  Total Feedback Count : 17                                              │  │
+│  │                                                                        │  │
+│  │  Rating Breakdown:                                                      │  │
+│  │  5-Star: 12  |  4-Star: 3  |  3-Star: 2  |  2-Star: 0  |  1-Star: 0   │  │
+│  │                                                                        │  │
+│  │  Recent Feedback:                                                       │  │
+│  │  ┌──────────────────────────────────────────────────────────────┐      │  │
+│  │  │ TASK-2026-0201 │ ABC Corp │ 23 Mar │ ⭐⭐⭐⭐⭐ │ "Excellent" │      │  │
+│  │  │ TASK-2026-0198 │ PQR Foods│ 22 Mar │ ⭐⭐⭐⭐   │ "Good work" │      │  │
+│  │  │ TASK-2026-0195 │ XYZ Hotel│ 21 Mar │ ⭐⭐⭐⭐⭐ │ "Thorough"  │      │  │
+│  │  └──────────────────────────────────────────────────────────────┘      │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ RE-TASK / REWORK TRACKING ────────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Re-Tasks Assigned  : 2            Re-Task Rate : 2.1%                 │  │
+│  │  (Re-Tasks as Primary ÷ Total Completed as Primary × 100)             │  │
+│  │                                                                        │  │
+│  │  Re-Task Details:                                                       │  │
+│  │  ┌──────────────────────────────────────────────────────────────┐      │  │
+│  │  │ Task ID         │ Original Task │ Customer │ Date    │Status │      │  │
+│  │  │─────────────────┼───────────────┼──────────┼─────────┼───────│      │  │
+│  │  │ TASK-2026-0205  │ TASK-2026-0180│ ABC Corp │ 25 Mar  │ Done  │      │  │
+│  │  │ TASK-2026-0215  │ TASK-2026-0199│ LMN Pvt  │ 28 Mar  │Pendng │      │  │
+│  │  └──────────────────────────────────────────────────────────────┘      │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ PERFORMANCE SCORE BREAKDOWN ──────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Factor                 │ Weight │ Raw Value │ Weighted Score           │  │
+│  │─────────────────────────┼────────┼───────────┼──────────────────────────│  │
+│  │ Task Completion Rate    │  30%   │  94.4%    │  28.3 / 30              │  │
+│  │ Time Utilization Rate   │  15%   │  78.5%    │  11.8 / 15              │  │
+│  │ Customer Satisfaction   │  25%   │  4.6 / 5  │  23.0 / 25              │  │
+│  │ Revenue Contribution    │  10%   │  Top 10%  │   9.5 / 10              │  │
+│  │ Material Efficiency     │  10%   │  96.2%    │   9.6 / 10              │  │
+│  │ Re-Task Penalty         │  10%   │  2.1%     │   9.8 / 10              │  │
+│  │─────────────────────────┼────────┼───────────┼──────────────────────────│  │
+│  │ TOTAL PERFORMANCE SCORE │ 100%   │           │  92.0 / 100  🟢         │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  Score Rating: 🟢 Excellent (90-100) | 🔵 Good (75-89) |                    │
+│               🟡 Average (60-74) | 🔴 Below Average (<60)                   │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Employee Info Section (Read-Only)
+
+| Field          | Type    | Description                                               | Source           |
+| -------------- | ------- | --------------------------------------------------------- | ---------------- |
+| Profile Photo  | Image   | Employee photograph                                       | Module 8         |
+| Employee Name  | Display | Full name of the technician                               | Module 8         |
+| Employee ID    | Display | Unique ID (e.g., EMP-00124)                               | Module 8         |
+| Role           | Badge   | Technician / Senior Technician                            | Module 8         |
+| Branch         | Display | Assigned branch name                                      | Module 7 → 8    |
+| Phone          | Display | Registered mobile number                                  | Module 8         |
+| Email          | Display | Registered email address                                  | Module 8         |
+| Joining Date   | Date    | Date of employment start                                  | Module 8         |
+| Status         | Badge   | 🟢 Active / 🔴 Inactive                                   | Module 8         |
+
+---
+
+## KPI Scorecards (Read-Only)
+
+| Card                   | Type         | Description                                                       | Calculation                                          |
+| ---------------------- | ------------ | ----------------------------------------------------------------- | ---------------------------------------------------- |
+| Overall Score          | Score / 100  | Weighted composite performance score                               | See Backend Calculation Logic                        |
+| Score Grade            | Badge        | 🟢 Excellent / 🔵 Good / 🟡 Average / 🔴 Below Average            | Based on score range thresholds                      |
+| Completion Rate        | Percent      | Percentage of assigned tasks that were completed                   | (Completed ÷ Assigned) × 100                         |
+| Utilization Rate       | Percent      | Percentage of working hours spent on actual task execution          | (Task Hours ÷ Working Hours) × 100                   |
+| Tasks / Day            | Number       | Average tasks completed per working day                            | Completed ÷ Working Days Present                     |
+| Avg Customer Rating    | Rating (⭐)  | Mean of all customer ratings from completed tasks                  | Sum(ratings) ÷ Count(rated tasks)                    |
+| Revenue Contribution   | Currency     | Total revenue from tasks where this technician participated        | Sum of SO line item values (split logic applied)     |
+| Material Efficiency    | Percent      | How closely actual material usage matches the standard requirement | (Std Qty ÷ Actually Used Qty) × 100 — capped at 100 |
+| Re-Task Rate           | Percent      | Percentage of tasks that required a re-service                     | (Re-Tasks as Primary ÷ Completed as Primary) × 100  |
+
+---
+
+## Task Performance Breakdown (Read-Only)
+
+| Field                | Type    | Description                                                   | Source              |
+| -------------------- | ------- | ------------------------------------------------------------- | ------------------- |
+| Total Assigned       | Number  | All tasks assigned to this technician in the selected period  | Module 21           |
+| Completed            | Number  | Tasks with Status = Completed                                 | Module 21           |
+| Pending              | Number  | Tasks with Status = Pending or In Progress                    | Module 21           |
+| Overdue              | Number  | Past-date tasks with Status ≠ Completed                       | Module 21           |
+| Normal Tasks         | Number  | Tasks with Type = Normal (from SO)                            | Module 21           |
+| Re-Tasks             | Number  | Tasks with Type = Re-Task (from tickets)                      | Module 21           |
+| On-Time Rate         | Percent | Completed tasks that were finished within their scheduled slot | Module 21           |
+
+---
+
+## Time & Attendance Analysis (Read-Only)
+
+| Field                | Type    | Description                                                                     | Source                      |
+| -------------------- | ------- | ------------------------------------------------------------------------------- | --------------------------- |
+| Working Days         | Number  | Total working days in the period (excluding week offs and holidays)              | Module 25 + Module 6        |
+| Present Days         | Number  | Days with a Punch-In record                                                     | Module 25 (Attendance)      |
+| Leave Days           | Number  | Approved leave days in the period                                                | Module 25 (Leave)           |
+| Absent Days          | Number  | Working days with no Punch-In and no approved leave                              | Module 25 (Attendance)      |
+| Week Offs            | Number  | Weekends / configured week-off days                                              | Module 6 (Config)           |
+| Late Arrivals        | Number  | Days where Punch-In was after designated shift start time                        | Module 25 (Attendance)      |
+| Attendance Rate      | Percent | (Present Days ÷ Effective Working Days) × 100 — excl. approved leave            | Calculated                  |
+| Total Working Hours  | Hours   | Sum of (Punch Out − Punch In) across all present days                           | Module 25 (Attendance)      |
+| Task Execution Hours | Hours   | Sum of (Actual End Time − Actual Start Time) for all completed tasks            | Module 21.6                 |
+| Avg Hours / Day      | Hours   | Total Working Hours ÷ Present Days                                              | Calculated                  |
+| Avg Task Time        | Hours   | Task Execution Hours ÷ Tasks Completed                                          | Calculated                  |
+| Travel Time (est.)   | Hours   | Total Working Hours − Task Execution Hours (approximate travel + transit time)  | Calculated                  |
+| Utilization Rate     | Percent | (Task Execution Hours ÷ Total Working Hours) × 100                              | Calculated                  |
+
+
+---
+
+## Revenue Contribution (Read-Only)
+
+| Field                     | Type     | Description                                                                                                | Source                    |
+| ------------------------- | -------- | ---------------------------------------------------------------------------------------------------------- | ------------------------- |
+| Total Revenue Generated   | Currency | Sum of SO line item values for all completed tasks involving this technician                                | Module 20 → Module 21    |
+| As Primary Technician     | Currency | Revenue from tasks where this technician was the Primary (100% attribution)                                 | Module 21 (Primary role)  |
+| Primary Task Count        | Number   | Count of completed tasks as Primary                                                                         | Module 21                 |
+| As Support Technician     | Currency | Revenue from tasks where this technician was a Support (proportional share)                                 | Module 21 (Support role)  |
+| Support Task Count        | Number   | Count of completed tasks as Support                                                                          | Module 21                 |
+| Avg Revenue / Task        | Currency | Total Revenue ÷ Total Tasks Completed                                                                       | Calculated                |
+
+
+---
+
+## Material Usage Efficiency (Read-Only)
+
+| Column              | Type    | Description                                                                  | Source                   |
+| ------------------- | ------- | ---------------------------------------------------------------------------- | ------------------------ |
+| Chemical / Product  | Display | Name of chemical/product used across all tasks                                | Module 12 → Module 21.6 |
+| Std Qty (Total)     | Number  | Sum of standard/required quantities across all tasks for this chemical        | Module 21 (Task Plan)    |
+| Actually Used (Total)| Number | Sum of actually used quantities logged by the technician                      | Module 21.6              |
+| Variance            | Number  | Std Qty − Actually Used. Positive = saved, Negative = overused               | Calculated               |
+| Efficiency %        | Percent | (Std Qty ÷ Actually Used) × 100. Capped at 100% for underuse                | Calculated               |
+| Overall Efficiency  | Percent | Weighted average efficiency across all chemicals (weighted by Std Qty value) | Calculated               |
+
+---
+
+## Customer Satisfaction (Read-Only)
+
+| Field                | Type    | Description                                                        | Source              |
+| -------------------- | ------- | ------------------------------------------------------------------ | ------------------- |
+| Average Rating       | Rating  | Mean rating across all rated completed tasks                       | Module 21.6         |
+| Total Feedback Count | Number  | Count of tasks with customer ratings                                | Module 21.6         |
+
+| 5-Star Count         | Number  | Tasks rated 5 stars                                                 | Module 21.6         |
+| 4-Star Count         | Number  | Tasks rated 4 stars                                                 | Module 21.6         |
+| 3-Star Count         | Number  | Tasks rated 3 stars                                                 | Module 21.6         |
+| 2-Star Count         | Number  | Tasks rated 2 stars                                                 | Module 21.6         |
+| 1-Star Count         | Number  | Tasks rated 1 star                                                  | Module 21.6         |
+| Recent Feedback List | Table   | Last 5 feedback entries showing Task ID, Customer, Date, Rating, Comment | Module 21.6   |
+
+### Recent Feedback Table Columns
+
+| Column           | Type    | Description                                  |
+| ---------------- | ------- | -------------------------------------------- |
+| Task ID          | Link    | Task identifier — click opens Task Detail    |
+| Customer         | Display | Customer business name                       |
+| Date             | Date    | Service completion date                      |
+| Rating           | Stars   | Customer rating (1-5)                        |
+| Feedback Comment | Display | Written feedback (truncated to 50 chars)     |
+
+---
+
+## Re-Task / Rework Tracking (Read-Only)
+
+| Field              | Type    | Description                                                                 | Source              |
+| ------------------ | ------- | --------------------------------------------------------------------------- | ------------------- |
+| Re-Tasks Assigned  | Number  | Count of Re-Task type tasks assigned to this technician (as Primary)         | Module 21           |
+| Re-Task Rate       | Percent | (Re-Tasks as Primary ÷ Total Completed as Primary) × 100                    | Calculated          |
+| Re-Task Details    | Table   | List of all re-tasks with linked original task details                       | Module 21           |
+
+### Re-Task Detail Table Columns
+
+| Column         | Type    | Description                                      |
+| -------------- | ------- | ------------------------------------------------ |
+| Task ID        | Link    | Re-Task identifier — click opens Task Detail     |
+| Original Task  | Link    | Original task that triggered the re-service      |
+| Customer       | Display | Customer name                                    |
+| Date           | Date    | Scheduled date of re-task                        |
+| Status         | Badge   | Completed / Pending                              |
+
+---
+
+## Performance Score Breakdown (Read-Only)
+
+| Field                  | Type       | Description                                                             |
+| ---------------------- | ---------- | ----------------------------------------------------------------------- |
+| Factor Name            | Display    | Name of the KPI factor (e.g., Task Completion Rate)                     |
+| Weight                 | Percent    | Assigned weight in the performance formula                              |
+| Raw Value              | Display    | The actual calculated value (e.g., 94.4%, 4.6/5, etc.)                 |
+| Weighted Score         | Score      | (Normalized Raw Value × Weight) — the contribution to the total score  |
+| Total Performance Score| Score /100 | Sum of all weighted scores                                              |
+| Score Rating Badge     | Badge      | 🟢 Excellent / 🔵 Good / 🟡 Average / 🔴 Below Average                 |
+
+---
+
+## Form Actions
+
+| Action              | Description                                                        |
+| ------------------- | ------------------------------------------------------------------ |
+| **Back**            | Returns to Performance Dashboard (Screen 26.1)                     |
+
+---
+
+================================================================================
+
+# ⚙️ Backend Calculation Logic
+
+> This section documents the **exact formulas and logic** used by the backend to compute all performance metrics. This is the single source of truth for the development team.
+
+---
+
+## 1. Task Performance Calculations
+
+### 1.1 Completion Rate
+
+```
+Completion Rate (%) = (Tasks Completed ÷ Tasks Assigned) × 100
+```
+
+| Variable         | Source                            | Filter                                      |
+| ---------------- | --------------------------------- | ------------------------------------------- |
+| Tasks Completed  | Module 21 → Task records          | Status = "Completed" AND Technician = X AND Date within range |
+| Tasks Assigned   | Module 21 → Task records          | All tasks where Technician = X (Primary OR Support) AND Date within range |
+
+**Edge Cases:**
+- If Tasks Assigned = 0, Completion Rate = 0% (not null/error)
+- Both Primary and Support assignments count as "Assigned"
+- Only tasks where technician is Primary count toward "Completed" attribution
+
+---
+
+### 1.2 On-Time Completion Rate
+
+```
+On-Time Rate (%) = (On-Time Completed ÷ Tasks Completed) × 100
+```
+
+| Variable          | Definition                                                                 |
+| ----------------- | -------------------------------------------------------------------------- |
+| On-Time Completed | Tasks where `Actual End Time` ≤ `Scheduled End Time + Buffer (30 min)`     |
+
+**Business Rule:** A 30-minute buffer is allowed beyond the scheduled end time before a task is considered "delayed".
+
+---
+
+### 1.3 Overdue Identification
+
+```
+IF Task.Scheduled_Date < TODAY
+   AND Task.Status ∉ ['Completed', 'Cancelled']
+THEN Task.Status = 'Overdue'
+```
+
+---
+
+## 2. Time & Utilization Calculations
+
+### 2.1 Total Working Hours
+
+```
+Total Working Hours = SUM(Punch_Out_Time − Punch_In_Time)
+    for all days where Attendance.Status = 'Present'
+    within the selected date range
+```
+
+**Source:** Module 25 → Attendance records
+
+---
+
+### 2.2 Task Execution Hours
+
+```
+Task Execution Hours = SUM(Actual_End_Time − Actual_Start_Time)
+    for all tasks where Status = 'Completed'
+    AND Technician = X (Primary or Support)
+    within the selected date range
+```
+
+**Source:** Module 21.6 → Completion log
+
+---
+
+### 2.3 Utilization Rate
+
+```
+Utilization Rate (%) = (Task Execution Hours ÷ Total Working Hours) × 100
+```
+
+**Edge Cases:**
+- If Total Working Hours = 0, Utilization Rate = 0%
+- Capped at 100% (in rare cases where task time exceeds attendance time due to overtime)
+
+---
+
+### 2.4 Tasks Per Day (Productivity)
+
+```
+Tasks Per Day = Tasks Completed ÷ Present Days
+```
+
+| Variable      | Source                                              |
+| ------------- | --------------------------------------------------- |
+| Present Days  | Module 25 → Days with Punch-In within date range   |
+
+---
+
+### 2.5 Average Task Duration
+
+```
+Avg Task Duration = Task Execution Hours ÷ Tasks Completed
+```
+
+---
+
+## 3. Revenue Contribution Calculations
+
+### 3.1 Revenue Attribution Logic
+
+Revenue is attributed to technicians based on their role in the task:
+
+#### Case A: Single Technician (Primary Only, No Support)
+
+```
+Technician Revenue = SO Line Item Value (100%)
+```
+
+#### Case B: Primary + Support Technician(s)
+
+```
+Primary Technician Revenue = SO Line Item Value × 60%
+Support Technician Revenue  = (SO Line Item Value × 40%) ÷ Number of Support Technicians
+```
+
+**Example:**
+- SO Line Item Value = ₹10,000
+- 1 Primary (Ravi) + 2 Support (Anjali, Amit)
+- Ravi gets: ₹10,000 × 60% = ₹6,000
+- Anjali gets: (₹10,000 × 40%) ÷ 2 = ₹2,000
+- Amit gets: (₹10,000 × 40%) ÷ 2 = ₹2,000
+
+---
+
+### 3.2 Total Revenue for a Technician
+
+```
+Total Revenue = SUM(Revenue Attribution per completed task)
+    where Technician = X
+    AND Task.Status = 'Completed'
+    within date range
+```
+
+---
+
+### 3.3 Revenue Percentile Ranking
+
+```
+Revenue Percentile = (Number of technicians with lower revenue ÷ Total technicians) × 100
+```
+
+Used for the "Top 10%", "Top 25%" labels on the KPI card.
+
+---
+
+## 4. Material Efficiency Calculations
+
+### 4.1 Per-Chemical Efficiency
+
+```
+Efficiency (%) = (Std Qty ÷ Actually Used Qty) × 100
+```
+
+**Interpretation:**
+- \> 100% = Under-usage (technician used less than required) — capped at 100% in score
+- = 100% = Exact usage (perfect efficiency)
+- < 100% = Over-usage (technician used more than required)
+
+---
+
+### 4.2 Overall Material Efficiency (Weighted)
+
+```
+Overall Material Efficiency = 
+    SUM(Std_Qty_i × Efficiency_i) ÷ SUM(Std_Qty_i)
+    for all chemicals i used by Technician X within date range
+```
+
+**Rationale:** Chemicals with higher standard quantities have more weight, so a small overuse on a high-volume chemical matters more than on a low-volume one.
+
+**Capping Rule:** Overall efficiency is capped at 100% — a technician cannot score above 100% by under-using materials (as under-use can also indicate incomplete treatment).
+
+---
+
+## 5. Customer Satisfaction Calculations
+
+### 5.1 Average Customer Rating
+
+```
+Avg Rating = SUM(Customer_Rating) ÷ COUNT(Rated Tasks)
+    where Task.Technician = X (as Primary)
+    AND Task.Status = 'Completed'
+    AND Customer_Rating IS NOT NULL
+    within date range
+```
+
+**Note:** Only tasks where the technician is Primary count toward their rating. Support technicians do not receive individual ratings.
+
+---
+
+### 5.2 Rating Distribution
+
+```
+For each star level (1 to 5):
+    Count = COUNT(tasks where Customer_Rating = star_level)
+    Percentage = (Count ÷ Total Rated Tasks) × 100
+```
+
+---
+
+## 6. Re-Task / Rework Calculations
+
+### 6.1 Re-Task Rate
+
+```
+Re-Task Rate (%) = (Re-Task Count ÷ Completed as Primary) × 100
+```
+
+| Variable             | Definition                                                                   |
+| -------------------- | ---------------------------------------------------------------------------- |
+| Re-Task Count        | Tasks with Type = "Re-Task" where the **original task's Primary** = this technician |
+| Completed as Primary | Tasks completed where this technician was the Primary                        |
+
+**Important Logic:** Re-tasks are attributed to the technician who was Primary on the **original** task (not the re-task itself). This ensures the rework is tracked against the person responsible for the initial service.
+
+---
+
+## 7. Final Performance Score Calculation
+
+### 7.1 Weight Distribution
+
+| Factor                  | Weight | Max Score |
+| ----------------------- | ------ | --------- |
+| Task Completion Rate    | 30%    | 30        |
+| Customer Satisfaction   | 25%    | 25        |
+| Time Utilization Rate   | 15%    | 15        |
+| Revenue Contribution    | 10%    | 10        |
+| Material Efficiency     | 10%    | 10        |
+| Re-Task Penalty (Inv.)  | 10%    | 10        |
+| **Total**               | **100%** | **100** |
+
+---
+
+### 7.2 Normalization & Scoring Formulas
+
+Each factor is normalized to a 0–1 scale before applying weights:
+
+#### Task Completion Rate Score
+
+```
+Normalized = Completion Rate ÷ 100
+Weighted Score = Normalized × 30
+```
+
+#### Customer Satisfaction Score
+
+```
+Normalized = Avg Rating ÷ 5.0
+Weighted Score = Normalized × 25
+```
+
+#### Time Utilization Score
+
+```
+Normalized = Utilization Rate ÷ 100
+Weighted Score = Normalized × 15
+```
+
+#### Revenue Contribution Score
+
+```
+Revenue Percentile = (Rank from bottom ÷ Total technicians) × 100
+Normalized = Revenue Percentile ÷ 100
+Weighted Score = Normalized × 10
+```
+
+#### Material Efficiency Score
+
+```
+Normalized = Overall Material Efficiency ÷ 100
+Weighted Score = Normalized × 10
+```
+
+#### Re-Task Penalty Score (Inverted — lower re-task rate = higher score)
+
+```
+Normalized = MAX(0, (1 − (Re-Task Rate ÷ 20)))
+Weighted Score = Normalized × 10
+```
+
+**Explanation:** A 0% re-task rate gets full score (10/10). A 20%+ re-task rate gets 0/10. Linear scale in between.
+
+---
+
+### 7.3 Final Score Assembly
+
+```
+Performance Score = 
+    (Completion_Normalized × 30) +
+    (Satisfaction_Normalized × 25) +
+    (Utilization_Normalized × 15) +
+    (Revenue_Normalized × 10) +
+    (Material_Normalized × 10) +
+    (ReTask_Normalized × 10)
+```
+
+**Result Range:** 0 to 100
+
+---
+
+### 7.4 Score Rating Thresholds
+
+| Score Range | Rating         | Badge |
+| ----------- | -------------- | ----- |
+| 90 – 100    | Excellent      | 🟢    |
+| 75 – 89     | Good           | 🔵    |
+| 60 – 74     | Average        | 🟡    |
+| 0 – 59      | Below Average  | 🔴    |
+
+---
+
+### 7.5 Ranking Logic (Table View)
+
+```
+Technicians are ranked in DESCENDING order of Performance Score.
+If two technicians have the same score, tie-breaking order:
+    1. Higher Completion Rate
+    2. Higher Customer Rating
+    3. Lower Re-Task Rate
+    4. Alphabetical by Name (last resort)
+```
+
+---
+
+================================================================================
+
+# Access Control (RBAC)
+
+| Role                     | Permissions                                                                       |
+| ------------------------ | --------------------------------------------------------------------------------- |
+| **Company Admin**        | Full access: View all technicians across all branches, export data                |
+| **Operations Manager**   | Full access: View all technicians across all branches, export data                |
+| **Branch Manager**       | View technicians belonging to their assigned branch only                          |
+| **Technician Manager**   | View technicians belonging to their assigned branch only                          |
+| **Technician**           | ❌ No access (technicians cannot view their own or others' performance scores)    |
+| **Senior Technician**    | ❌ No access                                                                      |
+
+---
+
+================================================================================
+
+# Business Rules
+
+| Rule                            | Description                                                                                |
+| ------------------------------- | ------------------------------------------------------------------------------------------ |
+| Data is Read-Only               | This module does not create, edit, or delete any records. It only reads and calculates.    |
+| Date Range Filter Required      | All metrics are calculated within the user-selected date range. No default "all-time" view. |
+| Minimum Data Threshold          | Performance Score is calculated only if technician has ≥ 5 completed tasks in the period.  |
+| Below Threshold Display         | If < 5 tasks, Score column shows "—" with tooltip: "Insufficient data for scoring."       |
+| Real-Time Calculation           | All KPIs are recalculated on page load / filter change (no cached scores).                 |
+| Revenue Split: 60/40            | Primary gets 60%, Support share 40% equally. Configurable in admin settings.               |
+| Re-Task Attribution             | Re-tasks are attributed to the Primary technician of the **original** task, not the re-task. |
+| Material Efficiency Cap         | Capped at 100% to prevent gaming by intentional under-usage.                               |
+| Overdue Auto-Marking            | Tasks past scheduled date with Status ≠ Completed are auto-flagged as Overdue.             |
+| Score Weight Configurability    | The 30/25/15/10/10/10 weight distribution is configurable via admin settings.              |
+| Export Includes All Columns     | Excel/PDF exports include all visible columns plus hidden fields (Employee ID, Branch ID). |
+| No Data Periods                 | If technician was on leave the entire period, all metrics show "N/A" with explanation.     |
+
+---
+
+> **Note:** This module is designed as a management-only analytics tool. Technicians do not have visibility into their scores or comparative rankings through the mobile app or this ERP module.
+
+---
+=================================================================================================
+
+
