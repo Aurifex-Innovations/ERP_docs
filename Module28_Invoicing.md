@@ -122,7 +122,6 @@ The default landing screen for Module 28. Displays all sales invoices in a **tab
 | Status       | Multi-select | Draft / Sent / Partial / Paid / Overdue / Cancelled    |
 | Invoice Type | Multi-select | Tax Invoice / Proforma / Credit Note                   |
 | Date Range   | Date Range   | From – To                                              |
-| SO Number    | Text         | Filter by linked Sales Order number                    |
 
 ---
 
