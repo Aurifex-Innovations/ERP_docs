@@ -90,10 +90,10 @@ The default landing screen for Module 28. Displays all sales invoices in a **tab
 
 | Field        | Type   | Required | Description                                                    |
 | ------------ | ------ | -------- | -------------------------------------------------------------- |
-| Invoice #    | Text   | Auto     | System-generated unique invoice number (INV-XXXXX)             |
+| Invoice No   | Text   | Auto     | System-generated unique invoice number (INV-XXXXX)             |
 | Invoice Date | Date   | Auto     | Date when invoice was created                                  |
 | Customer     | Text   | Auto     | Customer name from Module 18                                   |
-| SO #         | Link   | Auto     | Linked Sales Order number (clickable → opens Module 20)        |
+| SO No        | Link   | Auto     | Linked Sales Order number (clickable → opens Module 20)        |
 | Invoice Amt  | Number | Auto     | Total invoice amount including taxes                           |
 | Pending Amt  | Number | Auto     | Remaining unpaid amount (Invoice Amt - Received Amt)           |
 | Due Date     | Date   | Auto     | Payment due date (Invoice Date + Credit Period)                |
