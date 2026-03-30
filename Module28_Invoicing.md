@@ -299,7 +299,7 @@ Form screen to create a new sales invoice. Supports two creation modes: **(1) Fr
 | Description | Text    | Yes      | Service/Product name (auto-filled from SO if linked)  |
 | HSN/SAC     | Text    | Yes      | HSN code for products, SAC code for services          |
 | Qty         | Number  | Yes      | Quantity (default 1 for services)                     |
-| UOM         | Text    | Auto     | Unit from Product Master (Nos / Ltr / Visit / Kg)    |
+| UOM         | Text    | Auto     | Unit from Product Master                              |
 | Rate        | Number  | Yes      | Per-unit price (auto from SO, editable)               |
 | Discount %  | Number  | No       | Line-level discount percentage (default 0)            |
 | Tax %       | Number  | Auto     | GST rate from Module 9 based on HSN/SAC code         |
