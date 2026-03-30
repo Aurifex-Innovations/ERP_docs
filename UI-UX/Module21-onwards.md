@@ -2314,38 +2314,39 @@ Read-only detail screen showing the complete breakdown of a petty cash request. 
 
 ## View-Only Fields
 
-| Field            | Type     | Description                                                       |
-| ---------------- | -------- | ----------------------------------------------------------------- |
-| Request ID       | Display  | **[System-generated]** Unique request ID                          |
-| Status           | Badge    | **[System-driven]** Current lifecycle status                      |
-| Category         | Display  | **[Auto-fetched]** Expense category                               |
-| Expense Date     | Date     | **[Auto-fetched]** Expense date range (From – To)                 |
-| Amount (₹)       | Currency | **[Auto-fetched]** Claimed amount                                 |
-| Description      | Text     | **[Auto-fetched]** Expense description                            |
-| Related Task     | Link     | **[Auto-fetched]** Task reference (navigates to Module 21)        |
-| Related SO       | Link     | **[Auto-fetched]** Sales Order reference (navigates to Module 20) |
-| Bills / Receipts | File     | **[Auto-fetched]** Click to view/download uploaded documents      |
-| Justification    | Text     | **[Auto-fetched]** Context for the expense                        |
-| Payment Mode     | Display  | **[Auto-fetched]** Bank Transfer / UPI (from Section 3)           |
-| Account Holder   | Display  | **[Auto-fetched]** Name on account                                |
-| Bank Name        | Display  | **[Auto-fetched]** Employee's bank                                |
-| Account Number   | Display  | **[Auto-fetched]** Bank account number                            |
-| IFSC Code        | Display  | **[Auto-fetched]** Bank branch IFSC code                          |
-| Pre-Approved?    | Badge    | **[Auto-fetched]** Yes / No (from Section 4)                      |
-| Approval Status  | Badge    | **[System-driven]** Pending / Approved / Rejected / Returned      |
-| Reviewed By      | Display  | **[Auto-fetched]** Name of the reviewing manager                  |
-| Review Date      | Date     | **[Auto-fetched]** When the review was performed                  |
-| Approved Amount  | Currency | **[Auto-fetched]** Amount approved (may differ from requested)    |
-| Reviewer Remarks | Text     | **[Auto-fetched]** Notes from the approver                        |
-| Payment Status   | Badge    | **[System-driven]** Not Processed / Processed                     |
-| Payment Mode     | Display  | **[Auto-fetched]** Actual mode used for payment (from Finance)    |
-| Transaction Ref  | Display  | **[Auto-fetched]** Payment transaction reference (after payment)  |
-| Payment Date     | Date     | **[Auto-fetched]** When payment was made                          |
-| Submitted By     | Display  | **[Auto-fetched]** Name and role of requester                     |
-| Submitted Date   | DateTime | **[System-captured]** When the request was submitted              |
-| Branch name      | Display  | **[Auto-fetched]** Requester's branch                             |
-| Sent To          | Display  | **[Auto-fetched]** Recipients of the request                      |
-
+| Section                     | Field Name                 | Description                                                                 |
+|----------------------------|----------------------------|-----------------------------------------------------------------------------|
+| Header                     | Back to My Requests        | Navigates user back to request list                                        |
+| Header                     | Request ID                 | Unique identifier of the petty cash request                                |
+| Header                     | Status                     | Current status of the request (Pending, Approved, Rejected, etc.)          |
+| Expense Details            | Category                   | Type of expense (e.g., Local Conveyance, Materials, etc.)                  |
+| Expense Details            | Expense Date               | Date or date range when the expense occurred                               |
+| Expense Details            | Amount                     | Total expense amount requested                                             |
+| Expense Details            | Description                | Detailed explanation of the expense                                        |
+| Expense Details            | Related Task               | Linked task reference for which expense was incurred                       |
+| Expense Details            | Related SO                 | Linked sales order reference                                               |
+| Supporting Documents       | Bills / Receipts           | Uploaded proof documents for the expense                                   |
+| Supporting Documents       | Justification              | Reason explaining why the expense was necessary                            |
+| Bank / Payment Details     | Payment Mode (Requested)   | Preferred method for reimbursement (Bank Transfer, Cash, etc.)             |
+| Bank / Payment Details     | Account Holder Name        | Name of the bank account holder                                            |
+| Bank / Payment Details     | Bank Name                  | Name of the bank                                                           |
+| Bank / Payment Details     | Account Number             | Bank account number (masked/unmasked)                                      |
+| Bank / Payment Details     | IFSC Code                  | Bank branch identification code                                            |
+| Prior Approval             | Pre-Approved               | Indicates whether the expense was approved in advance                      |
+| Approval & Payment Status  | Approval Status            | Current approval stage of the request                                      |
+| Approval & Payment Status  | Reviewed By                | Name of the reviewer/approver                                              |
+| Approval & Payment Status  | Review Date                | Date when the request was reviewed                                         |
+| Approval & Payment Status  | Approved Amount            | Final approved reimbursement amount                                        |
+| Approval & Payment Status  | Reviewer Remarks           | Comments given by the approver                                             |
+| Approval & Payment Status  | Payment Status             | Status of reimbursement processing                                         |
+| Approval & Payment Status  | Payment Mode (Processed)   | Mode used for payment processing                                           |
+| Approval & Payment Status  | Transaction Reference      | Reference number of the transaction                                        |
+| Approval & Payment Status  | Payment Date               | Date when payment was made                                                 |
+| Submission Info            | Submitted By               | Name and role of the person who submitted the request                      |
+| Submission Info            | Submitted Date             | Date and time of submission                                                |
+| Submission Info            | Branch                     | Branch/location from where request was raised                              |
+| Submission Info            | Sent To                    | Users or roles to whom the request was sent for approval                   |
+| Actions                    | Back                       | Navigates back to previous screen                                          |
 ---
 
 ================================================================================
