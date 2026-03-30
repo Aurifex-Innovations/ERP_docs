@@ -1545,32 +1545,65 @@ The core workspace for Support Agents. It presents the entire context of the tic
 
 ---
 
-## Screen Components
+### Ticket Header
 
-| Component         | Description                                                                   |
-| ----------------- | ----------------------------------------------------------------------------- |
-| **SLA & Status**  | Live updates of the dual-timers. Flags if the SLA has escalated to L1/L2/L3.  |
-| **Actions Menu**  | Direct triggers for popups covering Assignment, Task mapping, and Resolution. |
-| **Activity Line** | Immutable audit log of all status changes, notes, calls, and task creations.  |
+| Field Name        | Description                                           |
+| ----------------- | ----------------------------------------------------- |
+| Back to Dashboard | Navigates user back to the main dashboard             |
+| Ticket ID         | Unique identifier of the ticket                       |
+| Print / PDF       | Generates printable or downloadable version of ticket |
 
----
 
-## Ticket Details (Read-Only)
+### Ticket Summary
 
-| Field       | Type    | Description                                                   |
-| ----------- | ------- | ------------------------------------------------------------- |
-| Subject     | Display | **[Auto-fetched]** Short description of the issue.            |
-| Customer    | Display | **[Auto-fetched]** Customer name (from Module 18).            |
-| SO No       | Link    | **[Auto-fetched]** Linked Sales Order.                        |
-| Task ID     | Link    | **[Auto-fetched]** Linked Module 21 Task ID.                  |
-| Type        | Display | **[Auto-fetched]** Complaint / Request / Inquiry.             |
-| Created     | Display | **[System-generated]** Timestamp of ticket creation.          |
-| Caller      | Display | **[Auto-fetched]** Contact person and number.                 |
-| Description | Text    | **[Auto-fetched]** Full issue details.                        |
-| Status      | Badge   | **[System-driven]** Current ticket status.                    |
-| Priority    | Badge   | **[System-driven]** Priority level (determines SLA).          |
-| Assigned To | Display | **[Auto-fetched]** Current Support Agent handling the ticket. |
-| Esc. Lvl    | Badge   | **[System-driven]** Current Escalation Level (L1/L2/L3).      |
+| Field Name          | Description                                        |
+| ------------------- | -------------------------------------------------- |
+| Subject             | Short title describing the issue                   |
+| Customer            | Name of the customer associated with the ticket    |
+| SO No               | Reference number of the related sales order        |
+| Task ID             | Linked task created from the ticket                |
+| Type                | Category of the ticket (Complaint, Service, Query) |
+| Created Date & Time | Date and time when the ticket was created          |
+| Caller Name & Phone | Contact person who raised the issue                |
+| Description         | Detailed explanation of the issue                  |
+
+
+### SLA & Status
+
+| Field Name       | Description                                             |
+| ---------------- | ------------------------------------------------------- |
+| Status           | Current state of the ticket                             |
+| Priority         | Urgency level of the ticket                             |
+| Assigned To      | Support agent responsible for the ticket                |
+| Response SLA     | Indicates if response time target was met               |
+| Resolution SLA   | Indicates if resolution time target was met or breached |
+| Escalation Level | Current escalation stage based on SLA                   |
+
+
+### Actions
+
+| Field Name        | Description                             |
+| ----------------- | --------------------------------------- |
+| Assign / Reassign | Assigns or changes the responsible user |
+| Add Note / Reply  | Adds internal notes or replies          |
+| Convert to Task   | Converts the ticket into a task         |
+| Pause Ticket      | Temporarily pauses the ticket           |
+| Mark Resolved     | Marks the issue as resolved             |
+| Close Ticket      | Closes the ticket permanently           |
+
+
+### Activity Timeline
+
+| Field Name           | Description                                |
+| -------------------- | ------------------------------------------ |
+| Timestamp            | Time when the activity occurred            |
+| Activity Icon        | Visual indicator of activity type          |
+| Activity Description | Details of the activity performed          |
+| User/System          | Indicates who performed the action         |
+| Tags                 | Labels like internal note or system update |
+
+
+
 
 ---
 
