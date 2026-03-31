@@ -90,10 +90,10 @@ The default landing screen for Module 29. Displays all purchase bills in a **tab
 
 | Field        | Type   | Required | Description                                                  |
 | ------------ | ------ | -------- | ------------------------------------------------------------ |
-| Bill #       | Text   | Auto     | System-generated bill number (BILL-XXXXX)                    |
+| Bill no      | Text   | Auto     | System-generated bill number (BILL-XXXXX)                    |
 | Bill Date    | Date   | Auto     | Date on the vendor's physical invoice                        |
 | Vendor       | Text   | Auto     | Vendor/Supplier name from Module 11                          |
-| PO #         | Link   | Auto     | Linked Purchase Order number (clickable → Module 11)         |
+| PO no        | Link   | Auto     | Linked Purchase Order number (clickable → Module 11)         |
 | Bill Amount  | Number | Auto     | Total bill amount including taxes                            |
 | Pending Amt  | Number | Auto     | Remaining unpaid amount                                      |
 | Due Date     | Date   | Auto     | Bill Date + Credit Period                                    |
