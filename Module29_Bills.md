@@ -268,7 +268,7 @@ Form screen to record a new purchase bill received from a vendor. Supports two m
 | ---------------- | ----------- | -------- | ---------------------------------------------------- |
 | Bill Type        | Radio       | Yes      | Purchase Bill (PO linked) / Expense Bill             |
 | Purchase Order   | Search      | Cond.    | Required if Bill Type = Purchase Bill                |
-| Vendor Bill #    | Text        | Yes      | The invoice number printed on the vendor's bill      |
+| Vendor Bill No   | Text        | Yes      | The invoice number printed on the vendor's bill      |
 | Bill Date        | Date Picker | Yes      | Date mentioned on the vendor's invoice               |
 | Credit Period    | Number      | Yes      | Payment terms in days (default from vendor master)   |
 | Due Date         | Date (Auto) | Auto     | Calculated: Bill Date + Credit Period                |
