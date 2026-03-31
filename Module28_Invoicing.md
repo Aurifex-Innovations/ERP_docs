@@ -751,7 +751,7 @@ Used to reduce the pending value of an issued invoice. This is a simplified manu
 | Field Name           | Description                                                              |
 | --------------       | ------------------------------------------------------------------------ |
 | ADJUST CREDIT AMOUNT | The total manual amount to credit against the invoice's pending balance  |
-| Summary              | Shows calculation ( new pending amount = total amount (frm invoice) - credit amount  |
+| Summary              | Shows calculation ( new pending amount = total amount (from invoice) - credit amount)  |
 
 
 ---
