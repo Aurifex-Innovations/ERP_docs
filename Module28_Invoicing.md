@@ -735,7 +735,7 @@ Used to reduce the pending value of an issued invoice. This is a simplified manu
 | Invoice Number | Reference of the original invoice for which credit note is being created |
 | Customer Name  | Name of the customer associated with the invoice                         |
 | Invoice Amount | Total amount of the original invoice                                     |
-| Pending Amount | Remaining unpaid amount of the invoice                                   |
+| Credit Amount  | Remaining unpaid amount of the invoice                                   |
 
 
 ### 2. Adjustment Details
