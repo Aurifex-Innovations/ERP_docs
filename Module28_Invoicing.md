@@ -118,7 +118,6 @@ The default landing screen for Module 28. Displays all sales invoices in a **tab
 | Filter       | Type         | Options                                                |
 | ------------ | ------------ | ------------------------------------------------------ |
 | Branch       | Dropdown     | All Branches / Specific Branch (from Module 7)         |
-| Customer     | Search       | Search by customer name (from Module 18)               |
 | Status       | Multi-select | Draft / Sent / Partial / Paid / Overdue / Cancelled    |
 | Invoice Type | Multi-select | Tax Invoice / Proforma / Credit Note                   |
 | Date Range   | Date Range   | From – To                                              |
@@ -132,6 +131,7 @@ Searchable by:
 - Invoice Number
 - Customer Name
 - Sales Order Number
+- Customer
 
 ---
 
