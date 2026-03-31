@@ -5821,14 +5821,14 @@ A read-only screen showing the complete invoice with all details — customer in
 │  │ GRAND TOTAL       : ₹ 10,561                                │            │
 │  └──────────────────────────────────────────────────────────────┘            │
 │                                                                              │
-│  TRANSACTION LEDGER (PAYMENTS & ADJUSTMENTS)                                 │
-│  ┌──────────┬────────────┬──────────────────┬──────────────┬──────────────┐  │
-│  │Date      │Type        │Reference #       │Credit Amount │Running Bal   │  │
-│  │──────────┼────────────┼──────────────────┼──────────────┼──────────────│  │
-│  │ 15 Mar   │ Invoice    │ INV-10024        │     —        │ ₹ 10,000      │  │
-│  │ 18 Mar   │ Payment    │ RCPT-8021        │ ₹ 5,000      │ ₹ 5,000       │  │
-│  │ 20 Mar   │ Adjustment │ CN-5001          │ ₹ 5,000      │ ₹ 0           │  │
-│  └──────────┴────────────┴──────────────────┴──────────────┴──────────────┘  │
+│  TRANSACTION LEDGER (PAYMENTS & CREDIT NOTES)                                │
+│  ┌──────────┬───────────┬────────────┬──────────────────┬──────────────┬──────────────┬────────┐  │
+│  │Date      │Type       │Reference # │Description       │Credit Amount │Running Bal   │Action  │  │
+│  │──────────┼───────────┼────────────┼──────────────────┼──────────────┼──────────────┼────────│  │
+│  │ 15 Mar   │ Invoice   │INV-10024   │Goods Sold        │     —        │ ₹ 10,000     │.       │  │
+│  │ 18 Mar   │ Payment   │RCPT-8021   │Bank Transfer     │ ₹ 5,000      │ ₹ 5,000      │[View]  │  │
+│  │ 20 Mar   │Credit Note│CN-5001     │Discount Applied  │ ₹ 5,000      │ ₹ 0          │[View]  │  │
+│  └──────────┴───────────┴────────────┴──────────────────┴──────────────┴──────────────┴────────┘  │
 │  [+ RECORD PAYMENT] (To Mod 30)   [+ ISSUE CREDIT NOTE] (To 28.5)            │
 │                                                                              │
 │  AUDIT LOG                                                                   │
@@ -5914,10 +5914,12 @@ A read-only screen showing the complete invoice with all details — customer in
 | Field Name     | Description                                               |
 | -------------- | --------------------------------------------------------- |
 | Date           | Date of the transaction                                   |
-| Type           | Source of transaction (Invoice / Payment / Adjustment)    |
-| Reference #    | Identifying number (INV #, RCPT #, CN #). Clickable.      |
+| Type           | Source of transaction. Determines the view action. Options: **Invoice** (current document), **Payment** (money received), **Credit Note** (adjustment). |
+| Reference #    | Identifying number (INV #, RCPT #, CN #)                  |
+| Description    | Reason or mode (e.g., "Bank Transfer", or Credit Note reason from Mod 28.5) |
 | Credit Amount  | The amount credited (paid or adjusted) against the invoice|
 | Running Bal    | The remaining pending invoice amount after this line      |
+| Action         | Dynamic view button. **If Payment:** opens Mod 30 receipt. **If Credit Note:** opens Mod 28.5 view. |
 | **[+ RECORD PAYMENT]** | Button that redirects to **Module 30**           |
 | **[+ ISSUE CREDIT NOTE]** | Button that redirects to **Screen 28.5 (Credit Note)** |
 
@@ -6526,14 +6528,14 @@ A read-only screen showing the complete bill with all details — vendor info, l
 │  │ NET PAYABLE       : ₹ 1,05,300                              │            │
 │  └──────────────────────────────────────────────────────────────┘            │
 │                                                                              │
-│  TRANSACTION LEDGER (PAYMENTS & ADJUSTMENTS)                                 │
-│  ┌──────────┬────────────┬──────────────────┬──────────────┬──────────────┐  │
-│  │Date      │Type        │Reference #       │Debit Amount  │Running Bal   │  │
-│  │──────────┼────────────┼──────────────────┼──────────────┼──────────────│  │
-│  │ 10 Mar   │ Bill       │ BILL-5524        │     —        │ ₹ 1,05,300   │  │
-│  │ 12 Mar   │ Payment    │ RCPT-8021        │ ₹ 50,000     │ ₹ 55,300     │  │
-│  │ 15 Mar   │ Debit Note │ DN-5001          │ ₹ 10,000     │ ₹ 45,300     │  │
-│  └──────────┴────────────┴──────────────────┴──────────────┴──────────────┘  │
+│  TRANSACTION LEDGER (PAYMENTS & DEBIT NOTES)                                 │
+│  ┌──────────┬───────────┬────────────┬──────────────────┬──────────────┬──────────────┬────────┐  │
+│  │Date      │Type       │Reference # │Description       │Debit Amount  │Running Bal   │Action  │  │
+│  │──────────┼───────────┼────────────┼──────────────────┼──────────────┼──────────────┼────────│  │
+│  │ 10 Mar   │ Bill      │BILL-5524   │Purchase          │     —        │ ₹ 1,05,300   │[View]  │  │
+│  │ 12 Mar   │ Payment   │RCPT-8021   │Bank Transfer     │ ₹ 50,000     │ ₹ 55,300     │[View]  │  │
+│  │ 15 Mar   │Debit Note │DN-5001     │Discount Applied  │ ₹ 10,000     │ ₹ 45,300     │[View]  │  │
+│  └──────────┴───────────┴────────────┴──────────────────┴──────────────┴──────────────┴────────┘  │
 │  [+ RECORD PAYMENT] (To Mod 30)   [+ ISSUE DEBIT NOTE] (To Mod 29.5)         │
 │                                                                              │
 │  ATTACHED DOCUMENTS                                                          │
@@ -6558,19 +6560,78 @@ A read-only screen showing the complete bill with all details — vendor info, l
 
 ## View Fields
 
-| Field           | Type    | Description                                               |
-| --------------- | ------- | --------------------------------------------------------- |
-| Status          | Badge   | Current bill status                                       |
-| From / To       | Display | Vendor details and Company details side by side           |
-| Vendor Bill #   | Text    | Vendor's own invoice number                               |
-| Our Bill #      | Text    | Our system-generated number                               |
-| PO Reference    | Link    | Clickable link to Purchase Order (Module 11)              |
-| GRN Reference   | Link    | Clickable link to Goods Receipt Note                      |
-| Line Items      | Table   | All billed items with HSN, rate, tax, and amount          |
-| Tax & TDS       | Summary | Tax breakdown with TDS deduction                          |
-| Ledger          | Table   | Transaction history showing payments, debit notes, & balance|
-| Attached Docs   | Links   | Uploaded bill copies with View/Download                   |
-| Audit Log       | List    | Chronological log of all actions                          |
+### 1. HEADER
+| Field Name    | Description                                            |
+| ------------- | ------------------------------------------------------ |
+| Bill Title    | Displays bill detail heading with our bill number      |
+| Status        | Current status of bill (Pending, Paid, Overdue, etc.)  |
+| Due Date      | Final date by which payment should be completed        |
+
+### 2. FROM (Vendor Details)
+| Field Name     | Description                                      |
+| -------------- | ------------------------------------------------ |
+| Vendor Name    | Name of the vendor issuing the bill              |
+| GSTIN (From)   | GST identification number of the vendor          |
+| Address (From) | Address of the vendor                            |
+
+### 3. TO (Company Details)
+| Field Name     | Description                               |
+| -------------- | ----------------------------------------- |
+| Company Name   | Name of our company receiving the bill    |
+| GSTIN (To)     | Our GST identification number             |
+| Address (To)   | Our billing address                       |
+
+### 4. Bill Info
+| Field Name              | Description                            |
+| ----------------------- | -------------------------------------- |
+| Vendor Bill #           | Vendor's own invoice number            |
+| Our Bill #              | System-generated internal bill number  |
+| Bill Date               | Date printed on the vendor's bill      |
+| Credit Period           | Credit days agreed with vendor         |
+| PO Reference            | Linked Purchase Order (Clickable)      |
+| GRN Reference           | Linked Goods Receipt Note (Clickable)  |
+
+### 5. Line Items
+| Field Name       | Description                              |
+| ---------------- | ---------------------------------------- |
+| Sr / Description | Name of product/service                  |
+| HSN              | HSN/SAC code of the item                 |
+| Qty / Rate       | Quantity and per-unit rate               |
+| Disc% / Tax%     | Discount and tax rates applied to row    |
+| Amount           | Total amount for the row                 |
+
+### 6. Tax & TDS Summary
+| Field Name     | Description                           |
+| -------------- | ------------------------------------- |
+| Taxable Amount | Total amount before tax but after discount |
+| SGST/CGST/IGST | Applicable tax amounts                |
+| TDS            | TDS section and deducted amount       |
+| Net Payable    | Final payable amount to vendor        |
+
+### 7. Transaction Ledger
+| Field Name     | Description                                               |
+| -------------- | --------------------------------------------------------- |
+| Date           | Date of the transaction                                   |
+| Type           | Source of transaction. Determines the view action. Options: **Bill** (current doc), **Payment** (money paid), **Debit Note** (adjustment). |
+| Reference #    | Identifying number (BILL #, RCPT #, DN #)                 |
+| Description    | Reason or mode (e.g., "Bank Transfer", or DN reason)      |
+| Debit Amount   | The amount debited (paid or adjusted) against the bill    |
+| Running Bal    | The remaining pending bill amount                         |
+| Action         | Dynamic view button. **If Payment:** opens Mod 30 view. **If Debit Note:** opens Mod 29.5 view. |
+| **[+ RECORD PAYMENT]** | Button that redirects to **Module 30**           |
+| **[+ ISSUE DEBIT NOTE]** | Button that redirects to **Screen 29.5 (Debit Note)** |
+
+### 8. Attached Documents
+| Field Name           | Description                                           |
+| -------------------- | ----------------------------------------------------- |
+| Original Bill File   | Downloadable/viewable vendor invoice attachment       |
+
+### 9. Audit Log
+| Field Name           | Description                                           |
+| -------------------- | ----------------------------------------------------- |
+| Activity Date & Time | Timestamp of action performed                         |
+| Activity Description | Description of action (Created, Linked, Confirmed, etc.) |
+| Performed By         | User who performed the action                         |
 
 ---
 

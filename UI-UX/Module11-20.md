@@ -8228,7 +8228,7 @@ Full read-only view of any GMA sheet accessible to the logged-in user. Used for 
 | **Section 3E (per site)** | Applicable flag, Cost/Doc, Docs/Month, Doc Cost/Year (E)                                    | Read-only        |
 | **Site Summary**          | Cost breakdown table (A+B+C+D+E), Total Cost, Proposed Price, Site GM%                      | Read-only        |
 | **Section 4 (Overall)**   | Site-wise summary, Total Annual Cost/Price, Overall GM%, GM with/without Documentation      | Auto / Read-only |
-| **Approval**              | Status, Approval Type, Approver, Approved/Rejected Date, Remarks, Authority Matrix          | Read-only        |
+| **Approval**              | Status(Approved or Rejected), Approval Type (e.g., Auto-Approved / Manual Manager / Manual CEO), Approver, Approved/Rejected Date, Remarks, Authority Matrix          | Read-only        |
 | **Audit Trail**           | Timestamp, Action, User, Remarks                                                            | Read-only        |
 
 ---
@@ -8385,7 +8385,7 @@ Read-only view of a GMA sheet submitted by the logged-in user. Displays source i
 | **Section 3E (per site)** | Applicable flag, Cost/Doc, Docs/Month, Doc Cost/Year (E)                                    | Read-only        |
 | **Site Summary**          | Cost breakdown table (A+B+C+D+E), Total Cost, Proposed Price, Site GM%                      | Read-only        |
 | **Section 4 (Overall)**   | Site-wise summary, Total Annual Cost/Price, Overall GM%, GM with/without Documentation      | Auto / Read-only |
-| **Approval**              | Status, Approval Type, Approver, Approved/Rejected Date, Remarks, Authority Matrix          | Read-only        |
+| **Approval**              | Status, Approval Type (e.g., Auto-Approved / Manual Manager / Manual CEO), Approver, Approved/Rejected Date, Remarks, Authority Matrix          | Read-only        |
 | **Audit Trail**           | Timestamp, Action, User, Remarks                                                            | Read-only        |
 
 ---
@@ -8402,7 +8402,7 @@ Read-only view of a GMA sheet submitted by the logged-in user. Displays source i
 
 ================================================================================
 
-# 17.3.1 View Received GMA Sheet
+<!-- # 17.3.1 View Received GMA Sheet
 
 **Description:**
 Full read-only view of a received GMA sheet for the approver to review all details — source info, service config, site-wise cost breakdown (Service Visit, Manpower, Chemical/Product, Surcharges, Documentation), and margin summary — before taking an approval or rejection action.
@@ -8427,7 +8427,7 @@ The layout is **identical to Screen 17.2.2 (View GMA Sheet)** with an additional
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
----
+--- -->
 
 ================================================================================
 
@@ -8501,19 +8501,18 @@ A focused action screen where the approver confirms their decision to approve or
 │  │ TOTAL ANNUAL PRICE │ ₹1,32,000                          │                  │
 │  │ ★ OVERALL GROSS MARGIN : 23%                            │                  │
 │  └────────────────────────────────────────────────────────┘                  │
-│                                                                              │
+│      -----section 5: approval--------                                                                        │
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
 │  │  YOUR DECISION                                                         │  │
-│  │                                                                        │  │
-│  │  ● Approve     ○ Reject                                                │  │
-│  │                                                                        │  │
-│  │  Remarks / Notes*                                                      │  │
-│  │  ┌─────────────────────────────────────────────────────────────────┐  │  │
-│  │  │                                                                  │  │  │
-│  │  └─────────────────────────────────────────────────────────────────┘  │  │
-│  │  (Required if Rejected; Optional if Approved — max 500 characters)    │  │
-│  │                                                                        │  │
-│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  GM %         : 23%  →  Sales Manager Approval Required                     │
+│  Deadline     : By 18 Mar 2026 10:00 AM (24-hour window)                    │
+│                                                                              │
+│  Decision     : ○ Approve   ○ Reject                                         │
+│  Remarks*     : [_______________________________________________]            │
+│                (Required if Rejected; Optional if Approved)                  │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 │                                                                              │
 │                    [CONFIRM DECISION]   [CANCEL]                             │
 │                                                                              │
@@ -8536,6 +8535,7 @@ A focused action screen where the approver confirms their decision to approve or
 | **Section 3E (per site)** | Applicable flag, Cost/Doc, Docs/Month, Doc Cost/Year (E)                                    | Read-only      |
 | **Site Summary**          | Cost breakdown table (A+B+C+D+E), Total Cost, Proposed Price, Site GM%                      | Read-only      |
 | **Section 4 (Overall)**   | Site-wise summary, Total Annual Cost/Price, Overall GM%                                     | Read-only      |
+| **Section 5** | GM%, Deadline date, Decision(approve/reject), Remarks|
 
 ---
 
@@ -8544,6 +8544,7 @@ A focused action screen where the approver confirms their decision to approve or
 | Field    | Type      | Required           | Validation                    |
 | -------- | --------- | ------------------ | ----------------------------- |
 | Decision | Radio     | Yes                | Approve / Reject              |
+
 | Remarks  | Text Area | Required if Reject | Free-text; max 500 characters |
 
 ---
