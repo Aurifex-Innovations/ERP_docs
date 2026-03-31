@@ -5401,7 +5401,7 @@ The default landing screen for Module 28. Displays all sales invoices in a **tab
 | Pending Amt  | Number | Auto     | Remaining unpaid amount (Invoice Amt - Received Amt)           |
 | Due Date     | Date   | Auto     | Payment due date (Invoice Date + Credit Period)                |
 | Status       | Badge  | Auto     | Draft / Sent / Partial / Paid / Overdue / Cancelled            |
-| Actions      | Buttons| —        | View / Edit / Delete / Record Payment / Send / PDF / Approve   |
+| Actions      | Buttons| —        | View / Edit / Delete / Record Payment / download pdf / download receipt |
 
 ---
 
@@ -5421,9 +5421,7 @@ The default landing screen for Module 28. Displays all sales invoices in a **tab
 | Filter       | Type         | Options                                                |
 | ------------ | ------------ | ------------------------------------------------------ |
 | Branch       | Dropdown     | All Branches / Specific Branch (from Module 7)         |
-| Customer     | Search       | Search by customer name (from Module 18)               |
 | Status       | Multi-select | Draft / Sent / Partial / Paid / Overdue / Cancelled    |
-| Invoice Type | Multi-select | Tax Invoice / Proforma / Credit Note                   |
 | Date Range   | Date Range   | From – To                                              |
 
 ---
@@ -5445,11 +5443,9 @@ Searchable by:
 | **View**           | Button | All statuses           | Opens invoice detail in read-only mode (Screen 28.3)   |
 | **Edit**           | Button | Draft only             | Opens invoice in edit mode (Screen 28.4)               |
 | **Delete**         | Button | Draft only             | Deletes draft invoice after confirmation               |
-| **Approve & Send** | Button | Draft only             | Finalizes invoice, updates Ledger, sends to customer   |
 | **Record Payment** | Button | Sent / Partial / Overdue | Redirects to Module 30 with invoice pre-selected      |
-| **Resend**           | Button | Sent / Overdue         | Re-send invoice via Email / WhatsApp                   |
-| **PDF**            | Button | Sent / Paid            | Download invoice as PDF                                |
-| **Receipt**        | Button | Paid                   | View/download payment receipt from Module 30           |
+| **Download PDF**   | Button | Sent / Paid            | Download invoice as PDF                                |
+| **Download Receipt**| Button | Paid                   | View/download payment receipt from Module 30           |
 
 ---
 
@@ -5458,8 +5454,6 @@ Searchable by:
 | Action              | Description                                               |
 | ------------------- | --------------------------------------------------------- |
 | **+ Create Invoice**| Opens the **Create Invoice Form** (Screen 28.2)           |
-| **Export PDF Batch** | Download multiple selected invoices as ZIP of PDFs        |
-| **Tally Export**     | Export invoice data in Tally-compatible XML/JSON format   |
 
 ---
 
@@ -5479,7 +5473,6 @@ Searchable by:
 
 | Event                        | System Action                                                  |
 | ---------------------------- | -------------------------------------------------------------- |
-| Invoice Approved & Sent      | Customer Ledger debited, Invoice status → Sent                 |
 | Full payment received        | Invoice status → Paid, Pending Amt → 0                        |
 | Partial payment received     | Invoice status → Partial, Pending Amt reduced                 |
 | Due date passes (unpaid)     | Invoice status → Overdue, Notification to accounts team       |
@@ -5578,8 +5571,8 @@ Form screen to create a new sales invoice. Supports two creation modes: **(1) Fr
 | Field          | Type         | Required | Description                                           |
 | -------------- | ------------ | -------- | ----------------------------------------------------- |
 | Creation Mode  | Radio        | Yes      | From Sales Order / Direct Invoice                     |
-| Sales Order    | Search       | Cond.    | Required if mode = From SO. Fetches SO details. Hidden if mode = Direct |
-| Customer       | Search       | Cond.    | Required if mode = Direct. Search by Name/Code. Fetches billing details from Module 18. Hidden if mode = From SO |
+| Sales Order    | Search + dropdown      | Cond.    | Required if mode = From SO. Fetches SO details. Hidden if mode = Direct |
+| Customer       | Search + dropdown     | Cond.    | Required if mode = Direct. Search by Name/Code. Fetches billing details from Module 18. Hidden if mode = From SO |
 | Invoice Type   | Dropdown     | Yes      | Tax Invoice / Proforma Invoice                        |
 | Invoice Date   | Date Picker  | Yes      | Defaults to today. Cannot be future date              |
 | Credit Period  | Number       | Yes      | Days allowed for payment (default from Contract)      |
@@ -5596,7 +5589,7 @@ Form screen to create a new sales invoice. Supports two creation modes: **(1) Fr
 | GSTIN           | Display  | Auto     | Customer's GST number from Module 18                |
 | Billing Address | Display  | Auto     | Default billing address from Module 18              |
 | State           | Dropdown | Auto     | **Default:** Auto-fetched from Module 18 billing address. **User can override** via `[Change ▼]` to select a different state (e.g., for inter-branch billing). Changing state **re-triggers tax logic** (CGST/SGST ↔ IGST). Options: All Indian states & UTs from Module 9 (Tax Config) |
-| Contact Person  | Display  | Auto     | Primary contact from Module 18                      |
+| Contact Person  | Display (name + mobile) | Auto     | Primary contact from Module 18                      |
 
 > **Data Source:** The entire Customer Details section is auto-populated when a Sales Order is fetched (mode = From SO) or when a Customer is selected (mode = Direct). All data originates from **Module 18 — Customer Master** (billing address, GSTIN, contact). The State field additionally references **Module 9 — Tax Configuration** for the dropdown list and for determining CGST/SGST vs IGST split.
 
@@ -5764,7 +5757,6 @@ Triggered by clicking `[+ ADD LINE ITEM]`. Allows the user to specify whether th
 | Action             | Description                                                      |
 | ------------------ | ---------------------------------------------------------------- |
 | **Save as Draft**  | Saves invoice without finalizing. Does NOT update Ledger         |
-| **Approve & Send** | Finalizes invoice, generates PDF, updates Ledger, sends to customer |
 | **Cancel**         | Discards all changes and returns to Dashboard (28.1)             |
 
 ---
@@ -5945,7 +5937,7 @@ A read-only screen showing the complete invoice with all details — customer in
 | Action              | Type   | Condition          | Description                                      |
 | ------------------- | ------ | ------------------ | ------------------------------------------------ |
 | **Download PDF**    | Button | Sent / Paid        | Download formatted invoice PDF                   |
-| **Resend**          | Button | Sent / Overdue     | Re-send via Email or WhatsApp                    |
+| **send**          | Button | Sent / Overdue     | Re-send via Email or WhatsApp                    |
 | **Record Payment**  | Button | Sent / Partial     | Redirect to Module 30 with this invoice          |
 | **Back to List**    | Button | All                | Returns to Invoice Dashboard (28.1)              |
 
