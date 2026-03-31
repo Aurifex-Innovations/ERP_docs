@@ -4,13 +4,15 @@
 
 The User Profile module provides a **360-degree, read-only view of any employee or technician** within the Pest Control ERP-CRM system. It consolidates personal details, organization hierarchy, salary configuration, banking details, uploaded documents, and leave summaries into a single, section-wise profile page.
 
+Additionally, for users with the **CEO** role, the profile includes a **Company Profile** section that displays and allows editing of the company details originally submitted during Onboarding (Module 2), along with additional branding fields such as Company Logo, Website, and Tagline.
+
 All data displayed in this module is **sourced from existing modules** — no new data entry occurs here. The profile can be **edited only by users with appropriate RBAC permissions** through the underlying source modules (Employee Management, IAM, HRM).
 
 **Module Connections:**
 
-- **Depends on:** Module 1 (IAM — Account ID, password, login status), Module 7 (Branch Management — branch assignment), Module 8 (Employee Master — personal details, role, designation, documents), Module 6 (Configuration — leave types, salary structure, shift settings), Module 25 (HRM — attendance, leave, salary)
-- **Used by:** All ERP users (self-view), HR Managers (employee review), Company Admins (full access)
-- **Data Nature:** Read-only profile view. Editable only through source modules with RBAC control.
+- **Depends on:** Module 1 (IAM — Account ID, password, login status), Module 2 (Company Onboarding — company details, documents), Module 7 (Branch Management — branch assignment), Module 8 (Employee Master — personal details, role, designation, documents), Module 6 (Configuration — leave types, salary structure, shift settings), Module 25 (HRM — attendance, leave, salary)
+- **Used by:** All ERP users (self-view), HR Managers (employee review), Company Admins (full access), CEO (company profile management)
+- **Data Nature:** Read-only profile view. Editable only through source modules with RBAC control. Company Profile section is editable only by CEO.
 
 ---
 
@@ -18,6 +20,7 @@ The module contains the following screens:
 
 - 27.1 User Profile – View Mode (Default)
 - 27.2 User Profile – Edit Mode (RBAC-controlled)
+- 27.3 Company Profile – View & Edit (CEO Only)
 
 ---
 
@@ -133,6 +136,47 @@ A comprehensive, section-wise profile page displaying all relevant information a
 │  │  SL Balance     : 5 / 6                                                │  │
 │  │  PL Balance     : 10 / 15                                              │  │
 │  │  Total Leaves Taken : 4                                                │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ SECTION 8: COMPANY PROFILE (CEO Only) ─────────────────────────────────┐ │
+│  │  ⚠️ This section is ONLY visible when the logged-in user has CEO role   │ │
+│  │                                                                        │  │
+│  │  Company Logo   : ┌─────┐                                              │  │
+│  │                   │ 🏢  │                                              │  │
+│  │                   └─────┘                                              │  │
+│  │                                                                        │  │
+│  │  Company Name   : Acme Pest Solutions Pvt. Ltd.                        │  │
+│  │  Tagline        : "Protecting Homes Since 2010"                        │  │
+│  │  Industry Type  : Pest Control                                         │  │
+│  │  Website        : www.acmepest.com                                     │  │
+│  │  Founding Year  : 2010                                                 │  │
+│  │                                                                        │  │
+│  │  ── Contact Person ──────────────────────────────                      │  │
+│  │  Name           : John Doe                                             │  │
+│  │  Email          : john@acmepest.com                                    │  │
+│  │  Phone          : 9988776655                                           │  │
+│  │                                                                        │  │
+│  │  ── Legal & Tax Information ─────────────────────                      │  │
+│  │  GST Number     : 27AAAAA0000A1Z5                                      │  │
+│  │  PAN Number     : ABCDE1234F                                           │  │
+│  │  License Number : PCO-MH-2024-1234 (Optional)                          │  │
+│  │                                                                        │  │
+│  │  ── Registered Address ──────────────────────────                      │  │
+│  │  Address Line 1 : Tower A, IT Park                                     │  │
+│  │  Address Line 2 : —                                                    │  │
+│  │  City           : Noida                                                │  │
+│  │  State          : Uttar Pradesh                                        │  │
+│  │  Pincode        : 201301                                               │  │
+│  │                                                                        │  │
+│  │  ── Company Documents ───────────────────────────                      │  │
+│  │  GST Certificate         │ gst_cert.pdf     │ ✅ Uploaded │ [📥][👁]  │  │
+│  │  PAN Card                │ pan_card.pdf     │ ✅ Uploaded │ [📥][👁]  │  │
+│  │  Business Registration   │ biz_reg.pdf      │ ✅ Uploaded │ [📥][👁]  │  │
+│  │                                                                        │  │
+│  │  ── Onboarding Status ───────────────────────────                      │  │
+│  │  Status         : ✅ Approved                                          │  │
+│  │  Company Code   : ACME-PINE-456 (read-only)                            │  │
 │  │                                                                        │  │
 │  └────────────────────────────────────────────────────────────────────────┘  │
 │                                                                              │
@@ -254,6 +298,64 @@ A comprehensive, section-wise profile page displaying all relevant information a
 
 ---
 
+## Section 8: Company Profile (CEO Only)
+
+> **Visibility Rule:** This entire section is **only visible** when the logged-in user has the **CEO** role. For all other roles, this section is completely hidden.
+
+### 8A. Company Identity
+
+| Field              | Type              | Required | Validation                         | Description                                                        | Source              |
+| ------------------ | ----------------- | -------- | ---------------------------------- | ------------------------------------------------------------------ | ------------------- |
+| Company Logo       | Display (Image)   | No       | JPG/PNG, Max 2MB, Recommended 200×200px | Company logo image used across the ERP and invoices           | **New** (Module 27) |
+| Company Name       | Display           | Yes      | Min 3 chars, Max 150 chars         | Registered company name                                            | Module 2            |
+| Tagline            | Display           | No       | Max 200 chars                      | Company motto or short branding text                               | **New** (Module 27) |
+| Industry Type      | Display (Badge)   | Yes      | Must be from predefined list       | Business sector (Grocery / Pest Control / Clothing)                | Module 2            |
+| Website            | Display           | No       | Valid URL format                   | Company website URL                                                | **New** (Module 27) |
+| Founding Year      | Display           | No       | 4-digit year, cannot be future     | Year the company was established                                   | **New** (Module 27) |
+
+### 8B. Contact Person
+
+| Field                | Type     | Required | Validation                    | Description                                                | Source    |
+| -------------------- | -------- | -------- | ----------------------------- | ---------------------------------------------------------- | --------- |
+| Contact Person Name  | Display  | Yes      | Min 2 chars, Max 120 chars    | Primary contact person for the company                     | Module 2  |
+| Contact Person Email | Display  | Yes      | Valid email format            | Contact person's email address                             | Module 2  |
+| Contact Person Phone | Display  | Yes      | Exactly 10 digits, numeric   | Contact person's phone number                              | Module 2  |
+
+### 8C. Legal & Tax Information
+
+| Field          | Type     | Required | Validation                              | Description                                    | Source    |
+| -------------- | -------- | -------- | --------------------------------------- | ---------------------------------------------- | --------- |
+| GST Number     | Display  | Yes      | 15-char valid GSTIN format              | Goods & Services Tax Identification Number     | Module 2  |
+| PAN Number     | Display  | Yes      | 10-char alphanumeric (AAAAA9999A)       | Permanent Account Number                       | Module 2  |
+| License Number | Display  | No       | Alphanumeric if provided                | Business or pest control license number        | Module 2  |
+
+### 8D. Registered Address
+
+| Field            | Type     | Required | Validation             | Description                                    | Source    |
+| ---------------- | -------- | -------- | ---------------------- | ---------------------------------------------- | --------- |
+| Address Line 1   | Display  | Yes      | Min 5 chars, Max 200   | Primary company address line                   | Module 2  |
+| Address Line 2   | Display  | No       | Max 200 chars          | Additional address info (floor, landmark, etc.)| Module 2  |
+| City             | Display  | Yes      | Min 2 chars, alphabets | City of registered office                      | Module 2  |
+| State            | Display  | Yes      | Min 2 chars, alphabets | State of registered office                     | Module 2  |
+| Pincode          | Display  | Yes      | 6-digit numeric        | Postal code of registered office               | Module 2  |
+
+### 8E. Company Documents
+
+| Field                          | Type          | Required | Validation                 | Description                                   | Source    |
+| ------------------------------ | ------------- | -------- | -------------------------- | --------------------------------------------- | --------- |
+| GST Certificate                | Display (Link)| Yes      | PDF/JPG/PNG, Max 5MB       | Uploaded GST certificate document             | Module 2  |
+| PAN Card                       | Display (Link)| Yes      | PDF/JPG/PNG, Max 5MB       | Uploaded PAN card document                    | Module 2  |
+| Business / Registration Doc    | Display (Link)| Yes      | PDF/JPG/PNG, Max 10MB      | Trade license or incorporation document       | Module 2  |
+
+### 8F. Onboarding Status (Read-Only)
+
+| Field              | Type            | Required | Description                                              | Source    |
+| ------------------ | --------------- | -------- | -------------------------------------------------------- | --------- |
+| Onboarding Status  | Display (Badge) | Auto     | 🟢 Approved / 🟡 Pending / 🔴 Rejected                  | Module 2  |
+| Company Code       | Display         | Auto     | System-generated unique company identifier (read-only)   | Module 2  |
+
+---
+
 ## Page-Level Actions
 
 | Action   | Condition                              | Behaviour                                                     |
@@ -369,6 +471,47 @@ Same layout as View Mode, but applicable fields become editable. Accessible by t
 │  │                                                                        │  │
 │  └────────────────────────────────────────────────────────────────────────┘  │
 │                                                                              │
+│  ┌─ SECTION 8: COMPANY PROFILE (CEO Only) ─────────────────────────────────┐ │
+│  │  ⚠️ Visible only to CEO role. Editable only by CEO.                     │ │
+│  │                                                                        │  │
+│  │  Company Logo   : ┌─────┐  [📤 Upload Logo]                            │  │
+│  │                   │ 🏢  │                                              │  │
+│  │                   └─────┘                                              │  │
+│  │                                                                        │  │
+│  │  Company Name   : [Acme Pest Solutions Pvt. Ltd.__]                    │  │
+│  │  Tagline        : [Protecting Homes Since 2010____]                    │  │
+│  │  Industry Type  : [▼ Pest Control ▼_______________]                    │  │
+│  │  Website        : [www.acmepest.com_______________]                    │  │
+│  │  Founding Year  : [2010___________________________]                    │  │
+│  │                                                                        │  │
+│  │  ── Contact Person ──────────────────────────────                      │  │
+│  │  Name           : [John Doe_______________________]                    │  │
+│  │  Email          : [john@acmepest.com______________]                    │  │
+│  │  Phone          : [9988776655_____________________]                    │  │
+│  │                                                                        │  │
+│  │  ── Legal & Tax Information ─────────────────────                      │  │
+│  │  GST Number     : [27AAAAA0000A1Z5________________]                    │  │
+│  │  PAN Number     : [ABCDE1234F_____________________]                    │  │
+│  │  License Number : [PCO-MH-2024-1234_______________]                    │  │
+│  │                                                                        │  │
+│  │  ── Registered Address ──────────────────────────                      │  │
+│  │  Address Line 1 : [Tower A, IT Park_______________]                    │  │
+│  │  Address Line 2 : [______________________________]                     │  │
+│  │  City           : [Noida_________________________]                     │  │
+│  │  State          : [Uttar Pradesh_________________]                     │  │
+│  │  Pincode        : [201301________________________]                     │  │
+│  │                                                                        │  │
+│  │  ── Company Documents ────────────────────────── (read-only)           │  │
+│  │  GST Certificate       │ gst_cert.pdf   │ ✅ Uploaded │  [📥][👁]    │  │
+│  │  PAN Card              │ pan_card.pdf   │ ✅ Uploaded │  [📥][👁]    │  │
+│  │  Business Registration │ biz_reg.pdf    │ ✅ Uploaded │  [📥][👁]    │  │
+│  │                                                                        │  │
+│  │  ── Onboarding Status ──────────────────────────── (read-only)         │  │
+│  │  Status         : ✅ Approved                                          │  │
+│  │  Company Code   : ACME-PINE-456                                        │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
 │  ┌────────────────────────────────────────────────────────────────────────┐  │
 │  │                     [💾 Save]        [✖ Cancel]                        │  │
 │  └────────────────────────────────────────────────────────────────────────┘  │
@@ -389,6 +532,7 @@ Same layout as View Mode, but applicable fields become editable. Accessible by t
 | 5. Bank Info             | All bank fields                                                          | —                                                         |
 | 6. Documents             | Upload / Delete documents                                                | —                                                         |
 | 7. Leave Summary         | —                                                                        | All fields (managed via Module 25 HRM)                    |
+| 8. Company Profile       | Company Logo, Name, Tagline, Industry Type, Website, Founding Year, Contact Person (Name/Email/Phone), GST Number, PAN Number, License Number, Address fields | Onboarding Status, Company Code, Company Documents (always read-only once uploaded) |
 
 ---
 
@@ -405,8 +549,10 @@ Same layout as View Mode, but applicable fields become editable. Accessible by t
 | 5. Bank Info             | Bank Name, Account Number, Account Holder Name, IFSC Code, UPI ID            |
 | 6. Documents             | Upload own documents (Gov ID, Address Proof, Education Certs, Other Docs)    |
 | 7. Leave Summary         | — (Read-Only)                                                                 |
+| 8. Company Profile       | All fields (CEO role only — see Section 8 details)                           |
 
 > **Note:** Employment Contract can only be uploaded by HR Manager or Admin — not by the employee.
+> **Note:** Section 8 (Company Profile) is only visible and editable for users with the CEO role.
 
 ### Document Actions (Edit Mode)
 
@@ -441,21 +587,45 @@ Same layout as View Mode, but applicable fields become editable. Accessible by t
 | Documents        | File size limits enforced. Only PDF/JPG/PNG accepted.                  |
 | Reporting Manager| Must be an active employee. Cannot be self.                            |
 
+### Section 8 — Company Profile Validation (CEO Only)
+
+| Field                     | Validation                                                                  |
+| ------------------------- | --------------------------------------------------------------------------- |
+| Company Logo              | JPG/PNG only. Max 2MB. Recommended 200×200px. Optional.                     |
+| Company Name              | Min 3, Max 150 chars. Alphanumeric and spaces allowed.                      |
+| Tagline                   | Max 200 chars. Optional.                                                    |
+| Industry Type             | Must select from predefined dropdown (Grocery / Pest Control / Clothing).   |
+| Website                   | Must be a valid URL format if provided. Optional.                           |
+| Founding Year             | Must be a 4-digit year. Cannot be in the future. Optional.                  |
+| Contact Person Name       | Min 2, Max 120 chars. No numbers or special characters.                     |
+| Contact Person Email      | Must be valid email format.                                                 |
+| Contact Person Phone      | Exactly 10 digits, numeric only.                                            |
+| GST Number                | 15-character valid GSTIN format (2 digits + PAN + 3 chars).                 |
+| PAN Number                | 10 characters, format: AAAAA9999A.                                          |
+| License Number            | Alphanumeric if provided. Optional.                                         |
+| Company Address Line 1    | Min 5 chars, Max 200 chars.                                                 |
+| Company City              | Min 2 chars, alphabets only.                                                |
+| Company State             | Min 2 chars, alphabets only.                                                |
+| Company Pincode           | 6-digit numeric.                                                            |
+
+> **Note:** Company Documents (GST Certificate, PAN Card, Business Registration) are read-only in the User Profile and are not editable or re-uploadable. They can only be managed through Module 2 (Onboarding).
+
 ---
 
 ================================================================================
 
 # Access Control (RBAC)
 
-| Role                   | View Own Profile | View Others' Profile | Edit Profile | Upload Documents | View Salary |
-| ---------------------- | ---------------- | -------------------- | ------------ | ---------------- | ----------- |
-| **Company Admin**      | ✅               | ✅ (All employees)   | ✅ (All)     | ✅                | ✅           |
-| **HR Manager**         | ✅               | ✅ (All employees)   | ✅ (All)     | ✅                | ✅           |
-| **Branch Manager**     | ✅               | ✅ (Own branch only) | ✅ (Branch)  | ✅ (Branch)       | ❌           |
-| **Technician Manager** | ✅               | ✅ (Own branch only) | ❌           | ❌                | ❌           |
-| **Operations Manager** | ✅               | ✅ (All employees)   | ❌           | ❌                | ❌           |
-| **Technician**         | ✅ (Self only)   | ❌                   | ❌           | ✅ (Own docs)     | ✅ (Own)     |
-| **Senior Technician**  | ✅ (Self only)   | ❌                   | ❌           | ✅ (Own docs)     | ✅ (Own)     |
+| Role                   | View Own Profile | View Others' Profile | Edit Profile | Upload Documents | View Salary | Company Profile (Sec 8) |
+| ---------------------- | ---------------- | -------------------- | ------------ | ---------------- | ----------- | ----------------------- |
+| **CEO**                | ✅               | ✅ (All employees)   | ✅ (All)     | ✅                | ✅           | ✅ View & Edit           |
+| **Company Admin**      | ✅               | ✅ (All employees)   | ✅ (All)     | ✅                | ✅           | ❌ Hidden                |
+| **HR Manager**         | ✅               | ✅ (All employees)   | ✅ (All)     | ✅                | ✅           | ❌ Hidden                |
+| **Branch Manager**     | ✅               | ✅ (Own branch only) | ✅ (Branch)  | ✅ (Branch)       | ❌           | ❌ Hidden                |
+| **Technician Manager** | ✅               | ✅ (Own branch only) | ❌           | ❌                | ❌           | ❌ Hidden                |
+| **Operations Manager** | ✅               | ✅ (All employees)   | ❌           | ❌                | ❌           | ❌ Hidden                |
+| **Technician**         | ✅ (Self only)   | ❌                   | ❌           | ✅ (Own docs)     | ✅ (Own)     | ❌ Hidden                |
+| **Senior Technician**  | ✅ (Self only)   | ❌                   | ❌           | ✅ (Own docs)     | ✅ (Own)     | ❌ Hidden                |
 
 ---
 
@@ -475,6 +645,11 @@ Same layout as View Mode, but applicable fields become editable. Accessible by t
 | Salary Visibility           | Salary section is hidden for users without salary view permission. Technicians and Senior Technicians can only see their own salary. |
 | Role Change Cascade         | Changing an employee's Role automatically updates their Module Permissions in Module 1 (IAM). |
 | Profile Completeness        | A profile completion indicator (e.g., "85% Complete") can be shown based on how many required fields and documents are filled. |
+| Company Profile Visibility  | Section 8 (Company Profile) is **only rendered** when the logged-in user's role = CEO. For all other roles, the section DOM element is not rendered at all. |
+| Company Profile Source      | Fields in Section 8 are populated from the Module 2 (Onboarding) company details API (`GET /api/v1/company-details`). New fields (Logo, Tagline, Website, Founding Year) are stored as extensions to the company profile. |
+| Company Logo Usage          | The uploaded Company Logo is used on invoices (Module 28), quotations, and other customer-facing documents generated by the ERP. |
+| Company Doc Read-Only     | Once company documents (GST Certificate, PAN Card, Business Registration) are uploaded during onboarding (Module 2), they become **permanently read-only** in the User Profile. The CEO can only Download (📥) and View (👁) them — no re-upload or delete is allowed. Any document changes must go through Module 2 onboarding flow. |
+| Onboarding Status Read-Only | The Onboarding Status and Company Code fields are always read-only and cannot be modified by any user, including the CEO. They reflect the current verification state from Module 2 → Module 3.
 
 ---
 

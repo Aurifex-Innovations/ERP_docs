@@ -2,7 +2,7 @@
 
 ## Overview
 
-Bills module manages all **Accounts Payable** operations — recording, tracking, and managing purchase bills received from vendors/suppliers. Supports both **Purchase Order (PO) linked bills** and **direct expense bills** (rent, utilities, office). Implements **3-Way Matching** (PO → GRN → Bill) for stock purchases to ensure integrity. Handles vendor TDS deduction, GST Input Tax Credit (ITC), and Debit Notes for purchase returns.
+Bills module manages all **Accounts Payable** operations — recording, tracking, and managing purchase bills received from vendors/suppliers. Supports both **Purchase Order (PO) linked bills** and **direct expense bills** (rent, utilities, office). Handles vendor TDS deduction, GST Input Tax Credit (ITC), and Debit Notes for purchase returns.
 
 **Module Connections:**
 
@@ -18,7 +18,7 @@ The module contains the following screens:
 - 29.2 Add Purchase Bill (From PO / Direct)
 - 29.3 View Bill Detail (Read-only)
 - 29.4 Edit Bill (Draft Only)
-- 29.5 Debit Note (Purchase Return)
+- 29.5 Debit Note (Adjustment)
 
 ---
 
@@ -42,7 +42,7 @@ The default landing screen for Module 29. Displays all purchase bills in a **tab
 │  │                                                                        │  │
 │  │ Branch     : [▼ All Branches ▼]                                       │  │
 │  │ Vendor     : [🔍 Search Vendor ▼]                                     │  │
-│  │ Status     : [☑ Draft ☑ Pending ☑ Approved ☑ Paid ☑ Overdue]       │  │
+│  │ Status     : [☑ Draft ☑ Pending ☑ Paid ☑ Overdue ☑ Cancelled]      │  │
 │  │ Bill Type  : [☑ Purchase Bill ☑ Expense Bill]                        │  │
 │  │ Date Range : [📅 From] - [📅 To]                                      │  │
 │  │ PO Number  : [____________________]                                    │  │
@@ -55,8 +55,8 @@ The default landing screen for Module 29. Displays all purchase bills in a **tab
 │                                                                              │
 │  BILLS SUMMARY CARDS                                                         │
 │  ┌──────────────┬──────────────┬──────────────┬──────────────┐               │
-│  │ Total        │ Overdue      │ Paid         │ Pending      │               │
-│  │ Payable      │              │ (This Month) │ Approval     │               │
+│  │ Total        │ Overdue      │ Paid         │ Drafts       │               │
+│  │ Payable      │              │ (This Month) │              │               │
 │  │ ₹ 8,20,000   │ ₹ 1,40,000   │ ₹ 5,50,000   │ 8 Bills      │               │
 │  └──────────────┴──────────────┴──────────────┴──────────────┘               │
 │                                                                              │
@@ -69,17 +69,17 @@ The default landing screen for Module 29. Displays all purchase bills in a **tab
 │  │BILL-5526 │14 Mar 26 │Office Mart  │—         │₹ 5,000    │₹ 5,000       │ │
 │  └──────────┴──────────┴─────────────┴──────────┴───────────┴──────────────┘ │
 │                                                                              │
-│  ┌──────────┬──────────────┬─────────────┬───────────────────────────────┐   │
-│  │Due Date  │Status        │3-Way Match  │Actions                        │   │
-│  │──────────┼──────────────┼─────────────┼───────────────────────────────│   │
-│  │10 Apr 26 │🟡 PENDING    │✅ Matched   │[View] [Approve] [Send Back]  │   │
-│  │12 Apr 26 │🟢 PAID       │✅ Matched   │[View] [PDF] [Payment Ref]    │   │
-│  │—         │⚪ DRAFT      │— (Expense)  │[View] [Edit] [Delete]        │   │
-│  └──────────┴──────────────┴─────────────┴───────────────────────────────┘   │
+│  ┌──────────┬──────────────┬───────────────────────────────────────┐         │
+│  │Due Date  │Status        │Actions                                │         │
+│  │──────────┼──────────────┼───────────────────────────────────────│         │
+│  │10 Apr 26 │🟡 PENDING    │[View] [Make Payment]                  │         │
+│  │12 Apr 26 │🟢 PAID       │[View] [PDF] [Payment Ref]             │         │
+│  │—         │⚪ DRAFT      │[View] [Edit] [Delete] [Confirm]       │         │
+│  └──────────┴──────────────┴───────────────────────────────────────┘         │
 │                                                                              │
 │  Pagination:  Previous   1   2   3   ...   10   Next                         │
 │                                                                              │
-│  Legend: ⚪ Draft  🟡 Pending  🟢 Paid  🟠 Partial  🔴 Overdue  ⛔ Rejected │
+│  Legend: ⚪ Draft  🟡 Pending  🟢 Paid  🟠 Partial  🔴 Overdue  ⛔ Cancelled │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -97,9 +97,8 @@ The default landing screen for Module 29. Displays all purchase bills in a **tab
 | Bill Amount  | Number | Auto     | Total bill amount including taxes                            |
 | Pending Amt  | Number | Auto     | Remaining unpaid amount                                      |
 | Due Date     | Date   | Auto     | Bill Date + Credit Period                                    |
-| Status       | Badge  | Auto     | Draft / Pending Approval / Approved / Paid / Partial / Overdue / Rejected |
-| 3-Way Match  | Badge  | Auto     | Matched ✅ / Mismatch ⚠️ / N/A (for expense bills)          |
-| Actions      | Buttons| —        | View / Edit / Delete / Approve / Send Back / PDF             |
+| Status       | Badge  | Auto     | Draft / Pending / Paid / Partial / Overdue / Cancelled       |
+| Actions      | Buttons| —        | View / Edit / Delete / Confirm / PDF / Payment Ref           |
 
 ---
 
@@ -110,7 +109,7 @@ The default landing screen for Module 29. Displays all purchase bills in a **tab
 | Total Payable   | Number | Sum of all unpaid bill amounts                            |
 | Overdue         | Number | Sum of bills past due date and not fully paid             |
 | Paid (Month)    | Number | Total vendor payments this month                          |
-| Pending Approval| Number | Count of bills awaiting manager approval                  |
+| Drafts          | Number | Count of bills in Draft status                            |
 
 ---
 
@@ -120,7 +119,7 @@ The default landing screen for Module 29. Displays all purchase bills in a **tab
 | ---------- | ------------ | ---------------------------------------------------- |
 | Branch     | Dropdown     | All Branches / Specific Branch (from Module 7)       |
 | Vendor     | Search       | Search by vendor name (from Module 11)               |
-| Status     | Multi-select | Draft / Pending / Approved / Paid / Overdue / Rejected |
+| Status     | Multi-select | Draft / Pending / Paid / Overdue / Cancelled           |
 | Bill Type  | Multi-select | Purchase Bill / Expense Bill                         |
 | Date Range | Date Range   | From – To                                            |
 | PO Number  | Text         | Filter by linked Purchase Order number               |
@@ -144,10 +143,9 @@ Searchable by:
 | **View**         | Button | All statuses         | Opens bill detail in read-only mode (Screen 29.3)       |
 | **Edit**         | Button | Draft only           | Opens bill in edit mode (Screen 29.4)                   |
 | **Delete**       | Button | Draft only           | Deletes draft bill after confirmation                   |
-| **Approve**      | Button | Pending Approval     | Approves bill, updates Vendor Ledger                    |
-| **Send Back**    | Button | Pending Approval     | Rejects with remarks, sends back to creator             |
-| **Make Payment** | Button | Approved / Overdue   | Redirects to Module 30 with bill pre-selected           |
-| **PDF**          | Button | Approved / Paid      | Download bill copy as PDF                               |
+| **Confirm**      | Button | Draft only           | Finalizes bill, updates Vendor Ledger                   |
+| **Make Payment** | Button | Pending / Overdue    | Redirects to Module 30 with bill pre-selected           |
+| **PDF**          | Button | Pending / Paid       | Download bill copy as PDF                               |
 | **Payment Ref**  | Button | Paid                 | View linked payment voucher from Module 30              |
 
 ---
@@ -166,9 +164,7 @@ Searchable by:
 
 | Rule                                | Description                                                  |
 | ----------------------------------- | ------------------------------------------------------------ |
-| Draft bills do not affect Ledger    | Only Approved bills update the Vendor Ledger                 |
-| Approval required for > ₹10,000    | Bills above ₹10,000 require manager approval                |
-| 3-Way Match for PO-linked bills     | PO quantity/amount vs GRN received vs Bill charged must match |
+| Draft bills do not affect Ledger    | Only Confirmed bills update the Vendor Ledger                |
 | Auto-Draft from Stock Entry         | When stock is added in Module 11, a Draft Bill is auto-created |
 | Overdue auto-detection              | Bills marked Overdue when Due Date passes without full payment |
 | TDS auto-calculation                | If vendor is TDS applicable, TDS is auto-deducted            |
@@ -179,12 +175,10 @@ Searchable by:
 
 | Event                           | System Action                                                |
 | ------------------------------- | ------------------------------------------------------------ |
-| Bill Approved                   | Vendor Ledger credited, Bill status → Approved               |
+| Bill Confirmed                  | Vendor Ledger credited, Bill status → Pending                |
 | Full payment made               | Bill status → Paid, Pending Amt → 0                          |
 | Partial payment made            | Bill status → Partial, Pending Amt reduced                   |
 | Due date passes (unpaid)        | Bill status → Overdue, Notification to accounts team         |
-| 3-Way Mismatch detected         | Warning icon ⚠️ shown, Approval blocked until resolved       |
-| Bill Rejected (Send Back)       | Status → Rejected, Creator receives notification             |
 
 ---
 
@@ -229,14 +223,6 @@ Form screen to record a new purchase bill received from a vendor. Supports two m
 │  │ Payment Terms    : Net 30                                             │  │
 │  └───────────────────────────────────────────────────────────────────────┘  │
 │                                                                              │
-│  3-WAY MATCH STATUS (For PO-linked bills)                                    │
-│  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │ PO Quantity    : 100 Ltr    │ GRN Received : 100 Ltr  │ ✅ Match     │  │
-│  │ PO Amount      : ₹ 80,000   │ Bill Amount  : ₹ 85,000 │ ⚠️ Mismatch │  │
-│  │                                                                       │  │
-│  │ ⚠️ Bill amount exceeds PO by ₹ 5,000 — Requires manager approval     │  │
-│  └───────────────────────────────────────────────────────────────────────┘  │
-│                                                                              │
 │  LINE ITEMS (Auto-populated from PO, editable)                               │
 │  ┌───┬────────────┬────────┬─────┬──────┬──────┬──────┬─────┬────────────┐  │
 │  │Sr │Description │HSN     │Qty  │UOM   │Rate  │Disc% │Tax% │Amount      │  │
@@ -269,7 +255,7 @@ Form screen to record a new purchase bill received from a vendor. Supports two m
 │  │ Internal Remarks  : [_____________________________________________]   │  │
 │  └───────────────────────────────────────────────────────────────────────┘  │
 │                                                                              │
-│  [SAVE AS DRAFT]    [SUBMIT FOR APPROVAL]    [CANCEL]                        │
+│  [SAVE AS DRAFT]    [CONFIRM BILL]    [CANCEL]                               │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -360,21 +346,6 @@ Form screen to record a new purchase bill received from a vendor. Supports two m
 
 ---
 
-## 3-Way Match Logic
-
-| Check             | PO Value   | GRN Value  | Bill Value | Result         |
-| ----------------- | ---------- | ---------- | ---------- | -------------- |
-| Quantity           | 100 Ltr    | 100 Ltr    | 100 Ltr    | ✅ Match       |
-| Quantity           | 100 Ltr    | 95 Ltr     | 100 Ltr    | ⚠️ GRN Short   |
-| Amount             | ₹80,000    | —          | ₹80,000    | ✅ Match       |
-| Amount             | ₹80,000    | —          | ₹85,000    | ⚠️ Bill Exceeds|
-
-**Mismatch Handling:**
-- System shows warning banner with the mismatch details.
-- Bill can be saved as Draft but CANNOT be approved until mismatch is resolved or overridden by Manager.
-
----
-
 ## Business Rules
 
 | Rule                         | Description                                                     |
@@ -383,7 +354,6 @@ Form screen to record a new purchase bill received from a vendor. Supports two m
 | TDS Deduction                | If vendor has TDS flag, TDS auto-deducted before payable calc   |
 | GST ITC (Input Tax Credit)   | Tax paid on purchase bills is recorded as Input Credit           |
 | Auto-Draft from Module 11    | Stock entry in Module 11 auto-creates a Draft bill              |
-| Approval Hierarchy           | Bills > ₹10,000 need Accounts Manager approval                 |
 | Expense categorization       | Expense bills must be mapped to COA account head (Module 32)    |
 
 ---
@@ -392,8 +362,8 @@ Form screen to record a new purchase bill received from a vendor. Supports two m
 
 | Action                     | Description                                                   |
 | -------------------------- | ------------------------------------------------------------- |
-| **Save as Draft**          | Saves bill without submitting. No Ledger impact               |
-| **Submit for Approval**    | Sends bill to manager queue. Status → Pending Approval        |
+| **Save as Draft**          | Saves bill without finalizing. No Ledger impact               |
+| **Confirm Bill**           | Confirms the bill and moves status to Pending. Updates Ledger |
 | **Cancel**                 | Discards changes and returns to Dashboard (29.1)              |
 
 ---
@@ -403,10 +373,7 @@ Form screen to record a new purchase bill received from a vendor. Supports two m
 | Event                        | System Action                                                 |
 | ---------------------------- | ------------------------------------------------------------- |
 | PO Selected (Fetch)          | Auto-populates Vendor, Line Items, GRN quantities             |
-| 3-Way Match runs             | Compares PO vs GRN vs Bill; shows match/mismatch status       |
-| Submit for Approval clicked  | Bill moves to approval queue; notification to manager         |
-| Bill Approved                | Vendor Ledger credited; GST ITC recorded; Status → Approved   |
-| Bill Rejected (Send Back)    | Status → Rejected; Creator notified with remarks              |
+| Confirm Bill clicked         | Bill status → Pending; Vendor Ledger credited; GST recorded   |
 
 ---
 
@@ -415,7 +382,7 @@ Form screen to record a new purchase bill received from a vendor. Supports two m
 # 29.3 View Bill Detail (Read-only)
 
 **Description:**
-A read-only screen showing the complete bill with all details — vendor info, line items, tax/TDS breakdown, 3-way match status, payment history, and audit trail. Shows linked PO, GRN references, and Debit Notes if any.
+A read-only screen showing the complete bill with all details — vendor info, line items, tax/TDS breakdown, payment history, and audit trail. Shows linked PO, GRN references, and Debit Notes if any.
 
 ---
 
@@ -425,8 +392,7 @@ A read-only screen showing the complete bill with all details — vendor info, l
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                       BILL DETAIL — BILL-5524                                │
 │                                                                              │
-│  Status: 🟡 PENDING APPROVAL        Due Date: 10 Apr 2026                   │
-│  3-Way Match: ⚠️ Mismatch (₹5,000 excess)                                  │
+│  Status: 🟡 PENDING                 Due Date: 10 Apr 2026                   │
 │                                                                              │
 │  ┌──────────────────────────────┬────────────────────────────────────────┐  │
 │  │ FROM (Vendor)                │ TO (Our Company)                       │  │
@@ -456,12 +422,15 @@ A read-only screen showing the complete bill with all details — vendor info, l
 │  │ NET PAYABLE       : ₹ 1,05,300                              │            │
 │  └──────────────────────────────────────────────────────────────┘            │
 │                                                                              │
-│  PAYMENT HISTORY                                                             │
-│  ┌──────────┬──────────┬──────────┬────────────┬──────────────────────────┐  │
-│  │Voucher # │Date      │Amount    │Mode        │Status                    │  │
-│  │──────────┼──────────┼──────────┼────────────┼──────────────────────────│  │
-│  │(No payments made yet)                                                  │  │
-│  └──────────┴──────────┴──────────┴────────────┴──────────────────────────┘  │
+│  TRANSACTION LEDGER (PAYMENTS & ADJUSTMENTS)                                 │
+│  ┌──────────┬────────────┬──────────────────┬──────────────┬──────────────┐  │
+│  │Date      │Type        │Reference #       │Debit Amount  │Running Bal   │  │
+│  │──────────┼────────────┼──────────────────┼──────────────┼──────────────│  │
+│  │ 10 Mar   │ Bill       │ BILL-5524        │     —        │ ₹ 1,05,300   │  │
+│  │ 12 Mar   │ Payment    │ RCPT-8021        │ ₹ 50,000     │ ₹ 55,300     │  │
+│  │ 15 Mar   │ Debit Note │ DN-5001          │ ₹ 10,000     │ ₹ 45,300     │  │
+│  └──────────┴────────────┴──────────────────┴──────────────┴──────────────┘  │
+│  [+ RECORD PAYMENT] (To Mod 30)   [+ ISSUE DEBIT NOTE] (To Mod 29.5)         │
 │                                                                              │
 │  ATTACHED DOCUMENTS                                                          │
 │  ┌──────────────────────────────────────────────────────────────────────┐    │
@@ -472,11 +441,11 @@ A read-only screen showing the complete bill with all details — vendor info, l
 │  ┌──────────────────────────────────────────────────────────────────────┐    │
 │  │ 10 Mar 2026 09:00 — Created by Suresh Kumar (Draft)                 │    │
 │  │ 10 Mar 2026 09:30 — Auto-linked to PO-3012 and GRN-1150            │    │
-│  │ 10 Mar 2026 10:00 — Submitted for Approval by Suresh Kumar         │    │
+│  │ 10 Mar 2026 10:00 — Confirmed by Suresh Kumar                      │    │
 │  └──────────────────────────────────────────────────────────────────────┘    │
 │                                                                              │
-│  [📥 DOWNLOAD PDF]  [✅ APPROVE]  [🔙 SEND BACK]  [🧾 MAKE PAYMENT]       │
-│  [📄 DEBIT NOTE]  [🔙 BACK TO LIST]                                        │
+│  [📥 DOWNLOAD PDF]  [🧾 MAKE PAYMENT]  [📄 DEBIT NOTE]                     │
+│  [🔙 BACK TO LIST]                                                          │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -488,7 +457,6 @@ A read-only screen showing the complete bill with all details — vendor info, l
 | Field           | Type    | Description                                               |
 | --------------- | ------- | --------------------------------------------------------- |
 | Status          | Badge   | Current bill status                                       |
-| 3-Way Match     | Badge   | Match / Mismatch indicator with details                   |
 | From / To       | Display | Vendor details and Company details side by side           |
 | Vendor Bill #   | Text    | Vendor's own invoice number                               |
 | Our Bill #      | Text    | Our system-generated number                               |
@@ -496,7 +464,7 @@ A read-only screen showing the complete bill with all details — vendor info, l
 | GRN Reference   | Link    | Clickable link to Goods Receipt Note                      |
 | Line Items      | Table   | All billed items with HSN, rate, tax, and amount          |
 | Tax & TDS       | Summary | Tax breakdown with TDS deduction                          |
-| Payment History | Table   | Linked payment vouchers from Module 30                    |
+| Ledger          | Table   | Transaction history showing payments, debit notes, & balance|
 | Attached Docs   | Links   | Uploaded bill copies with View/Download                   |
 | Audit Log       | List    | Chronological log of all actions                          |
 
@@ -506,10 +474,8 @@ A read-only screen showing the complete bill with all details — vendor info, l
 
 | Action           | Type   | Condition          | Description                                      |
 | ---------------- | ------ | ------------------ | ------------------------------------------------ |
-| **Approve**      | Button | Pending Approval   | Approve bill, update Vendor Ledger               |
-| **Send Back**    | Button | Pending Approval   | Reject with remarks                              |
-| **Make Payment** | Button | Approved / Overdue | Redirect to Module 30 with bill pre-selected     |
-| **Debit Note**   | Button | Approved / Paid    | Opens Debit Note form (Screen 29.5)              |
+| **Make Payment** | Button | Pending / Overdue  | Redirect to Module 30 with bill pre-selected     |
+| **Debit Note**   | Button | Pending / Paid     | Opens Debit Note form (Screen 29.5)              |
 | **Download PDF** | Button | All except Draft   | Download bill details as PDF                     |
 | **Back to List** | Button | All                | Returns to Bills Dashboard (29.1)                |
 
@@ -520,7 +486,7 @@ A read-only screen showing the complete bill with all details — vendor info, l
 # 29.4 Edit Bill (Draft Only)
 
 **Description:**
-Allows editing of a bill that is still in **Draft** status. Once submitted for approval, the bill cannot be edited — it must be Sent Back by the manager first. The edit form has the same layout as Add Bill (29.2) with all fields pre-populated.
+Allows editing of a bill that is still in **Draft** status. Once the bill is confirmed, it cannot be edited. The edit form has the same layout as Add Bill (29.2) with all fields pre-populated.
 
 ---
 
@@ -528,10 +494,10 @@ Allows editing of a bill that is still in **Draft** status. Once submitted for a
 
 | Rule                            | Description                                              |
 | ------------------------------- | -------------------------------------------------------- |
-| Edit allowed only for Draft     | Pending/Approved/Paid bills cannot be modified           |
+| Edit allowed only for Draft     | Pending/Paid bills cannot be modified                    |
 | Audit trail maintained          | Every edit is logged with user name and timestamp        |
 | Re-save as Draft                | Changes saved without affecting the Ledger               |
-| Submit from Edit                | Draft can be submitted for approval from edit screen     |
+| Confirm from Edit               | Draft can be confirmed directly from the edit screen     |
 
 ---
 
@@ -541,18 +507,17 @@ Allows editing of a bill that is still in **Draft** status. Once submitted for a
 | ------------------------- | ---------------------------------------------------------- |
 | User opens Edit           | All fields loaded from saved Draft data                    |
 | User modifies line items  | Tax/TDS breakdown auto-recalculates                        |
-| 3-Way Match re-runs       | If PO linked, match status updates in real-time            |
 | Save as Draft pressed     | Updates existing draft, no Ledger change                   |
-| Submit for Approval       | Moves to approval queue, manager notified                  |
+| Confirm Bill              | Bill is confirmed, vendor ledger updated, status → Pending |
 
 ---
 
 ================================================================================
 
-# 29.5 Debit Note (Purchase Return)
+# 29.5 Debit Note (Adjustment)
 
 **Description:**
-Used when goods received are damaged, incorrect, or need to be returned to the vendor. The Debit Note reduces the value of the original Purchase Bill and adjusts the Vendor Ledger. Similar to Credit Note in Module 28 but for the purchase side.
+A form to issue a Debit Note against an existing purchase bill. Used to reduce the vendor's payable balance in scenarios like purchase returns, billing errors, or post-purchase discounts. Supports auto-generation during the payment settlement process (Module 30).
 
 ---
 
@@ -560,40 +525,33 @@ Used when goods received are damaged, incorrect, or need to be returned to the v
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                         CREATE DEBIT NOTE                                    │
+│                           ISSUE DEBIT NOTE                                   │
 │                                                                              │
-│  ORIGINAL BILL                                                               │
+│  REFERENCE DETAILS                                                           │
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │ Bill #        : BILL-5524                                             │  │
-│  │ Vendor        : Industrial Chemicals Pvt Ltd                          │  │
-│  │ Bill Amount   : ₹ 1,06,200                                           │  │
-│  │ Pending Amount: ₹ 1,05,300 (after TDS)                               │  │
+│  │ Select Bill*      : [🔍 Search Vendor / Bill # ▼]                     │  │
+│  │                     (Shows only Pending or Paid bills)                │  │
+│  │                                                                       │  │
+│  │ Vendor            : Industrial Chemicals Pvt Ltd                      │  │
+│  │ Bill Amount       : ₹ 1,05,300                                       │  │
+│  │ Pending Amount    : ₹ 55,300                                         │  │
 │  └───────────────────────────────────────────────────────────────────────┘  │
 │                                                                              │
-│  DEBIT NOTE DETAILS                                                          │
+│  ADJUSTMENT DETAILS                                                          │
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │ Debit Note Date* : [📅 28 Mar 2026]                                   │  │
-│  │ Reason*          : [▼ Select Reason ▼]                                │  │
-│  │                    (Damaged Goods / Wrong Item / Quality Issue /       │  │
-│  │                     Pricing Error / Short Received / Other)            │  │
-│  │ Remarks          : [_____________________________________________]    │  │
+│  │ Date*             : [📅 15 Mar 2026]                                  │  │
+│  │ Reason*           : [▼ Purchase Return / Discount / Error / Other]    │  │
+│  │ Adjust Debit Amt* : [₹ 10,000      ]                                  │  │
+│  │                     (Must be ≤ Pending Amount. Current max: ₹ 55,300)│  │
+│  │ Remarks           : [_______________________________________________] │  │
 │  └───────────────────────────────────────────────────────────────────────┘  │
 │                                                                              │
-│  LINE ITEMS TO DEBIT                                                         │
-│  ┌───┬────────────────────┬─────┬──────┬──────┬──────────┬──────────────┐  │
-│  │ ☑ │Description         │Qty  │Rate  │Tax%  │Orig Amt  │Debit Amt     │  │
-│  │───┼────────────────────┼─────┼──────┼──────┼──────────┼──────────────│  │
-│  │ ☑ │Chemical X          │ 10  │1,200 │ 18%  │₹ 14,160  │₹ 14,160     │  │
-│  │ ☐ │Chemical Y          │ 50  │  600 │ 18%  │₹ 35,400  │—             │  │
-│  └───┴────────────────────┴─────┴──────┴──────┴──────────┴──────────────┘  │
+│  ATTACHMENTS                                                                 │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Supporting Doc    : [📎 Upload Return LR / Vendor Email]              │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
 │                                                                              │
-│  DEBIT SUMMARY                                                               │
-│  ┌──────────────────────────────────────────────────────────────┐            │
-│  │ Total Debit Amount    : ₹ 14,160                             │            │
-│  │ Adjusted Bill Payable : ₹ 1,06,200 - ₹ 14,160 = ₹ 92,040   │            │
-│  └──────────────────────────────────────────────────────────────┘            │
-│                                                                              │
-│  [ISSUE DEBIT NOTE]    [CANCEL]                                              │
+│                                              [ISSUE DEBIT NOTE] [CANCEL]     │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -602,39 +560,45 @@ Used when goods received are damaged, incorrect, or need to be returned to the v
 
 ## Screen Fields
 
-| Field            | Type       | Required | Description                                        |
-| ---------------- | ---------- | -------- | -------------------------------------------------- |
-| Original Bill    | Display    | Auto     | Reference bill details (read-only)                 |
-| Debit Note Date  | Date       | Yes      | Cannot be before original bill date                |
-| Reason           | Dropdown   | Yes      | Predefined reasons for debit                       |
-| Remarks          | Textarea   | No       | Additional explanation                             |
-| Line Item Select | Checkbox   | Yes      | Select which items to debit (min 1)                |
-| Return Qty       | Number     | Yes      | Qty being returned (cannot exceed original)        |
-| Debit Amount     | Number     | Auto     | Auto-calculated based on selected items and qty    |
+| Field            | Type        | Required | Description                                                  |
+| ---------------- | ----------- | -------- | ------------------------------------------------------------ |
+| Select Bill      | Search/Drop | Yes      | Select the original bill against which Debit Note is issued  |
+| Date             | Date Picker | Yes      | Date of issuing the Debit Note                               |
+| Reason           | Dropdown    | Yes      | Reason for adjustment                                        |
+| Adjust Debit Amt | Number      | Yes      | The flat amount by which the bill value is reduced           |
+| Remarks          | Textarea    | No       | Notes regarding the return/adjustment                        |
+| Supporting Doc   | File Upload | No       | Proof of return, vendor communication, etc.                  |
 
 ---
 
 ## Validation Rules
 
-| Field            | Rule                                                       |
-| ---------------- | ---------------------------------------------------------- |
-| Debit Note Date  | Cannot be before original bill date                        |
-| Reason           | Must select from dropdown                                  |
-| Line Items       | At least 1 item must be selected                           |
-| Return Qty       | Cannot exceed original billed quantity                     |
-| Debit Amount     | Cannot exceed original bill amount                         |
+| Field            | Rule                                                          |
+| ---------------- | ------------------------------------------------------------- |
+| Adjust Debit Amt | Must be greater than 0                                        |
+| Adjust Debit Amt | CANNOT exceed the current Pending Amount of the selected bill |
+| Selected Bill    | Must be in Pending or Paid status (cannot be Draft/Cancelled) |
+
+---
+
+## Business Rules
+
+| Rule                               | Description                                                    |
+| ---------------------------------- | -------------------------------------------------------------- |
+| Flat Adjustment                    | Affects the overall bill value; does not require line-item selection |
+| GST / Tax Reversal                 | Expected to be handled manually or proportionally applied at the accounting layer |
+| Auto-Generation (Module 30)        | When a payment is settled for less than the pending amount and marked "Settle & Close," a Debit Note is auto-generated for the shortfall. |
 
 ---
 
 ## System Behavior
 
-| Event                      | System Action                                             |
-| -------------------------- | --------------------------------------------------------- |
-| Debit Note issued          | DN number generated (DN-XXXXX)                            |
-| Ledger adjustment          | Vendor Ledger debited by DN amount                        |
-| Bill pending reduced       | Original bill's pending amount reduced                    |
-| GST ITC reversal           | Input Tax Credit reversed proportionally                  |
-| Stock return               | If physical return, stock adjusted in Module 11           |
+| Event                           | System Action                                                |
+| ------------------------------- | ------------------------------------------------------------ |
+| "Issue Debit Note" Clicked      | Debit Note created (DN-XXXXX)                                |
+| Ledger Effect                   | Vendor's payable balance is reduced by the Debit Amount      |
+| Bill Record Update              | Original bill's Pending Amount is reduced by the Debit Amount|
+| Status Update (If Fully Adjusted)| If the Debit Note reduces the Pending Amount to 0, bill status changes to Paid |
 
 ---
 
@@ -644,34 +608,27 @@ Used when goods received are damaged, incorrect, or need to be returned to the v
                     ┌──────────┐
                     │  DRAFT   │
                     └────┬─────┘
-                         │ (Submit for Approval)
+                         │ (Confirm Bill)
                          ▼
-                    ┌───────────────┐
-                    │   PENDING     │
-                    │   APPROVAL    │
-                    └────┬────┬─────┘
-                         │    │
-                    ┌────┘    └────┐
-                    ▼              ▼
-             ┌──────────┐  ┌──────────┐
-             │ APPROVED │  │ REJECTED │
-             └────┬─────┘  └──────────┘
-                  │
-             ┌────┴─────┐
-             ▼          ▼
-      ┌──────────┐ ┌──────────┐
-      │ PARTIAL  │ │ OVERDUE  │
-      │ (Payment)│ │(Due Date)│
-      └────┬─────┘ └────┬─────┘
-           │            │
-           ▼            ▼
-      ┌──────────────────┐
-      │      PAID        │
-      └──────────────────┘
+                    ┌──────────┐
+                    │ PENDING  │
+                    └────┬─────┘
+                         │
+              ┌──────────┴──────────┐
+              ▼                     ▼
+       ┌──────────┐          ┌──────────┐
+       │ PARTIAL  │          │ OVERDUE  │
+       │ (Payment)│          │(Due Date)│
+       └────┬─────┘          └────┬─────┘
+            │                     │
+            ▼                     ▼
+       ┌─────────────────────────────┐
+       │           PAID              │
+       └─────────────────────────────┘
 
   Side flows:
-  DRAFT → DELETED
-  APPROVED/PAID → DEBIT NOTE ISSUED
+  DRAFT → CANCELLED
+  PENDING/PAID → DEBIT NOTE ISSUED (Adjustment)
 ```
 
 ---
