@@ -752,7 +752,6 @@ Used to reduce the pending value of an issued invoice. This is a simplified manu
 | --------------       | ------------------------------------------------------------------------ |
 | ADJUST CREDIT AMOUNT | The total manual amount to credit against the invoice's pending balance  |
 
-**Note** = Only visible if user select payment settlement in reason dropdown.
 
 ---
 
