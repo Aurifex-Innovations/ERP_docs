@@ -643,7 +643,6 @@ A read-only screen showing the complete invoice with all details — customer in
 | ------------------- | ------ | ------------------ | ------------------------------------------------ |
 | **Download PDF**    | Button | Sent / Paid        | Download formatted invoice PDF                   |
 | **Resend**          | Button | Sent / Overdue     | Re-send via Email or WhatsApp                    |
-| **Record Payment**  | Button | Sent / Partial     | Redirect to Module 30 with this invoice          |
 | **Back to List**    | Button | All                | Returns to Invoice Dashboard (28.1)              |
 
 ---
