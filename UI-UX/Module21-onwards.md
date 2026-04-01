@@ -5401,7 +5401,7 @@ The default landing screen for Module 28. Displays all sales invoices in a **tab
 | Pending Amt  | Number | Auto     | Remaining unpaid amount (Invoice Amt - Received Amt)           |
 | Due Date     | Date   | Auto     | Payment due date (Invoice Date + Credit Period)                |
 | Status       | Badge  | Auto     | Draft / Sent / Partial / Paid / Overdue / Cancelled            |
-| Actions      | Buttons| —        | View / Edit / Delete / Record Payment / download pdf / download receipt |
+| Actions      | Buttons| —        | View / Edit / Delete / Download PDF / Record Payment ↔ Download Receipt |
 
 ---
 
@@ -5444,8 +5444,14 @@ Searchable by:
 | **Edit**           | Button | Draft only             | Opens invoice in edit mode (Screen 28.4)               |
 | **Delete**         | Button | Draft only             | Deletes draft invoice after confirmation               |
 | **Record Payment** | Button | Sent / Partial / Overdue | Redirects to Module 30 with invoice pre-selected      |
-| **Download PDF**   | Button | Sent / Paid            | Download invoice as PDF                                |
-| **Download Receipt**| Button | Paid                   | View/download payment receipt from Module 30           |
+| **Download Receipt**| Button | Paid                   | Downloads the linked payment receipt PDF from Module 30 |
+| **Download PDF**   | Button | Sent / Paid / Partial  | Downloads the invoice copy as PDF                      |
+
+> **Conditional Button Note:**
+> - **Record Payment** and **Download Receipt** occupy the **same button position** in each row.
+> - If Invoice Status = `Sent` / `Partial` / `Overdue` → Button shows **“Record Payment”** → Redirects to Module 30 with this invoice pre-selected.
+> - If Invoice Status = `Paid` → Button changes to **“Download Receipt”** → Downloads the payment receipt PDF from Module 30.
+> - If Invoice Status = `Draft` / `Cancelled` → This button is **hidden**.
 
 ---
 
@@ -6204,7 +6210,7 @@ The default landing screen for Module 29. Displays all purchase bills in a **tab
 | Pending Amt  | Number | Auto     | Remaining unpaid amount                                      |
 | Due Date     | Date   | Auto     | Bill Date + Credit Period                                    |
 | Status       | Badge  | Auto     | Draft / Pending / Paid / Partial / Overdue / Cancelled       |
-| Actions      | Buttons| —        | View / Edit / Delete / Confirm / PDF / Payment Ref           |
+| Actions      | Buttons| —        | View / Edit / Delete / Download PDF / Make Payment ↔ Download Receipt |
 
 ---
 
@@ -6224,11 +6230,9 @@ The default landing screen for Module 29. Displays all purchase bills in a **tab
 | Filter     | Type         | Options                                              |
 | ---------- | ------------ | ---------------------------------------------------- |
 | Branch     | Dropdown     | All Branches / Specific Branch (from Module 7)       |
-| Vendor     | Search       | Search by vendor name (from Module 11)               |
 | Status     | Multi-select | Draft / Pending / Paid / Overdue / Cancelled           |
 | Bill Type  | Multi-select | Purchase Bill / Expense Bill                         |
 | Date Range | Date Range   | From – To                                            |
-| PO Number  | Text         | Filter by linked Purchase Order number               |
 
 ---
 
@@ -6249,10 +6253,15 @@ Searchable by:
 | **View**         | Button | All statuses         | Opens bill detail in read-only mode (Screen 29.3)       |
 | **Edit**         | Button | Draft only           | Opens bill in edit mode (Screen 29.4)                   |
 | **Delete**       | Button | Draft only           | Deletes draft bill after confirmation                   |
-| **Confirm**      | Button | Draft only           | Finalizes bill, updates Vendor Ledger                   |
-| **Make Payment** | Button | Pending / Overdue    | Redirects to Module 30 with bill pre-selected           |
-| **PDF**          | Button | Pending / Paid       | Download bill copy as PDF                               |
-| **Payment Ref**  | Button | Paid                 | View linked payment voucher from Module 30              |
+| **Make Payment** | Button | Pending / Partial / Overdue | Redirects to Module 30 with bill pre-selected for payment |
+| **Download Receipt** | Button | Paid             | Downloads the linked payment voucher/receipt from Module 30 |
+| **Download PDF** | Button | Pending / Paid / Partial | Downloads the bill copy as PDF                        |
+
+> **Conditional Button Note:**
+> - **Make Payment** and **Download Receipt** occupy the **same button position** in each row.
+> - If Bill Status = `Pending` / `Partial` / `Overdue` → Button shows **"Make Payment"** → Redirects to Module 30 with this bill pre-selected.
+> - If Bill Status = `Paid` → Button changes to **"Download Receipt"** → Downloads the payment voucher/receipt PDF from Module 30.
+> - If Bill Status = `Draft` / `Cancelled` → This button is **hidden**.
 
 ---
 
