@@ -2337,35 +2337,33 @@ All fields from Screens 12–16 are displayed in read-only format, consolidated 
 
 ## View Fields
 
-| Field | Type | Description |
-| --- | --- | --- |
-| Request ID | Display | `PC-YYYY-NNNN` |
-| Status | Badge | Draft / Pending / Approved / Rejected / Returned / Paid |
-| Category | Display | Expense category |
-| Expense Date | Display | From – To date range |
-| Amount (₹) | Display | Total claimed amount |
-| Description | Display | Expense explanation |
-| Related Task | Display (Link) | Task ID (if linked) |
-| Related SO | Display (Link) | SO Number (if linked) |
-| Bills / Receipts | Tap-to-View | Attached receipt files (tap to open full-screen preview) |
-| Justification | Display | Additional note |
-
-| Pre-Approved? | Display | Yes / No |
-| Approved By | Display | Manager name (if pre-approved) |
-| Approval Reference | Display | Free text (if provided) |
-| Approval Status | Badge | Pending / Approved / Rejected |
-| Reviewed By | Display | Manager who reviewed |
-| Review Date | Display | Date of review |
-| Approved Amount | Display | Amount approved (may differ from claimed) |
-| Reviewer Remarks | Display | Manager's comments |
-| **— REIMBURSEMENT (Visible only when Status = Paid) —** | | |
-| Payment Status | Badge | Paid |
-| Payment Mode | Display | Mode used for reimbursement (Bank Transfer / UPI / Cash) |
-| Transaction Ref | Display | UTR / Cheque number |
-| Payment Date | Display | Reimbursement date |
-| Paid Amount | Display | Actual amount reimbursed |
-| Submitted On | Display | Submission timestamp |
-| Sent To | Display | Approver(s) who received the request |
+| Section                  | Field Name          | Description                                                                 |
+|--------------------------|--------------------|-----------------------------------------------------------------------------|
+| Header                   | Back               | Navigates user back to previous screen                                     |
+| Header                   | Request ID         | Unique identifier of the petty cash request                                |
+| Header                   | Status             | Current status of the request (Pending, Approved, Paid, etc.)              |
+| Expense Details          | Category           | Type of expense (e.g., Local Conveyance, Materials, etc.)                  |
+| Expense Details          | Expense Date       | Date or date range when the expense occurred                               |
+| Expense Details          | Amount             | Total expense amount requested                                             |
+| Expense Details          | Description        | Detailed explanation of the expense                                        |
+| Expense Details          | Related Task       | Linked task reference for which expense was incurred                       |
+| Expense Details          | Related SO         | Linked sales order reference                                               |
+| Supporting Documents     | Bills / Receipts   | Uploaded proof documents for the expense                                   |
+| Supporting Documents     | Justification      | Reason explaining why the expense was necessary                            |
+| Prior Approval           | Pre-Approved       | Indicates whether the expense was approved in advance                      |
+| Approval Status          | Approval Status    | Current approval stage of the request                                      |
+| Approval Status          | Reviewed By        | Name of the reviewer/approver                                              |
+| Approval Status          | Review Date        | Date when the request was reviewed                                         |
+| Approval Status          | Approved Amount    | Final approved reimbursement amount                                        |
+| Approval Status          | Reviewer Remarks   | Comments given by the approver                                             |
+| Reimbursement Details    | Payment Status     | Status of reimbursement (visible only when marked as Paid)                 |
+| Reimbursement Details    | Payment Mode       | Mode used for payment (Bank Transfer, Cash, etc.)                          |
+| Reimbursement Details    | Transaction Ref    | Reference number of the payment transaction                                |
+| Reimbursement Details    | Payment Date       | Date when payment was made                                                 |
+| Reimbursement Details    | Paid Amount        | Final amount paid to the requester                                         |
+| Submission Info          | Submitted On       | Date and time when the request was submitted                               |
+| Submission Info          | Sent To            | Users or roles to whom the request was sent for approval                   |
+| Footer                  | Bottom Navigation Bar | Navigation controls available at the bottom of the screen                 |
 
 ---
 
