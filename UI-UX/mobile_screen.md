@@ -657,7 +657,7 @@ Appears when a date cell is tapped:
 # Screen 7: Profile Page (View Mode)
 
 **Source Reference:** Module 27 – User Profile
-**Purpose:** View a comprehensive, read-only 360-degree profile of the logged-in employee (Self-View). Structured into 7 standard sections matching the web ERP.
+**Purpose:** View a comprehensive, read-only 360-degree profile of the logged-in employee (Self-View). Structured into 7 standard sections matching the web ERP (Module 27.1).
 
 ---
 
@@ -670,6 +670,7 @@ Appears when a date cell is tapped:
 │  ┌─ 1. BASIC USER INFORMATION ────────────┐  │
 │  │  [👤 Profile Photo]                    │  │
 │  │  EMP-00124 | Ravi Sharma               │  │
+│  │  Account ID: ravi.s                    │  │
 │  │  ravi.s@company.com                    │  │
 │  │  📱 9876543210  |  Alt: 9123456789     │  │
 │  │  Status: 🟢 Active                      │  │
@@ -678,6 +679,7 @@ Appears when a date cell is tapped:
 │                                              │
 │  ┌─ 2. ORGANIZATION INFORMATION ──────────┐  │
 │  │  Dept        : Operations              │  │
+│  │  Designation : Senior Pest Ctrl Tech   │  │
 │  │  Role        : Senior Technician       │  │
 │  │  Branch      : Mumbai — Andheri        │  │
 │  │  Manager     : Anil K.                 │  │
@@ -739,7 +741,7 @@ Appears when a date cell is tapped:
 | Element / Field | Type | Description |
 | --- | --- | --- |
 | Page Header | Header | "PROFILE" title with Edit button |
-| 1. Basic Info | Section (Read-only) | Profile Photo, EMP ID, Full Name, Email, Contact No, Alt No, Status, Date of Joining, Employment Type |
+| 1. Basic Info | Section (Read-only) | Profile Photo, EMP ID, Full Name, Account ID, Email, Contact No, Alt No, Status, Date of Joining, Employment Type |
 | 2. Org Info | Section (Read-only) | Department, Designation, Role, Branch, Reporting Manager |
 | 3. Address Info | Section (Read-only) | Current and Permanent Address (Line 1/2, City, State, Country, Pincode) |
 | 4. Salary Info | Section (Read-only) | Salary Type, Basic, HRA, Allowances, Incentives, Deductions, Net Salary. **Hidden** if user lacks salary view permissions |
@@ -771,51 +773,89 @@ Appears when a date cell is tapped:
 │  [← Cancel]       EDIT PROFILE     [💾 Save] │
 │                                              │
 │  ┌─ 1. BASIC USER INFORMATION ────────────┐  │
+│  │  [👤 Photo] [📤 Change Photo]          │  │
 │  │  First Name: Ravi (read-only)          │  │
+│  │  Last Name : Sharma (read-only)        │  │
 │  │  Email: ravi.s@company (read-only)     │  │
 │  │  Contact No*: [9876543210________]     │  │
 │  │  Alt No     : [9123456789________]     │  │
+│  │  Account ID: ravi.s (read-only)        │  │
+│  │  Status: 🟢 Active (read-only)         │  │
 │  └────────────────────────────────────────┘  │
 │  (Org, Salary, Leave sections read-only)     │
 │                                              │
 │  ┌─ 3. ADDRESS INFORMATION ───────────────┐  │
-│  │  Current Address Line 1*:              │  │
+│  │  ── Current Address ──                 │  │
+│  │  Address Line 1*:                      │  │
 │  │  [42, Shanti Nagar, Andheri West___]   │  │
+│  │  Address Line 2:                       │  │
+│  │  [Near City Mall__________________]    │  │
 │  │  City*:    [Mumbai___________]         │  │
 │  │  State*:   [▼ Maharashtra ▼__]         │  │
+│  │  Country*: [▼ India ▼________]         │  │
 │  │  Pincode*: [400058___________]         │  │
 │  │                                        │  │
 │  │  [☑] Same as Current Address           │  │
+│  │                                        │  │
+│  │  ── Permanent Address ── (disabled)    │  │
+│  │  (Auto-filled from Current Address)    │  │
 │  └────────────────────────────────────────┘  │
 │                                              │
 │  ┌─ 5. BANK INFORMATION ──────────────────┐  │
-│  │  Bank Name   : [State Bank of India]   │  │
-│  │  Account No  : [123456784321_______]   │  │
-│  │  Holder Name : [Ravi Sharma________]   │  │
-│  │  IFSC Code   : [SBIN0001234________]   │  │
+│  │  Bank Name*  : [State Bank of India]   │  │
+│  │  Account No* : [123456784321_______]   │  │
+│  │  Holder Name*: [Ravi Sharma________]   │  │
+│  │  IFSC Code*  : [SBIN0001234________]   │  │
 │  │  UPI ID      : [ravi.s@sbi_________]   │  │
 │  └────────────────────────────────────────┘  │
 │                                              │
 │  ┌─ 6. DOCUMENTS ─────────────────────────┐  │
-│  │  Gov ID Proof       : ✅ Uploaded       │  │
-│  │  Address Proof      : ✅ Uploaded       │  │
+│  │  Gov ID Proof       : ✅ Uploaded [👁]  │  │
+│  │  Address Proof      : ✅ Uploaded [👁]  │  │
+│  │  Education Certs    : ✅ Uploaded [👁]  │  │
 │  │  Other Docs         : ❌ Pending        │  │
 │  │  [📤 UPLOAD NEW DOCUMENT]               │  │
 │  └────────────────────────────────────────┘  │
+│  ⚠ Employment Contract cannot be uploaded   │
+│    by self — managed by HR only.            │
 └──────────────────────────────────────────────┘
 ```
 
 ## Form Fields (Self-Edit Permitted Fields)
 
-| Section | Editable Fields | Validation Rules |
+> Matches **Module 27.2 Self-Edit Rules**. Only the following fields are editable by the employee. All other fields remain read-only.
+
+| Section | Editable Fields | Read-Only Fields |
 | --- | --- | --- |
-| **1. Basic Info** | Contact Number, Alternate Number | Valid 10-digit mobile number |
-| **2. Org Info** | None (Read-only) | — |
-| **3. Address Info** | Current & Permanent Address (Line 1, 2, City, State, Pincode), "Same as Current" checkbox | Pincode must be 6-digits. Address Line 1, City, State required |
-| **4. Salary Info** | None (Read-only) | — |
-| **5. Bank Info** | Bank Name, Account No (unmasked in edit), Holder Name, IFSC Code, UPI ID | IFSC must be 11-char alphanumeric |
-| **6. Documents** | Upload Gov ID, Address Proof, Education Certs, Other Docs | Max 5MB per file (PDF/JPG/PNG). Note: 
-| **7. Leave Summary**| None (Read-onEmployment Contract cannot be uploaded by self |ly) | — |
+| **1. Basic Info** | Profile Photo, Contact Number, Alternate Number | EMP ID, First Name, Last Name, Full Name, Email, Account ID, Password, Status, Date of Joining, Employment Type |
+| **2. Org Info** | None (Read-only) | Department, Designation, Role, Branch, Reporting Manager, App User |
+| **3. Address Info** | Current & Permanent Address (Line 1, Line 2, City, State, Country, Pincode), "Same as Current" checkbox | — |
+| **4. Salary Info** | None (Read-only, view own salary only) | All salary fields |
+| **5. Bank Info** | Bank Name, Account Number (unmasked in edit), Account Holder Name, IFSC Code, UPI ID | — |
+| **6. Documents** | Upload: Gov ID Proof, Address Proof, Education Certs, Other Docs | Employment Contract (HR/Admin only — cannot be uploaded by self) |
+| **7. Leave Summary** | None (Read-only) | All leave fields (managed via Module 25) |
+
+---
+
+## Validation Rules (Self-Edit Mode)
+
+| Field | Validation |
+| --- | --- |
+| Profile Photo | JPG/PNG only, Max 2MB |
+| Contact Number | Must be valid 10-digit Indian mobile number |
+| Alternate Number | Must be valid 10-digit Indian mobile number (if provided) |
+| Address Line 1 | Min 5 chars, Max 200 chars. Required |
+| Address Line 2 | Max 200 chars. Optional |
+| City | Min 2 chars, alphabets. Required |
+| State | Must be from predefined list. Required |
+| Country | Default: India. Required |
+| Pincode | Must be 6-digit numeric. Required |
+| Bank Name | Min 3 chars. Required |
+| Account Number | Numeric. Required |
+| Account Holder Name | Min 2 chars. Required |
+| IFSC Code | Must be 11-character alphanumeric. Required |
+| UPI ID | Must follow `name@bank` format (if provided). Optional |
+| Documents | PDF/JPG/PNG only, Max 5MB per file |
 
 ## Actions
 
