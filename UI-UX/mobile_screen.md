@@ -31,6 +31,9 @@
 20. [Screen 17: Service Report View](#screen-17-service-report-view)
 21. [Screen 18: Notifications](#screen-18-notifications)
 22. [Screen 19: Chatbot](#screen-19-chatbot)
+23. [Screen 20: Petty Cash — My Requests](#screen-20-petty-cash--my-requests)
+24. [Screen 20.1: Add Petty Cash Request](#screen-201-add-petty-cash-request)
+25. [Screen 20.2: View My Petty Cash Request (Read-Only)](#screen-202-view-my-petty-cash-request-read-only)
 
 ---
 
@@ -46,6 +49,7 @@
 | Attendance | Module 25 – HRM (Attendance Section) |
 | Leave | Module 25 – HRM (Leave Section) |
 | Profile & Salary | Module 25 – HRM (Employee, Salary), Module 6 (Salary & Leave Config), Module 8 (Employee Master) |
+| Petty Cash | Module 24 – Petty Cash Management, Module 8 (Employee — bank/UPI details), Module 7 (Branch) |
 
 ---
 
@@ -299,8 +303,9 @@
 | Services | 📋 | Services | Screen 4: Services (Tasks) Page | Count of pending tasks |
 | Calendar | 📅 | Calendar | Screen 5: Calendar Page | — |
 | Leave | 🏖️ | Leave | Screen 6: Leave Module | Count of pending leave requests |
+| Petty Cash | 💰 | Petty Cash | Screen 20: Petty Cash — My Requests | Count of Draft / Returned requests |
 | Profile | 👤 | Profile | Screen 7: Profile Page | — |
-
+* Profile not in bottom - it will set on header to open profile.
 ## Behaviour
 
 | Rule | Description |
@@ -1856,6 +1861,7 @@ All fields from Screens 12–16 are displayed in read-only format, consolidated 
 | Task Update | ⚠️ | Task rescheduled, task priority changed |
 | Leave | 🏖️ | Leave approved, leave rejected |
 | Attendance | ⏰ | Reminder to punch in, late marking alert |
+| Petty Cash | 💰 | Request approved, request rejected, request returned, payment processed |
 | System | 🔔 | App updates, announcements, policy changes |
 
 ## Actions
@@ -1919,6 +1925,416 @@ All fields from Screens 12–16 are displayed in read-only format, consolidated 
 | Send Button (➤) | Icon Button | Submits the typed question to the chatbot |
 | Context-Aware | Backend Logic | Can reference the technician's current tasks and assigned chemicals |
 | Help Desk | Quick Link | Quick link to contact the branch manager or support team |
+
+---
+
+# Screen 20: Petty Cash — My Requests
+
+**Source Reference:** Module 24 – Petty Cash Management (24.2 Tab 2: My Requests)
+**Purpose:** Personal expense tracker for the logged-in employee. Shows all petty cash requests submitted by the current user. Users can create new requests, track approval status, and view details of past claims.
+**Opens From:** Bottom Navigation Bar → **Petty Cash (💰)** tab.
+
+---
+
+## Screen Layout
+
+```
+┌──────────────────────────────────────────────┐
+│  PETTY CASH                      [🔍] [🔽]   │
+│                                              │
+│  ┌──────────────────────────────────────┐    │
+│  │ [All (18)] │ [Pending (2)]          │    │
+│  │ [Approved (10)] │ [Rejected (3)]    │    │
+│  │ [Returned (1)]  │ [Paid (2)]        │    │
+│  └──────────────────────────────────────┘    │
+│                                              │
+│  ┌──────────────────────────────────────┐    │
+│  │  💰 PC-2026-0045                     │    │
+│  │  📂 Local Conveyance                │    │
+│  │  💵 ₹ 1,250                          │    │
+│  │  📅 23 Mar 2026                      │    │
+│  │  Status: ⏳ Pending                   │    │
+│  └──────────────────────────────────────┘    │
+│  ┌──────────────────────────────────────┐    │
+│  │  💰 PC-2026-0038                     │    │
+│  │  📂 Chemical                         │    │
+│  │  💵 ₹ 2,400                          │    │
+│  │  📅 20 Mar 2026                      │    │
+│  │  Status: ✅ Approved                  │    │
+│  └──────────────────────────────────────┘    │
+│  ┌──────────────────────────────────────┐    │
+│  │  💰 PC-2026-0020                     │    │
+│  │  📂 Vendor Payment                   │    │
+│  │  💵 ₹ 4,500                          │    │
+│  │  📅 12 Mar 2026                      │    │
+│  │  Status: 🔄 Returned                 │    │
+│  └──────────────────────────────────────┘    │
+│                                              │
+│  ┌──────────────────────────────────────┐    │
+│  │       [+ ADD REQUEST]                │    │
+│  └──────────────────────────────────────┘    │
+│                                              │
+│  [Bottom Navigation Bar]                     │
+└──────────────────────────────────────────────┘
+```
+
+## Screen Components
+
+### 20.1 Header & Top Controls
+
+| Element | Type | Description |
+| --- | --- | --- |
+| Page Header | Header | "PETTY CASH" title bar |
+| Search Icon (🔍) | Icon | Tap to search by Request ID or Description |
+| Filter Icon (🔽) | Icon | Tap to open filter options (Category, Date Range) |
+
+### 20.2 Status Filter Tabs
+
+| Tab | Filter |
+| --- | --- |
+| All | Shows all petty cash requests |
+| Pending | Status = Pending (awaiting approval) |
+| Approved | Status = Approved |
+| Rejected | Status = Rejected |
+| Returned | Status = Returned (needs correction & resubmission) |
+| Paid | Status = Paid (reimbursement completed) |
+
+### 20.3 Request Card Fields
+
+| Field | Type | Description | Source |
+| --- | --- | --- | --- |
+| Request ID | Display | Unique ID `PC-YYYY-NNNN`. Tap card → opens View Detail (Screen 20.2) | Module 24 |
+| Category | Badge | Expense category (e.g., Local Conveyance, Chemical) | Module 24 |
+| Amount (₹) | Display | Total claimed amount | Module 24 |
+| Date | Display | Expense date (From) or range | Module 24 |
+| Status | Badge | ⏳ Pending / ✅ Approved / ❌ Rejected / 🔄 Returned / 💰 Paid / 📝 Draft | Module 24 |
+
+**Card Tap Action:** Opens View My Petty Cash Request (Screen 20.2).
+
+### 20.4 Filter Options
+
+| Filter | Type | Options |
+| --- | --- | --- |
+| Category | Dropdown | All / Asset Purchase / Chemical / Fuel / Internet & Telephone / Local Conveyance / Office Expenses / Salary Advance / Staff Welfare / Stationery / Statutory & License / Travel Expenses / Vehicle Maintenance / Vendor Payment / Rent / Office Deposit / Promoter Incentive / Overtime / Transportation / Petrocard |
+| Date Range | Date Picker | Custom From – To date range |
+
+### 20.5 Add Request Button
+
+| Action | Trigger | Destination |
+| --- | --- | --- |
+| Add Request | Tap "+ ADD REQUEST" button | Opens Add Petty Cash Request Form (Screen 20.1) |
+
+---
+
+# Screen 20.1: Add Petty Cash Request
+
+**Source Reference:** Module 24 – Petty Cash Management (24.2.1 Add Petty Cash Request)
+**Purpose:** Form for employees to submit a new petty cash expense claim. Captures expense details, supporting documents, employee bank/UPI information for reimbursement, and optional prior approval reference.
+**Opens From:** Screen 20 (My Requests) → **[+ ADD REQUEST]** button.
+
+---
+
+## Screen Layout
+
+```
+┌──────────────────────────────────────────────┐
+│  [← Back]     ADD PETTY CASH REQUEST         │
+│                                              │
+│  Request ID: PC-2026-XXXX (Auto on Submit)   │
+│                                              │
+│  ─── EXPENSE DETAILS ──────────────────────  │
+│  Category*                                   │
+│  [▼ Select Category ▼]                       │
+│    • Asset Purchase      • Chemical          │
+│    • Fuel                • Internet & Tel.   │
+│    • Local Conveyance    • Office Expenses   │
+│    • Salary Advance      • Staff Welfare     │
+│    • Stationery          • Statutory & Lic.  │
+│    • Travel Expenses     • Vehicle Maint.    │
+│    • Vendor Payment      • Rent              │
+│    • Office Deposit      • Promoter Incent.  │
+│    • Overtime            • Transportation    │
+│    • Petrocard                               │
+│                                              │
+│  Expense Date (From)*                        │
+│  [📅 20 Mar 2026]                            │
+│                                              │
+│  Expense Date (To)*                          │
+│  [📅 23 Mar 2026]                            │
+│                                              │
+│  Amount (₹)*                                 │
+│  [₹ 1,250______________]                     │
+│                                              │
+│  Description*                                │
+│  [Purchased pest bait from local vendor ]    │
+│  [during service at ABC Corp Head Office]    │
+│                                              │
+│  Related Task (Optional)                     │
+│  [🔍 Search Task ID ▼]                       │
+│                                              │
+│  Related SO (Optional)                       │
+│  [🔍 Search SO No. ▼]                        │
+│                                              │
+│  ─── SUPPORTING DOCUMENTS ─────────────────  │
+│  Bill / Receipt*                             │
+│  [📎 Upload File]  ✅ receipt_1.jpg           │
+│  (PDF, JPG, PNG — Max 5MB per file)          │
+│  [📎 Upload More]  (Up to 5 files)           │
+│                                              │
+│  Justification Note (Optional)               │
+│  [________________________________]          │
+│                                              │
+│  ─── PRIOR APPROVAL ──────────────────────── │
+│  Was this expense pre-approved?              │
+│  [☑ Yes]  [☐ No]                             │
+│                                              │
+│  ── If Yes ──                                │
+│  Approved By*                                │
+│  [🔍 Search Manager / Supervisor ▼]          │
+│  Approval Reference                          │
+│  [Verbal approval on 22 Mar_______]          │
+│                                              │
+│  ┌──────────────────────────────────────┐    │
+│  │  [SAVE DRAFT]    [SUBMIT REQUEST]   │    │
+│  └──────────────────────────────────────┘    │
+│  [Cancel]                                    │
+└──────────────────────────────────────────────┘
+```
+
+---
+
+## Section 1: Expense Details Fields
+
+| Field | Type | Required | Validation | Description |
+| --- | --- | --- | --- | --- |
+| Category | Dropdown | Yes | Must select from 19 categories listed in layout | Type of expense |
+| Expense Date From | Date Picker | Yes | Cannot be a future date (max = today) | Start date of the expense period |
+| Expense Date To | Date Picker | Yes | Must be ≥ From date; cannot be a future date | End date of the expense period |
+| Amount (₹) | Currency Input | Yes | Must be > 0; max ₹50,000 | Total expense amount |
+| Description | Textarea | Yes | Min 10 chars, Max 500 chars | What, when, how — expense explanation |
+| Related Task | Search Dropdown | No | Must exist in Module 21 (if provided) | Link to a specific service task |
+| Related SO | Search Dropdown | No | Must exist in Module 20 (if provided) | Link to a specific Sales Order |
+
+### Category Dropdown Values (19 categories)
+
+| # | Category |
+| --- | --- |
+| 1 | Asset Purchase |
+| 2 | Chemical |
+| 3 | Fuel |
+| 4 | Internet & Telephone |
+| 5 | Local Conveyance |
+| 6 | Office Expenses |
+| 7 | Salary Advance |
+| 8 | Staff Welfare |
+| 9 | Stationery |
+| 10 | Statutory & License |
+| 11 | Travel Expenses |
+| 12 | Vehicle Maintenance |
+| 13 | Vendor Payment |
+| 14 | Rent |
+| 15 | Office Deposit |
+| 16 | Promoter Incentive |
+| 17 | Overtime |
+| 18 | Transportation |
+| 19 | Petrocard |
+
+---
+
+## Section 2: Supporting Documents Fields
+
+| Field | Type | Required | Validation | Description |
+| --- | --- | --- | --- | --- |
+| Bill / Receipt | File Upload (Camera / Gallery) | Yes | Min 1 file; PDF, JPG, PNG; Max 5MB each | Proof of expense (up to 5 files) |
+| Upload More | Button | — | Visible after 1st upload; max 5 files total | Add additional receipts |
+| Justification Note | Textarea | No | Max 500 chars | Additional context for the approver |
+
+---
+
+> **Note:** Bank / Payment Details are NOT captured in this form. The employee's bank/UPI details are already available in their employee profile (Module 8). Reimbursement is processed by the Finance team / Manager through the web ERP (Module 24.3.2 — Payment Processing Form).
+
+---
+
+## Section 3: Prior Approval Fields
+
+| Field | Type | Required | Validation | Description |
+| --- | --- | --- | --- | --- |
+| Pre-Approved? | Checkbox | Yes | Default: No | Whether expense was approved beforehand |
+| Approved By | Search Dropdown | Cond. | Must be a manager/supervisor from Module 8. Required if Pre-Approved = Yes | Person who gave prior approval |
+| Approval Reference | Text | No | Max 200 chars | Verbal/written approval reference (e.g., "Verbal approval on 22 Mar") |
+
+---
+
+## Validation Rules (Summary)
+
+| Rule | Description |
+| --- | --- |
+| Category Required | Must select one of 19 categories |
+| Date Validation | From Date ≤ To Date; neither can be a future date |
+| Amount Range | Amount must be > ₹0 and ≤ ₹50,000 |
+| Description Length | Minimum 10 characters, maximum 500 characters |
+| Receipt Upload | At least 1 file required; each file max 5MB; accepted formats: PDF, JPG, PNG |
+| Prior Approval | If "Yes" is checked, "Approved By" becomes mandatory |
+
+---
+
+## Form Actions
+
+| Action | System Behaviour |
+| --- | --- |
+| **Save Draft** | Saves form without validation. Status = **Draft**. No notifications sent. Returns to My Requests (Screen 20) |
+| **Submit Request** | Validates all fields → Opens Recipient Selection popup (matches web 24.2.1.1 behavior) → On confirm: Status = **Pending**, notification sent to selected approver(s) → Shows success toast: "Petty cash request submitted successfully." → Returns to My Requests (Screen 20) |
+| **Cancel** | Discards form and returns to My Requests (Screen 20) |
+
+### Recipient Selection Popup (On Submit)
+
+```
+┌─────────────────────────────────────────┐
+│  SELECT RECIPIENTS                       │
+│  ┌─────────────────────────────────┐    │
+│  │  Send to:                       │    │
+│  │  ☑ All (Default)               │    │
+│  │  ☐ Priya D. (Branch Manager)   │    │
+│  │  ☐ Kamal R. (Operations Head)  │    │
+│  │  ☐ Neha S. (Finance Manager)   │    │
+│  │                                 │    │
+│  │  [CONFIRM SEND]  [CANCEL]       │    │
+│  └─────────────────────────────────┘    │
+└─────────────────────────────────────────┘
+```
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| All | Checkbox | Default | Sends to all authorized approvers |
+| Recipients | Multi-select | Cond. | Individual managers/supervisors (from employee roles in Module 8) |
+
+---
+
+## Business Rules
+
+| Rule | Description |
+| --- | --- |
+| Live Capture | Receipt photos can be captured live from camera or selected from gallery |
+| No Bank Input | Bank/UPI details are NOT collected in this form. Reimbursement is handled by Finance via ERP web (Module 24.3.2) |
+| Offline Draft | Form supports offline draft saving. Auto-syncs when network is restored |
+| Edit Draft / Returned | Only requests with Status = **Draft** or **Returned** can be edited. Editing opens this form pre-filled with existing data |
+
+---
+
+# Screen 20.2: View My Petty Cash Request (Read-Only)
+
+**Source Reference:** Module 24 – Petty Cash Management (24.2.2 View My Request)
+**Purpose:** Read-only detail screen showing the complete breakdown of a petty cash request, including expense info, supporting documents, prior approval, and approval status. **Reimbursement details (Payment Status, Transaction Ref, etc.) are visible only when Status = Paid.**
+**Opens From:** Screen 20 (My Requests) → Tap on any **Request Card**.
+
+---
+
+## Screen Layout
+
+```
+┌──────────────────────────────────────────────┐
+│  [← Back]          REQUEST DETAIL            │
+│                                              │
+│  PC-2026-0045            Status: ⏳ PENDING  │
+│                                              │
+│  ─── EXPENSE DETAILS ──────────────────────  │
+│  ┌──────────────────────────────────────┐    │
+│  │  Category      : Local Conveyance   │    │
+│  │  Expense Date  : 20 – 23 Mar 2026   │    │
+│  │  Amount (₹)    : ₹ 1,250            │    │
+│  │  Description   : Purchased pest     │    │
+│  │                  bait from local     │    │
+│  │                  vendor during       │    │
+│  │                  service at ABC Corp │    │
+│  │  Related Task  : TASK-2026-0201     │    │
+│  │  Related SO    : SO-2026-0112       │    │
+│  └──────────────────────────────────────┘    │
+│                                              │
+│  ─── SUPPORTING DOCUMENTS ─────────────────  │
+│  ┌──────────────────────────────────────┐    │
+│  │  Bills/Receipts: [📄 receipt_1.jpg]  │    │
+│  │                  [📄 receipt_2.pdf]  │    │
+│  │  Justification : Urgent purchase    │    │
+│  │                   during site visit │    │
+│  └──────────────────────────────────────┘    │
+│                                              │
+│  ─── PRIOR APPROVAL ─────────────────────── │
+│  ┌──────────────────────────────────────┐    │
+│  │  Pre-Approved?  : No                │    │
+│  └──────────────────────────────────────┘    │
+│                                              │
+│  ─── APPROVAL STATUS ──────────────────────  │
+│  ┌──────────────────────────────────────┐    │
+│  │  Approval Status : ⏳ Pending       │    │
+│  │  Reviewed By     : —                │    │
+│  │  Review Date     : —                │    │
+│  │  Approved Amount : —                │    │
+│  │  Reviewer Remarks: —                │    │
+│  └──────────────────────────────────────┘    │
+│                                              │
+│  ─── REIMBURSEMENT DETAILS ────────────────  │
+│  (⚠ This section visible ONLY when          │
+│   Status = 💰 Paid)                          │
+│  ┌──────────────────────────────────────┐    │
+│  │  Payment Status  : 💰 Paid          │    │
+│  │  Payment Mode    : Bank Transfer     │    │
+│  │  Transaction Ref : UTR1234567890     │    │
+│  │  Payment Date    : 28 Mar 2026       │    │
+│  │  Paid Amount     : ₹ 1,250           │    │
+│  └──────────────────────────────────────┘    │
+│                                              │
+│  ─── SUBMISSION INFO ──────────────────────  │
+│  ┌──────────────────────────────────────┐    │
+│  │  Submitted On  : 23 Mar 2026 10:30  │    │
+│  │  Sent To       : All Managers       │    │
+│  └──────────────────────────────────────┘    │
+│                                              │
+│  [Bottom Navigation Bar]                     │
+└──────────────────────────────────────────────┘
+```
+
+---
+
+## View Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| Request ID | Display | `PC-YYYY-NNNN` |
+| Status | Badge | Draft / Pending / Approved / Rejected / Returned / Paid |
+| Category | Display | Expense category |
+| Expense Date | Display | From – To date range |
+| Amount (₹) | Display | Total claimed amount |
+| Description | Display | Expense explanation |
+| Related Task | Display (Link) | Task ID (if linked) |
+| Related SO | Display (Link) | SO Number (if linked) |
+| Bills / Receipts | Tap-to-View | Attached receipt files (tap to open full-screen preview) |
+| Justification | Display | Additional note |
+
+| Pre-Approved? | Display | Yes / No |
+| Approved By | Display | Manager name (if pre-approved) |
+| Approval Reference | Display | Free text (if provided) |
+| Approval Status | Badge | Pending / Approved / Rejected |
+| Reviewed By | Display | Manager who reviewed |
+| Review Date | Display | Date of review |
+| Approved Amount | Display | Amount approved (may differ from claimed) |
+| Reviewer Remarks | Display | Manager's comments |
+| **— REIMBURSEMENT (Visible only when Status = Paid) —** | | |
+| Payment Status | Badge | Paid |
+| Payment Mode | Display | Mode used for reimbursement (Bank Transfer / UPI / Cash) |
+| Transaction Ref | Display | UTR / Cheque number |
+| Payment Date | Display | Reimbursement date |
+| Paid Amount | Display | Actual amount reimbursed |
+| Submitted On | Display | Submission timestamp |
+| Sent To | Display | Approver(s) who received the request |
+
+---
+
+## Actions (Conditional)
+
+| Action | Available When | Description |
+| --- | --- | --- |
+| **Edit** | Status = Draft / Returned | Opens Add Petty Cash Request form (Screen 20.1) pre-filled with existing data |
+| **Revoke** | Status = Pending | Cancels the submitted request. Confirmation popup: "Are you sure you want to revoke this request?" |
 
 ---
 
@@ -2023,9 +2439,14 @@ The following diagram summarizes the complete task execution flow from start to 
 | View Leave Status | ✅ | ✅ |
 | View Own Salary | ✅ | ✅ |
 | Download Salary Slip | ✅ (own only) | ✅ (own only) |
+| Submit Petty Cash Request | ✅ | ✅ |
+| View Own Petty Cash Requests | ✅ | ✅ |
+| Edit Draft / Returned Requests | ✅ | ✅ |
+| Revoke Pending Request | ✅ | ✅ |
 | View Other's Tasks | ❌ | ❌ |
 | Create/Edit Tasks | ❌ | ❌ |
 | Approve/Reject Leave | ❌ | ❌ |
+| Approve/Reject Petty Cash | ❌ | ❌ |
 | Edit Attendance | ❌ | ❌ |
 
 ---
