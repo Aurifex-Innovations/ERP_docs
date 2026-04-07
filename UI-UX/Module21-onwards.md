@@ -8094,18 +8094,18 @@ This diagram is intentionally **step-by-step** so a beginner dev can implement e
 ```mermaid
 flowchart LR
   %% Lanes (visual grouping)
-  subgraph MASTERS[Masters (create ledgers)]
+  subgraph MASTERS["Masters - create ledgers"]
     M18[18: Customer Master] -->|Create/Update| L31M[31.2: Ledger Master<br/>Create/Edit Ledger]
     M13[13: Vendor Management] -->|Create/Update| L31M
     M32[32: Chart of Accounts] -->|Account groups/heads| L31M
   end
 
-  subgraph DOCS[Documents (cause postings)]
+  subgraph DOCS["Documents - cause postings"]
     I28D[28: Invoice Draft] -->|Approve & Send| I28F[28: Invoice Final]
     B29D[29: Bill Draft] -->|Confirm Bill| B29F[29: Bill Confirmed]
   end
 
-  subgraph PAY[Payments / Vouchers]
+  subgraph PAY["Payments / Vouchers"]
     V30R[30.2: Receipt Entry] --> V30S[30: Save Voucher]
     V30P[30.3: Payment Entry] --> V30S
     V30C[30.4/30.5: Contra/Journal] --> V30S
@@ -8377,3 +8377,689 @@ Use this when implementing event handlers. Rule of thumb: **documents/vouchers P
 - **Posting must be event-driven** from Modules 28/29/30 status transitions (Finalize/Confirm/Save).
 - **If a party ledger does not exist** (edge case), system should create it via master flow (Module 18/11) or raise a controlled validation error — but it should not “attach” the document to ledger creation.
 
+============================================================================================
+
+# 🎯 MODULE 31: LEDGER MANAGEMENT
+
+## Overview
+
+Ledger module is the **central account book ("Bahi Khata")** of the ERP system. Every Customer, Vendor, Bank Account, and internal account (Expenses, Income) has a Ledger showing the complete transaction history and current balance. All financial transactions from Invoicing (Module 28), Bills (Module 29), and Payments (Module 30) automatically post to the relevant Ledger. Supports opening balances, credit limits, ageing analysis, and account reconciliation.
+
+**Module Connections:**
+
+- **Depends on:** Module 18 (Customer Master — customer details), Module 13 (Vendor Management — vendor details), Module 32 (Chart of Accounts — account group classification)
+- **Fed by (postings):** Module 28 (Invoices → Customer Ledger Debit), Module 29 (Bills → Vendor Ledger Credit), Module 30 (Payments → Both Ledgers)
+- **Used by:** Module 33 (Reports — Balance Sheet, P&L, Ageing), Module 28 (Outstanding check), Module 30 (Balance display)
+
+**Important note (No direct link at creation):**
+- Creating a Ledger in **31.2** does **not** require selecting/attaching any Invoice (Module 28) or Bill (Module 29).
+- Module 28/29 only *feed* the Ledger later by posting transactions against an existing party/account ledger.
+
+---
+
+The module contains the following screens:
+
+- 31.1 Ledger Dashboard (Table View)
+- 31.2 Create / Edit Ledger
+- 31.3 Ledger Statement View (Account Passbook)
+
+---
+
+================================================================================
+
+# 31.1 Ledger Dashboard (Table View)
+
+**Description:**
+The default landing screen for Module 31. Displays all ledger accounts in a **table/list format** with tab-based grouping: **All / Customers (Sundry Debtors) / Vendors (Sundry Creditors) / Bank & Cash / Income & Expenses**. Shows total receivable, payable, and cash position.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          LEDGER MANAGEMENT                                   │
+│                                                                              │
+│  TABS: [ ALL ] [ CUSTOMERS ] [ VENDORS ] [ BANK & CASH ] [ INCOME/EXPENSE ] │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Filters                                                                │  │
+│  │                                                                        │  │
+│  │ Branch        : [▼ All Branches ▼]                                    │  │
+│  │ Account Group : [▼ Sundry Debtors / Sundry Creditors / Bank / etc ▼] │  │
+│  │ Balance Type  : [☑ Debit (Dr) ☑ Credit (Cr) ☑ Zero]                │  │
+│  │ Status        : [☑ Active ☑ Inactive]                                │  │
+│  │                                                                        │  │
+│  │ Search: [____________________] (Ledger Name / GSTIN / PAN)           │  │
+│  │                                                 [Reset Filters]       │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [+ CREATE LEDGER]   [📥 EXPORT ALL]   [📊 AGEING REPORT]                   │
+│                                                                              │
+│  SUMMARY CARDS                                                               │
+│  ┌──────────────┬──────────────┬──────────────┬──────────────┐               │
+│  │ Total        │ Total        │ Cash &       │ Overdue      │               │
+│  │ Receivable   │ Payable      │ Bank Balance │ (>30 days)   │               │
+│  │ ₹ 12,50,000  │ ₹ 8,20,000   │ ₹ 4,80,000   │ ₹ 2,10,000   │               │
+│  └──────────────┴──────────────┴──────────────┴──────────────┘               │
+│                                                                              │
+│  LEDGER LIST TABLE                                                           │
+│  ┌──────────────────┬──────────────────┬─────────────┬──────────────────┐    │
+│  │Ledger Name       │Account Group     │GSTIN / PAN  │Opening Bal.      │    │
+│  │──────────────────┼──────────────────┼─────────────┼──────────────────│    │
+│  │ABC Corp Ltd      │Sundry Debtors    │27AAACB1234F │₹ 5,000 Dr        │    │
+│  │Industrial Chem X │Sundry Creditors  │29AABCI1234F │₹ 15,000 Cr       │    │
+│  │HDFC Current A/C  │Bank Accounts     │—            │₹ 3,50,000 Dr     │    │
+│  │Petty Cash        │Cash-in-Hand      │—            │₹ 25,000 Dr       │    │
+│  │Service Income    │Income (Direct)   │—            │₹ 0                │    │
+│  │Electricity Exp   │Expenses(Indirect)│—            │₹ 0                │    │
+│  └──────────────────┴──────────────────┴─────────────┴──────────────────┘    │
+│                                                                              │
+│  ┌──────────────┬──────────────┬─────────────┬──────────────────────────┐    │
+│  │Total Dr      │Total Cr      │Closing Bal  │Actions                   │    │
+│  │──────────────┼──────────────┼─────────────┼──────────────────────────│    │
+│  │₹ 1,50,000    │₹ 1,20,000    │₹ 35,000 Dr  │[View] [Edit] [Statement] │    │
+│  │₹ 50,000      │₹ 1,55,000    │₹ 1,05,000 Cr│[View] [Edit] [Statement] │    │
+│  │₹ 8,50,000    │₹ 5,00,000    │₹ 7,00,000 Dr│[View] [Statement]       │    │
+│  │₹ 1,00,000    │₹ 75,000      │₹ 50,000 Dr  │[View] [Statement]       │    │
+│  │—             │₹ 18,50,000   │₹ 18,50,000Cr│[View] [Statement]       │    │
+│  │₹ 2,50,000    │—             │₹ 2,50,000 Dr│[View] [Statement]       │    │
+│  └──────────────┴──────────────┴─────────────┴──────────────────────────┘    │
+│                                                                              │
+│  Pagination:  Previous   1   2   3   ...   10   Next                         │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Table View Fields
+
+| Field          | Type   | Required | Description                                                |
+| -------------- | ------ | -------- | ---------------------------------------------------------- |
+| Ledger Name    | Text   | Auto     | Name of the party / account                                |
+| Account Group  | Text   | Auto     | Classification from Module 32 (Debtors/Creditors/Bank etc) |
+| GSTIN / PAN    | Text   | Auto     | Tax identification (for customers/vendors)                 |
+| Opening Balance| Number | Auto     | Starting balance when ERP was initialized                  |
+| Total Debit    | Number | Auto     | Sum of all debit entries                                   |
+| Total Credit   | Number | Auto     | Sum of all credit entries                                  |
+| Closing Balance| Number | Auto     | Opening + Total Dr - Total Cr (or vice versa depending on nature) |
+| Actions        | Buttons| —        | View / Edit / Statement                                    |
+
+---
+
+## Summary Card Fields
+
+| Field           | Type   | Description                                              |
+| --------------- | ------ | -------------------------------------------------------- |
+| Total Receivable| Number | Sum of all Sundry Debtors' Dr balances                   |
+| Total Payable   | Number | Sum of all Sundry Creditors' Cr balances                 |
+| Cash & Bank     | Number | Sum of all bank and cash account Dr balances              |
+| Overdue (>30d)  | Number | Receivable + Payable amounts older than 30 days          |
+
+---
+
+## Filters
+
+| Filter        | Type         | Options                                              |
+| ------------- | ------------ | ---------------------------------------------------- |
+| Branch        | Dropdown     | All Branches / Specific Branch                       |
+| Account Group | Dropdown     | Sundry Debtors / Sundry Creditors / Bank / Cash / Income / Expenses |
+| Balance Type  | Multi-select | Debit (Dr) / Credit (Cr) / Zero                     |
+| Status        | Multi-select | Active / Inactive                                    |
+
+---
+
+## Search
+
+Searchable by:
+
+- Ledger Name
+- GSTIN
+- PAN Number
+
+---
+
+## Actions (Table Row)
+
+| Action           | Type   | Description                                              |
+| ---------------- | ------ | -------------------------------------------------------- |
+| **View**         | Button | Opens ledger detail in read-only mode                    |
+| **Edit**         | Button | Edit ledger details (name, opening balance, credit limit)|
+| **Statement**    | Button | Opens Ledger Statement View (Screen 31.3)                |
+
+---
+
+## Form Actions
+
+| Action              | Description                                             |
+| ------------------- | ------------------------------------------------------- |
+| **+ Create Ledger** | Opens Create Ledger form (Screen 31.2)                  |
+| **Export All**       | Export ledger list as Excel/CSV                          |
+| **Ageing Report**   | Opens ageing analysis for all debtors/creditors         |
+
+---
+
+================================================================================
+
+# 31.2 Create / Edit Ledger
+
+**Description:**
+Form to create a new ledger account or edit an existing one. Used for adding new parties (Customers, Vendors), bank accounts, or internal account heads. Customer and Vendor ledgers are auto-created when a new Customer (Module 18) or Vendor (Module 11) is added — this form is for manual creation or modification.
+
+This screen is **master-data driven**:
+- Links (if any) are only to **Customer/Vendor master** (Module 18/11) and **Account Group** (Module 32).
+- There is **no selection/linking of specific Invoices (Module 28) or Bills (Module 29)** during Ledger creation.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        CREATE / EDIT LEDGER                                  │
+│                                                                              │
+│  BASIC DETAILS                                                               │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Ledger Name*       : [________________________]                       │  │
+│  │ Account Group*     : [▼ Sundry Debtors ▼]                             │  │
+│  │                     (Sundry Debtors / Sundry Creditors / Bank /       │  │
+│  │                      Cash / Fixed Assets / Income / Expense /         │  │
+│  │                      Duties & Taxes / Capital / Loans)                │  │
+│  │ Branch             : [▼ Mumbai ▼]                                     │  │
+│  │ Status             : (•) Active    ( ) Inactive                       │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  PARTY DETAILS (For Sundry Debtors / Creditors only)                         │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Linked Customer/Vendor: [🔍 Search ▼] (Auto-links from Mod 18/11)    │  │
+│  │ GSTIN               : [________________________]                      │  │
+│  │ PAN                 : [________________________]                      │  │
+│  │ Contact Person      : [________________________]                      │  │
+│  │ Phone               : [________________________]                      │  │
+│  │ Email               : [________________________]                      │  │
+│  │ Address             : [________________________________________________]│  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  BANK DETAILS (For Bank Accounts only)                                       │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Bank Name           : [________________________]                      │  │
+│  │ Account Number      : [________________________]                      │  │
+│  │ IFSC Code           : [________________________]                      │  │
+│  │ Account Type        : [▼ Current / Savings ▼]                         │  │
+│  │ Branch Name         : [________________________]                      │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  FINANCIAL SETTINGS                                                          │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Opening Balance*    : ₹ [________]      Type: (•) Dr  ( ) Cr          │  │
+│  │ As on Date          : [📅 01 Apr 2025]  (Financial year opening)      │  │
+│  │ Credit Limit        : ₹ [________]      (0 = No Limit)               │  │
+│  │ Credit Period (Days): [30]              (Default payment terms)       │  │
+│  │ TDS Applicable      : [☐ Yes]           Section: [▼ 194C ▼]          │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [SAVE]    [CANCEL]                                                          │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Screen Fields: Basic Details
+
+| Field         | Type     | Required | Description                                          |
+| ------------- | -------- | -------- | ---------------------------------------------------- |
+| Ledger Name   | Text     | Yes      | Party or account name                                |
+| Account Group | Dropdown | Yes      | Classification from Module 32 hierarchy              |
+| Branch        | Dropdown | No       | Associate with specific branch (or All)              |
+| Status        | Radio    | Yes      | Active / Inactive (default: Active)                  |
+
+---
+
+## Screen Fields: Party Details
+
+| Field             | Type    | Required | Description                                     |
+| ----------------- | ------- | -------- | ----------------------------------------------- |
+| Linked Party      | Search  | No       | Auto-link to Customer (Mod 18) / Vendor (Mod 11)|
+| GSTIN             | Text    | Cond.    | Mandatory for GST-registered parties            |
+| PAN               | Text    | Cond.    | Mandatory for TDS-applicable parties            |
+| Contact Person    | Text    | No       | Primary contact name                            |
+| Phone             | Phone   | No       | Contact phone (10 digits)                       |
+| Email             | Email   | No       | Contact email                                   |
+| Address           | Textarea| No       | Full address                                    |
+
+---
+
+## Screen Fields: Bank Details
+
+| Field          | Type     | Required | Description                                      |
+| -------------- | -------- | -------- | ------------------------------------------------ |
+| Bank Name      | Text     | Cond.    | Required if Account Group = Bank                 |
+| Account Number | Text     | Cond.    | Required if Account Group = Bank                 |
+| IFSC Code      | Text     | Cond.    | Required if Account Group = Bank                 |
+| Account Type   | Dropdown | Cond.    | Current / Savings                                |
+| Branch Name    | Text     | No       | Bank branch name                                 |
+
+---
+
+## Screen Fields: Financial Settings
+
+| Field          | Type    | Required | Description                                       |
+| -------------- | ------- | -------- | ------------------------------------------------- |
+| Opening Balance| Number  | Yes      | Starting balance (default: 0)                     |
+| Balance Type   | Radio   | Yes      | Dr (Debit) or Cr (Credit)                         |
+| As on Date     | Date    | Yes      | Date of opening balance (usually FY start)        |
+| Credit Limit   | Number  | No       | Maximum credit allowed (0 = unlimited)            |
+| Credit Period  | Number  | No       | Default payment terms in days                     |
+| TDS Applicable | Checkbox| No       | Whether TDS applies to this party                 |
+| TDS Section    | Dropdown| Cond.    | Required if TDS = Yes (194C / 194J / 194H etc.)  |
+
+---
+
+## Validation Rules
+
+| Field           | Rule                                                        |
+| --------------- | ----------------------------------------------------------- |
+| Ledger Name     | Must be unique within the same Account Group                |
+| Account Group   | Must select from Module 32 categories                       |
+| GSTIN           | If provided, must be valid 15-character GSTIN format        |
+| PAN             | If provided, must be valid 10-character PAN format          |
+| Opening Balance | Must be >= 0                                                |
+| Credit Limit    | Must be >= 0                                                |
+| IFSC Code       | If Bank account, must be valid 11-character IFSC            |
+| Account Number  | If Bank account, must be provided                           |
+
+---
+
+## Business Rules
+
+| Rule                              | Description                                               |
+| --------------------------------- | --------------------------------------------------------- |
+| Auto-creation from Module 18/11   | When new Customer or Vendor is created, Ledger is auto-created |
+| Credit Limit enforcement          | System warns when new invoice exceeds customer's credit limit |
+| Inactive Ledger                   | Cannot post new transactions to inactive ledgers          |
+| Opening Balance only once         | Can only be set during creation or FY opening; locked after first transaction |
+| Edit restrictions                 | Ledger Name and Account Group cannot be changed after first transaction |
+| No document linkage at creation   | Ledger creation/edit does not link to specific Invoices/Bills; documents only post transactions later |
+
+---
+
+## System Behavior
+
+| Event                           | System Action                                             |
+| ------------------------------- | --------------------------------------------------------- |
+| Save clicked (new)              | Ledger created with opening balance entry                 |
+| Customer created in Module 18   | Auto-creates Sundry Debtor ledger                         |
+| Vendor created in Module 13     | Auto-creates Sundry Creditor ledger                       |
+| Credit limit exceeded           | Warning popup when creating new Invoice/Bill              |
+
+---
+
+================================================================================
+
+# 31.3 Ledger Statement View (Account Passbook)
+
+**Description:**
+The statement screen shows a **chronological transaction history** for a specific ledger, similar to a bank passbook. Displays every Debit and Credit entry with running balance. Supports date-range filtering, PDF export, and email to party.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    LEDGER STATEMENT — ABC Corp Ltd                            │
+│                    Account Group: Sundry Debtors                             │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Date Range : [📅 01 Apr 2025] - [📅 28 Mar 2026]                     │  │
+│  │                                                    [GENERATE]        │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  PARTY DETAILS                                                               │
+│  ┌──────────────────────────────┬────────────────────────────────────────┐  │
+│  │ Name    : ABC Corp Ltd       │ GSTIN     : 27AAACB1234F1Z5           │  │
+│  │ Address : 45 MG Road, Fort,  │ Credit Limit : ₹ 2,00,000            │  │
+│  │           Mumbai 400001      │ Credit Period: 15 Days                │  │
+│  └──────────────────────────────┴────────────────────────────────────────┘  │
+│                                                                              │
+│  ACCOUNT SUMMARY                                                             │
+│  ┌──────────────┬──────────────┬──────────────┬──────────────┐               │
+│  │ Opening Bal  │ Total Debit  │ Total Credit │ Closing Bal  │               │
+│  │ ₹ 5,000 Dr   │ ₹ 1,50,000   │ ₹ 1,20,000   │ ₹ 35,000 Dr  │               │
+│  └──────────────┴──────────────┴──────────────┴──────────────┘               │
+│                                                                              │
+│  TRANSACTION HISTORY                                                         │
+│  ┌──────────┬──────────┬──────────────────┬──────────┬──────────┬─────────┐  │
+│  │Date      │Ref #     │Particulars       │Debit(Dr) │Credit(Cr)│Balance  │  │
+│  │──────────┼──────────┼──────────────────┼──────────┼──────────┼─────────│  │
+│  │01 Apr 25 │—         │Opening Balance   │₹  5,000  │—         │₹  5,000 │  │
+│  │          │          │                  │          │          │   Dr    │  │
+│  │15 Jun 25 │INV-10001 │Sales Invoice     │₹ 25,000  │—         │₹ 30,000 │  │
+│  │          │          │(Monthly Service) │          │          │   Dr    │  │
+│  │25 Jun 25 │RCP-3001  │Receipt (UPI)     │—         │₹ 25,000  │₹  5,000 │  │
+│  │          │          │                  │          │          │   Dr    │  │
+│  │15 Jul 25 │INV-10005 │Sales Invoice     │₹ 25,000  │—         │₹ 30,000 │  │
+│  │          │          │(Monthly Service) │          │          │   Dr    │  │
+│  │20 Jul 25 │RCP-3010  │Receipt (Cheque)  │—         │₹ 20,000  │₹ 10,000 │  │
+│  │          │          │Subject to Clr    │          │          │   Dr    │  │
+│  │15 Mar 26 │INV-10024 │Sales Invoice     │₹ 15,000  │—         │₹ 35,000 │  │
+│  │          │          │(Termite+Cockroach│          │          │   Dr    │  │
+│  │          │          │ Treatment)       │          │          │         │  │
+│  └──────────┴──────────┴──────────────────┴──────────┴──────────┴─────────┘  │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Closing Balance: ₹ 35,000 Dr (ABC Corp Ltd owes us ₹ 35,000)        │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [📥 DOWNLOAD PDF]  [📧 EMAIL TO PARTY]  [🖨 PRINT]  [🔙 BACK TO LIST]    │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Statement Fields
+
+| Field          | Type    | Description                                               |
+| -------------- | ------- | --------------------------------------------------------- |
+| Date           | Date    | Transaction date                                          |
+| Ref #          | Link    | Clickable reference when source document exists (Invoice / Receipt / Bill / Payment); blank/non-clickable for manual entries/opening balance |
+| Particulars    | Text    | Description of the transaction                            |
+| Debit (Dr)     | Number  | Amount increasing the balance (for debtors)               |
+| Credit (Cr)    | Number  | Amount decreasing the balance (for debtors)               |
+| Balance        | Number  | Running cumulative balance with Dr/Cr indicator           |
+
+---
+
+## Account Summary Fields
+
+| Field          | Type   | Description                                               |
+| -------------- | ------ | --------------------------------------------------------- |
+| Opening Balance| Number | Balance at the start of selected period                   |
+| Total Debit    | Number | Sum of all Debit entries in the period                    |
+| Total Credit   | Number | Sum of all Credit entries in the period                   |
+| Closing Balance| Number | Opening + Debits - Credits (for Debtors)                  |
+
+---
+
+## Actions (Statement Screen)
+
+| Action              | Type   | Description                                          |
+| ------------------- | ------ | ---------------------------------------------------- |
+| **Download PDF**    | Button | Download formatted statement as PDF                  |
+| **Email to Party**  | Button | Send statement to party's registered email           |
+| **Back to List**    | Button | Returns to Ledger Dashboard (31.1)                   |
+
+---
+
+## Business Rules
+
+| Rule                          | Description                                                |
+| ----------------------------- | ---------------------------------------------------------- |
+| Running balance               | Each row shows cumulative balance (not just trans. amount) |
+| Clickable references          | Ref # links open the original document (Invoice/Receipt)  |
+| Date range filter             | Default: Current financial year (01 Apr - 31 Mar)         |
+| Dr / Cr logic per group       | Debtors: Dr = Owes more, Cr = Paid. Creditors: Reversed  |
+| Interest calculation (Future) | Optional auto-interest on overdue balances                |
+
+---
+
+## System Behavior
+
+| Event                      | System Action                                             |
+| -------------------------- | --------------------------------------------------------- |
+| Ledger selected            | Fetches all transactions in default date range            |
+| Date range changed         | Re-fetches transactions, recalculates opening/closing     |
+| PDF Downloaded             | Formatted with company letterhead and party details       |
+| Email sent                 | PDF attached, sent to party's email, logged in audit      |
+
+---
+
+
+==========================================================================================
+
+
+# 🎯 MODULE 32: CHART OF ACCOUNTS (COA)
+
+## Overview
+
+Chart of Accounts (COA) defines the **account groups and account heads** used to classify every financial posting in the ERP. In Phase 1, COA should be **simple to configure and easy to pick from** in Modules 28–31.
+
+In practical terms:
+- **Module 31 (Ledger)** uses COA to assign each ledger to an **Account Group** (e.g., Sundry Debtors, Bank Accounts, Direct Income).
+- **Module 30 (Payments)** uses COA to select **Bank/Cash** accounts.
+- **Modules 28/29 (Invoice/Bill)** use COA for **Income/Expense/Tax/TDS/ITC classification** (as per your accounting design).
+- **Module 33 (Reports)** uses COA as the **structure** to group totals into P&L and Balance Sheet.
+
+**Module Connections:**
+
+- **Depends on:** Module 2 (Company Onboarding — initial COA setup), Module 7 (Branch — branch-wise account visibility)
+- **Used by:** Module 31 (Ledger — account group assignment), Module 30 (Payments — bank/cash account selection), Module 33 (Reports — report grouping), Module 28 (Income/GST classification), Module 29 (Expense/ITC/TDS classification)
+- **Prerequisites:** Configure basic COA before starting posting in Modules 28–30 and before creating internal ledgers in Module 31.
+
+---
+
+The module contains the following screens:
+
+- 32.1 COA List View (Default — Phase 1)
+- 32.2 Add / Edit Account Head (Group)
+- 32.3 View Account Head Detail
+- 32.4 COA Tree View (Phase 2 — Optional Enhancement)
+
+---
+
+================================================================================
+
+# 32.1 COA List View (Default — Phase 1)
+
+**Description:**
+Phase‑1 default screen. Shows COA heads in a **simple sortable table** with filters and search.
+
+This avoids building a complex dynamic tree while still supporting:
+- Fast selection of account heads in Modules 28–31
+- Consistent grouping for Module 33 reports
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       CHART OF ACCOUNTS (PHASE 1)                            │
+│                                                                              │
+│  VIEW: [📋 LIST VIEW]  [🌳 TREE VIEW (Phase 2)]                              │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Search: [____________________] (Account Name / Code / Path)           │  │
+│  │ Primary Group: [▼ All ▼]  Type: [▼ All (Group/Ledger) ▼]              │  │
+│  │ Status: [☑ Active ☑ Inactive]   Branch: [▼ All Branches ▼]           │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [+ ADD ACCOUNT HEAD]   [📥 EXPORT CSV]                                      │
+│                                                                              │
+│  COA LIST TABLE                                                              │
+│  ┌──────────┬──────────────────────┬──────────────┬──────────────────┬─────┐  │
+│  │Code      │Account Head Name     │Primary Group │Parent Group       │Type │  │
+│  │──────────┼──────────────────────┼──────────────┼──────────────────┼─────│  │
+│  │A-001     │Bank Accounts         │Assets        │Current Assets     │Group│  │
+│  │A-001-001 │HDFC Current A/C      │Assets        │Bank Accounts      │Ledger│ │
+│  │A-003     │Sundry Debtors        │Assets        │Current Assets     │Group│  │
+│  │L-001     │Sundry Creditors      │Liabilities   │Current Liab.      │Group│  │
+│  │I-001     │Service Income        │Income        │Direct Income      │Ledger│ │
+│  │E-001     │Electricity Expense   │Expense       │Indirect Expense   │Ledger│ │
+│  └──────────┴──────────────────────┴──────────────┴──────────────────┴─────┘  │
+│                                                                              │
+│  Actions: [View] [Edit] (per row)                                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Table Fields (Phase 1)
+
+| Field         | Type     | Required | Description |
+|--------------|----------|----------|-------------|
+| Code         | Text     | Auto     | Hierarchical code (editable as per business rule) |
+| Account Name | Text     | Yes      | Group/head name |
+| Primary Group| Dropdown | Yes      | Assets / Liabilities / Income / Expense / Capital |
+| Parent Group | Dropdown | Yes      | Parent group under which this head exists |
+| Type         | Badge    | Auto     | Group / Ledger |
+| Nature       | Text     | Yes      | Default Dr / Cr side (used in reports + validations) |
+| Status       | Badge    | Yes      | Active / Inactive |
+| Branch Scope | Badge    | No       | All branches or restricted branch |
+
+---
+
+## Filters
+
+| Filter        | Type         | Options |
+|--------------|--------------|---------|
+| Search       | Text         | Code / Account Name / Path |
+| Primary Group| Dropdown     | Assets / Liabilities / Income / Expense / Capital |
+| Type         | Dropdown     | All / Group / Ledger |
+| Status       | Multi-select | Active / Inactive |
+| Branch       | Dropdown     | All Branches / Specific Branch |
+
+---
+
+## Actions (Phase 1)
+
+| Action              | Type   | Description |
+|---------------------|--------|-------------|
+| **+ Add Account Head** | Button | Opens Add/Edit form (32.2) |
+| **View**            | Button | Opens detail screen (32.3) |
+| **Edit**            | Button | Opens Add/Edit screen (32.2) |
+| **Export CSV**      | Button | Exports current filtered table |
+
+---
+
+================================================================================
+
+# 32.2 Add / Edit Account Head (Group)
+
+**Description:**
+Create or edit a COA **group/head**. In Phase 1, keep it simple: COA manages **groups**, and ledger accounts are created/managed in Module 31.
+
+Notes for alignment with Modules 28–31:
+- When creating ledgers in **Module 31.2**, users must be able to pick an **Account Group** from this COA.
+- When posting from **Module 30**, users must be able to pick **Bank/Cash** ledgers (which are still Ledger accounts in Module 31, but grouped here).
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    ADD / EDIT COA ACCOUNT HEAD (GROUP)                       │
+│                                                                              │
+│  Account Name*   : [________________________]                                │
+│  Primary Group*  : [▼ Assets/Liabilities/Income/Expense/Capital ▼]           │
+│  Parent Group*   : [▼ Select Parent Group ▼]                                 │
+│  Nature*         : (•) Dr   ( ) Cr                                           │
+│                                                                              │
+│  Code            : [AUTO] (Editable, must remain unique)                     │
+│  Branch Scope    : [▼ All Branches ▼]                                        │
+│  Affects GP?     : [☐ Yes] (Only relevant for P&L grouping)                  │
+│  Status          : (•) Active   ( ) Inactive                                 │
+│                                                                              │
+│  [SAVE]  [CANCEL]                                                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Fields
+
+| Field         | Type     | Required | Description |
+|--------------|----------|----------|-------------|
+| Account Name | Text     | Yes      | Group/head name |
+| Primary Group| Dropdown | Yes      | Assets/Liabilities/Income/Expense/Capital |
+| Parent Group | Dropdown | Yes      | Parent group (cannot be self) |
+| Nature       | Radio    | Yes      | Default Dr/Cr side |
+| Code         | Text     | Auto     | Unique code (system generated, editable) |
+| Branch Scope | Dropdown | No       | All / specific branch (if branch-wise COA needed) |
+| Affects GP   | Checkbox | No       | For P&L grouping (Direct vs Indirect) |
+| Status       | Radio    | Yes      | Active / Inactive |
+
+---
+
+## Validation Rules (Phase 1)
+
+| Rule | Description |
+|------|-------------|
+| Unique code | `Code` must be unique across the company |
+| Unique name under same parent | Same `Account Name` cannot repeat under same `Parent Group` |
+| Root groups locked | Primary groups (Assets/Liabilities/Income/Expense/Capital) cannot be deleted |
+| Deletion | Group can be deleted only if it has no child groups and no ledgers assigned |
+| Nature consistency | `Nature` should match expected default for primary group (configurable override allowed) |
+
+---
+
+## Business Rules (Aligned with Modules 28–31)
+
+| Rule | Why it matters |
+|------|----------------|
+| COA before postings | Modules 28/29/30 should not post if required COA heads are missing |
+| Ledger creation happens in Module 31 | COA creates **groups/heads**; Ledger accounts are managed in Module 31 |
+| Bank/Cash heads required | Module 30 requires bank/cash ledgers grouped under COA Bank/Cash |
+| Income/Expense mapping | Module 28/29 must map postings to correct COA heads for reporting |
+
+---
+
+## System Behavior (Phase 1)
+
+| Event | System Action |
+|------|---------------|
+| Open Module 32 | Loads list view with filters |
+| Save new head | Creates COA head and makes it selectable in Module 31.2 account group dropdown |
+| Inactivate head | Prevent selection in new postings; existing ledgers remain classified (read-only impact) |
+
+---
+
+================================================================================
+
+# 32.3 View Account Head Detail
+
+**Description:**
+Read-only view of a COA head showing its details and where it is used (ledgers assigned under it).
+
+---
+
+## View Fields
+
+| Field | Type | Description |
+|------|------|-------------|
+| Account Name | Display | COA head name |
+| Code | Display | Unique code |
+| Primary Group | Display | Assets/Liabilities/Income/Expense/Capital |
+| Parent Group | Display | Parent grouping |
+| Nature | Display | Dr/Cr |
+| Status | Display | Active/Inactive |
+| Used By Ledgers | Table | List of ledgers (from Module 31) classified under this head |
+
+---
+
+## Actions
+
+| Action | Type | Description |
+|--------|------|-------------|
+| Edit | Button | Opens Add/Edit (32.2) |
+| Back to List | Button | Returns to List View (32.1) |
+
+---
+
+================================================================================
+
+# 32.4 COA Tree View (Phase 2 — Optional Enhancement)
+
+**Description:**
+Phase‑2 enhancement. If needed later, render COA as an expandable tree.
+
+For Phase 1 delivery, the **List View (32.1)** + **View Detail (32.3)** already supports the full accounting flow required for Modules 28–31 and reporting in Module 33.
+
+---
+
+
+====================== END HERE ===================================================

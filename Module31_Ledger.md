@@ -310,7 +310,7 @@ This screen is **master-data driven**:
 | ------------------------------- | --------------------------------------------------------- |
 | Save clicked (new)              | Ledger created with opening balance entry                 |
 | Customer created in Module 18   | Auto-creates Sundry Debtor ledger                         |
-| Vendor created in Module 11     | Auto-creates Sundry Creditor ledger                       |
+| Vendor created in Module 13     | Auto-creates Sundry Creditor ledger                       |
 | Credit limit exceeded           | Warning popup when creating new Invoice/Bill              |
 
 ---

@@ -2,31 +2,41 @@
 
 ## Overview
 
-Chart of Accounts module defines the **hierarchical structure of all financial accounts** used across the ERP. Think of it as the **"Folder System"** for organizing every type of money — Income, Expenses, Assets, Liabilities, and Capital. Every Ledger (Module 31) is classified under one of these account heads. The COA follows the Indian accounting standard with 5 primary groups and unlimited sub-groups. Supports custom account heads per company.
+Chart of Accounts (COA) defines the **account groups and account heads** used to classify every financial posting in the ERP. In Phase 1, COA should be **simple to configure and easy to pick from** in Modules 28–31.
+
+In practical terms:
+- **Module 31 (Ledger)** uses COA to assign each ledger to an **Account Group** (e.g., Sundry Debtors, Bank Accounts, Direct Income).
+- **Module 30 (Payments)** uses COA to select **Bank/Cash** accounts.
+- **Modules 28/29 (Invoice/Bill)** use COA for **Income/Expense/Tax/TDS/ITC classification** (as per your accounting design).
+- **Module 33 (Reports)** uses COA as the **structure** to group totals into P&L and Balance Sheet.
 
 **Module Connections:**
 
 - **Depends on:** Module 2 (Company Onboarding — initial COA setup), Module 7 (Branch — branch-wise account visibility)
-- **Used by:** Module 31 (Ledger — account group assignment), Module 30 (Payments — bank/cash account selection), Module 33 (Reports — P&L and Balance Sheet structure), Module 28 (Income classification), Module 29 (Expense classification)
-- **Prerequisites:** Must be configured before creating any Ledgers or Financial Transactions
+- **Used by:** Module 31 (Ledger — account group assignment), Module 30 (Payments — bank/cash account selection), Module 33 (Reports — report grouping), Module 28 (Income/GST classification), Module 29 (Expense/ITC/TDS classification)
+- **Prerequisites:** Configure basic COA before starting posting in Modules 28–30 and before creating internal ledgers in Module 31.
 
 ---
 
 The module contains the following screens:
 
-- 32.1 COA Tree View (Default)
-- 32.2 COA List View
-- 32.3 Add / Edit Account Head
-- 32.4 View Account Head Detail
+- 32.1 COA List View (Default — Phase 1)
+- 32.2 Add / Edit Account Head (Group)
+- 32.3 View Account Head Detail
+- 32.4 COA Tree View (Phase 2 — Optional Enhancement)
 
 ---
 
 ================================================================================
 
-# 32.1 COA Tree View (Default)
+# 32.1 COA List View (Default — Phase 1)
 
 **Description:**
-The default landing screen for Module 32. Displays the entire account hierarchy as an **expandable tree/folder structure**. Users can expand/collapse groups to see sub-groups and ledgers underneath. Color-coded by account type. Supports drag-and-drop reordering for custom arrangement.
+Phase‑1 default screen. Shows COA heads in a **simple sortable table** with filters and search.
+
+This avoids building a complex dynamic tree while still supporting:
+- Fast selection of account heads in Modules 28–31
+- Consistent grouping for Module 33 reports
 
 ---
 
@@ -34,146 +44,84 @@ The default landing screen for Module 32. Displays the entire account hierarchy 
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                       CHART OF ACCOUNTS                                      │
+│                       CHART OF ACCOUNTS (PHASE 1)                            │
 │                                                                              │
-│  VIEW: [🌳 TREE VIEW]  [📋 LIST VIEW]                                       │
+│  VIEW: [📋 LIST VIEW]  [🌳 TREE VIEW (Phase 2)]                              │
 │                                                                              │
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │ Search: [____________________] (Account Name / Code)                  │  │
-│  │ Filter: [☑ Assets ☑ Liabilities ☑ Income ☑ Expense ☑ Capital]      │  │
-│  │                                                       [Expand All]   │  │
-│  │                                                      [Collapse All]  │  │
+│  │ Search: [____________________] (Account Name / Code / Path)           │  │
+│  │ Primary Group: [▼ All ▼]  Type: [▼ All (Group/Ledger) ▼]              │  │
+│  │ Status: [☑ Active ☑ Inactive]   Branch: [▼ All Branches ▼]           │  │
 │  └───────────────────────────────────────────────────────────────────────┘  │
 │                                                                              │
-│  [+ ADD ACCOUNT HEAD]                                                        │
+│  [+ ADD ACCOUNT HEAD]   [📥 EXPORT CSV]                                      │
 │                                                                              │
-│  ACCOUNT TREE                                                                │
-│  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                       │  │
-│  │  📁 ASSETS                                                            │  │
-│  │  ├── 📁 Current Assets                                                │  │
-│  │  │   ├── 📁 Bank Accounts                                             │  │
-│  │  │   │   ├── 📄 HDFC Current A/C (1234)            ₹ 7,00,000 Dr     │  │
-│  │  │   │   ├── 📄 SBI Savings A/C (5678)             ₹ 1,50,000 Dr     │  │
-│  │  │   │   └── 📄 ICICI Current A/C (9012)           ₹ 2,30,000 Dr     │  │
-│  │  │   ├── 📁 Cash-in-Hand                                              │  │
-│  │  │   │   └── 📄 Petty Cash                         ₹ 50,000 Dr       │  │
-│  │  │   ├── 📁 Sundry Debtors (Trade Receivables)                        │  │
-│  │  │   │   ├── 📄 ABC Corp Ltd                       ₹ 35,000 Dr       │  │
-│  │  │   │   ├── 📄 XYZ Hotels Pvt Ltd                 ₹ 22,000 Dr       │  │
-│  │  │   │   └── 📄 Global Biz Solutions               ₹ 15,000 Dr       │  │
-│  │  │   └── 📁 Stock-in-Hand                                             │  │
-│  │  │       └── 📄 Inventory (Module 11)              ₹ 3,50,000 Dr     │  │
-│  │  ├── 📁 Fixed Assets                                                  │  │
-│  │  │   ├── 📄 Office Equipment                       ₹ 2,00,000 Dr     │  │
-│  │  │   ├── 📄 Vehicles                               ₹ 5,00,000 Dr     │  │
-│  │  │   └── 📄 Pest Control Machines (Module 11)      ₹ 1,80,000 Dr     │  │
-│  │  └── 📁 Investments                                                   │  │
-│  │                                                                       │  │
-│  │  📁 LIABILITIES                                                       │  │
-│  │  ├── 📁 Current Liabilities                                           │  │
-│  │  │   ├── 📁 Sundry Creditors (Trade Payables)                         │  │
-│  │  │   │   ├── 📄 Industrial Chemicals Pvt Ltd       ₹ 1,05,300 Cr     │  │
-│  │  │   │   ├── 📄 Agro Chem Products                 ₹ 45,000 Cr       │  │
-│  │  │   │   └── 📄 Office Mart Supplies               ₹ 5,000 Cr        │  │
-│  │  │   ├── 📁 Duties & Taxes                                            │  │
-│  │  │   │   ├── 📄 CGST Payable                       ₹ 15,000 Cr       │  │
-│  │  │   │   ├── 📄 SGST Payable                       ₹ 15,000 Cr       │  │
-│  │  │   │   ├── 📄 IGST Payable                       ₹ 8,000 Cr        │  │
-│  │  │   │   ├── 📄 TDS Payable (Various Sections)     ₹ 5,500 Cr        │  │
-│  │  │   │   └── 📄 CGST Input Credit                  ₹ 12,000 Dr       │  │
-│  │  │   └── 📁 Provisions                                                │  │
-│  │  │       └── 📄 Salary Payable                     ₹ 2,50,000 Cr     │  │
-│  │  └── 📁 Long-term Liabilities                                         │  │
-│  │      └── 📄 Term Loan (Bank)                       ₹ 15,00,000 Cr    │  │
-│  │                                                                       │  │
-│  │  📁 INCOME (Revenue)                                                  │  │
-│  │  ├── 📁 Direct Income                                                 │  │
-│  │  │   ├── 📄 Service Income (Pest Control)          ₹ 18,50,000 Cr    │  │
-│  │  │   └── 📄 Product Sales (Resell)                 ₹ 2,20,000 Cr     │  │
-│  │  └── 📁 Indirect Income                                               │  │
-│  │      ├── 📄 Interest Received                      ₹ 15,000 Cr       │  │
-│  │      └── 📄 Other Income                           ₹ 5,000 Cr        │  │
-│  │                                                                       │  │
-│  │  📁 EXPENSES                                                          │  │
-│  │  ├── 📁 Direct Expenses                                               │  │
-│  │  │   ├── 📄 Chemical Cost                          ₹ 4,50,000 Dr     │  │
-│  │  │   ├── 📄 Equipment Cost                         ₹ 1,20,000 Dr     │  │
-│  │  │   └── 📄 Fuel & Transportation                  ₹ 80,000 Dr       │  │
-│  │  └── 📁 Indirect Expenses                                             │  │
-│  │      ├── 📄 Salaries & Wages                       ₹ 6,00,000 Dr     │  │
-│  │      ├── 📄 Rent                                   ₹ 1,50,000 Dr     │  │
-│  │      ├── 📄 Electricity                            ₹ 25,000 Dr       │  │
-│  │      ├── 📄 Office Supplies                        ₹ 15,000 Dr       │  │
-│  │      └── 📄 Professional Fees                      ₹ 50,000 Dr       │  │
-│  │                                                                       │  │
-│  │  📁 CAPITAL                                                           │  │
-│  │  └── 📄 Owner's Capital                            ₹ 25,00,000 Cr    │  │
-│  │                                                                       │  │
-│  └───────────────────────────────────────────────────────────────────────┘  │
+│  COA LIST TABLE                                                              │
+│  ┌──────────┬──────────────────────┬──────────────┬──────────────────┬─────┐  │
+│  │Code      │Account Head Name     │Primary Group │Parent Group       │Type │  │
+│  │──────────┼──────────────────────┼──────────────┼──────────────────┼─────│  │
+│  │A-001     │Bank Accounts         │Assets        │Current Assets     │Group│  │
+│  │A-001-001 │HDFC Current A/C      │Assets        │Bank Accounts      │Ledger│ │
+│  │A-003     │Sundry Debtors        │Assets        │Current Assets     │Group│  │
+│  │L-001     │Sundry Creditors      │Liabilities   │Current Liab.      │Group│  │
+│  │I-001     │Service Income        │Income        │Direct Income      │Ledger│ │
+│  │E-001     │Electricity Expense   │Expense       │Indirect Expense   │Ledger│ │
+│  └──────────┴──────────────────────┴──────────────┴──────────────────┴─────┘  │
 │                                                                              │
+│  Actions: [View] [Edit] (per row)                                            │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Tree Node Types
+## Table Fields (Phase 1)
 
-| Node Type   | Icon | Description                                            |
-| ----------- | ---- | ------------------------------------------------------ |
-| Group       | 📁   | A category/folder containing sub-groups or ledgers     |
-| Ledger      | 📄   | An actual account (linked to Module 31)                |
-
----
-
-## Tree Node Information
-
-| Field        | Type    | Description                                             |
-| ------------ | ------- | ------------------------------------------------------- |
-| Account Name | Text    | Name of the group or ledger                             |
-| Balance      | Number  | Current balance with Dr/Cr indicator (for ledgers only) |
-| Count        | Number  | Number of child accounts (for groups only)              |
+| Field         | Type     | Required | Description |
+|--------------|----------|----------|-------------|
+| Code         | Text     | Auto     | Hierarchical code (editable as per business rule) |
+| Account Name | Text     | Yes      | Group/head name |
+| Primary Group| Dropdown | Yes      | Assets / Liabilities / Income / Expense / Capital |
+| Parent Group | Dropdown | Yes      | Parent group under which this head exists |
+| Type         | Badge    | Auto     | Group / Ledger |
+| Nature       | Text     | Yes      | Default Dr / Cr side (used in reports + validations) |
+| Status       | Badge    | Yes      | Active / Inactive |
+| Branch Scope | Badge    | No       | All branches or restricted branch |
 
 ---
 
 ## Filters
 
-| Filter  | Type         | Options                                               |
-| ------- | ------------ | ----------------------------------------------------- |
-| Type    | Multi-select | Assets / Liabilities / Income / Expense / Capital     |
-| Search  | Text         | Search by account name or code                        |
+| Filter        | Type         | Options |
+|--------------|--------------|---------|
+| Search       | Text         | Code / Account Name / Path |
+| Primary Group| Dropdown     | Assets / Liabilities / Income / Expense / Capital |
+| Type         | Dropdown     | All / Group / Ledger |
+| Status       | Multi-select | Active / Inactive |
+| Branch       | Dropdown     | All Branches / Specific Branch |
 
 ---
 
-## Actions (Tree Node)
+## Actions (Phase 1)
 
-| Action        | Type   | Condition       | Description                                       |
-| ------------- | ------ | --------------- | ------------------------------------------------- |
-| **Expand**    | Click  | Group nodes     | Shows child groups and ledgers                    |
-| **Collapse**  | Click  | Group nodes     | Hides child nodes                                 |
-| **View**      | Button | Ledger nodes    | Opens ledger statement (Module 31.3)              |
-| **Edit**      | Button | All nodes       | Opens Edit Account Head form (32.3)               |
-| **Add Child** | Button | Group nodes     | Opens Add Account Head under this group           |
-| **Delete**    | Button | Empty groups    | Deletes group only if no children exist           |
-
----
-
-## Form Actions
-
-| Action                 | Description                                            |
-| ---------------------- | ------------------------------------------------------ |
-| **+ Add Account Head** | Opens Add Account Head form (Screen 32.3)              |
-| **Expand All**         | Expands all tree nodes                                 |
-| **Collapse All**       | Collapses all tree nodes to root level                 |
+| Action              | Type   | Description |
+|---------------------|--------|-------------|
+| **+ Add Account Head** | Button | Opens Add/Edit form (32.2) |
+| **View**            | Button | Opens detail screen (32.3) |
+| **Edit**            | Button | Opens Add/Edit screen (32.2) |
+| **Export CSV**      | Button | Exports current filtered table |
 
 ---
 
 ================================================================================
 
-# 32.2 COA List View
+# 32.2 Add / Edit Account Head (Group)
 
 **Description:**
-Alternative flat-list view of all account heads in a sortable table format. Useful for bulk export, quick search, and data analysis. Shows the same accounts as the Tree View but without hierarchical nesting.
+Create or edit a COA **group/head**. In Phase 1, keep it simple: COA manages **groups**, and ledger accounts are created/managed in Module 31.
+
+Notes for alignment with Modules 28–31:
+- When creating ledgers in **Module 31.2**, users must be able to pick an **Account Group** from this COA.
+- When posting from **Module 30**, users must be able to pick **Bank/Cash** ledgers (which are still Ledger accounts in Module 31, but grouped here).
 
 ---
 
@@ -181,181 +129,111 @@ Alternative flat-list view of all account heads in a sortable table format. Usef
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                       CHART OF ACCOUNTS (LIST VIEW)                          │
+│                    ADD / EDIT COA ACCOUNT HEAD (GROUP)                       │
 │                                                                              │
-│  VIEW: [🌳 TREE VIEW]  [📋 LIST VIEW] ← Active                             │
+│  Account Name*   : [________________________]                                │
+│  Primary Group*  : [▼ Assets/Liabilities/Income/Expense/Capital ▼]           │
+│  Parent Group*   : [▼ Select Parent Group ▼]                                 │
+│  Nature*         : (•) Dr   ( ) Cr                                           │
 │                                                                              │
-│  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │ Search: [____________________]    Filter: [▼ All Types ▼]            │  │
-│  └───────────────────────────────────────────────────────────────────────┘  │
+│  Code            : [AUTO] (Editable, must remain unique)                     │
+│  Branch Scope    : [▼ All Branches ▼]                                        │
+│  Affects GP?     : [☐ Yes] (Only relevant for P&L grouping)                  │
+│  Status          : (•) Active   ( ) Inactive                                 │
 │                                                                              │
-│  [+ ADD ACCOUNT HEAD]   [📥 EXPORT CSV]                                     │
-│                                                                              │
-│  ┌──────────┬──────────────────────┬──────────────────┬───────┬──────┬────┐  │
-│  │Code      │Account Name          │Parent Group       │Type   │Nature│Bal │  │
-│  │──────────┼──────────────────────┼──────────────────┼───────┼──────┼────│  │
-│  │A-001     │Bank Accounts         │Current Assets     │Group  │Dr   │—   │  │
-│  │A-001-001 │HDFC Current A/C      │Bank Accounts      │Ledger │Dr   │7L  │  │
-│  │A-001-002 │SBI Savings A/C       │Bank Accounts      │Ledger │Dr   │1.5L│  │
-│  │A-002     │Sundry Debtors        │Current Assets     │Group  │Dr   │—   │  │
-│  │A-002-001 │ABC Corp Ltd          │Sundry Debtors     │Ledger │Dr   │35K │  │
-│  │L-001     │Sundry Creditors      │Current Liabilities│Group  │Cr   │—   │  │
-│  │L-001-001 │Industrial Chemicals  │Sundry Creditors   │Ledger │Cr   │1.05L│ │
-│  │I-001     │Service Income        │Direct Income      │Ledger │Cr   │18.5L│ │
-│  │E-001     │Chemical Cost         │Direct Expenses    │Ledger │Dr   │4.5L│  │
-│  └──────────┴──────────────────────┴──────────────────┴───────┴──────┴────┘  │
-│                                                                              │
-│  ┌──────────────────────────────────────────────────────────────────────┐    │
-│  │Actions                                                               │    │
-│  │──────────────────────────────────────────────────────────────────────│    │
-│  │[Edit]                                                                │    │
-│  │[View] [Edit]                                                         │    │
-│  │[View] [Edit]                                                         │    │
-│  │[Edit]                                                                │    │
-│  │[View] [Edit]                                                         │    │
-│  │[Edit]                                                                │    │
-│  │[View] [Edit]                                                         │    │
-│  │[View] [Edit]                                                         │    │
-│  │[View] [Edit]                                                         │    │
-│  └──────────────────────────────────────────────────────────────────────┘    │
-│                                                                              │
-│  Pagination:  Previous   1   2   3   ...   10   Next                         │
-│                                                                              │
+│  [SAVE]  [CANCEL]                                                            │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Table View Fields
+## Fields
 
-| Field        | Type   | Required | Description                                             |
-| ------------ | ------ | -------- | ------------------------------------------------------- |
-| Code         | Text   | Auto     | Hierarchical account code (A-001, A-001-001, etc.)      |
-| Account Name | Text   | Auto     | Name of the account head or group                       |
-| Parent Group | Text   | Auto     | Parent group name in the hierarchy                      |
-| Type         | Badge  | Auto     | Group / Ledger                                          |
-| Nature       | Text   | Auto     | Dr (Debit) / Cr (Credit) — default balance side         |
-| Balance      | Number | Auto     | Current balance (for ledgers only)                      |
-| Actions      | Buttons| —        | View / Edit                                             |
+| Field         | Type     | Required | Description |
+|--------------|----------|----------|-------------|
+| Account Name | Text     | Yes      | Group/head name |
+| Primary Group| Dropdown | Yes      | Assets/Liabilities/Income/Expense/Capital |
+| Parent Group | Dropdown | Yes      | Parent group (cannot be self) |
+| Nature       | Radio    | Yes      | Default Dr/Cr side |
+| Code         | Text     | Auto     | Unique code (system generated, editable) |
+| Branch Scope | Dropdown | No       | All / specific branch (if branch-wise COA needed) |
+| Affects GP   | Checkbox | No       | For P&L grouping (Direct vs Indirect) |
+| Status       | Radio    | Yes      | Active / Inactive |
+
+---
+
+## Validation Rules (Phase 1)
+
+| Rule | Description |
+|------|-------------|
+| Unique code | `Code` must be unique across the company |
+| Unique name under same parent | Same `Account Name` cannot repeat under same `Parent Group` |
+| Root groups locked | Primary groups (Assets/Liabilities/Income/Expense/Capital) cannot be deleted |
+| Deletion | Group can be deleted only if it has no child groups and no ledgers assigned |
+| Nature consistency | `Nature` should match expected default for primary group (configurable override allowed) |
+
+---
+
+## Business Rules (Aligned with Modules 28–31)
+
+| Rule | Why it matters |
+|------|----------------|
+| COA before postings | Modules 28/29/30 should not post if required COA heads are missing |
+| Ledger creation happens in Module 31 | COA creates **groups/heads**; Ledger accounts are managed in Module 31 |
+| Bank/Cash heads required | Module 30 requires bank/cash ledgers grouped under COA Bank/Cash |
+| Income/Expense mapping | Module 28/29 must map postings to correct COA heads for reporting |
+
+---
+
+## System Behavior (Phase 1)
+
+| Event | System Action |
+|------|---------------|
+| Open Module 32 | Loads list view with filters |
+| Save new head | Creates COA head and makes it selectable in Module 31.2 account group dropdown |
+| Inactivate head | Prevent selection in new postings; existing ledgers remain classified (read-only impact) |
 
 ---
 
 ================================================================================
 
-# 32.3 Add / Edit Account Head
+# 32.3 View Account Head Detail
 
 **Description:**
-Form to add a new account group or sub-group to the Chart of Accounts, or to edit an existing one. Ledgers are created through Module 31; this form is specifically for **account groups** (folders in the hierarchy).
-
----
-
-## Screen Layout
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                     ADD / EDIT ACCOUNT HEAD                                   │
-│                                                                              │
-│  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │ Account Name*     : [________________________]                        │  │
-│  │ Account Code      : [_________]   (Auto-generated, editable)          │  │
-│  │ Primary Group*    : [▼ Assets / Liabilities / Income / Expense / Capital] │
-│  │ Parent Group*     : [▼ Current Assets ▼]  (Sub-group under this)      │  │
-│  │ Nature*           : (•) Debit (Dr)    ( ) Credit (Cr)                 │  │
-│  │ Description       : [_____________________________________________]   │  │
-│  │                                                                       │  │
-│  │ Affects Gross Profit : [☐ Yes]   (For P&L grouping)                   │  │
-│  │ Status              : (•) Active   ( ) Inactive                       │  │
-│  └───────────────────────────────────────────────────────────────────────┘  │
-│                                                                              │
-│  [SAVE]    [CANCEL]                                                          │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Screen Fields
-
-| Field          | Type     | Required | Description                                          |
-| -------------- | -------- | -------- | ---------------------------------------------------- |
-| Account Name   | Text     | Yes      | Name of the new group or sub-group                   |
-| Account Code   | Text     | Auto     | Auto-generated hierarchical code (editable)          |
-| Primary Group  | Dropdown | Yes      | Root category: Assets/Liabilities/Income/Expense/Capital |
-| Parent Group   | Dropdown | Yes      | Immediate parent in the tree hierarchy               |
-| Nature         | Radio    | Yes      | Default balance side (Debit or Credit)               |
-| Description    | Textarea | No       | Brief description of what this group contains        |
-| Affects GP     | Checkbox | No       | Whether this group is for Gross Profit calculation   |
-| Status         | Radio    | Yes      | Active / Inactive (default: Active)                  |
-
----
-
-## Validation Rules
-
-| Field          | Rule                                                        |
-| -------------- | ----------------------------------------------------------- |
-| Account Name   | Must be unique within the same Parent Group                 |
-| Account Code   | Must be unique across the entire COA                        |
-| Primary Group  | Must select one of the 5 root groups                        |
-| Parent Group   | Must be a valid existing group                              |
-| Nature         | Must match the Primary Group's default nature               |
-| Delete         | Group can only be deleted if it has no child groups/ledgers |
-
----
-
-## Business Rules
-
-| Rule                            | Description                                                |
-| ------------------------------- | ---------------------------------------------------------- |
-| Default COA on company creation | System creates a standard Indian COA when a company signs up |
-| Nature inheritance              | Sub-groups inherit the Nature (Dr/Cr) from parent           |
-| Rename restricted               | Group names with transactions cannot be renamed             |
-| No duplicate codes              | Account codes must be unique across the entire COA          |
-| System groups locked            | Root-level groups (Assets, Liabilities, etc.) cannot be deleted |
-
----
-
-## System Behavior
-
-| Event                    | System Action                                              |
-| ------------------------ | ---------------------------------------------------------- |
-| Save clicked (new)       | New group added to tree, code auto-assigned                |
-| Parent Group changed     | Account code prefix updated hierarchically                 |
-| Delete attempted         | Checks for child accounts; blocks if children exist        |
-| Company created (Mod 2)  | Default Indian COA auto-generated                          |
-
----
-
-================================================================================
-
-# 32.4 View Account Head Detail
-
-**Description:**
-Read-only view of an account head showing its complete details, child accounts, and aggregate balance of all ledgers under it.
+Read-only view of a COA head showing its details and where it is used (ledgers assigned under it).
 
 ---
 
 ## View Fields
 
-| Field          | Type    | Description                                              |
-| -------------- | ------- | -------------------------------------------------------- |
-| Account Name   | Display | Group name                                               |
-| Account Code   | Display | Hierarchical code                                        |
-| Primary Group  | Display | Root category                                            |
-| Parent Group   | Display | Immediate parent                                         |
-| Nature         | Display | Dr / Cr                                                  |
-| Description    | Display | Group description                                        |
-| Child Accounts | Table   | List of sub-groups and ledgers under this group          |
-| Aggregate Bal  | Number  | Sum of all ledger balances under this group              |
+| Field | Type | Description |
+|------|------|-------------|
+| Account Name | Display | COA head name |
+| Code | Display | Unique code |
+| Primary Group | Display | Assets/Liabilities/Income/Expense/Capital |
+| Parent Group | Display | Parent grouping |
+| Nature | Display | Dr/Cr |
+| Status | Display | Active/Inactive |
+| Used By Ledgers | Table | List of ledgers (from Module 31) classified under this head |
 
 ---
 
 ## Actions
 
-| Action           | Type   | Description                                         |
-| ---------------- | ------ | --------------------------------------------------- |
-| **Edit**         | Button | Opens edit form (32.3)                              |
-| **Add Child**    | Button | Opens Add form with this group as parent            |
-| **View Statement**| Button| Opens aggregate statement of all child ledgers     |
-| **Back to Tree** | Button | Returns to COA Tree View (32.1)                     |
+| Action | Type | Description |
+|--------|------|-------------|
+| Edit | Button | Opens Add/Edit (32.2) |
+| Back to List | Button | Returns to List View (32.1) |
+
+---
+
+================================================================================
+
+# 32.4 COA Tree View (Phase 2 — Optional Enhancement)
+
+**Description:**
+Phase‑2 enhancement. If needed later, render COA as an expandable tree.
+
+For Phase 1 delivery, the **List View (32.1)** + **View Detail (32.3)** already supports the full accounting flow required for Modules 28–31 and reporting in Module 33.
 
 ---
