@@ -6,9 +6,13 @@ Ledger module is the **central account book ("Bahi Khata")** of the ERP system. 
 
 **Module Connections:**
 
-- **Depends on:** Module 18 (Customer Master — customer details), Module 11 (Vendor Master — vendor details), Module 32 (Chart of Accounts — account group classification)
-- **Fed by:** Module 28 (Invoices → Customer Ledger Debit), Module 29 (Bills → Vendor Ledger Credit), Module 30 (Payments → Both Ledgers)
+- **Depends on:** Module 18 (Customer Master — customer details), Module 13 (Vendor Management — vendor details), Module 32 (Chart of Accounts — account group classification)
+- **Fed by (postings):** Module 28 (Invoices → Customer Ledger Debit), Module 29 (Bills → Vendor Ledger Credit), Module 30 (Payments → Both Ledgers)
 - **Used by:** Module 33 (Reports — Balance Sheet, P&L, Ageing), Module 28 (Outstanding check), Module 30 (Balance display)
+
+**Important note (No direct link at creation):**
+- Creating a Ledger in **31.2** does **not** require selecting/attaching any Invoice (Module 28) or Bill (Module 29).
+- Module 28/29 only *feed* the Ledger later by posting transactions against an existing party/account ledger.
 
 ---
 
@@ -162,6 +166,10 @@ Searchable by:
 **Description:**
 Form to create a new ledger account or edit an existing one. Used for adding new parties (Customers, Vendors), bank accounts, or internal account heads. Customer and Vendor ledgers are auto-created when a new Customer (Module 18) or Vendor (Module 11) is added — this form is for manual creation or modification.
 
+This screen is **master-data driven**:
+- Links (if any) are only to **Customer/Vendor master** (Module 18/11) and **Account Group** (Module 32).
+- There is **no selection/linking of specific Invoices (Module 28) or Bills (Module 29)** during Ledger creation.
+
 ---
 
 ## Screen Layout
@@ -292,6 +300,7 @@ Form to create a new ledger account or edit an existing one. Used for adding new
 | Inactive Ledger                   | Cannot post new transactions to inactive ledgers          |
 | Opening Balance only once         | Can only be set during creation or FY opening; locked after first transaction |
 | Edit restrictions                 | Ledger Name and Account Group cannot be changed after first transaction |
+| No document linkage at creation   | Ledger creation/edit does not link to specific Invoices/Bills; documents only post transactions later |
 
 ---
 
@@ -375,7 +384,7 @@ The statement screen shows a **chronological transaction history** for a specifi
 | Field          | Type    | Description                                               |
 | -------------- | ------- | --------------------------------------------------------- |
 | Date           | Date    | Transaction date                                          |
-| Ref #          | Link    | Clickable reference (Invoice / Receipt / Bill / Payment)  |
+| Ref #          | Link    | Clickable reference when source document exists (Invoice / Receipt / Bill / Payment); blank/non-clickable for manual entries/opening balance |
 | Particulars    | Text    | Description of the transaction                            |
 | Debit (Dr)     | Number  | Amount increasing the balance (for debtors)               |
 | Credit (Cr)    | Number  | Amount decreasing the balance (for debtors)               |
@@ -400,7 +409,6 @@ The statement screen shows a **chronological transaction history** for a specifi
 | ------------------- | ------ | ---------------------------------------------------- |
 | **Download PDF**    | Button | Download formatted statement as PDF                  |
 | **Email to Party**  | Button | Send statement to party's registered email           |
-| **Print**           | Button | Print formatted statement                            |
 | **Back to List**    | Button | Returns to Ledger Dashboard (31.1)                   |
 
 ---

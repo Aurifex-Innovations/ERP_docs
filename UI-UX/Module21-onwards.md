@@ -5467,7 +5467,7 @@ Searchable by:
 
 | Rule                                  | Description                                                  |
 | ------------------------------------- | ------------------------------------------------------------ |
-| Draft invoices do not affect Ledger   | Only Sent/Approved invoices update the Customer Ledger       |
+| Draft invoices do not affect Ledger   | Only Sent/Approved invoices post entries to the Customer Ledger (Module 31). Ledger master creation is independent (no invoice linkage needed in Module 31.2). |
 | Overdue auto-detection                | System marks invoices as Overdue when Due Date passes        |
 | Deletion restricted to Draft          | Only Draft invoices can be deleted; Sent invoices need Credit Note |
 | Branch-based access                   | Users see invoices for their assigned branches only          |
@@ -6279,7 +6279,7 @@ Searchable by:
 
 | Rule                                | Description                                                  |
 | ----------------------------------- | ------------------------------------------------------------ |
-| Draft bills do not affect Ledger    | Only Confirmed bills update the Vendor Ledger                |
+| Draft bills do not affect Ledger    | Only Confirmed bills post entries to the Vendor Ledger (Module 31). Ledger master creation is independent (no bill linkage needed in Module 31.2). |
 | Auto-Draft from Stock Entry         | When stock is added in Module 11, a Draft Bill is auto-created |
 | Overdue auto-detection              | Bills marked Overdue when Due Date passes without full payment |
 | TDS auto-calculation                | If vendor is TDS applicable, TDS is auto-deducted            |
@@ -6396,7 +6396,7 @@ Form screen to record a new purchase bill received from a vendor. Supports two m
 
 | Field         | Type    | Required | Description                                          |
 | ------------- | ------- | -------- | ---------------------------------------------------- |
-| Vendor Name   | Display | Auto     | Fetched from Module 11 Vendor Master                 |
+| Vendor Name   | Display | Auto     | Fetched from Module 13 Vendor Management             |
 | GSTIN         | Display | Auto     | Vendor's GST number                                  |
 | Vendor State  | Display | Auto     | Determines CGST/SGST vs IGST                        |
 | TDS Applicable| Display | Auto     | Whether TDS applies and under which section          |
@@ -8030,3 +8030,350 @@ This section details the exact data flow and system behavior when moving from a 
     - `[Payment     | PAY-205 | Dr ₹15,000]`
 
 ---
+
+====================================================================================================
+
+# 📌 Developer Note: Finance → Ledger Posting (Modules 28/29/30 → Module 31) — Dynamic Flow
+
+This note is added to prevent confusion when implementing Modules **28 (Invoices)**, **29 (Bills)**, and **30 (Payments)** with Module **31 (Ledger)**.
+
+## Key Principle (Most important)
+
+- **Module 31.2 “Create / Edit Ledger” is NOT linked to Module 28 or 29 documents.**
+  - Ledger creation is **master-data driven** (Customer/Vendor masters + Chart of Accounts groups).
+  - Modules **28/29/30** only **post transactions** into existing ledgers after documents are approved/confirmed/saved.
+
+## Beginner-friendly mental model
+
+- Think of **Module 31** as two parts:
+  - **(A) Ledger Master**: “Which accounts exist?” (created from masters / COA)
+  - **(B) Ledger Entries**: “What transactions happened?” (posted from Invoices/Bills/Payments)
+- Modules **28/29/30** should never “create a ledger by linking a document”. They only **post entries** (and show references back to documents).
+
+## What “linkage” means (to avoid wrong implementation)
+
+- **Master linkage (allowed in Ledger creation)**:
+  - Customer/Vendor selection (Module 18 / Module 11)
+  - Account Group selection (Module 32)
+- **Document linkage (NOT part of Ledger creation)**:
+  - Selecting specific Invoices (Module 28) or Bills (Module 29) inside Module 31.2
+- **Ledger statement references (optional display)**:
+  - Ledger statement rows may show `Ref #` (INV/BILL/RCP/PAY/CN/DN) and allow deep-link to the source document *when it exists*.
+
+## Quick cheat-sheet (Event → Ledger posting?)
+
+| Module | Event / Status | Post ledger entry? | Notes |
+| ------ | -------------- | ------------------ | ----- |
+| 28 | Save as `Draft` | No | No ledger effect |
+| 28 | `Approve & Send` / Finalize | Yes | Creates invoice posting(s) |
+| 29 | Save as `Draft` | No | No ledger effect |
+| 29 | `Confirm Bill` | Yes | Creates bill posting(s) |
+| 30 | Save voucher (`Receipt/Payment/Contra/Journal`) | Yes | Creates voucher posting(s); also updates 28/29 allocations and document status |
+
+## Posting Triggers Summary (When to write Ledger entries)
+
+- **Module 28 (Invoice)**
+  - `Draft` → **No posting**
+  - `Approve & Send` / Finalize → **Post to Ledger**
+    - Customer Ledger (Sundry Debtor): **Debit**
+    - Sales/Tax ledgers as per accounting design (Module 32/COA)
+- **Module 29 (Bill)**
+  - `Draft` → **No posting**
+  - `Confirm Bill` → **Post to Ledger**
+    - Vendor Ledger (Sundry Creditor): **Credit**
+    - Expense/ITC/TDS ledgers as per accounting design (Module 32/COA)
+- **Module 30 (Receipt/Payment/Contra/Journal)**
+  - On `Save` (voucher created) → **Post to Ledger**
+    - Bank/Cash ledger affected + Party ledger affected
+    - Also drives status updates and transaction-ledger rows inside Module 28/29
+
+## End-to-End Dynamic Flow (System view) — “Swimlane” style
+
+This diagram is intentionally **step-by-step** so a beginner dev can implement event handlers in the right module.
+
+```mermaid
+flowchart LR
+  %% Lanes (visual grouping)
+  subgraph MASTERS[Masters (create ledgers)]
+    M18[18: Customer Master] -->|Create/Update| L31M[31.2: Ledger Master<br/>Create/Edit Ledger]
+    M13[13: Vendor Management] -->|Create/Update| L31M
+    M32[32: Chart of Accounts] -->|Account groups/heads| L31M
+  end
+
+  subgraph DOCS[Documents (cause postings)]
+    I28D[28: Invoice Draft] -->|Approve & Send| I28F[28: Invoice Final]
+    B29D[29: Bill Draft] -->|Confirm Bill| B29F[29: Bill Confirmed]
+  end
+
+  subgraph PAY[Payments / Vouchers]
+    V30R[30.2: Receipt Entry] --> V30S[30: Save Voucher]
+    V30P[30.3: Payment Entry] --> V30S
+    V30C[30.4/30.5: Contra/Journal] --> V30S
+  end
+
+  %% Posting engine (module 31 entries)
+  I28F -->|Post entries| L31E[31: Ledger Entries<br/>(posting engine)]
+  B29F -->|Post entries| L31E
+  V30S -->|Post entries| L31E
+
+  %% COA is used during posting and reporting
+  M32 -->|Classifies accounts + determines report groups| L31E
+  M32 -->|Report structure / grouping| R33
+
+  %% Where user sees results
+  L31E --> L31Dash[31.1 Dashboard<br/>Balances, ageing totals]
+  L31E --> L31Stmt[31.3 Statement<br/>Running balance + Ref#]
+
+  %% Feedback loops
+  V30S -->|Allocation + status update<br/>Paid/Partial/Overdue| I28F
+  V30S -->|Allocation + status update<br/>Paid/Partial/Overdue| B29F
+
+  %% Reports (Module 33)
+  L31E --> R33[33: Reports<br/>Balance Sheet, P&L, Trial Balance,<br/>GST, Ageing, Cashflow, BRS, TDS]
+```
+
+## Conditional flows (common cases) — step-by-step
+
+This section is the **full developer flow** across:
+- `Module31_Ledger.md` (Ledger master + statement)
+- `Module32_ChartsOfAccounts.md` (COA groups + account heads used for classification)
+- `Module33_Reports.md` (reports generated from Ledger + COA + statutory sources)
+
+### A) Invoice lifecycle → Ledger → Reports (Module 28 → 31 → 32 → 33)
+
+- **If invoice = `Draft`**
+  - Do **not** post anything in Module 31
+  - Do **not** impact ageing / receivable totals
+- **If invoice is finalized (`Approve & Send`)**
+  - Post entries to **Module 31** (Customer balance increases)
+  - Use **Module 32 (COA)** to classify the posting into correct income/tax heads (Sales, GST Payable, etc. as per COA design)
+  - Statement row ref: `INV-xxxx`
+  - Reports (Module 33) will start reflecting receivable/revenue as per **COA grouping (Module 32)** + **Ledger entries (Module 31)**
+
+### B) Bill lifecycle → Ledger → Reports (Module 29 → 31 → 32 → 33)
+
+- **If bill = `Draft`**
+  - Do **not** post anything in Module 31
+- **If bill is confirmed (`Confirm Bill`)**
+  - Post entries to **Module 31** (Vendor payable increases)
+  - Use **Module 32 (COA)** to classify the posting into correct expense/ITC/TDS heads (as per COA design)
+  - Statement row ref: `BILL-xxxx`
+  - Reports (Module 33) will reflect payable/expense/ITC as per **COA grouping (Module 32)** + **Ledger entries (Module 31)**
+
+### C) Receipt against invoices (Module 30.2) — allocation conditions (28 ↔ 30 ↔ 31 ↔ 32 ↔ 33)
+
+- **If receipt amount == total allocated**
+  - Post voucher entries to **Module 31** (Bank/Cash + Customer)
+  - Bank/Cash ledger selection must come from **Module 32 (COA)** bank/cash heads
+  - Update invoice status in Module 28: `Paid` / `Partial` depending on pending
+- **If receipt amount < invoice pending**
+  - **Keep Open** → invoice stays `Partial`, pending remains
+  - **Settle & Close** → auto-generate Credit Note (Module 28.5) for shortfall; ledger adjusted by CN
+- **If receipt amount > pending (overpayment)**
+  - Extra becomes **Advance / On Account** in Customer Ledger (Module 31)
+  - Future invoices can use **Advance Adjustment** (Module 30)
+
+### D) Payment against bills (Module 30.3) — allocation conditions (29 ↔ 30 ↔ 31 ↔ 32 ↔ 33)
+
+- **If payment amount == total allocated**
+  - Post voucher entries to **Module 31** (Bank/Cash + Vendor)
+  - Bank/Cash ledger selection must come from **Module 32 (COA)** bank/cash heads
+  - Update bill status in Module 29 accordingly
+- **If payment amount < bill pending**
+  - **Keep Open** → bill stays `Partial`
+  - **Settle & Close** → auto-generate Debit Note (Module 29.5) for shortfall; ledger adjusted by DN
+- **If payment amount > pending (advance paid to vendor)**
+  - Extra becomes **Advance** on Vendor ledger (shows as debit balance / advance)
+  - Future bills can adjust via advance in Module 30
+
+### E) Edge cases (must be handled cleanly)
+
+- **Ledger is Inactive (Module 31 status = Inactive)**
+  - Modules 28/29/30 must block posting with a clear validation error (“Cannot post to inactive ledger”)
+- **Party ledger missing**
+  - Preferred: ensure ledgers are auto-created from **Module 18 (Customer)** / **Module 13 (Vendor)** master flows
+  - Otherwise: fail fast with controlled error; do not try to “create ledger by linking invoice/bill”
+
+## Module 33 usage (what it consumes)
+
+- Module 33 should consume **ledger entries (Module 31)** + **COA structure/mapping (Module 32)** as the primary source of truth.
+- For specific statutory reports, Module 33 additionally references:
+  - **Module 28**: invoice-level tax breakdown for GSTR-1 / output tax categorization
+  - **Module 29**: bill-level ITC breakdown for GSTR-3B / input tax categorization
+  - **Module 30**: voucher stream for cash-flow and bank reconciliation flows
+  - **Module 9 (Tax)**: GST rules/rates/HSN configuration used to validate and summarize compliance
+
+### Report → Primary data source (beginner mapping)
+
+| Report (Module 33) | Primary Source | Secondary Sources (if needed) |
+| --- | --- | --- |
+| Profit & Loss | Module 31 + Module 32 | — |
+| Balance Sheet | Module 31 + Module 32 | — |
+| Trial Balance | Module 31 + Module 32 | — |
+| Cash Flow | Module 30 + Module 31 | Module 32 |
+| GST (GSTR-1, GSTR-3B) | Module 28 + Module 29 | Module 9, Module 31 (validation/reconciliation) |
+| Ageing (AR/AP) | Module 31 (open positions) | Module 28/29 due-dates (if designed) |
+| Bank Reconciliation | Module 30 + Module 31 | — |
+| TDS Report | Module 30 + vendor/customer masters | Module 14 (TDS config), Module 31 (posting audit) |
+
+## ASCII Flowchart (Modules 28 → 33) — with conditional branches
+
+Use this when implementing event handlers. Rule of thumb: **documents/vouchers POST**, ledger master **does not “link” documents**.
+
+```
+                               ┌─────────────────────────────────────────────┐
+                               │                MASTERS                       │
+                               │  M18 Customer / M13 Vendor / M32 COA         │
+                               └──────────────────────────┬──────────────────┘
+                                                          │ (create/update master)
+                                                          ▼
+                               ┌─────────────────────────────────────────────┐
+                               │  MODULE 31.2: LEDGER MASTER (Create/Edit)    │
+                               │  - Allowed links: Customer/Vendor + COA      │
+                               │  - NOT allowed: pick Invoice/Bill here       │
+                               └──────────────────────────┬──────────────────┘
+                                                          │ (exists before posting)
+                                                          ▼
+                               ┌─────────────────────────────────────────────┐
+                               │  MODULE 32: COA (Chart of Accounts)          │
+                               │  - Defines account groups & nature (Dr/Cr)   │
+                               │  - Used by: posting classification + reports │
+                               └─────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                  DOCUMENTS THAT CAUSE POSTINGS                                 │
+└───────────────────────────────────────────────────────────────────────────────────────────────┘
+
+   ┌───────────────────────────────┐                               ┌───────────────────────────────┐
+   │ MODULE 28: INVOICE            │                               │ MODULE 29: BILL                │
+   └───────────────┬───────────────┘                               └───────────────┬───────────────┘
+                   │                                                   │
+                   ▼                                                   ▼
+         ┌─────────────────┐                                 ┌─────────────────┐
+         │ Save as DRAFT    │                                 │ Save as DRAFT    │
+         └───────┬─────────┘                                 └───────┬─────────┘
+                 │                                                     │
+                 │  (NO Ledger posting)                                │  (NO Ledger posting)
+                 │                                                     │
+                 ▼                                                     ▼
+     ┌──────────────────────────┐                         ┌──────────────────────────┐
+     │ Approve & Send / Finalize │                         │ Confirm Bill              │
+     └───────────────┬──────────┘                         └───────────────┬──────────┘
+                     │ (POST to Ledger)                                    │ (POST to Ledger)
+                     │                                                     │
+                     ▼                                                     ▼
+          ┌─────────────────────────────────────────────────────────────────────────────┐
+          │                 MODULE 31: LEDGER ENTRIES (Posting Engine)                   │
+          │  Creates entries with optional Ref#: INV-xxx / BILL-xxx                       │
+          └───────────────────────────────┬─────────────────────────────────────────────┘
+                                          │
+                                          │
+                                          ▼
+                        ┌─────────────────────────────────────────────┐
+                        │ MODULE 31.1 Dashboard / 31.3 Statement        │
+                        │ - Running balance + optional deep-links by Ref#│
+                        └──────────────────────────┬──────────────────┘
+                                                   │
+                                                   ▼
+                        ┌─────────────────────────────────────────────┐
+                        │ MODULE 33 Reports                              │
+                        │ P&L / Balance Sheet / Trial Balance / Cashflow │
+                        │ GST (GSTR-1/3B) / Ageing / BRS / TDS           │
+                        │ Inputs: Ledger(31) + COA(32) + Tax(9) + Docs   │
+                        └─────────────────────────────────────────────┘
+
+
+┌───────────────────────────────────────────────────────────────────────────────────────────────┐
+│                         PAYMENTS / ALLOCATIONS (MODULE 30) — CONDITIONAL FLOWS                 │
+└───────────────────────────────────────────────────────────────────────────────────────────────┘
+
+   ┌─────────────────────────────────────────────────────┐
+   │ MODULE 30.2: RECEIPT (Money IN)                      │
+   │ Inputs: Customer + Amount + Mode + Allocation Grid   │
+   └──────────────────────────┬──────────────────────────┘
+                              │ SAVE (Voucher created)
+                              ▼
+                 ┌─────────────────────────────────────────────┐
+                 │ POST to Module 31 (Voucher posting)          │
+                 │ - Dr Bank/Cash  / Cr Customer (typical)      │
+                 └───────────────────┬─────────────────────────┘
+                                     │
+                                     ▼
+                       ┌──────────────────────────────────────┐
+                       │ Allocation decision (against invoices) │
+                       └───────────────┬───────────────────────┘
+                                       │
+         ┌─────────────────────────────┼──────────────────────────────┐
+         │                             │                              │
+         ▼                             ▼                              ▼
+┌──────────────────────┐     ┌──────────────────────┐        ┌──────────────────────────┐
+│ Amount == allocated  │     │ Amount < pending     │        │ Amount > pending         │
+└──────────┬───────────┘     └──────────┬───────────┘        └──────────┬───────────────┘
+           │                              │                              │
+           ▼                              ▼                              ▼
+┌──────────────────────┐     ┌──────────────────────────────┐   ┌──────────────────────────┐
+│ Update Module 28:     │     │ Choose settlement action      │   │ Advance / On Account      │
+│ Paid or Partial       │     │ - Keep Open  → Partial stays  │   │ - Save extra to Ledger     │
+└──────────────────────┘     │ - Settle&Close→ create CN (28.5)│   │ - Future adjust in 30      │
+                             └──────────┬─────────────────────┘   └──────────────────────────┘
+                                        │
+                                        ▼
+                             ┌──────────────────────────────┐
+                             │ If CN created (28.5):         │
+                             │ - POST CN adjustment to Ledger │
+                             │ - Invoice becomes closed       │
+                             └──────────────────────────────┘
+
+
+   ┌─────────────────────────────────────────────────────┐
+   │ MODULE 30.3: PAYMENT (Money OUT)                     │
+   │ Inputs: Vendor + Amount + Mode + Allocation Grid     │
+   └──────────────────────────┬──────────────────────────┘
+                              │ SAVE (Voucher created)
+                              ▼
+                 ┌─────────────────────────────────────────────┐
+                 │ POST to Module 31 (Voucher posting)          │
+                 │ - Dr Vendor / Cr Bank/Cash (typical)         │
+                 └───────────────────┬─────────────────────────┘
+                                     │
+                                     ▼
+                       ┌────────────────────────────────────┐
+                       │ Allocation decision (against bills) │
+                       └───────────────┬────────────────────┘
+                                       │
+         ┌─────────────────────────────┼──────────────────────────────┐
+         │                             │                              │
+         ▼                             ▼                              ▼
+┌──────────────────────┐     ┌──────────────────────┐        ┌──────────────────────────┐
+│ Amount == allocated  │     │ Amount < pending     │        │ Amount > pending         │
+└──────────┬───────────┘     └──────────┬───────────┘        └──────────┬───────────────┘
+           │                              │                              │
+           ▼                              ▼                              ▼
+┌──────────────────────┐     ┌──────────────────────────────┐   ┌──────────────────────────┐
+│ Update Module 29:     │     │ Choose settlement action      │   │ Vendor Advance            │
+│ Paid or Partial       │     │ - Keep Open  → Partial stays  │   │ - Save extra in Ledger     │
+└──────────────────────┘     │ - Settle&Close→ create DN (29.5)│   │ - Future adjust in 30      │
+                             └──────────┬─────────────────────┘   └──────────────────────────┘
+                                        │
+                                        ▼
+                             ┌──────────────────────────────┐
+                             │ If DN created (29.5):         │
+                             │ - POST DN adjustment to Ledger │
+                             │ - Bill becomes closed          │
+                             └──────────────────────────────┘
+
+
+┌───────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                           EDGE CASES                                           │
+└───────────────────────────────────────────────────────────────────────────────────────────────┘
+
+  [Ledger inactive in Module 31]  → Block posting from 28/29/30 with clear validation error
+  [Party ledger missing]          → Create via master flow (18/13) OR fail fast (do NOT link doc to 31.2)
+```
+
+## Implementation Guardrails (for dev)
+
+- **Do not build any UI in Module 31.2** to pick `Invoice #` / `Bill #` as part of ledger creation.
+- **Posting must be event-driven** from Modules 28/29/30 status transitions (Finalize/Confirm/Save).
+- **If a party ledger does not exist** (edge case), system should create it via master flow (Module 18/11) or raise a controlled validation error — but it should not “attach” the document to ledger creation.
+

@@ -796,8 +796,8 @@ MODULE 18: CUSTOMER ─────────► MODULE 28: INVOICING ──�
                                       │                           │
 MODULE 20: SALES ORDER ───────────────┘                           │
                                                                   │
-MODULE 11: STOCK/VENDOR ─────► MODULE 29: BILLS ─────────► MODULE 31: LEDGER
-(Vendor Master + PO + GRN)    (Purchase Bills)              (Vendor Balance)
+MODULE 11: STOCK / MODULE 13: VENDORS ─────► MODULE 29: BILLS ─────────► MODULE 31: LEDGER
+(Stock + Vendor Management + PO/GRN)        (Purchase Bills)              (Vendor Balance)
                                       │                           │
                                       └──────────── MODULE 30: PAYMENTS
                                                    (Receipts & Vouchers)
