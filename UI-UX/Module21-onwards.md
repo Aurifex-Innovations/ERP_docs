@@ -8375,7 +8375,7 @@ Use this when implementing event handlers. Rule of thumb: **documents/vouchers P
 
 - **Do not build any UI in Module 31.2** to pick `Invoice #` / `Bill #` as part of ledger creation.
 - **Posting must be event-driven** from Modules 28/29/30 status transitions (Finalize/Confirm/Save).
-- **If a party ledger does not exist** (edge case), system should create it via master flow (Module 18/11) or raise a controlled validation error — but it should not “attach” the document to ledger creation.
+- **If a party ledger does not exist** (edge case), system should create it via master flow (Module 18 / Module 13) or raise a controlled validation error — but it should not “attach” the document to ledger creation.
 
 ============================================================================================
 
@@ -8402,6 +8402,25 @@ The module contains the following screens:
 - 31.1 Ledger Dashboard (Table View)
 - 31.2 Create / Edit Ledger
 - 31.3 Ledger Statement View (Account Passbook)
+
+---
+
+## UI/UX blueprint (for designers)
+
+Use this to align layouts, navigation, and component choices before pixel design.
+
+| Screen | Primary user goal | Entry points | Exit / next |
+|--------|-------------------|--------------|-------------|
+| **31.1 Dashboard** | Find a ledger, see balances, open statement | Main menu → Ledger | Row → View / Edit / Statement |
+| **31.2 Create/Edit** | Add or fix a ledger (master only; no invoice/bill pick) | `[+ CREATE]` from 31.1, or Edit | Save → back to 31.1; Cancel → back |
+| **31.3 Statement** | See passbook + export | Statement from 31.1 row | Back → 31.1; Ref# → source doc (28/30) |
+
+**Layout pattern (recommended):**
+- **31.1:** Sticky top bar (title + primary `[+ CREATE LEDGER]`); tabs under title; filter card collapsible on mobile; table with zebra rows; row actions as icon buttons or kebab menu.
+- **31.2:** Single-column form on desktop; group into **Basic → Party (conditional) → Bank (conditional) → Financial**; show Party/Bank sections only when Account Group implies them.
+- **31.3:** Header strip (ledger name + account group); date range + Generate; summary cards in one row; transaction table full width; footer actions (PDF / Email / Print / Back).
+
+**Visual hierarchy:** Summary cards → main table (31.1) or transaction grid (31.3) should be the focal area; filters secondary.
 
 ---
 
@@ -8545,10 +8564,10 @@ Searchable by:
 # 31.2 Create / Edit Ledger
 
 **Description:**
-Form to create a new ledger account or edit an existing one. Used for adding new parties (Customers, Vendors), bank accounts, or internal account heads. Customer and Vendor ledgers are auto-created when a new Customer (Module 18) or Vendor (Module 11) is added — this form is for manual creation or modification.
+Form to create a new ledger account or edit an existing one. Used for adding new parties (Customers, Vendors), bank accounts, or internal account heads. Customer and Vendor ledgers are auto-created when a new Customer (Module 18) or Vendor (Module 13) is added — this form is for manual creation or modification.
 
 This screen is **master-data driven**:
-- Links (if any) are only to **Customer/Vendor master** (Module 18/11) and **Account Group** (Module 32).
+- Links (if any) are only to **Customer/Vendor master** (Module 18 / Module 13) and **Account Group** (Module 32).
 - There is **no selection/linking of specific Invoices (Module 28) or Bills (Module 29)** during Ledger creation.
 
 ---
@@ -8572,7 +8591,7 @@ This screen is **master-data driven**:
 │                                                                              │
 │  PARTY DETAILS (For Sundry Debtors / Creditors only)                         │
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │ Linked Customer/Vendor: [🔍 Search ▼] (Auto-links from Mod 18/11)    │  │
+│  │ Linked Customer/Vendor: [🔍 Search ▼] (Auto-links from Mod 18/13)    │  │
 │  │ GSTIN               : [________________________]                      │  │
 │  │ PAN                 : [________________________]                      │  │
 │  │ Contact Person      : [________________________]                      │  │
@@ -8617,11 +8636,38 @@ This screen is **master-data driven**:
 
 ---
 
+## Editability rules (Create vs Edit)
+
+| Field | Create mode | Edit mode (before any transactions) | Edit mode (after first transaction posted) |
+|------|-------------|--------------------------------------|-------------------------------------------|
+| Ledger Name | Editable | Editable | **Locked** (read-only) |
+| Account Group | Editable | Editable | **Locked** (read-only) |
+| Linked Party | Optional | Optional | **Locked** (recommended; changing link can break history) |
+| Opening Balance + Type + As on Date | Editable | Editable | **Locked** (read-only) |
+| Status | Editable | Editable | Editable (but blocks new postings when Inactive) |
+| Credit Limit / Credit Period / TDS flags | Editable | Editable | Editable |
+
+---
+
+## Dropdown enums (Module 31.2)
+
+| Dropdown | Options / Source | Notes |
+|---------|-------------------|-------|
+| Account Group | **From Module 32 (COA)** | Show only **Active** account heads allowed for ledger classification (e.g., Sundry Debtors, Sundry Creditors, Bank, Cash, Income, Expense, Duties & Taxes, etc.). |
+| Branch | All Branches + branch list | If Branch-wise ledgers are supported; otherwise hide and default to company-wide. |
+| Status | `Active`, `Inactive` | If Inactive, block new postings from Modules 28/29/30. |
+| Balance Type | `Dr`, `Cr` | Dr = Debit, Cr = Credit. |
+| Account Type (Bank) | `Current`, `Savings` | Optional additional types can be added later. |
+| TDS Applicable | `Yes/No` (checkbox) | When checked, enable `TDS Section`. |
+| TDS Section | `194C`, `194J`, `194H`, `194I`, `194Q`, `192`, `Other` | Keep list configurable if you expect changes; Phase 1 can be fixed enums. |
+
+---
+
 ## Screen Fields: Party Details
 
 | Field             | Type    | Required | Description                                     |
 | ----------------- | ------- | -------- | ----------------------------------------------- |
-| Linked Party      | Search  | No       | Auto-link to Customer (Mod 18) / Vendor (Mod 11)|
+| Linked Party      | Search  | No       | Auto-link to Customer (Mod 18) / Vendor (Mod 13)|
 | GSTIN             | Text    | Cond.    | Mandatory for GST-registered parties            |
 | PAN               | Text    | Cond.    | Mandatory for TDS-applicable parties            |
 | Contact Person    | Text    | No       | Primary contact name                            |
@@ -8676,7 +8722,7 @@ This screen is **master-data driven**:
 
 | Rule                              | Description                                               |
 | --------------------------------- | --------------------------------------------------------- |
-| Auto-creation from Module 18/11   | When new Customer or Vendor is created, Ledger is auto-created |
+| Auto-creation from Module 18/13   | When new Customer or Vendor is created, Ledger is auto-created |
 | Credit Limit enforcement          | System warns when new invoice exceeds customer's credit limit |
 | Inactive Ledger                   | Cannot post new transactions to inactive ledgers          |
 | Opening Balance only once         | Can only be set during creation or FY opening; locked after first transaction |
@@ -8790,6 +8836,7 @@ The statement screen shows a **chronological transaction history** for a specifi
 | ------------------- | ------ | ---------------------------------------------------- |
 | **Download PDF**    | Button | Download formatted statement as PDF                  |
 | **Email to Party**  | Button | Send statement to party's registered email           |
+| **Print**           | Button | Print formatted statement                            |
 | **Back to List**    | Button | Returns to Ledger Dashboard (31.1)                   |
 
 ---
@@ -8847,6 +8894,23 @@ The module contains the following screens:
 - 32.2 Add / Edit Account Head (Group)
 - 32.3 View Account Head Detail
 - 32.4 COA Tree View (Phase 2 — Optional Enhancement)
+
+---
+
+## UI/UX blueprint (for designers)
+
+| Screen | Primary user goal | Entry points | Exit / next |
+|--------|-------------------|--------------|-------------|
+| **32.1 List** | Browse/search COA heads; open detail or edit | Main menu → Chart of Accounts | Row → View / Edit |
+| **32.2 Add/Edit** | Create or change a COA group/head | `[+ ADD]` from 32.1, or Edit | Save → 32.1 or 32.3 |
+| **32.3 Detail** | Confirm head metadata; see which ledgers use it | View from 32.1 | Edit → 32.2; Back → 32.1 |
+
+**Layout pattern (Phase 1):**
+- **32.1:** Same pattern as other admin lists: filter row → toolbar (`Add`, `Export`) → data table → pagination.
+- **32.2:** Single-page form; Primary Group + Parent Group as dependent dropdowns (parent options filter by primary).
+- **32.3:** Read-only header card (name, code, groups, nature, status) → optional **“Used by ledgers”** table below (scroll if long).
+
+**Link to Module 31:** Account Group dropdown in **31.2** must list the same COA heads that appear in 32.1 (filtered to allowed types, e.g. groups usable for ledger classification).
 
 ---
 
@@ -8978,10 +9042,37 @@ Notes for alignment with Modules 28–31:
 | Primary Group| Dropdown | Yes      | Assets/Liabilities/Income/Expense/Capital |
 | Parent Group | Dropdown | Yes      | Parent group (cannot be self) |
 | Nature       | Radio    | Yes      | Default Dr/Cr side |
-| Code         | Text     | Auto     | Unique code (system generated, editable) |
+| Code (not add in UI)        | Text     | Auto     | Unique code (system generated, editable) |
 | Branch Scope | Dropdown | No       | All / specific branch (if branch-wise COA needed) |
 | Affects GP   | Checkbox | No       | For P&L grouping (Direct vs Indirect) |
 | Status       | Radio    | Yes      | Active / Inactive |
+
+---
+
+## Editability rules (Module 32.2 — Create vs Edit)
+
+| Field | Create mode | Edit mode (unused head) | Edit mode (already used by any ledger/posting/report) |
+|------|-------------|--------------------------|--------------------------------------------------------|
+| Account Name | Editable | Editable | Editable (renaming affects report labels; allow with caution) |
+| Primary Group | Editable | Editable | **Locked** (changing Assets→Income breaks reporting) |
+| Parent Group | Editable | Editable | Limited (allow only within same Primary Group) |
+| Nature | Editable | Editable | **Locked** (changing Dr/Cr side can impact reports) |
+| Code | Editable | Editable | **Locked** or “admin-only” (recommended) |
+| Branch Scope | Editable | Editable | Editable (if your access model supports it) |
+| Affects GP | Editable | Editable | Editable |
+| Status | Editable | Editable | Editable (Inactive should prevent new selection) |
+
+---
+
+## Dropdown enums (Module 32)
+
+| Dropdown | Options / Source | Notes |
+|---------|-------------------|-------|
+| Primary Group | `Assets`, `Liabilities`, `Income`, `Expense`, `Capital` | Fixed enums (Phase 1). |
+| Parent Group | **Filtered list from existing COA heads** | Filter parent list by selected Primary Group. Disallow selecting self. |
+| Nature | `Dr`, `Cr` | Default suggestion based on Primary Group; allow override only if accounting team wants. |
+| Branch Scope | `All Branches`, `<Branch List>` | Optional for Phase 1; can be hidden if not needed. |
+| Status | `Active`, `Inactive` | Inactive heads should not appear in Module 31.2 selection. |
 
 ---
 
@@ -9027,6 +9118,62 @@ Read-only view of a COA head showing its details and where it is used (ledgers a
 
 ---
 
+## Meaning of “Used By Ledgers”
+
+**What it is:** A **secondary table** on this screen that lists every **Ledger** record in **Module 31** whose **Account Group** (or equivalent classification field) points to **this COA head**.
+
+**Why it exists:** COA defines *categories*; Module 31 defines *actual accounts* (e.g. “ABC Corp Ltd” under Sundry Debtors). This table answers: *“Which party/bank/income ledgers are filed under this account head?”*
+
+**Example:** If the COA row is **Sundry Debtors (Group)**, the table might show ledgers such as `ABC Corp Ltd`, `XYZ Hotels` — each row is a Module 31 ledger, not an invoice.
+
+**Empty state:** If no ledger uses this head yet, show *“No ledgers assigned to this account head.”*
+
+**Optional UX:** Each ledger name can link to **Module 31.3** (statement) for that ledger.
+
+---
+
+## Buttons on this screen (avoid confusion)
+
+| Control | What it does | Does **not** do |
+|--------|----------------|-----------------|
+| **← Back to list** | Returns to **32.1 COA List** | — |
+| **`[ EDIT ACCOUNT HEAD ]`** (footer) | Opens **32.2 Add/Edit** with **this COA account head** pre-loaded so the user can change name, parent, nature, status, etc. | Does **not** edit any row in “Used By Ledgers”; those rows are **Module 31** ledgers. |
+| **Ledger row: Statement** (or clickable ledger name) | Opens **31.3 Ledger Statement** for **that one ledger** (e.g. ABC Corp Ltd) | Does **not** open COA edit. Not the same as “Edit Account Head”. |
+
+**Why two different “edit” concepts exist:**  
+- **COA head** = category (Sundry Debtors). Edit via **`[ EDIT ACCOUNT HEAD ]`** → **32.2**.  
+- **Ledger** = party/account under that category. View transactions via **Statement** → **31.3** (edit ledger itself from **31.2**, not from this COA detail table).
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  ← Back to list                    ACCOUNT HEAD DETAIL                        │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │  Account Name     : Sundry Debtors                                     │  │
+│  │  Code             : A-003                                              │  │
+│  │  Primary Group    : Assets          Parent Group : Current Assets      │  │
+│  │  Nature           : Debit (Dr)      Status        : Active             │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  USED BY LEDGERS (Module 31 — ledgers under this COA head)                    │
+│  ┌────────────────────────────┬────────────────────┬──────────────┬──────────────────┐  │
+│  │ Ledger Name               │ Branch             │ Closing Bal. │ Go to ledger      │  │
+│  │────────────────────────────┼────────────────────┼──────────────┼──────────────────│  │
+│  │ ABC Corp Ltd  (clickable)  │ Mumbai             │ ₹ 35,000 Dr  │ [ Statement ]     │  │
+│  │ XYZ Hotels Pvt Ltd         │ Mumbai             │ ₹ 22,000 Dr  │ [ Statement ]     │  │
+│  └────────────────────────────┴────────────────────┴──────────────┴──────────────────┘  │
+│  (Empty: “No ledgers assigned to this account head.”)                        │
+│                                                                              │
+│  [ EDIT THIS COA HEAD → opens 32.2 ]     (edits Sundry Debtors, not a row)   │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## View Fields
 
 | Field | Type | Description |
@@ -9037,7 +9184,7 @@ Read-only view of a COA head showing its details and where it is used (ledgers a
 | Parent Group | Display | Parent grouping |
 | Nature | Display | Dr/Cr |
 | Status | Display | Active/Inactive |
-| Used By Ledgers | Table | List of ledgers (from Module 31) classified under this head |
+| Used By Ledgers | Table | **Ledgers in Module 31** under this COA head. Columns: **Ledger Name** (optional link), **Branch**, **Closing Bal.**, **Go to ledger** = **Statement** button → **31.3** only (not COA edit). |
 
 ---
 
@@ -9045,8 +9192,9 @@ Read-only view of a COA head showing its details and where it is used (ledgers a
 
 | Action | Type | Description |
 |--------|------|-------------|
-| Edit | Button | Opens Add/Edit (32.2) |
-| Back to List | Button | Returns to List View (32.1) |
+| Back to List | Button | Returns to List View (**32.1**) |
+| Edit this COA head | Button | Opens **32.2** to edit **the account head shown at top** (same as footer in wireframe). |
+| Statement (per ledger row) | Button / link | Opens **31.3** for **that ledger row** only. |
 
 ---
 
