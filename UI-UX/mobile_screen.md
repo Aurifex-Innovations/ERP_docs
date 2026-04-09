@@ -1844,3 +1844,302 @@ Below is the updated standard sequence for executing a task from the mobile app.
 4. **Leave Strictness:** Applying for leave on Screen 9.1.1 is strictly blocked if the selected leave balance is zero.
 5. **Session Expiry:** App forces logout after X days (configured in Module 1) or immediately if the user is Deactivated in Module 8.
 
+---
+
+# 📍 Location Status Logs and Functionality
+
+Tracking the technician's state dynamically via GPS location signals and action triggers as defined in Module 22.
+
+---
+
+## State-Machine: Technician Location Status Lifecycle
+
+```
+ ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+ │                        TECHNICIAN LOCATION STATUS — STATE MACHINE                            │
+ │                        Source: Module 22 (Live Location & Travel Tracking)                    │
+ └─────────────────────────────────────────────────────────────────────────────────────────────┘
+
+                                   ┌───────────────────┐
+                                   │                   │
+                                   │    ⏻ OFFLINE      │   (App not active / GPS off / Not punched in)
+                                   │                   │
+                                   └─────────┬─────────┘
+                                             │
+                                             │  Trigger: Technician taps "Punch In" (Screen 6)
+                                             │           GPS tracking begins
+                                             ▼
+                                   ┌───────────────────┐
+                                   │                   │
+                                   │   🟢 CLOCK IN     │   Backend registers start-of-day
+                                   │                   │   Timestamp: HH:MM AM
+                                   └─────────┬─────────┘
+                                             │
+                                             │  GPS pings begin (every X minutes/meters)
+                                             │  Location changes detected
+                                             ▼
+                   ┌──────────────────────────────────────────────────┐
+                   │                                                  │
+                   │              🚗 TRAVELING                        │◄──────────────────────┐
+                   │                                                  │                       │
+                   │  GPS coordinates changing continuously           │                       │
+                   │  (Moving between locations / general travel)     │                       │
+                   │                                                  │                       │
+                   └──────────┬──────────────────┬────────────────────┘                       │
+                              │                  │                                            │
+                              │                  │                                            │
+          ┌───────────────────┘                  └───────────────────┐                        │
+          │                                                         │                        │
+          │  Trigger: 2-3 consecutive GPS                           │  Trigger: Technician   │
+          │  pings show SAME coordinates                            │  taps "Start Travel"   │
+          │  (no active site arrival)                               │  (Screen 11)           │
+          │                                                         │                        │
+          ▼                                                         ▼                        │
+┌───────────────────┐                                     ┌───────────────────┐              │
+│                   │                                     │                   │              │
+│    💤 IDLE        │                                     │  🟡 ON GOING      │              │
+│                   │                                     │  (Task-Specific   │              │
+│  Stationary for   │                                     │   Travel)         │              │
+│  extended period  │                                     │                   │              │
+│  NOT near a task  │                                     │  Travel time      │              │
+│  site             │                                     │  tracked against  │              │
+│                   │                                     │  TASK-YYYY-NNNN   │              │
+└─────────┬─────────┘                                     └─────────┬─────────┘              │
+          │                                                         │                        │
+          │  Trigger: GPS coordinates                               │  Trigger: Technician   │
+          │  start changing again                                   │  taps "Start Task"     │
+          │  (movement resumes)                                     │  (Screen 11/12)        │
+          │                                                         │  + Geo-fence validated │
+          │          ┌──────────────────┐                           │  (within 500m radius)  │
+          └─────────►│  🚗 TRAVELING    │                           │                        │
+                     │  (Reverts back)  │                           │                        │
+                     └──────────────────┘                           │                        │
+                                                                    ▼                        │
+                                                          ┌───────────────────┐              │
+                                                          │                   │              │
+                                                          │  📍 ARRIVED       │              │
+                                                          │                   │              │
+                                                          │  Check-in time-   │              │
+                                                          │  stamp captured   │              │
+                                                          │  Task Status →    │              │
+                                                          │  "In Progress"    │              │
+                                                          │                   │              │
+                                                          └─────────┬─────────┘              │
+                                                                    │                        │
+                                                                    │  Execution flow begins │
+                                                                    │  (Screens 13 → 17)    │
+                                                                    ▼                        │
+                                                          ┌───────────────────┐              │
+                                                          │                   │              │
+                                                          │  🔧 ON-SITE       │              │
+                                                          │                   │              │
+                                                          │  Maintained for   │              │
+                                                          │  entire duration: │              │
+                                                          │                   │              │
+                                                          │  Step 1: Before   │              │
+                                                          │    Photos (Scr 13)│              │
+                                                          │  Step 2: Service  │              │
+                                                          │    Exec  (Scr 14) │              │
+                                                          │  Step 3: Observ-  │              │
+                                                          │    ations (Scr 15)│              │
+                                                          │  Step 4: After    │              │
+                                                          │    Photos (Scr 16)│              │
+                                                          │  Step 5: OTP &    │              │
+                                                          │    Verify (Scr 17)│              │
+                                                          │                   │              │
+                                                          └─────────┬─────────┘              │
+                                                                    │                        │
+                                                                    │  Trigger: Technician   │
+                                                                    │  taps "Submit Task"    │
+                                                                    │  (Screen 17 — OTP OK)  │
+                                                                    ▼                        │
+                                                          ┌───────────────────┐              │
+                                                          │                   │              │
+                                                          │  ✅ DEPARTED       │              │
+                                                          │                   │              │
+                                                          │  Check-out time-  │              │
+                                                          │  stamp captured   │              │
+                                                          │  Task Status →    │              │
+                                                          │  "Completed"      │              │
+                                                          │  Service Report   │              │
+                                                          │  generated (Sc 18)│              │
+                                                          │                   │              │
+                                                          └─────────┬─────────┘              │
+                                                                    │                        │
+                                                                    │  GPS detects movement  │
+                                                                    │  towards next location │
+                                                                    │                        │
+                                                                    └────────────────────────┘
+                                                                    Reverts to 🚗 TRAVELING
+                                                                    (New task-wise travel
+                                                                     leg begins)
+
+
+ ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+ │  END-OF-DAY EXIT                                                                             │
+ │                                                                                              │
+ │  Trigger: Technician taps "Punch Out" (Screen 6) OR system auto-punch-out at shift end       │
+ │                                                                                              │
+ │  ANY STATE (Traveling / Idle / Departed) ──────►  ⏻ OFFLINE (Clock Out)                      │
+ │                                                                                              │
+ │  GPS tracking STOPS. Background location service deactivated.                                │
+ │  Final travel log entry closed. Day summary available in Module 22.2                         │
+ └─────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## GPS Ping Decision Engine
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│                         GPS PING EVALUATION (runs every X min/meters)                │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+
+               ┌──────────────────────────────┐
+               │  New GPS Ping Received        │
+               │  Lat: XX.XXXX, Lng: YY.YYYY   │
+               └──────────────┬───────────────┘
+                              │
+                              ▼
+               ┌──────────────────────────────┐
+               │  Compare with previous        │
+               │  2-3 pings                    │          ┌───────────────────────┐
+               └──────────────┬───────────────┘          │                       │
+                              │                          │  Is an explicit       │
+                    ┌─────────┴─────────┐                │  action trigger       │
+                    │                   │                │  active?              │
+                    ▼                   ▼                │  (Start Travel /      │
+           ┌──────────────┐    ┌──────────────┐         │   Start Task /        │
+           │  Coordinates │    │  Coordinates │         │   Submit Task)        │
+           │  CHANGED     │    │  SAME        │         │                       │
+           │  (Moving)    │    │  (Stationary)│         └───────────┬───────────┘
+           └──────┬───────┘    └──────┬───────┘                     │
+                  │                   │                              │  YES: Action trigger
+                  │                   │                              │  OVERRIDES GPS-based
+                  │                   ▼                              │  state detection
+                  │           ┌──────────────────┐                  │
+                  │           │  Is tech near a   │                  │
+                  │           │  task site?        │                  │
+                  │           │  (within geo-fence)│                  │
+                  │           └──────┬──────┬──────┘                  │
+                  │                 │      │                          │
+                  │              NO │      │ YES                     │
+                  │                 ▼      ▼                          │
+                  │         ┌─────────┐ ┌─────────────┐              │
+                  │         │ 💤 IDLE  │ │ 📍 ARRIVED   │              │
+                  │         │ (flag)  │ │ (if action   │              │
+                  │         └─────────┘ │ is pending)  │              │
+                  │                     └─────────────┘              │
+                  │                                                  │
+                  ▼                                                  ▼
+         ┌──────────────┐                              ┌──────────────────┐
+         │ 🚗 TRAVELING  │                              │  State set by     │
+         │ (Log new      │                              │  action type:     │
+         │  coordinate)  │                              │  ON GOING /       │
+         └──────────────┘                              │  ARRIVED /        │
+                                                       │  DEPARTED         │
+                                                       └──────────────────┘
+```
+
+---
+
+## Transition Rules Table
+
+| # | From State | To State | Trigger Type | Trigger Detail | Screen Ref |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | ⏻ Offline | 🟢 Clock In | **User Action** | Technician taps "Punch In" on Dashboard | Screen 6 |
+| 2 | 🟢 Clock In | 🚗 Traveling | **GPS Auto** | First location ping detects movement | — (Background) |
+| 3 | 🚗 Traveling | 💤 Idle | **GPS Auto** | 2-3 consecutive pings = same coordinates, NOT near any task site | — (Background) |
+| 4 | 💤 Idle | 🚗 Traveling | **GPS Auto** | Coordinates start changing again (movement resumes) | — (Background) |
+| 5 | 🚗 Traveling | 🟡 On Going | **User Action** | Technician taps "Start Travel" for a specific task | Screen 11 |
+| 6 | 🟡 On Going | 📍 Arrived | **User Action** + **Geo-fence** | Technician taps "Start Task" AND device is within 500m of site GPS | Screen 11 → 12 |
+| 7 | 📍 Arrived | 🔧 On-Site | **System Auto** | Execution flow begins (Screen 13 opened) | Screen 13 |
+| 8 | 🔧 On-Site | 🔧 On-Site | **Sustained** | Maintained throughout Steps 1–5 of execution (no state change) | Screen 13–17 |
+| 9 | 🔧 On-Site | ✅ Departed | **User Action** | Technician taps "Submit Task" with verified OTP | Screen 17 |
+| 10 | ✅ Departed | 🚗 Traveling | **GPS Auto** | GPS detects movement towards next location | — (Background) |
+| 11 | Any State | ⏻ Offline | **User Action** / **System** | Punch Out OR auto-punch-out at shift end. GPS tracking stops | Screen 6 |
+
+---
+
+## Task-Wise Log Segmentation
+
+Each task generates an **independent travel leg** in Module 22, ensuring per-task metrics are maintained:
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│                      DAILY TRAVEL LOG — Technician: Ravi S.                           │
+│                      Date: 23 Mar 2026                                                │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                      │
+│  08:00 ──► 🟢 CLOCK IN (Branch Office)                                               │
+│  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  │
+│                                                                                      │
+│  ┌─ LEG 1: TASK-2026-0201 ─────────────────────────────────────────────────────┐    │
+│  │                                                                              │    │
+│  │  08:05   🟡 ON GOING ──────  "Start Travel" tapped                          │    │
+│  │              │                                                               │    │
+│  │         [15.2 km, 25 min travel]                                             │    │
+│  │              │                                                               │    │
+│  │  08:30   📍 ARRIVED ───────  "Start Task" tapped (Geo-fence ✅)              │    │
+│  │              │                                                               │    │
+│  │          🔧 ON-SITE ───────  Execution: Steps 1–5                            │    │
+│  │              │               Duration: 1h 45m                                │    │
+│  │              │                                                               │    │
+│  │  10:15   ✅ DEPARTED ──────  "Submit Task" (OTP verified)                    │    │
+│  │                                                                              │    │
+│  │  Summary: Travel 25 min │ On-Site 1h 45m │ Distance 15.2 km                  │    │
+│  └──────────────────────────────────────────────────────────────────────────────┘    │
+│                                                                                      │
+│  10:15 ──► 🚗 TRAVELING (towards next task)                                          │
+│  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  │
+│                                                                                      │
+│  ┌─ LEG 2: TASK-2026-0202 ─────────────────────────────────────────────────────┐    │
+│  │                                                                              │    │
+│  │  10:20   🟡 ON GOING ──────  "Start Travel" tapped                          │    │
+│  │              │                                                               │    │
+│  │         [12.8 km, 20 min travel]                                             │    │
+│  │              │                                                               │    │
+│  │  10:40   📍 ARRIVED ───────  "Start Task" tapped (Geo-fence ✅)              │    │
+│  │              │                                                               │    │
+│  │          🔧 ON-SITE ───────  Execution: Steps 1–5                            │    │
+│  │              │               Duration: 1h 20m                                │    │
+│  │              │                                                               │    │
+│  │  12:00   ✅ DEPARTED ──────  "Submit Task" (OTP verified)                    │    │
+│  │                                                                              │    │
+│  │  Summary: Travel 20 min │ On-Site 1h 20m │ Distance 12.8 km                  │    │
+│  └──────────────────────────────────────────────────────────────────────────────┘    │
+│                                                                                      │
+│  12:00 ──► 🚗 TRAVELING (return to branch)                                           │
+│  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  │
+│  12:45 ──► 💤 IDLE (stationary at branch, no active task)                            │
+│  17:30 ──► ⏻ CLOCK OUT (Punch Out)                                                  │
+│                                                                                      │
+│  ═══════════════════════════════════════════════════════════════════════════════════  │
+│  DAY SUMMARY                                                                         │
+│  Total Distance : 42.5 km        Total Active Time : 8h 30m                          │
+│  Tasks Completed: 2              Total On-Site     : 3h 05m                          │
+│  Total Travel   : 1h 30m         Idle Time         : 4h 45m                          │
+│                                                                                      │
+│  View in: Module 22.2 — Technician Logistics & Travel Log                            │
+└──────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Status Definitions (Reference)
+
+*   **Punched In / Clock In**: When a user physically Punches In at the start of the day (Screen 6), the backend status in Module 22 registers as **Clock In**.
+*   **Traveling & Idle**: 
+    *   While moving across locations, the state continuously logs as **Traveling**.
+    *   If consecutive 2-3 location pings reveal the exact same coordinates without an active site arrival, the state automatically switches to **Idle**.
+    *   If the location changes continuously again, the state reverts back to **Traveling**.
+*   **Travel to Task (On Going)**: 
+    *   When the technician taps "Start Travel" (Screen 11), the status is explicitly set to **On Going** to track travel time specifically for that task.
+*   **Arrived**: 
+    *   Once at the site, if the technician taps "Start Task" (Screen 11/12), the state immediately changes to **Arrived**.
+*   **On-Site Execution**: 
+    *   The state is kept as **On-Site** for the entire duration of the service execution (Screens 13–17) until the service is fully done.
+*   **Task Done / Departed**: 
+    *   Once the service report is verified and marked complete (Screen 17 submit), the state changes to **Departed**.
+    *   Following departure, as they move towards the next destination, the backend reverts to **Traveling**, ensuring separate, task-wise logs are consistently kept for every travel leg.
