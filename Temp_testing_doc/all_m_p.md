@@ -4,24 +4,28 @@
 
 ## Current State Snapshot
 
-| Item | Status |
-| :--- | :--- |
-| **Module 1–20 Frontend** | Static UI exists — ~50% needs Figma alignment fixes |
-| **Module 21–32 Frontend** | Completely pending (0% done) |
-| **Backend Ready** | Module 1–21, 24–32 ✅ |
+
+| Item                      | Status                                                                                                                                                                                                                                                            |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Module 1–20 Frontend**  | Static UI exists — ~50% needs Figma alignment fixes                                                                                                                                                                                                               |
+| **Module 21–32 Frontend** | Completely pending (0% done)                                                                                                                                                                                                                                      |
+| **Backend Ready**         | Module 1–21, 24–32 ✅                                                                                                                                                                                                                                              |
 | **Backend ETA (Pending)** | Module 22, 23 ⏳ (**backend will be provided within 2 days**). Until then UI-only work continues; once backend is available, integration will start immediately. Any backend bugs/errors found during integration will be resolved on an immediate/priority basis. |
+
 
 ---
 
 ## Developer Roster
 
-| Dev | Exp | Availability | Current Status | Assigned Track |
-| :--- | :--- | :--- | :--- | :--- |
-| **Araman** | 1 yr | 4 hrs + weekend extra | Working on Mod 1–20 fixes | 🔵 Track 1 (Fix 1–20) |
-| **Ansh** | 6 mo | 4 hrs | Started Mod 6 UI, good UI skills | 🔵 Track 1 (Fix 1–20) |
-| **Raj** | 3 yr | **Full-time (8 hrs)** | Available | 🟠 Track 2 (Build 21–32) |
-| **Vipul** | 8 yr | 4 hrs | Started Mod 24 UI | 🟠 Track 2 (Build 21–32) |
-| **Uday** | 3 yr | 4 hrs + weekend extra | Available | 🟠 Track 2 (Build 21–32) |
+
+| Dev        | Exp  | Availability          | Current Status                   | Assigned Track           |
+| ---------- | ---- | --------------------- | -------------------------------- | ------------------------ |
+| **Araman** | 1 yr | 4 hrs + weekend extra | Working on Mod 1–20 fixes        | 🔵 Track 1 (Fix 1–20)    |
+| **Ansh**   | 6 mo | 4 hrs                 | Started Mod 6 UI, good UI skills | 🔵 Track 1 (Fix 1–20)    |
+| **Raj**    | 3 yr | **Full-time (8 hrs)** | Available                        | 🟠 Track 2 (Build 21–32) |
+| **Vipul**  | 8 yr | 4 hrs                 | Started Mod 24 UI                | 🟠 Track 2 (Build 21–32) |
+| **Uday**   | 3 yr | 4 hrs + weekend extra | Available                        | 🟠 Track 2 (Build 21–32) |
+
 
 > **Note:** Nikhil is currently removed from the plan. If he joins, modules will be reassigned to him at that point.
 
@@ -35,20 +39,24 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 
 **Araman** (more experienced — takes modules with heavier logic + integration):
 
-| Module Group | Modules | Notes |
-| :--- | :--- | :--- |
-| Auth + Platform | 1, 2, 3, 4 | Login flows, onboarding, admin panel, subscription |
-| Org Setup | 7, 8 | Branch (simpler), Employee (complex — tabs, hiring flow) |
-| Inventory | 11, 13, 14 | Stock, Vendor, PO — table views + detail screens |
-| Sales Pipeline | 15, 20 | Leads (pipeline view), SO (most complex — 3 source types) |
+
+| Module Group    | Modules    | Notes                                                     |
+| --------------- | ---------- | --------------------------------------------------------- |
+| Auth + Platform | 1, 2, 3, 4 | Login flows, onboarding, admin panel, subscription        |
+| Org Setup       | 7, 8       | Branch (simpler), Employee (complex — tabs, hiring flow)  |
+| Inventory       | 11, 13, 14 | Stock, Vendor, PO — table views + detail screens          |
+| Sales Pipeline  | 15, 20     | Leads (pipeline view), SO (most complex — 3 source types) |
+
 
 **Ansh** (Good UI + fresher — takes config/form-heavy modules):
 
-| Module Group | Modules | Notes |
-| :--- | :--- | :--- |
-| RBAC + Config | 5, 6 | Role management (already started 6), salary/leave config |
-| Master Data | 9, 10, 12 | Tax, Products, Services — config forms + table views |
+
+| Module Group   | Modules        | Notes                                                     |
+| -------------- | -------------- | --------------------------------------------------------- |
+| RBAC + Config  | 5, 6           | Role management (already started 6), salary/leave config  |
+| Master Data    | 9, 10, 12      | Tax, Products, Services — config forms + table views      |
 | Sales Pipeline | 16, 17, 18, 19 | Quotation, GMA, Customer, Contract — forms + status flows |
+
 
 ---
 
@@ -105,20 +113,22 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 
 ### Module Complexity & Assignment Logic
 
-| Module | Complexity | Screens | Backend Ready? | Assigned To | Reason |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| 21 (Task Mgmt) | 🔴 Very High | ~12 | ✅ | **Raj** | ✅ Already done |
-| 22 (Location) | 🟡 Medium | ~4 | ❌ | **Raj** | Almost done. UI only (backend pending) |
-| 23 (Support) | 🟡 Medium | ~6 | ❌ | **Raj** | Almost done. UI only (backend pending) |
-| 24 (Petty Cash) | 🟡 Medium | ~6 | ✅ | **Vipul** | Already started. Finish + integrate |
-| 25 (HRM) | 🔴 Very High | ~15 | ✅ | **Uday** | Attendance + Leave + Payroll — 3 sub-modules |
-| 26 (Performance) | 🟠 High | ~6 | ✅ | **Uday** | Dashboards. Reads from Mod 21/25 |
-| 27 (User Profile) | 🟢 Low | ~4 | ✅ | **Uday** | Simple self-service. Quick build |
-| 28 (Invoice) | 🔴 Very High | ~8 | ✅ | **Raj** | Complex forms + PDF + Credit Notes |
-| 29 (Bills) | 🟠 High | ~7 | ✅ | **Vipul** | Mirror of 28 (purchase side). Senior dev can reuse patterns |
-| 30 (Payments) | 🔴 Very High | ~8 | ✅ | **Raj** | Receipts + Vouchers + Allocation — most complex finance module |
-| 31 (Ledger) | 🟡 Medium | ~4 | ✅ | **Raj** | List + detail + filter views |
-| 32 (COA) | 🟡 Medium | ~4 | ✅ | **Raj** | Tree/list structure. Config module — build before Ledger |
+
+| Module            | Complexity   | Screens | Backend Ready? | Assigned To | Reason                                                         |
+| ----------------- | ------------ | ------- | -------------- | ----------- | -------------------------------------------------------------- |
+| 21 (Task Mgmt)    | 🔴 Very High | ~12     | ✅              | **Raj**     | ✅ Already done                                                 |
+| 22 (Location)     | 🟡 Medium    | ~4      | ❌              | **Raj**     | Almost done. UI only (backend pending)                         |
+| 23 (Support)      | 🟡 Medium    | ~6      | ❌              | **Raj**     | Almost done. UI only (backend pending)                         |
+| 24 (Petty Cash)   | 🟡 Medium    | ~6      | ✅              | **Vipul**   | Already started. Finish + integrate                            |
+| 25 (HRM)          | 🔴 Very High | ~15     | ✅              | **Uday**    | Attendance + Leave + Payroll — 3 sub-modules                   |
+| 26 (Performance)  | 🟠 High      | ~6      | ✅              | **Uday**    | Dashboards. Reads from Mod 21/25                               |
+| 27 (User Profile) | 🟢 Low       | ~4      | ✅              | **Uday**    | Simple self-service. Quick build                               |
+| 28 (Invoice)      | 🔴 Very High | ~8      | ✅              | **Raj**     | Complex forms + PDF + Credit Notes                             |
+| 29 (Bills)        | 🟠 High      | ~7      | ✅              | **Vipul**   | Mirror of 28 (purchase side). Senior dev can reuse patterns    |
+| 30 (Payments)     | 🔴 Very High | ~8      | ✅              | **Raj**     | Receipts + Vouchers + Allocation — most complex finance module |
+| 31 (Ledger)       | 🟡 Medium    | ~4      | ✅              | **Raj**     | List + detail + filter views                                   |
+| 32 (COA)          | 🟡 Medium    | ~4      | ✅              | **Raj**     | Tree/list structure. Config module — build before Ledger       |
+
 
 ---
 
@@ -243,13 +253,15 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 
 ## Risk Assessment
 
-| Risk | Impact | Mitigation |
-| :--- | :--- | :--- |
-| **Mod 20 (SO) UI Fix may spill** | High — SO has 3 source types, complex forms | Araman prioritizes SO integration over Mod 14 polish |
-| **Mod 30 (Payments) may not finish Day 5** | High — most complex finance module | Raj has full-time bandwidth + starts Day 3 (extra day gained since 21 is done). Vipul can support if Mod 29 finishes early |
-| **Mod 25 (HRM) has 3 sub-modules** | Medium — Attendance + Leave + Payroll is a lot | Uday gets extra weekend hours (Day 2–3). Payroll can be UI-only if tight |
-| **Mod 22, 23 cannot integrate** | Low — backend not ready | Raj finishes UI on Day 1. Integration planned for post-sprint when backend arrives |
-| **Ansh is a fresher** | Low — Config/form modules are simpler | Paired with lower-risk modules (Tax, Products, Services, Quotation). Can ask Araman for help |
+
+| Risk                                       | Impact                                         | Mitigation                                                                                                                 |
+| ------------------------------------------ | ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **Mod 20 (SO) UI Fix may spill**           | High — SO has 3 source types, complex forms    | Araman prioritizes SO integration over Mod 14 polish                                                                       |
+| **Mod 30 (Payments) may not finish Day 5** | High — most complex finance module             | Raj has full-time bandwidth + starts Day 3 (extra day gained since 21 is done). Vipul can support if Mod 29 finishes early |
+| **Mod 25 (HRM) has 3 sub-modules**         | Medium — Attendance + Leave + Payroll is a lot | Uday gets extra weekend hours (Day 2–3). Payroll can be UI-only if tight                                                   |
+| **Mod 22, 23 cannot integrate**            | Low — backend not ready                        | Raj finishes UI on Day 1. Integration planned for post-sprint when backend arrives                                         |
+| **Ansh is a fresher**                      | Low — Config/form modules are simpler          | Paired with lower-risk modules (Tax, Products, Services, Quotation). Can ask Araman for help                               |
+
 
 ---
 
@@ -302,13 +314,15 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 
 ## Dev Workload Summary (Modules Count)
 
-| Developer | Modules Owned | Total | Track |
-| :--- | :--- | :--- | :--- |
-| **Araman** | 1, 2, 3, 4, 7, 8, 11, 13, 14, 15, 20 | 11 | 🔵 Fix (1–20) |
-| **Ansh** | 5, 6, 9, 10, 12, 16, 17, 18, 19 | 9 | 🔵 Fix (1–20) |
-| **Raj** | 21, 22, 23, 28, 30, 31, 32 | 7 (21 done; 22, 23 almost done) | 🟠 Build (21–32) |
-| **Vipul** | 24, 29 | 2 | 🟠 Build (21–32) |
-| **Uday** | 25, 26, 27 | 3 | 🟠 Build (21–32) |
+
+| Developer  | Modules Owned                        | Total                           | Track            |
+| ---------- | ------------------------------------ | ------------------------------- | ---------------- |
+| **Araman** | 1, 2, 3, 4, 7, 8, 11, 13, 14, 15, 20 | 11                              | 🔵 Fix (1–20)    |
+| **Ansh**   | 5, 6, 9, 10, 12, 16, 17, 18, 19      | 9                               | 🔵 Fix (1–20)    |
+| **Raj**    | 21, 22, 23, 28, 30, 31, 32           | 7 (21 done; 22, 23 almost done) | 🟠 Build (21–32) |
+| **Vipul**  | 24, 29                               | 2                               | 🟠 Build (21–32) |
+| **Uday**   | 25, 26, 27                           | 3                               | 🟠 Build (21–32) |
+
 
 ---
 
@@ -316,10 +330,12 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 
 > When Nikhil becomes available, immediately reassign the following from Uday:
 
-| Give to Nikhil | Take from Uday | Reason |
-| :--- | :--- | :--- |
-| **Mod 22** (Location) | UI Only — self-contained | Frees Uday to focus on Mod 25 integration + Mod 26 |
-| **Mod 23** (Support) | UI Only — self-contained | SLA tickets, independent module |
-| **Mod 27** (User Profile) | Low complexity | Quick build, gives Nikhil a warm-up module |
+
+| Give to Nikhil            | Take from Uday           | Reason                                             |
+| ------------------------- | ------------------------ | -------------------------------------------------- |
+| **Mod 22** (Location)     | UI Only — self-contained | Frees Uday to focus on Mod 25 integration + Mod 26 |
+| **Mod 23** (Support)      | UI Only — self-contained | SLA tickets, independent module                    |
+| **Mod 27** (User Profile) | Low complexity           | Quick build, gives Nikhil a warm-up module         |
+
 
 This returns Uday's load to **Mod 25, 26 only** (the original plan), keeping the sprint balanced.
