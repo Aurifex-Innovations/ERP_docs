@@ -107,9 +107,9 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 
 | Module | Complexity | Screens | Backend Ready? | Assigned To | Reason |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| 21 (Task Mgmt) | 🔴 Very High | ~12 | ✅ | **Raj** | Calendar + Assignment — needs full-time bandwidth |
-| 22 (Location) | 🟡 Medium | ~4 | ❌ | **Uday** | UI only. Maps + tracking. Self-contained, no backend block |
-| 23 (Support) | 🟡 Medium | ~6 | ❌ | **Uday** | UI only. SLA tickets. Self-contained |
+| 21 (Task Mgmt) | 🔴 Very High | ~12 | ✅ | **Raj** | ✅ Already done |
+| 22 (Location) | 🟡 Medium | ~4 | ❌ | **Raj** | Almost done. UI only (backend pending) |
+| 23 (Support) | 🟡 Medium | ~6 | ❌ | **Raj** | Almost done. UI only (backend pending) |
 | 24 (Petty Cash) | 🟡 Medium | ~6 | ✅ | **Vipul** | Already started. Finish + integrate |
 | 25 (HRM) | 🔴 Very High | ~15 | ✅ | **Uday** | Attendance + Leave + Payroll — 3 sub-modules |
 | 26 (Performance) | 🟠 High | ~6 | ✅ | **Uday** | Dashboards. Reads from Mod 21/25 |
@@ -117,8 +117,8 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 | 28 (Invoice) | 🔴 Very High | ~8 | ✅ | **Raj** | Complex forms + PDF + Credit Notes |
 | 29 (Bills) | 🟠 High | ~7 | ✅ | **Vipul** | Mirror of 28 (purchase side). Senior dev can reuse patterns |
 | 30 (Payments) | 🔴 Very High | ~8 | ✅ | **Raj** | Receipts + Vouchers + Allocation — most complex finance module |
-| 31 (Ledger) | 🟡 Medium | ~4 | ✅ | **Vipul** | List + detail + filter views |
-| 32 (COA) | 🟡 Medium | ~4 | ✅ | **Vipul** | Tree/list structure. Config module |
+| 31 (Ledger) | 🟡 Medium | ~4 | ✅ | **Raj** | List + detail + filter views |
+| 32 (COA) | 🟡 Medium | ~4 | ✅ | **Raj** | Tree/list structure. Config module — build before Ledger |
 
 ---
 
@@ -127,58 +127,58 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────┐
 │  TRACK 2: BUILD MODULE 21–32 (New UI + Integration)                                  │
+│  ⚡ Raj has already completed Mod 21 and nearly finished Mod 22, 23                  │
 ├──────────┬──────────────────┬──────────────────┬─────────────────────────────────────┤
 │  Day     │  RAJ (8hrs)      │  VIPUL (4hrs)    │  UDAY (4hrs)                        │
 │          │  Full-time       │  Senior (8yr)    │  3yr exp                            │
 ├──────────┼──────────────────┼──────────────────┼─────────────────────────────────────┤
 │          │                  │                  │                                     │
-│  Day 1   │  Mod 21 — UI     │  Mod 24 — UI     │  Mod 25 — UI                        │
-│  Apr 10  │  (Task Calendar, │  (Finish + Start │  (Attendance sub-module)             │
-│  Fri     │   Assignment,    │   Integration)   │                                     │
-│          │   Dispatch views)│                  │                                     │
+│  Day 1   │  Mod 22, 23 —    │  Mod 24 — UI     │  Mod 25 — UI                        │
+│  Apr 10  │  Finish remaining│  (Finish + Start │  (Attendance sub-module)             │
+│  Fri     │  UI work         │   Integration)   │                                     │
+│          │  + Mod 32 — UI   │                  │                                     │
+│          │  (COA — config   │                  │                                     │
+│          │   tree/list)     │                  │                                     │
 │          │                  │                  │                                     │
 ├──────────┼──────────────────┼──────────────────┼─────────────────────────────────────┤
 │          │                  │                  │                                     │
-│  Day 2   │  Mod 21 — UI     │  Mod 24 — Integ  │  Mod 25 — UI                        │
-│  Apr 11  │  (Task Detail,   │  + Mod 32 — UI   │  (Leave Apply/Approve sub-module)   │
-│  Sat ⬆️  │   Reschedule,   │  (COA — config   │  ⬆️ extra hrs                       │
-│          │   Re-assign) +   │   tree/list)     │                                     │
-│          │  Integration     │                  │                                     │
-│          │  start           │                  │                                     │
+│  Day 2   │  Mod 32 — Integ  │  Mod 24 — Integ  │  Mod 25 — UI                        │
+│  Apr 11  │  + Mod 31 — UI   │                  │  (Leave Apply/Approve sub-module)   │
+│  Sat ⬆️  │  (Ledger list,   │                  │  ⬆️ extra hrs                       │
+│          │   detail, filter)│                  │                                     │
+│          │  + Mod 28 — UI   │                  │                                     │
+│          │  Start (Invoice) │                  │                                     │
 │          │                  │                  │                                     │
 ├──────────┼──────────────────┼──────────────────┼─────────────────────────────────────┤
 │          │                  │                  │                                     │
-│  Day 3   │  Mod 28 — UI     │  Mod 32 — Integ  │  Mod 25 — UI Finish (Payroll)       │
-│  Apr 12  │  (Invoice Create,│  + Mod 31 — UI   │  + Integration Start                │
-│  Sun ⬆️  │   List, Detail,  │  (Ledger list,   │  + Mod 27 — UI + Integ              │
-│          │   Credit Note)   │   detail, filter)│  (User Profile — quick build)       │
-│          │                  │                  │  ⬆️ extra hrs                       │
+│  Day 3   │  Mod 31 — Integ  │  Mod 29 — UI     │  Mod 25 — UI Finish (Payroll)       │
+│  Apr 12  │  + Mod 28 — UI   │  (Bills — mirror  │  + Integration Start                │
+│  Sun ⬆️  │  continued       │   of Invoice      │  + Mod 27 — UI + Integ              │
+│          │  (Invoice Create,│   structure)     │  (User Profile — quick build)       │
+│          │   List, Detail,  │                  │  ⬆️ extra hrs                       │
+│          │   Credit Note)   │                  │                                     │
 │          │                  │                  │                                     │
 ├──────────┼──────────────────┼──────────────────┼─────────────────────────────────────┤
 │          │                  │                  │                                     │
-│  Day 4   │  Mod 28 — Integ  │  Mod 31 — Integ  │  Mod 26 — UI                        │
-│  Apr 13  │  + Mod 30 — UI   │  + Mod 29 — UI   │  (Technician Performance dashboards)│
-│  Mon     │  (Payments —     │  (Bills — mirror  │  + Mod 25 Integration Finish        │
-│          │   Receipt,       │   of Invoice      │                                     │
-│          │   Voucher forms) │   structure)     │                                     │
+│  Day 4   │  Mod 28 — Integ  │  Mod 29 — Integ  │  Mod 26 — UI                        │
+│  Apr 13  │  + Mod 30 — UI   │                  │  (Technician Performance dashboards)│
+│  Mon     │  Start (Payments │                  │  + Mod 25 Integration Finish        │
+│          │   — Receipt,     │                  │                                     │
+│          │   Voucher forms) │                  │                                     │
 │          │                  │                  │                                     │
 ├──────────┼──────────────────┼──────────────────┼─────────────────────────────────────┤
 │          │                  │                  │                                     │
-│  Day 5   │  Mod 30 — UI     │  Mod 29 — Integ  │  Mod 26 — Integration               │
-│  Apr 14  │  continued +     │  + Final Polish   │  + Mod 22 — UI Only ⚠️              │
-│  Tue     │  Integration     │  + Review Mod     │  (Location maps, travel tracking)   │
-│          │  (Allocation     │  24, 31, 32      │  + Mod 23 — UI Only ⚠️              │
-│          │   logic, advance,│                  │  (Support tickets, SLA dashboard)   │
-│          │   shortfall)     │                  │  ⚠️ Mod 22, 23 — No backend yet    │
+│  Day 5   │  Mod 30 — UI     │  Final Polish     │  Mod 26 — Integration               │
+│  Apr 14  │  continued +     │  + Review Mod     │  + Help with Track 1 Integ          │
+│  Tue     │  Integration     │  24, 29          │  if needed                          │
+│          │  (Allocation,    │                  │                                     │
+│          │   Advance,       │                  │                                     │
+│          │   Shortfall,     │                  │                                     │
+│          │   CN/DN auto-gen)│                  │                                     │
 │          │                  │                  │                                     │
-│          │  ⚠️ Mod 30 is   │                  │                                     │
-│          │  the hardest —   │                  │                                     │
-│          │  may need Day 5  │                  │                                     │
-│          │  evening buffer  │                  │                                     │
 └──────────┴──────────────────┴──────────────────┴─────────────────────────────────────┘
 
 ⬆️ = Extra hours available (weekend)
-⚠️ = Risk flag
 ```
 
 ---
@@ -192,7 +192,7 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 
  🔵 Araman    → Mod 1, 2 UI Fix
  🔵 Ansh      → Mod 5, 6 UI Fix
- 🟠 Raj       → Mod 21 UI (Task Calendar, Assignment)
+ 🟠 Raj       → Mod 22, 23 Finish + Mod 32 UI (COA)
  🟠 Vipul     → Mod 24 UI Finish + Integration Start
  🟠 Uday      → Mod 25 UI (Attendance sub-module)
 
@@ -202,8 +202,8 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 
  🔵 Araman ⬆️ → Mod 3, 4, 7 UI Fix + Integration (1, 2)
  🔵 Ansh      → Mod 9, 10 UI Fix + Integration (5, 6)
- 🟠 Raj       → Mod 21 UI Finish + Integration Start
- 🟠 Vipul     → Mod 24 Integration + Mod 32 UI (COA)
+ 🟠 Raj       → Mod 32 Integ + Mod 31 UI (Ledger) + Mod 28 UI Start
+ 🟠 Vipul     → Mod 24 Integration
  🟠 Uday  ⬆️ → Mod 25 UI (Leave sub-module)
 
 ═══════════════════════════════════════════════════════════════════════════════════════
@@ -212,8 +212,8 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 
  🔵 Araman ⬆️ → Mod 8 UI Fix (Employee — heavy) + Integration (3, 4, 7)
  🔵 Ansh      → Mod 12, 16 UI Fix + Integration (9, 10)
- 🟠 Raj       → Mod 28 UI (Invoice — Create, List, Detail, CN)
- 🟠 Vipul     → Mod 32 Integration + Mod 31 UI (Ledger)
+ 🟠 Raj       → Mod 31 Integ + Mod 28 UI continued (Invoice)
+ 🟠 Vipul     → Mod 29 UI (Bills)
  🟠 Uday  ⬆️ → Mod 25 UI Finish (Payroll) + Integ Start + Mod 27 UI+Integ
 
 ═══════════════════════════════════════════════════════════════════════════════════════
@@ -222,8 +222,8 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 
  🔵 Araman    → Mod 11, 13 UI Fix + Integration (8)
  🔵 Ansh      → Mod 17, 18 UI Fix + Integration (12, 16)
- 🟠 Raj       → Mod 28 Integration + Mod 30 UI Start (Payments)
- 🟠 Vipul     → Mod 31 Integration + Mod 29 UI (Bills)
+ 🟠 Raj       → Mod 28 Integ + Mod 30 UI Start (Payments)
+ 🟠 Vipul     → Mod 29 Integration
  🟠 Uday      → Mod 26 UI (Performance) + Mod 25 Integration Finish
 
 ═══════════════════════════════════════════════════════════════════════════════════════
@@ -232,9 +232,9 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 
  🔵 Araman    → Mod 14, 15, 20 UI Fix + Integration (11, 13)
  🔵 Ansh      → Mod 19 UI Fix + Integration (17, 18, 19)
- 🟠 Raj       → Mod 30 UI Finish + Integration (Allocation, Advance, Shortfall)
- 🟠 Vipul     → Mod 29 Integration + Final Review (24, 31, 32)
- 🟠 Uday      → Mod 26 Integ + Mod 22 UI Only ⚠️ + Mod 23 UI Only ⚠️
+ 🟠 Raj       → Mod 30 UI + Integration (Allocation, Advance, Shortfall)
+ 🟠 Vipul     → Final Polish + Review (24, 29)
+ 🟠 Uday      → Mod 26 Integration + Help with Track 1 Integ if needed
 
 ═══════════════════════════════════════════════════════════════════════════════════════
 ```
@@ -246,11 +246,9 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 | Risk | Impact | Mitigation |
 | :--- | :--- | :--- |
 | **Mod 20 (SO) UI Fix may spill** | High — SO has 3 source types, complex forms | Araman prioritizes SO integration over Mod 14 polish |
-| **Mod 30 (Payments) may not finish Day 5** | High — most complex finance module | Raj has full-time bandwidth. Vipul (senior) can support if Mod 29 finishes early |
+| **Mod 30 (Payments) may not finish Day 5** | High — most complex finance module | Raj has full-time bandwidth + starts Day 3 (extra day gained since 21 is done). Vipul can support if Mod 29 finishes early |
 | **Mod 25 (HRM) has 3 sub-modules** | Medium — Attendance + Leave + Payroll is a lot | Uday gets extra weekend hours (Day 2–3). Payroll can be UI-only if tight |
-| **Uday has 6 modules now** | Medium — Mod 22, 23, 27 added from Nikhil | Mod 27 is quick (Low complexity). Mod 22, 23 are UI-only (no integration needed yet). Weekend extra hrs absorb the load |
-| **Mod 22, 23 cannot integrate** | Low — backend not ready | Uday builds UI only on Day 5. Integration planned for post-sprint when backend arrives |
-| **Mod 21 (Task) is very heavy** | High — calendar, assignment, dispatch, re-task | Full 2 days allocated to Raj (full-time). This is the highest priority module |
+| **Mod 22, 23 cannot integrate** | Low — backend not ready | Raj finishes UI on Day 1. Integration planned for post-sprint when backend arrives |
 | **Ansh is a fresher** | Low — Config/form modules are simpler | Paired with lower-risk modules (Tax, Products, Services, Quotation). Can ask Araman for help |
 
 ---
@@ -284,8 +282,8 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 │  Mod 19  │  ✅ Done           │  Contract — Ansh                             │
 │  Mod 20  │  ✅ Done           │  SO — Araman                                 │
 │  Mod 21  │  ✅ Done           │  Task Mgmt — Raj                             │
-│  Mod 22  │  ✅ Done           │  Location — Uday                             │
-│  Mod 23  │  ✅ Done           │  Support — Uday                              │
+│  Mod 22  │  ✅ Done           │  Location — Raj                              │
+│  Mod 23  │  ✅ Done           │  Support — Raj                               │
 │  Mod 24  │  ✅ Done           │  Petty Cash — Vipul                          │
 │  Mod 25  │  ✅ Done           │  HRM — Uday                                  │
 │  Mod 26  │  ✅ Done           │  Performance — Uday                          │
@@ -293,8 +291,8 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 │  Mod 28  │  ✅ Done           │  Invoice — Raj                               │
 │  Mod 29  │  ✅ Done           │  Bills — Vipul                               │
 │  Mod 30  │  ✅ Done           │  Payments — Raj                              │
-│  Mod 31  │  ✅ Done           │  Ledger — Vipul                              │
-│  Mod 32  │  ✅ Done           │  COA — Vipul                                 │
+│  Mod 31  │  ✅ Done           │  Ledger — Raj                                │
+│  Mod 32  │  ✅ Done           │  COA — Raj                                   │
 ├──────────┼────────────────────┼──────────────────────────────────────────────┤
 │  TOTAL   │  32/32 ✅ Done     │  All modules completed                       │
 └──────────┴────────────────────┴──────────────────────────────────────────────┘
@@ -308,9 +306,9 @@ Figma alignment, missing screens, responsive fixes, and API integration where ba
 | :--- | :--- | :--- | :--- |
 | **Araman** | 1, 2, 3, 4, 7, 8, 11, 13, 14, 15, 20 | 11 | 🔵 Fix (1–20) |
 | **Ansh** | 5, 6, 9, 10, 12, 16, 17, 18, 19 | 9 | 🔵 Fix (1–20) |
-| **Raj** | 21, 28, 30 | 3 (all Very High complexity) | 🟠 Build (21–32) |
-| **Vipul** | 24, 29, 31, 32 | 4 | 🟠 Build (21–32) |
-| **Uday** | 22, 23, 25, 26, 27 | 5 (Mod 25 is Very High; 22, 23 UI-only) | 🟠 Build (21–32) |
+| **Raj** | 21, 22, 23, 28, 30, 31, 32 | 7 (21 done; 22, 23 almost done) | 🟠 Build (21–32) |
+| **Vipul** | 24, 29 | 2 | 🟠 Build (21–32) |
+| **Uday** | 25, 26, 27 | 3 | 🟠 Build (21–32) |
 
 ---
 
