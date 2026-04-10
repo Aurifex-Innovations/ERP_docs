@@ -68,7 +68,7 @@ resell_qty
 purchase_price
 
 ### Calculation
-
+```
 SELECT 
 SUM(
 (stock_ledger.assets_qty +
@@ -79,7 +79,7 @@ SUM(
 FROM stock_ledger
 JOIN inventory_products
 ON stock_ledger.product_id = inventory_products.id;
-
+```
 ---
 
 ## 5. Total Assets
