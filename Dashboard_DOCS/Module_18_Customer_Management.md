@@ -42,8 +42,8 @@ GROUP BY customer_type;
 
 ### Source Table
 
-customers
-branches
+- customers
+- branches
 
 ### SQL
 
