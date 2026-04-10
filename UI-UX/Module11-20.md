@@ -271,20 +271,26 @@ Searchable by:
 │                                                                              │
 │  Section 5: Initial Allocation (Optional)                                    │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  Immediate Transfer to Branch: [☑ BLR ☑ HYD ☑ BOM ☑ CHN]              │ │
+│  │  Add Branch Allocation: [▼ Select Branch ▼]  [+ ADD]    11 Remaining at central (auto-calculated)                │ │
 │  │                                                                         │ │
-│  │  IF BRANCHES SELECTED:                                                  │ │
-│  │  BLR Qty               : [________]                                    │ │
-│  │  HYD Qty               : [________]                                    │ │
-│  │  BOM Qty               : [________]                                    │ │
-│  │  CHN Qty               : [________]                                    │ │
+│  │  ALLOCATION TABLE                                                       │ │
+│  │  ┌────────────┬───────┬──────────┬────────────┬──────────┬─────────┐   │ │
+│  │  │ Branch     │ Total │ Assets   │ Consumable │ Resell   │ Action  │   │ │
+│  │  │────────────┼───────┼──────────┼────────────┼──────────┼─────────│   │ │
+│  │  │ Bangalore  │ [ 30 ]│ [  10  ] │ [  10  ]   │ [  10  ] │ [🗑]    │   │ │
+│  │  │ Hyderabad  │ [ 15 ]│ [  5   ] │ [  10  ]   │ [  0   ] │ [🗑]    │   │ │
+│  │  │────────────┼───────┼──────────┼────────────┼──────────┼─────────│   │ │
+│  │  │ TOTAL      │  45   │    15    │    20      │    10    │         │   │ │
+│  │  └────────────┴───────┴──────────┴────────────┴──────────┴─────────┘   │ │
 │  │                                                                         │ │
-│  │  Remain at Central     : [Auto-calculated]                             │ │
+│  │                                                                         │ │
+│  │                                                                         │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │                              [SAVE]  [CANCEL]                                │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
+
 ```
 
 #### Section 1: Product Selection Fields
@@ -363,12 +369,17 @@ Searchable by:
 
 #### Section 5: Initial Allocation Fields
 
-| Field                         | Type            | Description           |
-| ----------------------------- | --------------- | --------------------- |
-| Immediate Transfer to Branchs | Multi-select    | Distribute on receipt |
-| Branch1 Qty                   | Number          | If selected           |
-| Branch2 Qty                   | Number          | If selected           |
-| Remain at Central             | Auto-calculated | Balance               |
+| Field                      | Type            | Description                                              |
+| -------------------------- | --------------- | -------------------------------------------------------- |
+| Add Branch Allocation      | Multiselect Dropdown        | Select a branch to dynamically add to the table          |
+| Total (Per Branch)         | Number          | Total quantity assigned to branch                        |
+| Assets (Per Branch)        | Number          | Trackable assets assigned                                |
+| Consumable (Per Branch)    | Number          | Bulk consumables assigned                                |
+| Resell (Per Branch)        | Number          | Display/resale stock assigned                            |
+| Action                     | Button          | Remove branch row from table                             |
+| Remaining at Central Stock | Auto-calculated | Total Quantity Received - Sum of all Branch Total Qty |
+│  │  Validation: Assets + Consumable + Resell = Total branch Qty            │ │
+
 
 ## \*all non required fields are optional
 
@@ -448,13 +459,20 @@ Searchable by:
 │                                                                             │
 │  Section 5: Branch Allocation (Optional Update)                             │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  Current Branch Transfers                                               │ │
+│  │  Add Branch Allocation: [▼ Select Branch ▼]  [+ ADD]   11 Remaining at central (auto-calculated)                                                             │ │
 │  │                                                                         │ │
-│  │  BLR Branch Qty       : [ 4 ]                                           │ │
-│  │  HYD Branch Qty       : [ 3 ]                                           │ │
-│  │  BOM Branch Qty       : [ 2 ]                                           │ │
+│  │  ALLOCATION TABLE                                                       │ │
+│  │  ┌────────────┬───────┬──────────┬────────────┬──────────┬─────────┐   │ │
+│  │  │ Branch     │ Total │ Assets   │ Consumable │ Resell   │ Action  │   │ │
+│  │  │────────────┼───────┼──────────┼────────────┼──────────┼─────────│   │ │
+│  │  │ Bangalore  │ [ 4 ] │ [  2   ] │ [  2   ]   │ [  0   ] │ [🗑]    │   │ │
+│  │  │ Hyderabad  │ [ 3 ] │ [  0   ] │ [  3   ]   │ [  0   ] │ [🗑]    │   │ │
+│  │  │ Mumbai     │ [ 2 ] │ [  0   ] │ [  0   ]   │ [  2   ] │ [🗑]    │   │ │
+│  │  │────────────┼───────┼──────────┼────────────┼──────────┼─────────│   │ │
+│  │  │ TOTAL      │   9   │    2     │    5       │    2     │         │   │ │
+│  │  └────────────┴───────┴──────────┴────────────┴──────────┴─────────┘   │ │
 │  │                                                                         │ │
-│  │  Remaining at Central : 11 (Auto Calculated)                            │ │
+│  │                                                                         │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                             │
 │                     [UPDATE]   [CANCEL]                                      │
@@ -538,10 +556,15 @@ Not allowed:
 
 #### Section 5: Branch Allocation Fields
 
-| Field                | Type   | Editable |
-| -------------------- | ------ | -------- |
-| Branch Qty           | Number | Yes      |
-| Remaining at Central | Auto   | No       |
+| Field                      | Type            | Editable |
+| -------------------------- | --------------- | -------- |
+| Add Branch Allocation      | Dropdown        | Yes      |
+| Total (Per Branch)         | Number          | Yes      |
+| Assets (Per Branch)        | Number          | Yes      |
+| Consumable (Per Branch)    | Number          | Yes      |
+| Resell (Per Branch)        | Number          | Yes      |
+| Action                     | Button          | Yes      |
+| Remaining at Central Stock | Auto-calculated | No       |
 
 Validation:
 
