@@ -12,8 +12,8 @@ Based on Module 10 (Inventory Products) and Module 11 (Stock Management)
 inventory_products
 
 ### Fields
-status
-deleted_at
+status,
+deleted_at,
 id
 
 ### Calculation
