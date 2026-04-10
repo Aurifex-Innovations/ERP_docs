@@ -79,11 +79,11 @@ leads
 
 | Column Header | Database Field | Table |
 |--------------|---------------|------|
-| Lead ID | lead_id | leads |
+| Lead ID | id | leads |
 | Lead Name | lead_name | leads |
 | Mobile Number | mobile_number | leads |
 | Lead Type | lead_type | leads |
-| Lead Source | lead_source | leads |
+| Lead Source | source | leads |
 | Priority | priority | leads |
 | Lead Status | status | leads |
 | Created Date | created_date | leads |
@@ -129,7 +129,7 @@ Shows leads whose follow-up date has passed and are not converted or lost.
 
 ```sql
 SELECT 
-l.lead_id,
+l.id,
 l.lead_name,
 f.next_follow_up_date,
 l.status
@@ -156,7 +156,7 @@ Shows urgent leads that are still new and need immediate action.
 
 ```sql
 SELECT 
-lead_id,
+id,
 lead_name,
 mobile_number,
 priority,
@@ -182,7 +182,7 @@ Shows leads stuck in negotiation for too long.
 
 ```sql
 SELECT 
-lead_id,
+id,
 lead_name,
 priority,
 status,
