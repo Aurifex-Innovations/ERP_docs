@@ -88,9 +88,6 @@ leads
 | Lead Status | status | leads |
 | Created Date | created_date | leads |
 
-```sql
-leads.assigned_to_id = users.id
-```
 
 ---
 ### 2. Upcoming Follow-ups Table
@@ -102,24 +99,21 @@ Shows upcoming follow-up tasks for the sales team.
 
 leads  
 follow_ups  
-users  
 
 ---
-####Table Headers
+#### Table Headers
 | Column Header  | Database Field      | Table      |
 | -------------- | ------------------- | ---------- |
 | Lead Name      | lead_name           | leads      |
 | Follow-up Date | next_follow_up_date | follow_ups |
 | Contact Mode   | contact_mode        | follow_ups |
 | Priority       | priority            | leads      |
-| Assigned To    | name                | users      |
 
 
 ### Join Condition
 
 ```sql
 follow_ups.lead_id = leads.id
-leads.assigned_to_id = users.id
 ```
 
 ## 5. Business Alerts
@@ -138,21 +132,18 @@ SELECT
 l.lead_id,
 l.lead_name,
 f.next_follow_up_date,
-l.status,
-u.name AS assigned_to
+l.status
 FROM follow_ups f
 JOIN leads l
 ON f.lead_id = l.id
-JOIN users u
-ON l.assigned_to_id = u.id
 WHERE f.next_follow_up_date < CURRENT_DATE
-AND l.status NOT IN ('Converted','Lost');
+AND l.status NOT IN ('Converted','Lost')
+AND l.is_deleted = FALSE;
 ```
 ### Tables Used
 
 leads  
-follow_ups  
-users    
+follow_ups     
 
 ---
 
