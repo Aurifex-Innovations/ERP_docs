@@ -86,11 +86,5 @@ IF contract_end_date within next 30 days
 THEN TRIGGER ALERT;
 ```
 
-### 3. Blocked Vendor Order
--Purpose: Alert staff when a purchase is attempted from a vendor with a 
-```sql
-IF vendor_status = 'BLOCKED'
-THEN TRIGGER ALERT;
-```
 
 ---
