@@ -17,12 +17,12 @@
 
 ## 3. Data Visualization & Charts
 
-### 1. Quotes by Status
+### 1. Quotetion by Status
 - **Shows:** Distribution across Draft, Sent, Accepted, Rejected, Expired  
 - **Why it matters:** Identifies bottlenecks in sales pipeline  
 - **X-axis:** status  
 - **Y-axis:** COUNT(id)
-- **** COUNT(id)  
+- **Source Tables:** quotations  
 - **Chart Type:** Funnel Chart  
 
 ---
@@ -31,7 +31,8 @@
 - **Shows:** Total quotation value over 12 months  
 - **Why it matters:** Identifies seasonal demand patterns  
 - **X-axis:** Month(created_at)  
-- **Y-axis:** SUM(grand_total)  
+- **Y-axis:** SUM(grand_total)
+- **Source Tables:** quotations
 - **Chart Type:** Line Chart  
 
 ---
@@ -50,7 +51,8 @@
 - **Shows:** Source of quotations (Leads, Customers, Prospects)  
 - **Why it matters:** Helps optimize marketing strategy  
 - **X-axis:** source_type  
-- **Y-axis:** COUNT(id)  
+- **Y-axis:** COUNT(id)
+- **Source Tables:** quotations
 - **Chart Type:** Pie Chart  
 
 ---
