@@ -89,8 +89,8 @@ Shows latest customers added in system.
 
 **Tables Used**
 
-customers
-branches
+- customers
+- branches
 
 **Table Headers**
 
@@ -120,8 +120,8 @@ LIMIT 10;
 Shows customers who currently have active contracts.
 **Tables Used**
 
-customers
-contracts
+- customers
+- contracts
 
 **Table Headers**
 
