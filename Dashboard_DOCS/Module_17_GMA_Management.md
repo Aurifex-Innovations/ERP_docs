@@ -187,3 +187,105 @@ FROM gma_sheets
 WHERE overall_gross_margin < 10
 AND is_deleted = FALSE;
 ```
+# 🔐 GMA Dashboard Permission Note
+
+## Module Dependency
+
+The GMA Dashboard depends on:
+
+- Lead Module
+- Customer Module
+
+Reason:
+
+- GMA can be created from Leads
+- GMA can be created from Customers
+- Source Type is used in GMA (Lead / Customer)
+- Dashboard shows GMA data based on source
+- If user cannot access Lead or Customer data, dashboard will not show correct information
+
+---
+
+# Permission Logic
+
+## Case 1
+
+User has:
+
+- GMA Module Permission
+- Lead Module Permission
+- Customer Module Permission
+
+### Result
+
+GMA Dashboard will be **VISIBLE**
+
+### Reason
+
+- User can see GMA data
+- User can see lead-based GMA
+- User can see customer-based GMA
+- Source type data will load properly
+
+---
+
+## Case 2
+
+User has:
+
+- GMA Module Permission
+- BUT does not have Lead Module Permission
+- OR does not have Customer Module Permission
+
+### Result
+
+GMA Dashboard will be **NOT VISIBLE**
+
+### Reason
+
+- GMA is created from Leads and Customers
+- Source Type is used in dashboard
+- User cannot access source data
+- Dashboard will not show proper information
+
+### Message
+
+"You don't have permission to see the dashboard."
+
+---
+
+# Permission Matrix
+
+| GMA Module | Lead Module | Customer Module | Dashboard |
+|-----------|------------|----------------|----------|
+| ✅ | ✅ | ✅ | ✅ Visible |
+| ✅ | ❌ | ✅ | ❌ Not Visible |
+| ✅ | ✅ | ❌ | ❌ Not Visible |
+| ❌ | ❌ | ❌ | ❌ Not Visible |
+
+---
+
+# Backend Logic
+
+IF gma_module_view = TRUE  
+AND lead_module_view = TRUE  
+AND customer_module_view = TRUE  
+
+THEN  
+    Show Dashboard  
+
+ELSE  
+    Hide Dashboard  
+    Show Message: "You don't have permission to see the dashboard."
+
+---
+
+# Final Rule
+
+GMA Dashboard will only be visible when user has:
+
+- GMA Module Permission
+- Lead Module Permission
+- Customer Module Permission
+
+Otherwise dashboard will be hidden.
