@@ -1,4 +1,4 @@
-# Inventory Dashboard
+# Inventory Dashboard (Downloadable)
 
 Based on Module 10 (Inventory Products) and Module 11 (Stock Management)
 
