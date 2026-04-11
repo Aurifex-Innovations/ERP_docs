@@ -89,7 +89,7 @@ Shows latest created contracts.
 
 - contracts
 - customers
-- gma
+- gma_sheets
 - branches
 
 **Table Headers**
@@ -101,7 +101,7 @@ Shows latest created contracts.
 SELECT 
 c.contract_id AS "Contract ID",
 cu.name AS "Customer Name",
-g.gma_id AS "GMA ID",
+g.id AS "GMA ID",
 c.total_sale_value AS "Contract Value",
 c.start_date AS "Start Date",
 c.end_date AS "End Date",
@@ -110,8 +110,8 @@ b.branch_name AS "Branch"
 FROM contracts c
 JOIN customers cu
 ON c.customer_id = cu.id
-JOIN gma g
-ON c.gma_id = g.id
+JOIN gma_sheet g
+ON c.id = g.id
 JOIN branches b
 ON c.branch_id = b.id
 WHERE c.is_deleted = FALSE
