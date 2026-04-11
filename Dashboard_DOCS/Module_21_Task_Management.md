@@ -182,7 +182,7 @@ LIMIT 20;
 ```
 
 **Table Headers**
-| Task Number | Customer | SO Number | Service | Scheduled Date | Start Time | End Time | Status |
+- | Task Number | Customer | SO Number | Service | Scheduled Date | Start Time | End Time | Status |
 
 
 ## Table 2: Task Material Usage
@@ -214,7 +214,7 @@ WHERE t.is_deleted = FALSE;
 ```
 
 **Table Headers**
-| Task Number | Product Name | UOM | Required Qty | Used Qty | Scheduled Date |
+- | Task Number | Product Name | UOM | Required Qty | Used Qty | Scheduled Date |
 
 
 # 4. Alerts (2)
