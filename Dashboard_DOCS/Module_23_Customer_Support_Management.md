@@ -18,8 +18,7 @@ support_tickets
 
 ```sql
 SELECT COUNT(id) AS total_support_tickets
-FROM support_tickets
-WHERE is_deleted = FALSE;
+FROM support_tickets;
 ```
 
 ## KPI 2: Open Support Tickets
@@ -35,8 +34,7 @@ support_tickets
 ```
 SELECT COUNT(id) AS open_support_tickets
 FROM support_tickets
-WHERE status = 'Open'
-AND is_deleted = FALSE;
+WHERE status = 'Open';
 ```
 
 ## KPI 3: Closed Support Tickets
@@ -52,8 +50,7 @@ support_tickets
 ```
 SELECT COUNT(id) AS closed_support_tickets
 FROM support_tickets
-WHERE status = 'Closed'
-AND is_deleted = FALSE;
+WHERE status = 'Closed';
 ```
 
 ## KPI 4: High Priority Tickets
@@ -69,8 +66,7 @@ support_tickets
 ```
 SELECT COUNT(id) AS high_priority_tickets
 FROM support_tickets
-WHERE priority = 'High'
-AND is_deleted = FALSE;
+WHERE priority = 'High';
 ```
 
 # 2. Charts (3)
