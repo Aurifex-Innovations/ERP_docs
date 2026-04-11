@@ -89,7 +89,6 @@ SELECT
 status,
 COUNT(id) AS total_tickets
 FROM support_tickets
-WHERE is_deleted = FALSE
 GROUP BY status;
 ```
 
@@ -112,7 +111,6 @@ SELECT
 DATE(created_at) AS ticket_date,
 COUNT(id) AS total_tickets
 FROM support_tickets
-WHERE is_deleted = FALSE
 GROUP BY DATE(created_at)
 ORDER BY ticket_date;
 ```
@@ -136,7 +134,6 @@ SELECT
 priority,
 COUNT(id) AS total_tickets
 FROM support_tickets
-WHERE is_deleted = FALSE
 GROUP BY priority;
 ```
 
@@ -167,7 +164,6 @@ JOIN customers c
 ON st.customer_id = c.id
 JOIN branches b
 ON st.branch_id = b.id
-WHERE st.is_deleted = FALSE
 ORDER BY st.created_at DESC
 LIMIT 20;
 ```
@@ -201,7 +197,6 @@ JOIN customers c
 ON st.customer_id = c.id
 WHERE st.priority = 'High'
 AND st.status = 'Open'
-AND st.is_deleted = FALSE
 ORDER BY st.created_at DESC;
 ```
 
@@ -230,8 +225,7 @@ status,
 created_at
 FROM support_tickets
 WHERE priority = 'High'
-AND status = 'Open'
-AND is_deleted = FALSE;
+AND status = 'Open';
 ```
 
 ## Alert 2: Old Open Ticket Alert
@@ -247,14 +241,12 @@ support_tickets
 ```
 SELECT 
 ticket_number,
-issue_type,
 priority,
 status,
 created_at
 FROM support_tickets
 WHERE status = 'Open'
-AND created_at < CURRENT_DATE - INTERVAL '3 days'
-AND is_deleted = FALSE;
+AND created_at < CURRENT_DATE - INTERVAL '3 days';
 ```
 
 # 🔐 Customer Support Dashboard Permission Note
