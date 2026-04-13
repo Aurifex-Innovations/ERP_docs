@@ -6000,7 +6000,7 @@ Initial lead capture form for registering new customer inquiries. Captures essen
 | Created By          | Auto           | System      | Current logged-in user                                                         | System field                                                    |
 | Created Date        | Auto           | System      | System timestamp                                                               | System field                                                    |
 | Status              | Auto           | System      | Default: NEW                                                                   | New / Qualified / Quotation send / Negotiation /Lost/ Converted |
-| Lost Reason         | Text Area      | Conditional | Required if Status = Lost                                                      |                                                                 | Reason for lead loss |
+| Lost Reason         | Text Area      | Conditional | Required if Status = Lost                                                      |                                            Reason for lead loss |
 | Next Follow-up Date | Date & Time    | Yes         | Must be today or future date                                                   | Manually entered by user (not auto-calculated)                  |
 
 ---
