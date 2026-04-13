@@ -248,7 +248,7 @@ FROM support_tickets
 WHERE status = 'Open'
 AND created_at < CURRENT_DATE - INTERVAL '3 days';
 ```
-## 5. Global Filters for KPIs and Charts
+## 5. Global Filters for KPIs and Charts and tables
 
 To provide dynamic data views, the dashboard uses three global filters. If a user selects these filters, the API dynamically applies them. If the user clears the filters or makes no selection, the original base query runs.
 
