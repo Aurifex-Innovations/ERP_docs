@@ -148,6 +148,22 @@ ORDER BY q.valid_till ASC;
 | Critical Expiry Alert | Prevents quote expiration | status = 'SENT' AND valid_till = CURRENT_DATE + 1 | quotations |
 
 ---
+## 6. Global Filters for KPIs and Charts and tables
+
+To provide dynamic data views, the dashboard uses three global filters. If a user selects these filters, the API dynamically applies them. If the user clears the filters or makes no selection, the original base query runs.
+
+### 1. Global Filters Definition
+
+
+1. **Date Range Filter**: Custom date selection mapping to `start_date` and `end_date`.
+2. **Time Period Filter**: A preset dropdown mapping to date ranges on the backend:
+   - **Current**: `CURRENT_DATE`
+   - **7 Days**: `CURRENT_DATE - INTERVAL '7 days'` to `CURRENT_DATE`
+   - **1 Month**: `CURRENT_DATE - INTERVAL '1 month'` to `CURRENT_DATE`
+   - **3 Months**: `CURRENT_DATE - INTERVAL '3 months'` to `CURRENT_DATE`
+   - **6 Months**: `CURRENT_DATE - INTERVAL '6 months'` to `CURRENT_DATE`
+   - **1 Year**: `CURRENT_DATE - INTERVAL '1 year'` to `CURRENT_DATE`
+  
 
 ## Summary
 
