@@ -44,7 +44,7 @@ WHERE salary_month = DATE_FORMAT(CURRENT_DATE, '%Y-%m');
 
 ### 5. Total Leaves Taken
 
-#### Tables Used: hrm_leaves
+#### Tables Used: hrm_holidays
 #### SQL
 ```
 SELECT COUNT(*) AS total_leaves
@@ -91,7 +91,7 @@ ORDER BY salary_month;
 
 ### 3. Leaves by Status (Donut Chart)
 
-#### Tables Used: hrm_leaves
+#### Tables Used: hrm_holidays
 #### SQL
 ```
 SELECT 
@@ -210,7 +210,7 @@ Shows employees with high leave count
 
 #### Tables Used
 
-- hrm_leaves
+- hrm_holidays
 - users
 
 #### SQL
