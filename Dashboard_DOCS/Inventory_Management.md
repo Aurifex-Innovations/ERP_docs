@@ -457,6 +457,26 @@ In Transit Alert
 Expiry Alert
 
 ---
+---
+
+## 6. Global Filters for KPIs and Charts
+
+To provide dynamic data views, the dashboard uses three global filters. If a user selects these filters, the API dynamically applies them. If the user clears the filters or makes no selection, the original base query runs.
+
+### 1. Global Filters Definition
+
+1. **Branch Filter**: Filter specific data by selecting a `branch_id`.
+2. **Date Range Filter**: Custom date selection mapping to `start_date` and `end_date`.
+3. **Time Period Filter**: A preset dropdown mapping to date ranges on the backend:
+   - **Current**: `CURRENT_DATE`
+   - **7 Days**: `CURRENT_DATE - INTERVAL '7 days'` to `CURRENT_DATE`
+   - **1 Month**: `CURRENT_DATE - INTERVAL '1 month'` to `CURRENT_DATE`
+   - **3 Months**: `CURRENT_DATE - INTERVAL '3 months'` to `CURRENT_DATE`
+   - **6 Months**: `CURRENT_DATE - INTERVAL '6 months'` to `CURRENT_DATE`
+   - **1 Year**: `CURRENT_DATE - INTERVAL '1 year'` to `CURRENT_DATE`
+
+---
+
 
 # Data Relationship
 
