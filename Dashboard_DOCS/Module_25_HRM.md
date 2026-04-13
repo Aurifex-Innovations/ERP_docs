@@ -89,18 +89,6 @@ GROUP BY salary_month
 ORDER BY salary_month;
 ```
 
-### 3. Leaves by Status (Donut Chart)
-
-#### Tables Used: hrm_holidays
-#### SQL
-```
-SELECT 
-status,
-COUNT(*) AS total
-FROM hrm_leaves
-GROUP BY status;
-```
-
 ### 4. Employees by Branch (Bar Chart)
 
 #### Tables Used: users, branches
