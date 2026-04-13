@@ -89,18 +89,23 @@ GROUP BY salary_month
 ORDER BY salary_month;
 ```
 
-### 4. Employees by Branch (Bar Chart)
-
+### 4. Employees by Department & Employment Type (Bar Chart)
 #### Tables Used: users, branches
 #### SQL
 ```
 SELECT 
-b.branch_name,
-COUNT(u.id) AS total_employees
-FROM users u
-JOIN branches b ON u.branch_id = b.id
-GROUP BY b.branch_name;
+    department,
+    employment_type,
+    COUNT(id) AS total_employees
+FROM users
+WHERE is_active = true
+GROUP BY department, employment_type
+ORDER BY department, total_employees DESC;
 ```
+
+- X-axis: Department
+- Y-axis: Total Employees
+- Bars: Split by Employment Type (Grouped Bar Chart)
 
 ## 3. Tables (2)
 ### Table 1: Employee List
