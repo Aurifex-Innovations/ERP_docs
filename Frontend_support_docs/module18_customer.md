@@ -66,14 +66,17 @@ These types exist under the customer package but **`CustomerRequest` / responses
 
 ## API List
 
-| Method   | Endpoint                    | Purpose                      | Authorization Required                                      |
-| -------- | --------------------------- | ---------------------------- | ----------------------------------------------------------- |
-| `GET`    | `/api/v1/customer/dropdown` | Active customers for selects | JWT only (no `CUSTOMER_MANAGEMENT_*` / CEO check on method) |
-| `POST`   | `/api/v1/customer`          | Create customer              | `CEO` **or** `CUSTOMER_MANAGEMENT_ADD`                      |
-| `PUT`    | `/api/v1/customer/update`   | Update customer              | `CEO` **or** `CUSTOMER_MANAGEMENT_EDIT`                     |
-| `GET`    | `/api/v1/customer/by-id`    | Customer 360° detail         | `CEO` **or** `CUSTOMER_MANAGEMENT_READ`                     |
-| `GET`    | `/api/v1/customer`          | Paginated filter/search      | `CEO` **or** `CUSTOMER_MANAGEMENT_READ`                     |
-| `DELETE` | `/api/v1/customer/delete`   | Soft-delete / deactivate     | `CEO` **or** `CUSTOMER_MANAGEMENT_DELETE`                   |
+| Method   | Endpoint                                                     | Purpose                                             | Authorization Required                                      |
+| -------- | ------------------------------------------------------------ | --------------------------------------------------- | ----------------------------------------------------------- |
+| `GET`    | `/api/v1/customer/dropdown`                                  | Active customers for selects                        | JWT only (no `CUSTOMER_MANAGEMENT_*` / CEO check on method) |
+| `POST`   | `/api/v1/customer`                                           | Create customer                                     | `CEO` **or** `CUSTOMER_MANAGEMENT_ADD`                      |
+| `PUT`    | `/api/v1/customer/update`                                    | Update customer                                     | `CEO` **or** `CUSTOMER_MANAGEMENT_EDIT`                     |
+| `GET`    | `/api/v1/customer/by-id`                                     | Customer 360° detail                                | `CEO` **or** `CUSTOMER_MANAGEMENT_READ`                     |
+| `GET`    | `/api/v1/customer/contract-logs`                             | 18.3.2 Tab 2: Contract Logs grid (paginated)        | `CEO` **or** `CUSTOMER_MANAGEMENT_READ`                     |
+| `GET`    | `/api/v1/customer/sales-orders-service-history`              | 18.3.3 Tab 3: SO + Service History grid (paginated) | `CEO` **or** `CUSTOMER_MANAGEMENT_READ`                     |
+| `GET`    | `/api/v1/customer/sales-orders-service-history/export-excel` | 18.3.3 Export: Download Service History `.xlsx`     | `CEO` **or** `CUSTOMER_MANAGEMENT_READ`                     |
+| `GET`    | `/api/v1/customer`                                           | Paginated filter/search                             | `CEO` **or** `CUSTOMER_MANAGEMENT_READ`                     |
+| `DELETE` | `/api/v1/customer/delete`                                    | Soft-delete / deactivate                            | `CEO` **or** `CUSTOMER_MANAGEMENT_DELETE`                   |
 
 **Base path:** `/api/v1/customer`
 
@@ -975,6 +978,147 @@ curl -sS -G "{{baseUrl}}/api/v1/customer" \
 
 ---
 
+### `GET /api/v1/customer/contract-logs` (18.3.2 Tab 2: Contract Logs)
+
+**Purpose**  
+Read-only, paginated **Contract Logs** grid for a customer (Module 19 agreements, including historical).
+
+**Authorization**
+
+- **Token:** Required.
+- **Authority:** `CUSTOMER_MANAGEMENT_READ` **or** `CEO`.
+- **Tenant:** `X-Tenant-ID` required in practice.
+
+**Query parameters**
+
+| Field        | Type   | Required | Default | Description                     |
+| ------------ | ------ | -------- | ------- | ------------------------------- |
+| `customerId` | string | Yes      | —       | Customer id (e.g. `CUST-A3F2B`) |
+| `pageNo`     | int    | No       | `0`     | 0-based page index              |
+| `pageSize`   | int    | No       | `10`    | Page size                       |
+
+#### Response
+
+- **HTTP:** `200 OK`
+- **Body:** `ResponseStructure<CustomerProductPaginationResponse<CustomerContractLogRowResponse>>`
+
+`CustomerContractLogRowResponse` fields:
+
+| Field           | Type   | Description                                                                                 |
+| --------------- | ------ | ------------------------------------------------------------------------------------------- |
+| `contractId`    | string | Contract system id (e.g. `CON-2026-0041`)                                                   |
+| `startDate`     | date   | Contract start date (`YYYY-MM-DD`)                                                          |
+| `endDate`       | date   | Contract end date (`YYYY-MM-DD`)                                                            |
+| `contractValue` | number | Total contract value                                                                        |
+| `gmaId`         | string | Source GMA id (Module 17)                                                                   |
+| `status`        | string | Display status from Module 19 (`ACTIVE`, `EXPIRING_SOON`, `EXPIRED`, `TERMINATED`, `DRAFT`) |
+
+#### cURL
+
+```bash
+curl -sS -G "{{baseUrl}}/api/v1/customer/contract-logs" \
+  --data-urlencode "customerId=CUST-A3F2B" \
+  --data-urlencode "pageNo=0" \
+  --data-urlencode "pageSize=10" \
+  -H "Authorization: Bearer {{accessToken}}" \
+  -H "X-Tenant-ID: {{tenantId}}" \
+  -H "Accept: application/json"
+```
+
+---
+
+### `GET /api/v1/customer/sales-orders-service-history` (18.3.3 Tab 3: Sales Orders & Service History)
+
+**Purpose**  
+Read-only, paginated grid of Sales Orders (Module 20) for a customer, with a **service status** snapshot.
+
+**Service status source (current backend behavior)**  
+`serviceStatus` is taken from `contract_sales_order_links.service_status` when a link exists for the SO id; otherwise it defaults to `PENDING`.
+
+**Authorization**
+
+- **Token:** Required.
+- **Authority:** `CUSTOMER_MANAGEMENT_READ` **or** `CEO`.
+- **Tenant:** `X-Tenant-ID` required in practice.
+
+**Query parameters**
+
+| Field        | Type   | Required | Default | Description                     |
+| ------------ | ------ | -------- | ------- | ------------------------------- |
+| `customerId` | string | Yes      | —       | Customer id (e.g. `CUST-A3F2B`) |
+| `pageNo`     | int    | No       | `0`     | 0-based page index              |
+| `pageSize`   | int    | No       | `10`    | Page size                       |
+
+#### Response
+
+- **HTTP:** `200 OK`
+- **Body:** `ResponseStructure<CustomerProductPaginationResponse<CustomerSalesOrderServiceHistoryRowResponse>>`
+
+`CustomerSalesOrderServiceHistoryRowResponse` fields:
+
+| Field              | Type   | Description                                                                               |
+| ------------------ | ------ | ----------------------------------------------------------------------------------------- |
+| `salesOrderId`     | string | Sales order id                                                                            |
+| `soNumber`         | string | SO number (e.g. `SO-2026-0112`)                                                           |
+| `soDate`           | date   | SO date (`YYYY-MM-DD`)                                                                    |
+| `linkedContractId` | string | Contract id if contract-based; empty otherwise                                            |
+| `orderType`        | string | `Contract` / `One-Time Service` / `Product Sale`                                          |
+| `totalValue`       | number | SO grand total                                                                            |
+| `soStatus`         | string | `DRAFT` / `OPEN` / `FULFILLED` / `BILLED` / `CANCELLED`                                   |
+| `serviceStatus`    | string | `PENDING` by default; otherwise link value (e.g. `SCHEDULED`, `IN_PROGRESS`, `COMPLETED`) |
+
+#### cURL
+
+```bash
+curl -sS -G "{{baseUrl}}/api/v1/customer/sales-orders-service-history" \
+  --data-urlencode "customerId=CUST-A3F2B" \
+  --data-urlencode "pageNo=0" \
+  --data-urlencode "pageSize=10" \
+  -H "Authorization: Bearer {{accessToken}}" \
+  -H "X-Tenant-ID: {{tenantId}}" \
+  -H "Accept: application/json"
+```
+
+---
+
+### `GET /api/v1/customer/sales-orders-service-history/export-excel` (18.3.3 Export)
+
+**Purpose**  
+Downloads Sales Orders & Service History for a customer as an Excel `.xlsx` file.
+
+**Authorization**
+
+- **Token:** Required.
+- **Authority:** `CUSTOMER_MANAGEMENT_READ` **or** `CEO`.
+- **Tenant:** `X-Tenant-ID` required in practice.
+
+**Query parameters**
+
+| Field        | Type   | Required | Description                     |
+| ------------ | ------ | -------- | ------------------------------- |
+| `customerId` | string | Yes      | Customer id (e.g. `CUST-A3F2B`) |
+
+#### Response
+
+- **HTTP:** `200 OK`
+- **Content-Type:** `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+- **Content-Disposition:** `attachment; filename="service-history.xlsx"`
+- **Body:** raw bytes
+
+**Excel columns (current implementation)**  
+`SO Number`, `SO Date`, `Linked Contract`, `Order Type`, `Total Value`, `SO Status`, `Service Status`
+
+#### cURL (download)
+
+```bash
+curl -L -X GET "{{baseUrl}}/api/v1/customer/sales-orders-service-history/export-excel?customerId=CUST-A3F2B" \
+  -H "Authorization: Bearer {{accessToken}}" \
+  -H "X-Tenant-ID: {{tenantId}}" \
+  -o service-history.xlsx
+```
+
+---
+
 ### `DELETE /api/v1/customer/delete`
 
 **Purpose**  
@@ -1078,14 +1222,16 @@ curl -sS -X DELETE "{{baseUrl}}/api/v1/customer/delete" \
 
 ### Frontend Notes (per-endpoint highlights)
 
-| Endpoint | Notes                                                                                                           |
-| -------- | --------------------------------------------------------------------------------------------------------------- |
-| Dropdown | Use for dependent fields (e.g. SO, contract) — no extra authority; still send tenant.                           |
-| Create   | Duplicate UX on 409; lead import updates lead to CONVERTED.                                                     |
-| Update   | Lock **customerType** and **PAN** in UI; block if backend says deleted.                                         |
-| By id    | `status` is **string**; contracts/SOs are real lists; sites/history/LTV are placeholders.                       |
-| List     | Reapply filters when using `next`/`prev`; confirm date format; soft-delete visibility **not** excluded in spec. |
-| Delete   | Requires `reason` query param; check 400 for open SO.                                                           |
+| Endpoint                     | Notes                                                                                                                     |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Dropdown                     | Use for dependent fields (e.g. SO, contract) — no extra authority; still send tenant.                                     |
+| Create                       | Duplicate UX on 409; lead import updates lead to CONVERTED.                                                               |
+| Update                       | Lock **customerType** and **PAN** in UI; block if backend says deleted.                                                   |
+| By id                        | `status` is **string**; contracts/SOs are real lists; sites/history/LTV are placeholders.                                 |
+| Contract Logs (Tab 2)        | Use for 360° Contract Logs grid. Display `status` may include `EXPIRING_SOON` (derived from Module 19).                   |
+| SO + Service History (Tab 3) | `serviceStatus` is read from contract schedule link if present; otherwise defaults to `PENDING`. Export is `.xlsx` bytes. |
+| List                         | Reapply filters when using `next`/`prev`; confirm date format; soft-delete visibility **not** excluded in spec.           |
+| Delete                       | Requires `reason` query param; check 400 for open SO.                                                                     |
 
 ---
 
@@ -1122,6 +1268,8 @@ curl -sS -X DELETE "{{baseUrl}}/api/v1/customer/delete" \
 - **Pagination:** Prefer client-managed query rebuild for **next/prev** because server URLs may omit some filters.
 - **Date display:** Detail response uses **OffsetDateTime**; list uses **Instant** on `CustomerResponse.createdAt` — format consistently in UI (UTC).
 - **Two error shapes:** Success uses `ResponseStructure`; failures often use **`ValidationErrorResponse`** (not the same as success wrapper).
+- **360 tabs split:** For large customers, load Tab 2 and Tab 3 via dedicated APIs (`/contract-logs`, `/sales-orders-service-history`) for proper pagination instead of relying on the top-50 summaries returned by `GET /by-id`.
+- **Excel export:** `/sales-orders-service-history/export-excel` returns binary `.xlsx` bytes. In browser clients set `responseType: 'blob'` and download using filename `service-history.xlsx`.
 
 ---
 
