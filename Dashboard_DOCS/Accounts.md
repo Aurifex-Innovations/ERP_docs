@@ -236,18 +236,22 @@ Displays total revenue per branch.
 
 ### 🧾 Table Headers
 - branch_id
+- branch_name
 - total_revenue
 
 ### 🗂 Data Table Name
-sales_invoices
+sales_invoices, branches
 
 ### 🧾 SQL Query
 ```
 SELECT 
-    branch_id,
-    SUM(grand_total) AS total_revenue
-FROM sales_invoices
-GROUP BY branch_id;
+    si.branch_id,
+    b.branch_name,
+    SUM(si.grand_total) AS total_revenue
+FROM sales_invoices si
+LEFT JOIN branches b 
+    ON si.branch_id = b.id
+GROUP BY si.branch_id, b.branch_name;
 ```
 
 
@@ -280,19 +284,23 @@ Displays revenue generated per customer.
 
 ### 🧾 Table Headers
 - customer_id
+- customer_name
 - total_revenue
 
 
 ### 🗂 Data Table Name
-sales_invoices
+sales_invoices , customers
 
 ### 🧾 SQL Query
 ```
 SELECT 
-    customer_id,
-    SUM(grand_total) AS total_revenue
-FROM sales_invoices
-GROUP BY customer_id;
+    si.customer_id,
+    c.customer_name,
+    SUM(si.grand_total) AS total_revenue
+FROM sales_invoices si
+LEFT JOIN customers c 
+    ON si.customer_id = c.id
+GROUP BY si.customer_id, c.customer_name;
 ```
 
 ## 📋 4. Invoice Detail Table
@@ -303,23 +311,27 @@ Detailed invoice-level data.
 ### 🧾 Table Headers
 - invoice_number
 - customer_id
+- customer_name
 - invoice_date
 - grand_total
 - status
 
 
 ### 🗂 Data Table Name
-sales_invoices
+sales_invoices , customers
 
 ### 🧾 SQL Query
 ```
 SELECT 
-    invoice_number,
-    customer_id,
-    invoice_date,
-    grand_total,
-    status
-FROM sales_invoices;
+    si.invoice_number,
+    si.customer_id,
+    c.customer_name,
+    si.invoice_date,
+    si.grand_total,
+    si.status
+FROM sales_invoices si
+LEFT JOIN customers c 
+    ON si.customer_id = c.id;
 ```
 
 ## 📋 5. Product Consumption Table
@@ -329,17 +341,20 @@ Shows consumption of products.
 
 ### 🧾 Table Headers
 - product_code
+- product_name
 - consumable_qty
   
 ### 🗂 Data Table Name
-Stock tables
+stock_ledger
 
 ### 🧾 SQL Query
 ```
 SELECT 
     product_code,
-    consumable_qty
-FROM stock;
+    product_name,
+    SUM(consumable_qty) AS consumable_qty
+FROM stock_ledger
+GROUP BY product_code, product_name;
 ```
 
 ## 📋 6. Vendor Outstanding Summary
