@@ -223,8 +223,11 @@ ORDER BY date;
 stock_ledger
 inventory_products
 
-### Query
+### chart type
+bar chart
 
+### Query
+```
 SELECT 
 sl.category,
 SUM(
@@ -235,7 +238,7 @@ FROM stock_ledger sl
 JOIN inventory_products ip
 ON sl.product_id = ip.id
 GROUP BY sl.category;
-
+```
 ---
 
 # 3. Tables
