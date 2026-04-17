@@ -5981,7 +5981,7 @@ Initial lead capture form for registering new customer inquiries. Captures essen
 ---
 
 ## Form Fields
-
+```
 | Field               | Type           | Required    | Options/Validation                                                             | Notes                                                           |
 | ------------------- | -------------- | ----------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------- | -------------------- |
 | Lead ID             | Auto Generated | System      | Format: LD-YYYY-XXXXX (e.g., LD-2026-00042)                                    | Read-only, unique sequential                                    |
@@ -6002,7 +6002,7 @@ Initial lead capture form for registering new customer inquiries. Captures essen
 | Status              | Auto           | System      | Default: NEW                                                                   | New / Qualified / Quotation send / Negotiation /Lost/ Converted |
 | Lost Reason         | Text Area      | Conditional | Required if Status = Lost                                                      |                                            Reason for lead loss |
 | Next Follow-up Date | Date & Time    | Yes         | Must be today or future date                                                   | Manually entered by user (not auto-calculated)                  |
-
+```
 ---
 
 ## Conditional Logic
