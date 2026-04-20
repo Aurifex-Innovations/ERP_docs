@@ -38,7 +38,7 @@ A unified stock view displaying product-wise quantities across accessible branch
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
 │  │ Filters                                                                │  │
 │  │                                                                        │  │
-│  │ Branch View: [▼ All My Branches / Central / BLR / HYD / BOM ▼]        │  │
+│  │ Branch View: [▼ All Branches (Company-wide) / Central / BLR / HYD / BOM ▼] │  │
 │  │ Category: [☑ Chemical ☑ Sprayer ☑ Machine ☑ Trap ☑ Tool ☑ Other]    │  │
 │  │ Stock Type: [☑ Assets ☑ Consumable ☑ Resell]                          │  │
 │  │ Status: [☑ Available ☑ Low ☑ Out ☑ Inactive]                          │  │
@@ -102,21 +102,21 @@ A unified stock view displaying product-wise quantities across accessible branch
 
 # Actions
 
-| Action | Description                                    |
-| ------ | ---------------------------------------------- |
-| View   | Open detailed product stock view               |
-| Edit   | Modify stock details or allocations            |
-| Delete | Remove stock entry (based on permission rules) |
+| Action | Description                                                   |
+| ------ | ------------------------------------------------------------- |
+| View   | Open **Product Stock Ledger (11.1.A)** showing all stock logs |
+| Edit   | Modify stock details or allocations                           |
+| Delete | Remove stock entry (based on permission rules)                |
 
 ---
 
 ## Actions (Table Row)
 
-| Action     | Type   | Description                                          |
-| ---------- | ------ | ---------------------------------------------------- |
-| **View**   | Button | Opens stock details in read-only mode.               |
-| **Edit**   | Button | Allows authorized users to modify stock information. |
-| **Delete** | Button | Removes the stock record (permission based).         |
+| Action     | Type   | Description                                                              |
+| ---------- | ------ | ------------------------------------------------------------------------ |
+| **View**   | Button | Opens **Product Stock Ledger (11.1.A)** — shows all entries for product. |
+| **Edit**   | Button | Allows authorized users to modify stock information.                     |
+| **Delete** | Button | Removes the stock record (permission based).                             |
 
 ---
 
@@ -134,13 +134,41 @@ These actions open separate forms.
 
 # Filters
 
-| Filter       | Type         | Options                                            |
-| ------------ | ------------ | -------------------------------------------------- |
-| Branch       | Dropdown     | All My Branches / Central / BLR / HYD / BOM / etc. |
-| Category     | Multi-select | Chemical / Sprayer / Machine / Trap / Tool / Other |
-| Stock Type   | Multi-select | Assets / Consumable / Resell                       |
-| Status       | Multi-select | Available / Low / Out / Inactive,Discontinued      |
-| Created Date | Date Range   | From – To                                          |
+| Filter       | Type         | Options                                                                          |
+| ------------ | ------------ | -------------------------------------------------------------------------------- |
+| Branch       | Dropdown     | All Branches (Company-wide) / Central / All My Branches / BLR / HYD / BOM / etc. |
+| Category     | Multi-select | Chemical / Sprayer / Machine / Trap / Tool / Other                               |
+| Stock Type   | Multi-select | Assets / Consumable / Resell                                                     |
+| Status       | Multi-select | Available / Low / Out / Inactive,Discontinued                                    |
+| Created Date | Date Range   | From – To                                                                        |
+
+---
+
+# Role-Based Branch View Logic
+
+This logic defines what stock data is visible in the **Branch View** filter based on the user's role and permissions.
+
+| Role                         | Default View                | Available Options                            | Can See Central? |
+| ---------------------------- | --------------------------- | -------------------------------------------- | ---------------- |
+| **CEO / Director / Partner** | All Branches (Company-wide) | All Branches / Central / Individual branches | ✅ Yes           |
+| **CFO / Finance Head**       | All Branches (Company-wide) | All Branches / Central / Individual branches | ✅ Yes           |
+| **Head Ops / Admin**         | All Branches (Company-wide) | All Branches / Central / Individual branches | ✅ Yes           |
+| **Inventory Manager (HO)**   | Central Warehouse           | Central / Assigned branches                  | ✅ Yes           |
+| **Branch Manager**           | Own Branch                  | Own assigned branches only                   | ❌ No (Default)  |
+| **Branch Staff**             | Own Branch                  | Own branch only                              | ❌ No            |
+
+### View Definitions
+
+- **All Branches (Company-wide)**: Aggregated stock across **ALL** locations (Central + All Branches). Represents the total inventory value and quantity of the parent company.
+- **Central Warehouse**: Only stock physically located at the Head Office / Central storage. This is the "unallocated" pool from which branch requests are fulfilled.
+- **All My Branches**: Aggregated stock across only the branches assigned to the current user (e.g., a Regional Manager seeing 3 branches but not Central).
+- **Specific Branch (e.g., BLR)**: Stock data for that single location only.
+
+### Visibility Rules
+
+1.  **CEO/Higher Roles**: Have unrestricted access to view any branch or the company-wide aggregate.
+2.  **Branch Level**: Restricted to their own site to prevent unauthorized visibility into other branch operations or central reserves, unless specifically granted "Read-Only Central View" permission.
+3.  **Defaulting**: The system defaults to the most relevant view for that role (e.g., Branch Manager starts on their branch; CEO starts on Company-wide).
 
 ---
 
@@ -154,6 +182,253 @@ Searchable by:
 - Asset ID _(if asset tracking is enabled)_
 
 ---
+
+# 11.1.A Product Stock Ledger (Stock Movement Log)
+
+**Description:**
+Displays the complete stock movement history for a **single product** across all entries. This screen is accessed by clicking **[View]** on any product row in the Stock Dashboard (11.1). Each row in the log table represents one stock event — stock request (HO receipt) or branch transfer — acting as a chronological log of all inventory movements for that product.
+
+A **summary header card** at the top shows aggregated current stock levels, stock-type breakdown, and key metrics for quick reference.
+
+**This screen bridges the gap between:**
+
+- **11.1 Stock Dashboard** (product-wise summary) → User clicks [View] on a product
+- **11.1.3 View Central Stock Entry** (single entry detail) → User clicks [View] on a log entry
+
+**Primary Use Cases:**
+
+- **Inventory audit** — trace all purchases and movements for a product
+- **Stock reconciliation** — verify quantities against physical stock
+- **Receipt history** — review past stock requests, suppliers, and costs
+- **Trend monitoring** — observe stock additions over months/intervals
+
+---
+
+## Navigation
+
+```
+11.1 Stock Dashboard → [View] on Product Row → 11.1.A Product Stock Ledger
+                                                     ├── [View] on Entry → 11.1.3 View Central Stock Entry
+                                                     ├── [Edit] on Entry → 11.1.2 Edit Central Stock Entry
+                                                     └── [+ Add Stock Entry] → 11.1.1 Add to Central Stock (pre-filled)
+```
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  ← Back to Stock Dashboard                                                  │
+│                                                                              │
+│                      PRODUCT STOCK LEDGER                                    │
+│                                                                              │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  PRODUCT SUMMARY CARD                                                   │ │
+│  │                                                                         │ │
+│  │  📷 [Product Image]                                                     │ │
+│  │  Product Name      : Brass Sprayer 3L                                   │ │
+│  │  Product Code      : BSP3-001                                           │ │
+│  │  Category          : Sprayer         Brand    : Agro Corp               │ │
+│  │  HSN Code          : 84242000        Base UOM : Units                   │ │
+│  │                                                                         │ │
+│  │  ┌──────────────┬──────────────┬──────────────┬──────────────┐          │ │
+│  │  │ Total Stock  │ Assets       │ Consumable   │ Resell       │          │ │
+│  │  │     132      │     45       │     67       │     20       │          │ │
+│  │  ├──────────────┼──────────────┼──────────────┼──────────────┤          │ │
+│  │  │ In-Transit   │ Reserved     │ Available    │ Status       │          │ │
+│  │  │     12       │     8        │     112      │ 🟢 Available │          │ │
+│  │  └──────────────┴──────────────┴──────────────┴──────────────┘          │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │ Filters & Search                                                        │ │
+│  │                                                                         │ │
+│  │ Entry Type : [☑ Stock Request ☑ Branch Transfer]                    │ │
+│  │ Stock Type : [☑ Assets ☑ Consumable ☑ Resell]                          │ │
+│  │ Branch     : [▼ All Branches ▼]                                        │ │
+│  │ Date Range : [📅 From] — [📅 To]                                       │ │
+│  │ Search     : [________] (Entry ID / Supplier / Branch / Created By)     │ │
+│  │                                                                         │ │
+│  │ [Reset Filters]                                   [+ ADD STOCK ENTRY]  │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  STOCK ENTRY LOG TABLE                                                       │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │Entry ID    │Type       │Dir │Date       │From   │To     │Assets│Cons.│Resell│ │
+│  │────────────┼───────────┼────┼───────────┼───────┼───────┼──────┼─────┼──────│ │
+│  │CSTK-000482 │Stock Req  │IN  │12 Feb 2026│ABC Ind│Central│ +10  │ +5  │ +5   │ │
+│  │CSTK-000391 │Stock Req  │IN  │15 Jan 2026│XYZ Sup│Central│ +15  │ +20 │  0   │ │
+│  │TR-BLR-001  │Transfer   │OUT │01 Jan 2026│Central│BLR    │ -5   │  0  │  0   │ │
+│  │CSTK-000245 │Stock Req  │IN  │10 Dec 2025│ABC Ind│Central│ +10  │ +30 │ +10  │ │
+│  │TR-HYD-004  │Transfer   │IN  │25 Nov 2025│HYD    │Central│ +10  │ +5  │  0   │ │
+│  │CSTK-000102 │Stock Req  │IN  │01 Oct 2025│ABC Ind│Central│ +5   │ +15 │  0   │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Net Change │Status│Created By     │Actions                                ││
+│  │───────────┼──────┼───────────────┼───────────────────────────────────────││
+│  │    +20    │✅    │Head Ops User  │[View] [Edit] [Delete]                 ││
+│  │    +35    │✅    │Head Ops User  │[View] [Edit] [Delete]                 ││
+│  │    -5     │✅    │System         │[View]                                 ││
+│  │    +50    │✅    │Head Ops User  │[View] [Edit] [Delete]                 ││
+│  │    +15    │✅    │Head Ops User  │[View]                                 ││
+│  │    +20    │✅    │Head Ops User  │[View] [Edit] [Delete]                 ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  Pagination:  Previous   1   2   3   ...   10   Next                         │
+│                                                                              │
+│  Legend: ✅ Complete  ⏳ Pending  📦 In-Transit                               │
+│                                                                              │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │  RUNNING TOTAL SUMMARY                                                  │ │
+│  │                                                                         │ │
+│  │  Total Entries       : 6                                                │ │
+│  │  Total Inwards (+)    : 130 Units                                        │ │
+│  │  Total Outwards (-)   : 8 Units                                          │ │
+│  │  Net Current Stock    : 122 Units                                        │ │
+│  │                                                                         │ │
+│  │  Total Investment (₹) : ₹1,65,200 (Accessible in Financial Detail)       │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Product Summary Card Fields
+
+| Field          | Type            | Description                                        |
+| -------------- | --------------- | -------------------------------------------------- |
+| Product Image  | Image Thumbnail | Product photo from Product Master                  |
+| Product Name   | Display         | Full product name                                  |
+| Product Code   | Display         | Unique SKU from Product Master                     |
+| Category       | Display         | Chemical / Sprayer / Machine / Trap / Tool / Other |
+| Brand          | Display         | Manufacturer or brand name                         |
+| HSN Code       | Link            | Clickable link to view tax details                 |
+| Base UOM       | Display         | Unit of measurement from Product Master            |
+| Total Stock    | Number          | Aggregated total across all entries                |
+| Assets Qty     | Number          | Total asset units for this product                 |
+| Consumable Qty | Number          | Total consumable stock for this product            |
+| Resell Qty     | Number          | Total resell stock for this product                |
+| In-Transit Qty | Number          | Stock currently in transit                         |
+| Reserved Qty   | Number          | Stock reserved for pending requests                |
+| Available Qty  | Number (Calc)   | Total – In-Transit – Reserved                      |
+| Status         | Badge           | 🟢 Available / 🟡 Low Stock / 🔴 Out of Stock      |
+
+---
+
+## Stock Entry Log Table Fields
+
+| Field      | Type   | Description                                                           |
+| ---------- | ------ | --------------------------------------------------------------------- |
+| Entry ID   | Text   | Unique reference ID (Stock Request / Transfer ID)                     |
+| Entry Type | Badge  | Stock Request / Branch Transfer                      |
+| Direction  | Badge  | **IN (Inwards)** or **OUT (Outwards)** movement indicator              |
+| Entry Date | Date   | Date of stock movement                                                |
+| From       | Text   | Source location (e.g., Supplier Name, "System", or Branch Code)       |
+| To         | Text   | Destination location (e.g., "Central" or Branch Code)                 |
+| Assets     | Number | Net change in Asset units (+ for addition, - for removal)             |
+| Consumable | Number | Net change in Consumable units                                        |
+| Resell     | Number | Net change in Resell units                                            |
+| Net Change | Number | Total unit change across all stock types                              |
+| Status     | Badge  | ✅ Complete / ⏳ Pending / 📦 In-Transit                             |
+| Created By | Text   | User who initiated the entry                                          |
+| Actions    | Buttons| View (all) / Edit & Delete (Stock Requests only)          |
+
+> **Note**: Financial details (Invoice No, Amounts, Tax) are intentionally hidden in the Ledger view to focus on stock movement. Full document details are available by clicking **[View]** to open the Entry View (11.1.3).
+
+---
+
+
+## Filters
+
+| Filter     | Type         | Options                                            |
+| ---------- | ------------ | -------------------------------------------------- |
+| Entry Type | Multi-select | Stock Request / Branch Transfer                    |
+| Direction  | Multi-select | IN (Inwards) / OUT (Outwards)                      |
+| Stock Type | Multi-select | Assets / Consumable / Resell                       |
+| Branch     | Dropdown     | All Branches / Central / BLR / HYD / BOM / etc.    |
+| Date Range | Date Range   | From – To                                          |
+
+---
+
+## Search
+
+Searchable by:
+
+- Entry ID
+- From / To Branch
+- Supplier Name (for Stock Request entries)
+- Created By User
+
+---
+
+## Actions (Log Table Row)
+
+| Action     | Available When                             | Target Screen                                                     |
+| ---------- | ------------------------------------------ | ----------------------------------------------------------------- |
+| **View**   | All entries                                | Opens **11.1.3 View Central Stock Entry** for that specific entry |
+| **Edit**   | Stock Request entries only, not locked     | Opens **11.1.2 Edit Central Stock Entry** for that specific entry |
+| **Delete** | Stock Request entries only, no downstream usage | Soft-delete with confirmation dialog                         |
+
+---
+
+## Form Actions
+
+| Action                | Description                                                                    |
+| --------------------- | ------------------------------------------------------------------------------ |
+| **+ Add Stock Entry** | Opens **11.1.1 Add to Central Stock** with product pre-selected and pre-filled |
+| **← Back**            | Return to **11.1 Stock Dashboard**                                             |
+
+---
+
+## Running Total Summary Fields
+
+| Field                | Type            | Description                                    |
+| -------------------- | --------------- | ---------------------------------------------- |
+| Total Entries        | Auto-count      | Number of stock entries for this product        |
+| Total Inwards (+)    | Auto-sum        | Total items added to stock                      |
+| Total Outwards (-)   | Auto-sum        | Total items removed from stock                  |
+| Net Current Stock    | Auto-calculated | Total Inwards - Total Outwards                  |
+
+---
+
+## System Behavior
+
+### 1. Sorting
+
+Default sort: **Entry Date descending** (latest entries first).
+User can sort by any column header.
+
+### 2. Pre-filled Add Stock
+
+When user clicks **[+ Add Stock Entry]** from this screen, the Add to Central Stock form (11.1.1) opens with:
+
+- Product pre-selected and locked
+- Product Code, HSN Code, Base UOM auto-filled
+- Current stock reference auto-fetched
+
+### 3. Permission Control
+
+| Role            | Access Level                       |
+| --------------- | ---------------------------------- |
+| Head Ops        | View all entries, Edit, Delete     |
+| Inventory Admin | View all entries, Edit             |
+| Branch Manager  | View entries related to own branch |
+| Finance Auditor | View all entries (read-only)       |
+
+### 4. Entry Type Indicators
+
+| Entry Type      | Dir | Icon | Color  | Description                             |
+| --------------- | --- | ---- | ------ | --------------------------------------- |
+| Stock Request    | IN  | 📥   | Green  | Receipt from Central Warehouse / Vendor  |
+| Branch Transfer | IN  | 📥   | Blue   | Received from another branch            |
+| Branch Transfer | OUT | 📤   | Blue   | Sent to another branch                  |
+
+---
+
+================================================================================
 
 ## Add Stock (Multi-Mode)
 
@@ -378,12 +653,17 @@ Searchable by:
 
 **Description:** Modify an existing Central Stock entry for correction or operational updates. Procurement information and generated asset IDs remain protected to maintain inventory audit integrity.
 
+**Accessed from:** Product Stock Ledger (11.1.A) → [Edit] on a log entry row.
+On **[Update]** or **[Cancel]**, returns to **11.1.A Product Stock Ledger**.
+
 ---
 
 # Screen Layout
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
+│  ← Back to Product Stock Ledger                                             │
+│                                                                             │
 │                     EDIT CENTRAL STOCK ENTRY                                 │
 │                                                                             │
 │  Entry Reference ID : CSTK-000482  [System Generated]                       │
@@ -581,6 +861,8 @@ Every edit must log:
 **Description:**
 Display complete details of a Central Stock entry in **read-only mode**. This screen allows Head Ops, Admins, and authorized users to review procurement details, stock allocation, asset generation, and branch transfers without allowing modifications.
 
+**Accessed from:** Product Stock Ledger (11.1.A) → [View] on a log entry row.
+
 This screen is mainly used for:
 
 - **Stock audit**
@@ -594,6 +876,8 @@ This screen is mainly used for:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
+│  ← Back to Product Stock Ledger                                             │
+│                                                                             │
 │                     VIEW CENTRAL STOCK ENTRY                                 │
 │                                                                             │
 │  Entry Reference ID : CSTK-000482                                           │
@@ -668,6 +952,8 @@ This screen is mainly used for:
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                             │
 │   [EDIT]   [TRANSFER STOCK]   [VIEW ASSET HISTORY]   [DOWNLOAD INVOICE]    │
+│                                                                             │
+│                              [BACK]                                          │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -751,7 +1037,7 @@ Assets + Consumable + Resell = Total Quantity
 | Transfer Stock     | Initiates stock transfer workflow         |
 | View Asset History | Shows lifecycle of assets                 |
 | Download Invoice   | Download uploaded invoice                 |
-| Back               | Return to stock list                      |
+| Back               | Return to **11.1.A Product Stock Ledger** |
 
 ---
 
@@ -824,16 +1110,18 @@ If stock is damaged, missing, or incorrect, users can **report issues during rec
 │                                                                              │
 │ REQUEST TABLE                                                                │
 │ ┌──────────────────────────────────────────────────────────────────────────┐ │
-│ │Request ID │Type │Direction│From│To │Items│Total│Assets│Status │Priority │ │
-│ │───────────┼─────┼─────────┼────┼───┼─────┼─────┼──────┼───────┼──────── │ │
-│ │SR-BLR-001 │Stock│Inward   │CEN │BLR│ 3   │ 25  │ 5    │Pending│High     │ │
-│ │SR-BLR-002 │Stock│Inward   │CEN │BLR│ 2   │ 10  │ 0    │Approved│Normal  │ │
+│ │Request ID │Type │Direction│From│To │Items│Total│Assets│Status   │Priority│ │
+│ │───────────┼─────┼─────────┼────┼───┼─────┼─────┼──────┼─────────┼────────│ │
+│ │SR-BLR-001 │Stock│Inward   │CEN │BLR│ 3   │ 25  │ 5    │Pending  │High    │ │
+│ │TR-2024-056│Trans│Inward   │HYD │BLR│ 2   │ 12  │ 2    │InTransit│Normal  │ │
+│ │SR-BLR-002 │Stock│Inward   │CEN │BLR│ 2   │ 10  │ 0    │Received │Normal  │ │
 │ └──────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │ ┌──────────────────────────────────────────────────────────────────────────┐ │
 │ │Requested By │Requested Date & Time │Action                                │ │
 │ │─────────────┼──────────────────────┼──────────────────────────────────── │ │
 │ │John Doe     │15 Jan 2024 10:45 AM  │[View] [Revoke]                       │ │
+│ │Rajesh K.    │16 Jan 2024 09:30 AM  │[View] [Receive]                      │ │
 │ │Jane Smith   │16 Jan 2024 02:30 PM  │[View]                                │ │
 │ └──────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
@@ -861,6 +1149,20 @@ If stock is damaged, missing, or incorrect, users can **report issues during rec
 | Requested By          | Text     | User who created the request       |
 | Requested Date & Time | DateTime | Timestamp of request creation      |
 | Action                | Button   | View / Revoke / Receive            |
+
+---
+
+# Conditional Action Rules
+
+| Request Status   | Available Actions                    | Target Screen                           |
+| ---------------- | ------------------------------------ | --------------------------------------- |
+| Draft            | View, Edit, Submit, Delete           | Edit (11.2.1), Submit Popup (11.2.1.1)  |
+| Pending Approval | View, Revoke                         |—                                        |
+| Approved         | View                                 |—                                        |
+| In-Transit       | View, **Receive**                    | **Receive Stock Form (11.2.3)**         |
+| Received         | View                                 |—                                        |
+| Rejected         | View, Edit (Resubmit)                | Re-opens Stock Request Form             |
+| Revoked          | View                                 |—                                        |
 
 ---
 
@@ -921,7 +1223,10 @@ If stock is damaged, missing, or incorrect, users can **report issues during rec
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
 │  │ HEADER INFORMATION                                                      │ │
 │  │                                                                         │ │
-│  │  Requesting Branch*    : [Auto-filled: Current User's Branch]          │ │
+│  │  Requesting Branch*    : [▼ Select Branch ▼]                           │ │
+│  │                          (If single branch → auto-filled & locked)     │ │
+│  │                          (If multi-branch → dropdown of user branches) │ │
+│  │  Request To            : Central Warehouse (Head Office) [Read Only]   │ │
 │  │  Requested By*         : [Auto-filled: Current User]                   │ │
 │  │  Request Date*         : [Auto-filled: Current Date]                   │ │
 │  │  Priority*             : [▼ Low / Normal / High / Urgent ▼]            │ │
@@ -978,15 +1283,22 @@ If stock is damaged, missing, or incorrect, users can **report issues during rec
 
 ### Form Fields
 
-| Field             | Type           | Required | Validation                   |
-| ----------------- | -------------- | -------- | ---------------------------- |
-| Request ID        | Auto-generated | System   | SR-[BRANCH]-YYYY-SEQ format  |
-| Requesting Branch | Auto-filled    | System   | Current user's branch        |
-| Requested By      | Auto-filled    | System   | Current user                 |
-| Request Date      | Auto-filled    | System   | Current date                 |
-| Priority          | Dropdown       | Yes      | Low / Normal / High / Urgent |
-| Required By Date  | Date           | Yes      | ≥ Today + 1 day              |
-| Purpose           | Text Area      | Yes      | Min 20 characters            |
+| Field             | Type            | Required | Validation                                                                                                                                    |
+| ----------------- | --------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Request ID        | Auto-generated  | System   | SR-[BRANCH]-YYYY-SEQ format (uses selected branch code)                                                                                       |
+| Requesting Branch | Dropdown / Auto | Yes      | If user has 1 branch → auto-filled & locked. If user has multiple branches → dropdown showing only user's assigned branches. Must select one. |
+| Request To        | Display         | System   | Always "Central Warehouse (Head Office)" — Read Only. Branch-to-branch transfers use the separate Transfer flow.                              |
+| Requested By      | Auto-filled     | System   | Current user                                                                                                                                  |
+| Request Date      | Auto-filled     | System   | Current date                                                                                                                                  |
+| Priority          | Dropdown        | Yes      | Low / Normal / High / Urgent                                                                                                                  |
+| Required By Date  | Date            | Yes      | ≥ Today + 1 day                                                                                                                               |
+| Purpose           | Text Area       | Yes      | Min 20 characters                                                                                                                             |
+
+> **Branch Selection Logic:**
+>
+> - On branch selection → "Current Branch Stock" column in Items Table updates to show stock for the selected branch
+> - Request ID auto-generates using selected branch code: `SR-BLR-2026-0045`
+> - Approved stock will be dispatched TO the selected branch
 
 ### Items Table Fields
 
@@ -1026,10 +1338,14 @@ If stock is damaged, missing, or incorrect, users can **report issues during rec
 
 **Description:**
 This popup appears after the user clicks **[Submit Request]** in **Module 11.2.1 Stock Request**.
-It allows the requester to select **one or multiple recipients** (approvers or responsible personnel) to whom the stock request notification will be sent.
+It allows the requester to select **one or multiple recipients** (approvers or responsible personnel at **Head Office / Central**) to whom the stock request notification will be sent.
 
-By default, **“All” recipients are selected**, meaning the request will be sent to all authorized users configured to receive stock requests (such as Admin, HR Manager, Operations Head, etc.).
+Since all stock requests are directed to **Central Warehouse (Head Office)**, the recipient list always shows **Head Office approvers only** (Admin, Head Ops, Operations Head, etc.).
+
+By default, **"All Head Office Approvers" are selected**, meaning the request will be sent to all authorized Head Office users.
 The user may alternatively **select specific individuals** if the request needs to be routed to a particular person.
+
+The popup displays the **From (Requesting Branch)** and **To (Central Warehouse)** context so the user can verify the request direction before confirming.
 
 After confirming, the system sends the request notification and updates the request workflow to **Pending Approval / Review**.
 
@@ -1038,22 +1354,33 @@ After confirming, the system sends the request notification and updates the requ
 ### Popup Layout
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  POPUP: SELECT RECIPIENTS                                    │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  Send to specific person(s):                         │    │
-│  │  ☑ All (Default checked)                            │    │
-│  │  ☐ Raj Kumar (Admin)                                │    │
-│  │  ☐ Mike Smith (HR Manager)                          │    │
-│  │  ☐ Sarah Jones (Operations Head)                    │    │
-│  │                                                      │    │
-│  │  [CONFIRM SEND]  [CANCEL]                            │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│  SUBMIT STOCK REQUEST                                            │
+│                                                                  │
+│  From    : BLR Branch                                            │
+│  To      : Central Warehouse (Head Office)                       │
+│                                                                  │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │  Send to:                                                │    │
+│  │  ☑ All Head Office Approvers (Default)                  │    │
+│  │  ☐ Raj Kumar (Admin - Head Office)                      │    │
+│  │  ☐ Mike Smith (Head Ops - Head Office)                  │    │
+│  │  ☐ Sarah Jones (Operations Head - Head Office)          │    │
+│  │                                                          │    │
+│  │  [CONFIRM SEND]  [CANCEL]                                │    │
+│  │                                                          │    │
+│  └─────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
----
+### Popup Fields
+
+| Field                     | Type                | Description                                                                              |
+| ------------------------- | ------------------- | ---------------------------------------------------------------------------------------- |
+| From                      | Display (Read Only) | Requesting Branch selected in the form                                                   |
+| To                        | Display (Read Only) | Always "Central Warehouse (Head Office)"                                                 |
+| Send to                   | Checkbox List       | List of Head Office approvers with role labels                                           |
+| All Head Office Approvers | Checkbox (Default)  | When checked, sends to all configured approvers. Unchecking allows individual selection. |
 
 # 11.2.2 Stock Request – View (Branch / Head Ops)
 
@@ -1313,7 +1640,10 @@ Tracks the **complete request lifecycle** for compliance and operational transpa
 
 ---
 
-# 11.2.3 Receive Stock / Asset Allocation/ Receive (Destination Branch)
+# 11.2.3 Receive Stock / Asset Allocation / Receive (Destination Branch)
+
+**Description:**
+Triggered by clicking the **[Receive]** button on an **In-Transit** request in either **Tab 2: My Requests** (for the original requester) or **Tab 3: Received Requests** (for the destination branch manager). This form allows the receiving branch to verify item quantities, inspect asset condition, and allocate assets to employees or the branch pool.
 
 #### Screen Layout
 
@@ -1487,7 +1817,8 @@ Users can later open a draft request, update details, and **Submit** it for appr
 | ------------- | ---- | ---------------------------------------------------- |
 | View          | 👁   | Opens request details in **read-only mode**          |
 | Edit          | ✏    | Allows editing of request details (permission based) |
-| Approve       | ✔    | Redirects to **Approval Form Screen**                |
+| Approve       | ✔    | Redirects to **Approval Form Screen** (11.3.1)       |
+| Receive       | 📦   | Redirects to **Receive Stock Form** (11.2.3)         |
 
 ---
 
@@ -1498,7 +1829,7 @@ Users can later open a draft request, update details, and **Submit** it for appr
 | Draft                | View, Edit, Submit         |
 | Pending Approval     | View, Edit, Approve        |
 | Approved             | View, Edit, Allocate Stock |
-| In Transit           | View                       |
+| In Transit           | View, **Receive**          |
 | Completed / Received | View                       |
 | Rejected             | View, Edit                 |
 
@@ -1738,8 +2069,9 @@ Module 11.3 → Received Requests → Action → Review / Approve
 
 ### If Approved
 
-- Request status → **Approved**
-- Inventory reserved
+- Request status → **In-Transit** (Dispatch details are recorded in the form)
+- Inventory reserved and deducted from source branch
+- Destination branch is notified, and the **[Receive]** button becomes available in their dashboard (Tab 2 or Tab 3).
 - Dispatch workflow triggered
 
 ### If Approved with Branch Transfer
@@ -2956,12 +3288,12 @@ _(Integrated with Module 10 Product Master — product price auto-fetched on sel
 
 When a product is selected from the search dropdown, the system automatically fetches and fills:
 
-| Field Auto-Filled | Source in Module 10     |
-| ----------------- | ----------------------- |
-| Product Code      | Product Master record   |
-| UOM               | Base UOM from Product   |
-| Dilution          | Standard Usage (if set) |
-| Price / UOM (₹)   | **Purchase Price**(editable )     |
+| Field Auto-Filled | Source in Module 10           |
+| ----------------- | ----------------------------- |
+| Product Code      | Product Master record         |
+| UOM               | Base UOM from Product         |
+| Dilution          | Standard Usage (if set)       |
+| Price / UOM (₹)   | **Purchase Price**(editable ) |
 
 > The **Price / UOM** is editable — the admin can override the fetched price if a negotiated rate applies for this service.
 
@@ -3101,33 +3433,33 @@ When a product is selected from the search dropdown, the system automatically fe
 
 ### Section 4: Chemicals / Products Used
 
-| #   | Field Name                  | Parent / Belongs To               | Hierarchy                                 | UI Type                     | Required | Default State                   | Behavior / Notes                                            |
-| --- | --------------------------- | --------------------------------- | ----------------------------------------- | --------------------------- | -------- | ------------------------------- | ----------------------------------------------------------- |
-| 17  | Search Product              | Section 4 – Chemicals             | Top-level field                           | Search Dropdown             | Yes      | Empty                           | Searches Module 10 Product Master (active consumables only) |
-| 18  | Product Name                | Section 4 → Chemical Table Row    | Table Column (per row)                    | Auto-filled from search     | System   | —                               | Filled on product selection                                 |
-| 19  | Product Code                | Section 4 → Chemical Table Row    | Table Column (per row)                    | Auto-filled                 | System   | —                               | From Product Master                                         |
-| 20  | UOM                         | Section 4 → Chemical Table Row    | Table Column (per row)                    | Auto-filled                 | System   | —                               | Base UOM (ml / Ltr / gm / kg / Nos)                         |
-| 21  | Dilution                    | Section 4 → Chemical Table Row    | Table Column (per row)                    | Number Input                | Yes      | Auto-filled if set in Module 10 | Editable                                                    |
-| 22  | Coverage (SQFT)             | Section 4 → Chemical Table Row    | Table Column (per row)                    | Number Input                | Yes      | Empty                           | Area covered per dilution dose                              |
-| 23  | Required Qty                | Section 4 → Chemical Table Row    | Table Column (per row)                    | Number Input                | Yes      | Empty                           | Must be > 0                                                 |
-| 24  | Price / UOM (₹)             | Section 4 → Chemical Table Row    | Table Column (per row)                    | Auto-filled (Editable)      | System   | Auto from Module 10             | Admin can override                                          |
-| 25  | Cost / Visit (₹)            | Section 4 → Chemical Table Row    | Table Column (per row)                    | Auto-calculated (Read Only) | System   | ₹0                              | = Req. Qty × Price/UOM                                      |
-| 26  | Est. Cost / Month (₹)       | Section 4 → Chemical Table Row    | Table Column (per row)                    | Auto-calculated (Read Only) | System   | ₹0                              | = Cost/Visit × Visits/Month                                 |
-| 27  | 🗑 Delete Row               | Section 4 → Chemical Table Row    | Table Action (per row)                    | Icon Button                 | —        | Visible per row                 | Removes the chemical row                                    |
-| 28  | Visits/Month (Reference)    | Section 4 – Chemicals             | Summary field (below table)               | Auto-filled (Read Only)     | System   | —                               | From Service Frequency                                      |
-| 29  | Total Chemical Cost / Visit | Section 4 – Chemical Cost Summary | Summary field (below table)               | Auto-calculated (Read Only) | System   | ₹0                              | Sum of all rows' Cost/Visit                                 |
-| 30  | Total Chemical Cost / Month | Section 4 – Chemical Cost Summary | Summary field (below table)               | Auto-calculated (Read Only) | System   | ₹0                              | Sum of all rows' Est. Cost/Month                            |
+| #   | Field Name                  | Parent / Belongs To               | Hierarchy                   | UI Type                     | Required | Default State                   | Behavior / Notes                                            |
+| --- | --------------------------- | --------------------------------- | --------------------------- | --------------------------- | -------- | ------------------------------- | ----------------------------------------------------------- |
+| 17  | Search Product              | Section 4 – Chemicals             | Top-level field             | Search Dropdown             | Yes      | Empty                           | Searches Module 10 Product Master (active consumables only) |
+| 18  | Product Name                | Section 4 → Chemical Table Row    | Table Column (per row)      | Auto-filled from search     | System   | —                               | Filled on product selection                                 |
+| 19  | Product Code                | Section 4 → Chemical Table Row    | Table Column (per row)      | Auto-filled                 | System   | —                               | From Product Master                                         |
+| 20  | UOM                         | Section 4 → Chemical Table Row    | Table Column (per row)      | Auto-filled                 | System   | —                               | Base UOM (ml / Ltr / gm / kg / Nos)                         |
+| 21  | Dilution                    | Section 4 → Chemical Table Row    | Table Column (per row)      | Number Input                | Yes      | Auto-filled if set in Module 10 | Editable                                                    |
+| 22  | Coverage (SQFT)             | Section 4 → Chemical Table Row    | Table Column (per row)      | Number Input                | Yes      | Empty                           | Area covered per dilution dose                              |
+| 23  | Required Qty                | Section 4 → Chemical Table Row    | Table Column (per row)      | Number Input                | Yes      | Empty                           | Must be > 0                                                 |
+| 24  | Price / UOM (₹)             | Section 4 → Chemical Table Row    | Table Column (per row)      | Auto-filled (Editable)      | System   | Auto from Module 10             | Admin can override                                          |
+| 25  | Cost / Visit (₹)            | Section 4 → Chemical Table Row    | Table Column (per row)      | Auto-calculated (Read Only) | System   | ₹0                              | = Req. Qty × Price/UOM                                      |
+| 26  | Est. Cost / Month (₹)       | Section 4 → Chemical Table Row    | Table Column (per row)      | Auto-calculated (Read Only) | System   | ₹0                              | = Cost/Visit × Visits/Month                                 |
+| 27  | 🗑 Delete Row               | Section 4 → Chemical Table Row    | Table Action (per row)      | Icon Button                 | —        | Visible per row                 | Removes the chemical row                                    |
+| 28  | Visits/Month (Reference)    | Section 4 – Chemicals             | Summary field (below table) | Auto-filled (Read Only)     | System   | —                               | From Service Frequency                                      |
+| 29  | Total Chemical Cost / Visit | Section 4 – Chemical Cost Summary | Summary field (below table) | Auto-calculated (Read Only) | System   | ₹0                              | Sum of all rows' Cost/Visit                                 |
+| 30  | Total Chemical Cost / Month | Section 4 – Chemical Cost Summary | Summary field (below table) | Auto-calculated (Read Only) | System   | ₹0                              | Sum of all rows' Est. Cost/Month                            |
 
 **System Behavior — On Product Selection**
 
 When a product is selected from the search dropdown, the system automatically fetches and fills:
 
-| Field Auto-Filled | Source in Module 10     |
-| ----------------- | ----------------------- |
-| Product Code      | Product Master record   |
-| UOM               | Base UOM from Product   |
-| Dilution          | Standard Usage (if set) |
-| Price / UOM (₹)   | **Purchase Price**(editable      |
+| Field Auto-Filled | Source in Module 10         |
+| ----------------- | --------------------------- |
+| Product Code      | Product Master record       |
+| UOM               | Base UOM from Product       |
+| Dilution          | Standard Usage (if set)     |
+| Price / UOM (₹)   | **Purchase Price**(editable |
 
 > The **Price / UOM** is editable — the admin can override the fetched price if a negotiated rate applies for this service.
 
@@ -3429,8 +3761,6 @@ FLOW: What happens when user clicks [+ Add Custom Treatment Method]
 
 ---
 
-
-
 ### 🅵 [+ Add Custom Property Type] — Detailed Breakdown
 
 **Location:** Section 5 → Pricing Configuration → Fixed Price → Residential
@@ -3653,7 +3983,7 @@ FLOW: What happens when user clicks [+ Add Pricing for Custom Service Category]
 │   ├── Chemical Cost Summary (Read-Only)
 │      ├── Total Chemical Cost / Visit
 │      └── Total Chemical Cost / Month
-│  
+│
 │
 ├── Section 5: PRICING CONFIGURATION
 │   ├── Pricing Reference Banner (Read-Only from Section 4)
