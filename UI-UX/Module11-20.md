@@ -546,20 +546,26 @@ When user clicks **[+ Add Stock Entry]** from this screen, the Add to Central St
 │                                                                              │
 │  Section 5: Initial Allocation (Optional)                                    │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  Immediate Transfer to Branch: [☑ BLR ☑ HYD ☑ BOM ☑ CHN]              │ │
+│  │  Add Branch Allocation: [▼ Select Branch ▼]  [+ ADD]    11 Remaining at central (auto-calculated)                │ │
 │  │                                                                         │ │
-│  │  IF BRANCHES SELECTED:                                                  │ │
-│  │  BLR Qty               : [________]                                    │ │
-│  │  HYD Qty               : [________]                                    │ │
-│  │  BOM Qty               : [________]                                    │ │
-│  │  CHN Qty               : [________]                                    │ │
+│  │  ALLOCATION TABLE                                                       │ │
+│  │  ┌────────────┬───────┬──────────┬────────────┬──────────┬─────────┐   │ │
+│  │  │ Branch     │ Total │ Assets   │ Consumable │ Resell   │ Action  │   │ │
+│  │  │────────────┼───────┼──────────┼────────────┼──────────┼─────────│   │ │
+│  │  │ Bangalore  │ [ 30 ]│ [  10  ] │ [  10  ]   │ [  10  ] │ [🗑]    │   │ │
+│  │  │ Hyderabad  │ [ 15 ]│ [  5   ] │ [  10  ]   │ [  0   ] │ [🗑]    │   │ │
+│  │  │────────────┼───────┼──────────┼────────────┼──────────┼─────────│   │ │
+│  │  │ TOTAL      │  45   │    15    │    20      │    10    │         │   │ │
+│  │  └────────────┴───────┴──────────┴────────────┴──────────┴─────────┘   │ │
 │  │                                                                         │ │
-│  │  Remain at Central     : [Auto-calculated]                             │ │
+│  │                                                                         │ │
+│  │                                                                         │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 │                              [SAVE]  [CANCEL]                                │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
+
 ```
 
 #### Section 1: Product Selection Fields
@@ -638,12 +644,17 @@ When user clicks **[+ Add Stock Entry]** from this screen, the Add to Central St
 
 #### Section 5: Initial Allocation Fields
 
-| Field                         | Type            | Description           |
-| ----------------------------- | --------------- | --------------------- |
-| Immediate Transfer to Branchs | Multi-select    | Distribute on receipt |
-| Branch1 Qty                   | Number          | If selected           |
-| Branch2 Qty                   | Number          | If selected           |
-| Remain at Central             | Auto-calculated | Balance               |
+| Field                      | Type            | Description                                              |
+| -------------------------- | --------------- | -------------------------------------------------------- |
+| Add Branch Allocation      | Multiselect Dropdown        | Select a branch to dynamically add to the table          |
+| Total (Per Branch)         | Number          | Total quantity assigned to branch                        |
+| Assets (Per Branch)        | Number          | Trackable assets assigned                                |
+| Consumable (Per Branch)    | Number          | Bulk consumables assigned                                |
+| Resell (Per Branch)        | Number          | Display/resale stock assigned                            |
+| Action                     | Button          | Remove branch row from table                             |
+| Remaining at Central Stock | Auto-calculated | Total Quantity Received - Sum of all Branch Total Qty |
+│  │  Validation: Assets + Consumable + Resell = Total branch Qty            │ │
+
 
 ## \*all non required fields are optional
 
@@ -728,13 +739,20 @@ On **[Update]** or **[Cancel]**, returns to **11.1.A Product Stock Ledger**.
 │                                                                             │
 │  Section 5: Branch Allocation (Optional Update)                             │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  Current Branch Transfers                                               │ │
+│  │  Add Branch Allocation: [▼ Select Branch ▼]  [+ ADD]   11 Remaining at central (auto-calculated)                                                             │ │
 │  │                                                                         │ │
-│  │  BLR Branch Qty       : [ 4 ]                                           │ │
-│  │  HYD Branch Qty       : [ 3 ]                                           │ │
-│  │  BOM Branch Qty       : [ 2 ]                                           │ │
+│  │  ALLOCATION TABLE                                                       │ │
+│  │  ┌────────────┬───────┬──────────┬────────────┬──────────┬─────────┐   │ │
+│  │  │ Branch     │ Total │ Assets   │ Consumable │ Resell   │ Action  │   │ │
+│  │  │────────────┼───────┼──────────┼────────────┼──────────┼─────────│   │ │
+│  │  │ Bangalore  │ [ 4 ] │ [  2   ] │ [  2   ]   │ [  0   ] │ [🗑]    │   │ │
+│  │  │ Hyderabad  │ [ 3 ] │ [  0   ] │ [  3   ]   │ [  0   ] │ [🗑]    │   │ │
+│  │  │ Mumbai     │ [ 2 ] │ [  0   ] │ [  0   ]   │ [  2   ] │ [🗑]    │   │ │
+│  │  │────────────┼───────┼──────────┼────────────┼──────────┼─────────│   │ │
+│  │  │ TOTAL      │   9   │    2     │    5       │    2     │         │   │ │
+│  │  └────────────┴───────┴──────────┴────────────┴──────────┴─────────┘   │ │
 │  │                                                                         │ │
-│  │  Remaining at Central : 11 (Auto Calculated)                            │ │
+│  │                                                                         │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                             │
 │                     [UPDATE]   [CANCEL]                                      │
@@ -818,10 +836,15 @@ Not allowed:
 
 #### Section 5: Branch Allocation Fields
 
-| Field                | Type   | Editable |
-| -------------------- | ------ | -------- |
-| Branch Qty           | Number | Yes      |
-| Remaining at Central | Auto   | No       |
+| Field                      | Type            | Editable |
+| -------------------------- | --------------- | -------- |
+| Add Branch Allocation      | Dropdown        | Yes      |
+| Total (Per Branch)         | Number          | Yes      |
+| Assets (Per Branch)        | Number          | Yes      |
+| Consumable (Per Branch)    | Number          | Yes      |
+| Resell (Per Branch)        | Number          | Yes      |
+| Action                     | Button          | Yes      |
+| Remaining at Central Stock | Auto-calculated | No       |
 
 Validation:
 
@@ -6288,7 +6311,7 @@ Initial lead capture form for registering new customer inquiries. Captures essen
 ---
 
 ## Form Fields
-
+```
 | Field               | Type           | Required    | Options/Validation                                                             | Notes                                                           |
 | ------------------- | -------------- | ----------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------- | -------------------- |
 | Lead ID             | Auto Generated | System      | Format: LD-YYYY-XXXXX (e.g., LD-2026-00042)                                    | Read-only, unique sequential                                    |
@@ -6307,9 +6330,9 @@ Initial lead capture form for registering new customer inquiries. Captures essen
 | Created By          | Auto           | System      | Current logged-in user                                                         | System field                                                    |
 | Created Date        | Auto           | System      | System timestamp                                                               | System field                                                    |
 | Status              | Auto           | System      | Default: NEW                                                                   | New / Qualified / Quotation send / Negotiation /Lost/ Converted |
-| Lost Reason         | Text Area      | Conditional | Required if Status = Lost                                                      |                                                                 | Reason for lead loss |
+| Lost Reason         | Text Area      | Conditional | Required if Status = Lost                                                      |                                            Reason for lead loss |
 | Next Follow-up Date | Date & Time    | Yes         | Must be today or future date                                                   | Manually entered by user (not auto-calculated)                  |
-
+```
 ---
 
 ## Conditional Logic
@@ -8558,7 +8581,7 @@ Full read-only view of any GMA sheet accessible to the logged-in user. Used for 
 | **Section 3E (per site)** | Applicable flag, Cost/Doc, Docs/Month, Doc Cost/Year (E)                                    | Read-only        |
 | **Site Summary**          | Cost breakdown table (A+B+C+D+E), Total Cost, Proposed Price, Site GM%                      | Read-only        |
 | **Section 4 (Overall)**   | Site-wise summary, Total Annual Cost/Price, Overall GM%, GM with/without Documentation      | Auto / Read-only |
-| **Approval**              | Status, Approval Type, Approver, Approved/Rejected Date, Remarks, Authority Matrix          | Read-only        |
+| **Approval**              | Status(Approved or Rejected), Approval Type (e.g., Auto-Approved / Manual Manager / Manual CEO), Approver, Approved/Rejected Date, Remarks, Authority Matrix          | Read-only        |
 | **Audit Trail**           | Timestamp, Action, User, Remarks                                                            | Read-only        |
 
 ---
@@ -8715,7 +8738,7 @@ Read-only view of a GMA sheet submitted by the logged-in user. Displays source i
 | **Section 3E (per site)** | Applicable flag, Cost/Doc, Docs/Month, Doc Cost/Year (E)                                    | Read-only        |
 | **Site Summary**          | Cost breakdown table (A+B+C+D+E), Total Cost, Proposed Price, Site GM%                      | Read-only        |
 | **Section 4 (Overall)**   | Site-wise summary, Total Annual Cost/Price, Overall GM%, GM with/without Documentation      | Auto / Read-only |
-| **Approval**              | Status, Approval Type, Approver, Approved/Rejected Date, Remarks, Authority Matrix          | Read-only        |
+| **Approval**              | Status, Approval Type (e.g., Auto-Approved / Manual Manager / Manual CEO), Approver, Approved/Rejected Date, Remarks, Authority Matrix          | Read-only        |
 | **Audit Trail**           | Timestamp, Action, User, Remarks                                                            | Read-only        |
 
 ---
@@ -8732,7 +8755,7 @@ Read-only view of a GMA sheet submitted by the logged-in user. Displays source i
 
 ================================================================================
 
-# 17.3.1 View Received GMA Sheet
+<!-- # 17.3.1 View Received GMA Sheet
 
 **Description:**
 Full read-only view of a received GMA sheet for the approver to review all details — source info, service config, site-wise cost breakdown (Service Visit, Manpower, Chemical/Product, Surcharges, Documentation), and margin summary — before taking an approval or rejection action.
@@ -8757,7 +8780,7 @@ The layout is **identical to Screen 17.2.2 (View GMA Sheet)** with an additional
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
----
+--- -->
 
 ================================================================================
 
@@ -8831,19 +8854,18 @@ A focused action screen where the approver confirms their decision to approve or
 │  │ TOTAL ANNUAL PRICE │ ₹1,32,000                          │                  │
 │  │ ★ OVERALL GROSS MARGIN : 23%                            │                  │
 │  └────────────────────────────────────────────────────────┘                  │
-│                                                                              │
+│      -----section 5: approval--------                                                                        │
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
 │  │  YOUR DECISION                                                         │  │
-│  │                                                                        │  │
-│  │  ● Approve     ○ Reject                                                │  │
-│  │                                                                        │  │
-│  │  Remarks / Notes*                                                      │  │
-│  │  ┌─────────────────────────────────────────────────────────────────┐  │  │
-│  │  │                                                                  │  │  │
-│  │  └─────────────────────────────────────────────────────────────────┘  │  │
-│  │  (Required if Rejected; Optional if Approved — max 500 characters)    │  │
-│  │                                                                        │  │
-│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  GM %         : 23%  →  Sales Manager Approval Required                     │
+│  Deadline     : By 18 Mar 2026 10:00 AM (24-hour window)                    │
+│                                                                              │
+│  Decision     : ○ Approve   ○ Reject                                         │
+│  Remarks*     : [_______________________________________________]            │
+│                (Required if Rejected; Optional if Approved)                  │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 │                                                                              │
 │                    [CONFIRM DECISION]   [CANCEL]                             │
 │                                                                              │
@@ -8866,6 +8888,7 @@ A focused action screen where the approver confirms their decision to approve or
 | **Section 3E (per site)** | Applicable flag, Cost/Doc, Docs/Month, Doc Cost/Year (E)                                    | Read-only      |
 | **Site Summary**          | Cost breakdown table (A+B+C+D+E), Total Cost, Proposed Price, Site GM%                      | Read-only      |
 | **Section 4 (Overall)**   | Site-wise summary, Total Annual Cost/Price, Overall GM%                                     | Read-only      |
+| **Section 5** | GM%, Deadline date, Decision(approve/reject), Remarks|
 
 ---
 
@@ -8874,6 +8897,7 @@ A focused action screen where the approver confirms their decision to approve or
 | Field    | Type      | Required           | Validation                    |
 | -------- | --------- | ------------------ | ----------------------------- |
 | Decision | Radio     | Yes                | Approve / Reject              |
+
 | Remarks  | Text Area | Required if Reject | Free-text; max 500 characters |
 
 ---

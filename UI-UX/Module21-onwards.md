@@ -1545,32 +1545,65 @@ The core workspace for Support Agents. It presents the entire context of the tic
 
 ---
 
-## Screen Components
+### Ticket Header
 
-| Component         | Description                                                                   |
-| ----------------- | ----------------------------------------------------------------------------- |
-| **SLA & Status**  | Live updates of the dual-timers. Flags if the SLA has escalated to L1/L2/L3.  |
-| **Actions Menu**  | Direct triggers for popups covering Assignment, Task mapping, and Resolution. |
-| **Activity Line** | Immutable audit log of all status changes, notes, calls, and task creations.  |
+| Field Name        | Description                                           |
+| ----------------- | ----------------------------------------------------- |
+| Back to Dashboard | Navigates user back to the main dashboard             |
+| Ticket ID         | Unique identifier of the ticket                       |
+| Print / PDF       | Generates printable or downloadable version of ticket |
 
----
 
-## Ticket Details (Read-Only)
+### Ticket Summary
 
-| Field       | Type    | Description                                                   |
-| ----------- | ------- | ------------------------------------------------------------- |
-| Subject     | Display | **[Auto-fetched]** Short description of the issue.            |
-| Customer    | Display | **[Auto-fetched]** Customer name (from Module 18).            |
-| SO No       | Link    | **[Auto-fetched]** Linked Sales Order.                        |
-| Task ID     | Link    | **[Auto-fetched]** Linked Module 21 Task ID.                  |
-| Type        | Display | **[Auto-fetched]** Complaint / Request / Inquiry.             |
-| Created     | Display | **[System-generated]** Timestamp of ticket creation.          |
-| Caller      | Display | **[Auto-fetched]** Contact person and number.                 |
-| Description | Text    | **[Auto-fetched]** Full issue details.                        |
-| Status      | Badge   | **[System-driven]** Current ticket status.                    |
-| Priority    | Badge   | **[System-driven]** Priority level (determines SLA).          |
-| Assigned To | Display | **[Auto-fetched]** Current Support Agent handling the ticket. |
-| Esc. Lvl    | Badge   | **[System-driven]** Current Escalation Level (L1/L2/L3).      |
+| Field Name          | Description                                        |
+| ------------------- | -------------------------------------------------- |
+| Subject             | Short title describing the issue                   |
+| Customer            | Name of the customer associated with the ticket    |
+| SO No               | Reference number of the related sales order        |
+| Task ID             | Linked task created from the ticket                |
+| Type                | Category of the ticket (Complaint, Service, Query) |
+| Created Date & Time | Date and time when the ticket was created          |
+| Caller Name & Phone | Contact person who raised the issue                |
+| Description         | Detailed explanation of the issue                  |
+
+
+### SLA & Status
+
+| Field Name       | Description                                             |
+| ---------------- | ------------------------------------------------------- |
+| Status           | Current state of the ticket                             |
+| Priority         | Urgency level of the ticket                             |
+| Assigned To      | Support agent responsible for the ticket                |
+| Response SLA     | Indicates if response time target was met               |
+| Resolution SLA   | Indicates if resolution time target was met or breached |
+| Escalation Level | Current escalation stage based on SLA                   |
+
+
+### Actions
+
+| Field Name        | Description                             |
+| ----------------- | --------------------------------------- |
+| Assign / Reassign | Assigns or changes the responsible user |
+| Add Note / Reply  | Adds internal notes or replies          |
+| Convert to Task   | Converts the ticket into a task         |
+| Pause Ticket      | Temporarily pauses the ticket           |
+| Mark Resolved     | Marks the issue as resolved             |
+| Close Ticket      | Closes the ticket permanently           |
+
+
+### Activity Timeline
+
+| Field Name           | Description                                |
+| -------------------- | ------------------------------------------ |
+| Timestamp            | Time when the activity occurred            |
+| Activity Icon        | Visual indicator of activity type          |
+| Activity Description | Details of the activity performed          |
+| User/System          | Indicates who performed the action         |
+| Tags                 | Labels like internal note or system update |
+
+
+
 
 ---
 
@@ -2281,38 +2314,39 @@ Read-only detail screen showing the complete breakdown of a petty cash request. 
 
 ## View-Only Fields
 
-| Field            | Type     | Description                                                       |
-| ---------------- | -------- | ----------------------------------------------------------------- |
-| Request ID       | Display  | **[System-generated]** Unique request ID                          |
-| Status           | Badge    | **[System-driven]** Current lifecycle status                      |
-| Category         | Display  | **[Auto-fetched]** Expense category                               |
-| Expense Date     | Date     | **[Auto-fetched]** Expense date range (From – To)                 |
-| Amount (₹)       | Currency | **[Auto-fetched]** Claimed amount                                 |
-| Description      | Text     | **[Auto-fetched]** Expense description                            |
-| Related Task     | Link     | **[Auto-fetched]** Task reference (navigates to Module 21)        |
-| Related SO       | Link     | **[Auto-fetched]** Sales Order reference (navigates to Module 20) |
-| Bills / Receipts | File     | **[Auto-fetched]** Click to view/download uploaded documents      |
-| Justification    | Text     | **[Auto-fetched]** Context for the expense                        |
-| Payment Mode     | Display  | **[Auto-fetched]** Bank Transfer / UPI (from Section 3)           |
-| Account Holder   | Display  | **[Auto-fetched]** Name on account                                |
-| Bank Name        | Display  | **[Auto-fetched]** Employee's bank                                |
-| Account Number   | Display  | **[Auto-fetched]** Bank account number                            |
-| IFSC Code        | Display  | **[Auto-fetched]** Bank branch IFSC code                          |
-| Pre-Approved?    | Badge    | **[Auto-fetched]** Yes / No (from Section 4)                      |
-| Approval Status  | Badge    | **[System-driven]** Pending / Approved / Rejected / Returned      |
-| Reviewed By      | Display  | **[Auto-fetched]** Name of the reviewing manager                  |
-| Review Date      | Date     | **[Auto-fetched]** When the review was performed                  |
-| Approved Amount  | Currency | **[Auto-fetched]** Amount approved (may differ from requested)    |
-| Reviewer Remarks | Text     | **[Auto-fetched]** Notes from the approver                        |
-| Payment Status   | Badge    | **[System-driven]** Not Processed / Processed                     |
-| Payment Mode     | Display  | **[Auto-fetched]** Actual mode used for payment (from Finance)    |
-| Transaction Ref  | Display  | **[Auto-fetched]** Payment transaction reference (after payment)  |
-| Payment Date     | Date     | **[Auto-fetched]** When payment was made                          |
-| Submitted By     | Display  | **[Auto-fetched]** Name and role of requester                     |
-| Submitted Date   | DateTime | **[System-captured]** When the request was submitted              |
-| Branch name      | Display  | **[Auto-fetched]** Requester's branch                             |
-| Sent To          | Display  | **[Auto-fetched]** Recipients of the request                      |
-
+| Section                     | Field Name                 | Description                                                                 |
+|----------------------------|----------------------------|-----------------------------------------------------------------------------|
+| Header                     | Back to My Requests        | Navigates user back to request list                                        |
+| Header                     | Request ID                 | Unique identifier of the petty cash request                                |
+| Header                     | Status                     | Current status of the request (Pending, Approved, Rejected, etc.)          |
+| Expense Details            | Category                   | Type of expense (e.g., Local Conveyance, Materials, etc.)                  |
+| Expense Details            | Expense Date               | Date or date range when the expense occurred                               |
+| Expense Details            | Amount                     | Total expense amount requested                                             |
+| Expense Details            | Description                | Detailed explanation of the expense                                        |
+| Expense Details            | Related Task               | Linked task reference for which expense was incurred                       |
+| Expense Details            | Related SO                 | Linked sales order reference                                               |
+| Supporting Documents       | Bills / Receipts           | Uploaded proof documents for the expense                                   |
+| Supporting Documents       | Justification              | Reason explaining why the expense was necessary                            |
+| Bank / Payment Details     | Payment Mode (Requested)   | Preferred method for reimbursement (Bank Transfer, Cash, etc.)             |
+| Bank / Payment Details     | Account Holder Name        | Name of the bank account holder                                            |
+| Bank / Payment Details     | Bank Name                  | Name of the bank                                                           |
+| Bank / Payment Details     | Account Number             | Bank account number (masked/unmasked)                                      |
+| Bank / Payment Details     | IFSC Code                  | Bank branch identification code                                            |
+| Prior Approval             | Pre-Approved               | Indicates whether the expense was approved in advance                      |
+| Approval & Payment Status  | Approval Status            | Current approval stage of the request                                      |
+| Approval & Payment Status  | Reviewed By                | Name of the reviewer/approver                                              |
+| Approval & Payment Status  | Review Date                | Date when the request was reviewed                                         |
+| Approval & Payment Status  | Approved Amount            | Final approved reimbursement amount                                        |
+| Approval & Payment Status  | Reviewer Remarks           | Comments given by the approver                                             |
+| Approval & Payment Status  | Payment Status             | Status of reimbursement processing                                         |
+| Approval & Payment Status  | Payment Mode (Processed)   | Mode used for payment processing                                           |
+| Approval & Payment Status  | Transaction Reference      | Reference number of the transaction                                        |
+| Approval & Payment Status  | Payment Date               | Date when payment was made                                                 |
+| Submission Info            | Submitted By               | Name and role of the person who submitted the request                      |
+| Submission Info            | Submitted Date             | Date and time of submission                                                |
+| Submission Info            | Branch                     | Branch/location from where request was raised                              |
+| Submission Info            | Sent To                    | Users or roles to whom the request was sent for approval                   |
+| Actions                    | Back                       | Navigates back to previous screen                                          |
 ---
 
 ================================================================================
@@ -2747,3 +2781,6433 @@ Finance team form to process payment for approved petty cash requests. Captures 
 ---
 
 ================================================================================
+
+# 🎯 MODULE 25: HRM (HUMAN RESOURCE MANAGEMENT)
+
+## Overview
+
+HRM module manages Employee Data, Salary, Attendance, and Leave Management within the ERP system. It acts as a central hub for HR operations — providing a unified view of employee records, enabling month-wise salary management, tracking attendance via calendar integration with Task Management, and handling leave applications with approval workflows.
+
+**Module Connections:**
+
+- **Depends on:** Module 6 (Role Salary & Leave Configuration — role-wise salary structure, incentive config, statutory deductions, leave policy — **PRIMARY CONFIG SOURCE**), Module 8 (Employee Details — employee-level overrides of Module 6 defaults), Module 21 (Task Management — attendance integration via task execution logs), Module 7 (Branch), Module 5 (Roles)
+- **Used by:** Payroll processing, Attendance reports, Leave balance tracking, Management dashboards
+- **Role-Based Access:** Admin / HR roles have full access; Employees can submit leave requests via application
+
+**Dynamic Configuration Flow:**
+```
+Module 6 (Role Config)          Module 8 (Employee Creation)       Module 25 (HRM)
+─────────────────────           ────────────────────────────       ──────────────────
+Admin defines role-wise    →    Role selected → System auto-  →   Salary View auto-fetches
+salary structure, incentive      fetches Module 6 config →         employee's salary config
+config, statutory deductions,    Admin can OVERRIDE per             (from Mod 8, which inherited
+leave policy (CL/SL/PL),        employee → Saved to Employee       from Mod 6). HR can further
+carry forward, approval          record                             edit month-by-month.
+authority, reset cycle
+```
+
+> **Key Principle:** Module 6 sets **role-level defaults**. Module 8 allows **employee-level overrides**. Module 25 uses the **final employee-level values** for month-wise salary processing, attendance tracking, and leave management.
+
+---
+
+The module contains the following screens:
+
+- 25.1 Tab 1: Employee Management (Table View)
+- 25.2 Salary View (Per Employee)
+- 25.2.1 Salary Upload via Excel/CSV
+- 25.3 Attendance View (Per Employee — Calendar)
+- 25.3.1 Attendance Day Popup (View/Edit)
+- 25.3.2 Attendance Upload via Excel/CSV
+- 25.4 Leave Entry Form (Per Employee)
+- 25.5 Tab 2: Leave Requests (All Requests Dashboard)
+- 25.5.1 Leave Request Action Popup
+
+---
+
+================================================================================
+
+# 25.1 Tab 1: Employee Management
+
+**Description:**
+Default landing screen displaying all employees in a table view. Reuses employee fields from Module 8 (Employee Details) with three additional action columns — Salary, Attendance, and Leave — that open detailed sub-screens for each employee.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     HRM - HUMAN RESOURCE MANAGEMENT                          │
+│                                                                              │
+│  [Tab 1: Employee Management ●]           [Tab 2: Leave Requests]           │
+│                                                                              │
+│  ┌─ FILTERS ──────────────────────────────────────────────────────────────┐  │
+│  │ Branch      : [▼ All Branches ▼]       Department : [▼ Dropdown ▼]    │  │
+│  │ Designation : [▼ Dropdown ▼]           Role       : [▼ Dropdown ▼]    │  │
+│  │ Reporting Manager : [🔍 Searchable ▼]                                  │  │
+│  │ Status      : [▼ All / Active / Inactive ▼]                            │  │
+│  │ Created Date: [📅 From] — [📅 To]                                      │  │
+│  │                                                        [Reset Filters] │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  Search: [🔍 Employee ID / Name / Email / Contact Number_______________]    │
+│                                                                              │
+│  EMPLOYEE TABLE                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Emp ID│Employee Name│Email ID│Contact No│Designation│Department│Role     ││
+│  │──────┼─────────────┼────────┼──────────┼───────────┼──────────┼─────────││
+│  │EMP01 │John Doe     │j@..    │9876....  │Manager    │Sales     │Admin    ││
+│  │EMP02 │Jane Smith   │js@..   │9987....  │Technician │Operations│Staff    ││
+│  │EMP03 │Rahul Patel  │rp@..   │9765....  │Executive  │HR        │User     ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Branch│Reporting Manager│Status│Created Date│Salary│Attendance│Leave    ││
+│  │──────┼─────────────────┼──────┼────────────┼──────┼──────────┼─────────││
+│  │HSR   │Suraj Sharma     │Active│24-Jan-2026 │[💰]  │[📅]      │[🏖️]    ││
+│  │BTM   │Rohit Mehta      │Active│21-Jan-2026 │[💰]  │[📅]      │[🏖️]    ││
+│  │Indira│Anil Kumar       │Inact.│20-Jan-2026 │[💰]  │[📅]      │[🏖️]    ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  Pagination:  Previous   1   2   3   ...   10   Next                        │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Employee Table Fields (Reused from Module 8)
+
+| Field             | Type    | Source   | Notes                      |
+| ----------------- | ------- | -------- | -------------------------- |
+| Emp ID            | Text    | Mod 8    | Unique employee identifier |
+| Employee Name     | Text    | Mod 8    | Full name                  |
+| Email ID          | Email   | Mod 8    | Employee email             |
+| Contact Number    | Phone   | Mod 8    | Employee mobile            |
+| Designation       | Text    | Mod 8    | Job title                  |
+| Department        | Text    | Mod 8    | Employee department        |
+| Role              | Text    | Mod 8    | System role assigned       |
+| Branch            | Text    | Mod 8    | Assigned branch            |
+| Reporting Manager | Text    | Mod 8    | Direct reporting manager   |
+| Status            | Badge   | Mod 8    | Active / Inactive          |
+| Created Date      | Date    | Mod 8    | Employee creation date     |
+
+## HRM-Specific Action Columns
+
+| Column     | Type   | Action                                      |
+| ---------- | ------ | ------------------------------------------- |
+| Salary     | Button | Opens Salary View (Screen 25.2)             |
+| Attendance | Button | Opens Attendance Calendar View (Screen 25.3)|
+| Leave      | Button | Opens Leave Entry Form (Screen 25.4)        |
+
+---
+
+## Filters (Same as Module 8)
+
+| Filter             | Type         | Required | Description                                |
+| ------------------ | ------------ | -------- | ------------------------------------------ |
+| Branch             | Multi-select | No       | Filter employees by assigned branch        |
+| Department         | Dropdown     | No       | Filter by department                       |
+| Designation        | Dropdown     | No       | Filter by designation                      |
+| Role               | Dropdown     | No       | Filter by system role                      |
+| Reporting Manager  | Searchable   | No       | Filter by reporting manager                |
+| Status             | Dropdown     | No       | Active / Inactive                          |
+| Created Date Range | Date Range   | No       | Filter employees created within date range |
+
+---
+
+## Search
+
+| Field         | Type | Description                                        |
+| ------------- | ---- | -------------------------------------------------- |
+| Global Search | Text | Search by Employee ID, Name, Email, Contact Number |
+
+---
+
+## System Behaviour
+
+| Event         | System Response                         |
+| ------------- | --------------------------------------- |
+| Apply Filters | Table refreshes with filtered results   |
+| Search        | Filters records based on search keyword |
+| Click Salary  | Opens Salary View for that employee     |
+| Click Attend. | Opens Attendance Calendar for employee  |
+| Click Leave   | Opens Leave Entry Form for employee     |
+
+---
+
+================================================================================
+
+# 25.2 Salary View (Per Employee)
+
+**Description:**
+Detailed salary view for a specific employee. Displays month-wise salary breakdown with editable components, payment status tracking, and salary slip download. Accessible via Salary button in the Employee Management table.
+
+**Dynamic Data Source:** Salary components are auto-fetched from the employee record (Module 8 Step 3), which itself inherits defaults from the Role Configuration (Module 6 Step 2). HR can override any value month-by-month in this view. The Salary Type (CTC / Fixed / Hourly), Incentive Configuration, and Statutory Deduction applicability are all driven by the role config.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to Employee List]        SALARY: EMP01 — John Doe                  │
+│                                   Role: Sales Manager                        │
+│                                                                              │
+│  ┌─ MONTH FILTER ────────────────────────────────────────────────────────┐  │
+│  │ Month : [▼ March ▼]    Year : [▼ 2026 ▼]         [Apply]            │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ─── SALARY INFO (Auto from Module 6 → Module 8) ───────────────────────  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Salary Type     : CTC  (from Role Config — Mod 6 Step 2)               ││
+│  │ Salary Eff From : 01-Jan-2026     Salary Eff To : 31-Dec-2026          ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  ─── SALARY BREAKDOWN (March 2026) ──────────────────────────────────────  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Component              │ Type        │ Amount (₹)                       ││
+│  │────────────────────────┼─────────────┼──────────────────────────────────││
+│  │ EARNINGS                                                                ││
+│  │ Basic Salary           │ Fixed       │ [₹ 25,000____]                   ││
+│  │ HRA                    │ Fixed       │ [₹ 10,000____]                   ││
+│  │ Other Allowance        │ Fixed       │ [₹  5,000____]                   ││
+│  │ Incentive              │ Variable    │ [₹  3,000____]                   ││
+│  │ Deductions (General)   │ Fixed       │ [₹  2,000____]                   ││
+│  │────────────────────────┼─────────────┼──────────────────────────────────││
+│  │ STATUTORY DEDUCTIONS (shown only if applicable — from Mod 6 config)     ││
+│  │ PF                     │ Statutory   │ [₹  3,000____]  ☑ Applicable    ││
+│  │ ESI                    │ Statutory   │ [₹    750____]  ☑ Applicable    ││
+│  │ TDS                    │ Statutory   │ [₹  2,000____]  ☑ Applicable    ││
+│  │ Other Deductions       │ Variable    │ [₹      0____]                   ││
+│  │────────────────────────┼─────────────┼──────────────────────────────────││
+│  │ **GROSS SALARY**       │ Auto        │ ₹ 43,000                         ││
+│  │ **TOTAL DEDUCTIONS**   │ Auto        │ ₹  7,750                         ││
+│  │ **NET SALARY**         │ Auto        │ ₹ 35,250                         ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  ─── INCENTIVE CONFIGURATION (Dynamic — from Module 6 Step 2) ───────────  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Holiday Work Incentive : ☑ Applicable                                   ││
+│  │   • Type               : Fixed                                          ││
+│  │   • Amount             : [₹ 500____]                                    ││
+│  │                                                                          ││
+│  │ Overtime               : ☑ Applicable                                   ││
+│  │   • Type               : Per Hour                                       ││
+│  │   • Shift Type         : Night Shift                                    ││
+│  │   • Shift Incentive    : [₹ ____]                                       ││
+│  │   • Per Hour Pay       : [₹ 150____]                                    ││
+│  │   • Max OT Hours/Month : 40                                             ││
+│  │                                                                          ││
+│  │ OT Hours This Month    : [____] hrs     OT Amount: ₹ ____ (auto-calc)  ││
+│  │ Holiday Days Worked    : [____] days    Holiday Amt: ₹ ____ (auto-calc) ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  ─── STATUS ─────────────────────────────────────────────────────────────  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Payment Status  : [▼ Unpaid ▼]  (Paid / Unpaid / Due)                  ││
+│  │ Reason          : [Late joining — prorated salary________________]      ││
+│  │ Payment Date    : [📅 ________]  (Auto-filled when marked Paid)         ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  [💾 Save Changes]  [✅ Mark as Paid]  [📄 Download Salary Slip]            │
+│  [📤 Upload Salary Data]                                                     │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Salary Info Fields (Read-only — from Module 6 → Module 8)
+
+| Field             | Type     | Source   | Description                                        |
+| ----------------- | -------- | -------- | -------------------------------------------------- |
+| Salary Type       | Display  | Mod 6 S2 | CTC / Fixed / Hourly (from Role Config)            |
+| Salary Eff. From  | Display  | Mod 6 S2 | Salary rule start date                             |
+| Salary Eff. To    | Display  | Mod 6 S2 | Salary rule end date (optional)                    |
+
+> These fields are **read-only** in Module 25. They are configured in Module 6 (Step 2) and inherited via Module 8.
+
+---
+
+## Salary Component Fields (Editable per Month)
+
+| Field            | Type     | Required | Source          | Description                          |
+| ---------------- | -------- | -------- | --------------- | ------------------------------------ |
+| Basic Salary     | Currency | Yes      | Mod 6 S2→Mod 8  | Base salary (role default, editable) |
+| HRA              | Currency | No       | Mod 6 S2→Mod 8  | House Rent Allowance                 |
+| Other Allowance  | Currency | No       | Mod 6 S2→Mod 8  | Additional allowances                |
+| Incentive        | Currency | No       | Mod 6 S2→Mod 8  | Performance incentive                |
+| Deductions (Gen.)| Currency | No       | Mod 6 S2→Mod 8  | Standard deductions from role config |
+| Other Deductions | Currency | No       | HRM (Mod 25)    | Additional month-specific deductions |
+| Gross Salary     | Currency | Auto     | Calculated      | Sum of all earnings                  |
+| Total Deductions | Currency | Auto     | Calculated      | Sum of all deductions + statutory    |
+| Net Salary       | Currency | Auto     | Calculated      | Gross − Total Deductions             |
+
+---
+
+## Statutory Deductions (Conditional — from Module 6 Step 2)
+
+> These fields are **shown only if the corresponding checkbox is marked as applicable** in Module 6 Step 2 role configuration. If not applicable for the employee's role, the row is hidden.
+
+| Field          | Type     | Required    | Source   | Shown When              |
+| -------------- | -------- | ----------- | -------- | ----------------------- |
+| PF Deduction   | Currency | Conditional | Mod 6 S2 | PF Applicable = ☑ Yes   |
+| ESI Deduction  | Currency | Conditional | Mod 6 S2 | ESI Applicable = ☑ Yes  |
+| TDS Deduction  | Currency | Conditional | Mod 6 S2 | TDS Applicable = ☑ Yes  |
+
+---
+
+## Incentive Configuration (Dynamic — from Module 6 Step 2)
+
+> Incentive fields are **shown only if the corresponding incentive type is marked as applicable** in Module 6 Step 2. HR can edit the monthly values (OT hours, holiday days worked).
+
+| Field                             | Type     | Required    | Source          | Description                              |
+| --------------------------------- | -------- | ----------- | --------------- | ---------------------------------------- |
+| Holiday Work Incentive Applicable | Display  | Auto        | Mod 6 S2        | Yes/No (from role config)                |
+| Holiday Work Incentive Type       | Display  | Auto        | Mod 6 S2        | Fixed / Per Day / Per Hour               |
+| Holiday Work Incentive Amount     | Currency | Auto        | Mod 6 S2        | Default amount from role config          |
+| Holiday Days Worked (this month)  | Number   | Cond.       | HRM (Mod 25)    | HR enters actual holiday days worked     |
+| Holiday Incentive Amount          | Currency | Auto        | Calculated      | Days × Amount (auto-calculated)          |
+| Overtime Applicable               | Display  | Auto        | Mod 6 S2        | Yes/No (from role config)                |
+| Overtime Type                     | Display  | Auto        | Mod 6 S2        | Per Hour / Per Shift                     |
+| Overtime Shift Type               | Display  | Auto        | Mod 6 S2        | Shift description                        |
+| Overtime Shift Incentive          | Currency | Auto        | Mod 6 S2        | Shift incentive amount                   |
+| Per Hour Pay                      | Currency | Auto        | Mod 6 S2        | Hourly overtime rate                     |
+| Max OT Hours/Month                | Number   | Auto        | Mod 6 S2        | Monthly OT limit from role config        |
+| OT Hours This Month               | Number   | Cond.       | HRM (Mod 25)    | HR enters actual OT hours worked         |
+| OT Amount                         | Currency | Auto        | Calculated      | Hours × Per Hour Pay (auto-calculated)   |
+
+> **Final Net Salary Calculation:**
+> `Net Salary = (Basic + HRA + Allowance + Incentive + Holiday Incentive Amt + OT Amount) − (Deductions + PF + ESI + TDS + Other Deductions)`
+
+> **Note:** Initial salary values are auto-fetched from the employee record (Module 8 Step 3), which itself inherits defaults from Role Configuration (Module 6 Step 2). HR can override any editable value month-by-month. Read-only config fields (Salary Type, Statutory applicability, Incentive applicability) can only be changed via Module 6.
+
+---
+
+## Status Fields
+
+| Field          | Type     | Required | Options / Validation                    |
+| -------------- | -------- | -------- | --------------------------------------- |
+| Payment Status | Dropdown | Yes      | Paid / Unpaid / Due                     |
+| Reason         | Textarea | Cond.    | Required when status = Unpaid or Due    |
+| Payment Date   | Date     | Cond.    | Auto-filled on "Mark as Paid"; editable |
+
+---
+
+## Form Actions
+
+| Action                 | Condition       | Description                                  |
+| ---------------------- | --------------- | -------------------------------------------- |
+| **Save Changes**       | Always          | Saves edited salary components and status    |
+| **Mark as Paid**       | Status ≠ Paid   | Sets status to Paid, records payment date    |
+| **Download Salary Slip** | Status = Paid | Downloads PDF salary slip for selected month |
+| **Upload Salary Data** | Always          | Opens Upload Popup (Screen 25.2.1)           |
+
+---
+
+## Validation Rules
+
+| Field          | Rule                                              |
+| -------------- | ------------------------------------------------- |
+| Basic Salary   | Required, numeric, minimum 0                      |
+| All amounts    | Numeric, minimum 0                                |
+| Net Salary     | Auto-calculated, cannot be negative               |
+| Payment Status | Required                                          |
+| Reason         | Required if status = Unpaid or Due, min 10 chars  |
+| Salary Slip    | Download enabled only when status = Paid          |
+
+---
+
+================================================================================
+
+# 25.2.1 Salary Upload via Excel/CSV
+
+**Description:**
+Popup modal for bulk uploading salary data via Excel/CSV file. Provides a sample template download for reference.
+
+---
+
+## Popup Layout
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│                  UPLOAD SALARY DATA                  [X Close] │
+│                                                               │
+│  Upload salary data for multiple employees at once.          │
+│                                                               │
+│  ┌───────────────────────────────────────────────────────┐   │
+│  │                                                       │   │
+│  │       📁 Drag & Drop file here                       │   │
+│  │       or [Browse Files]                              │   │
+│  │                                                       │   │
+│  │       Supported: .xlsx, .xls, .csv                   │   │
+│  │       Max size: 10MB                                 │   │
+│  │                                                       │   │
+│  └───────────────────────────────────────────────────────┘   │
+│                                                               │
+│  📥 Download Sample Excel Sheet                              │
+│                                                               │
+│  Selected File: salary_march_2026.xlsx  ✅                    │
+│                                                               │
+│                    [Cancel]    [Upload & Process]             │
+└───────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Upload Fields
+
+| Field               | Type        | Required | Validation                        |
+| ------------------- | ----------- | -------- | --------------------------------- |
+| File Upload         | File Picker | Yes      | .xlsx / .xls / .csv, max 10MB    |
+| Download Sample     | Link/Button | —        | Downloads pre-formatted template  |
+
+> [!IMPORTANT]
+> To ensure correct data processing and avoid system errors, always **Download the Sample Excel Sheet** and enter your data into that pre-formatted template before uploading.
+
+---
+## Sample Excel Columns
+
+| Column             | Description                              |
+| ------------------ | ---------------------------------------- |
+| Emp ID             | Employee ID (must exist)                 |
+| Month              | Salary month (e.g., Mar-2026)            |
+| Basic Salary       | Basic pay amount                         |
+| HRA                | House Rent Allowance                     |
+| Other Allowance    | Additional allowances                    |
+| Incentive          | Incentive amount                         |
+| Deductions         | General deductions                       |
+| PF                 | PF deduction (if applicable)             |
+| ESI                | ESI deduction (if applicable)            |
+| TDS                | TDS deduction (if applicable)            |
+| Other Deductions   | Other deduction amount                   |
+| OT Hours           | Overtime hours worked (if applicable)    |
+| Holiday Days Worked| Holiday days worked (if applicable)      |
+| Payment Status     | Paid / Unpaid / Due                      |
+| Reason             | Reason (if Unpaid/Due)                   |
+
+## System Behaviour
+
+| Event              | Response                                          |
+| ------------------ | ------------------------------------------------- |
+| Upload & Process   | Validates file → shows preview → confirms import  |
+| Invalid Emp ID     | Row flagged with error; skipped                   |
+| Duplicate month    | Warning: existing data will be overwritten         |
+| Success            | Toast: "X records imported successfully"          |
+
+---
+
+================================================================================
+
+# 25.3 Attendance View (Per Employee — Calendar)
+
+**Description:**
+Calendar-based attendance view for a specific employee. Integrates data from Task Management (Module 21 — task execution logs) and Leave records. Each date cell shows attendance status with colour coding. Clicking a date opens a popup for viewing/editing punch-in/out details.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to Employee List]      ATTENDANCE: EMP01 — John Doe               │
+│                                                                              │
+│  ┌─ MONTH FILTER ────────────────────────────────────────────────────────┐  │
+│  │ Month : [▼ March ▼]    Year : [▼ 2026 ▼]         [Apply]            │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │  [◄ Prev Month]         MARCH 2026          [Next Month ►]           │  │
+│  │                                                                       │  │
+│  │  MON    TUE    WED    THU    FRI    SAT    SUN                        │  │
+│  │  ┌──────┬──────┬──────┬──────┬──────┬──────┬──────┐                   │  │
+│  │  │      │      │      │      │      │      │  1   │                   │  │
+│  │  │      │      │      │      │      │      │ 🟡WO │                   │  │
+│  │  ├──────┼──────┼──────┼──────┼──────┼──────┼──────┤                   │  │
+│  │  │  2   │  3   │  4   │  5   │  6   │  7   │  8   │                   │  │
+│  │  │ 🟢P  │ 🟢P  │ 🟢P  │ 🔴A  │ 🟢P  │ 🟢P  │ 🟡WO │                   │  │
+│  │  ├──────┼──────┼──────┼──────┼──────┼──────┼──────┤                   │  │
+│  │  │  9   │ 10   │ 11   │ 12   │ 13   │ 14   │ 15   │                   │  │
+│  │  │ 🟢P  │ 🟢P  │ 🔵L  │ 🔵L  │ 🟢P  │ HD   │ 🟡WO │                   │  │
+│  │  ├──────┼──────┼──────┼──────┼──────┼──────┼──────┤                   │  │
+│  │  │ 16   │ 17   │ 18   │ 19   │ 20   │ 21   │ 22   │                   │  │
+│  │  │ 🟢P  │ 🟢P  │ 🟢P  │ 🟢P  │ 🟢P  │ 🟢P  │ 🟡WO │                   │  │
+│  │  ├──────┼──────┼──────┼──────┼──────┼──────┼──────┤                   │  │
+│  │  │ 23●  │ 24   │ 25   │ 26   │ 27   │ 28   │ 29   │                   │  │
+│  │  │ 🟢P  │      │      │      │      │      │      │                   │  │
+│  │  └──────┴──────┴──────┴──────┴──────┴──────┴──────┘                   │  │
+│  │                                                                       │  │
+│  │  Legend: 🟢P Present  🔴A Absent  🔵L Leave  🟡WO Week Off  HD Holiday│  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  MONTHLY SUMMARY                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Working Days: 22 │ Present: 18 │ Absent: 1 │ Leave: 2 │ Holiday: 1    ││
+│  │ Week Off: 4      │                                                    ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  [+ Add Manual Entry]    [📤 Upload Attendance Data]                         │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Calendar Filters
+
+| Filter | Type     | Required | Description                                |
+| ------ | -------- | -------- | ------------------------------------------ |
+| Month  | Dropdown | Yes      | Select month to view attendance calendar   |
+| Year   | Dropdown | Yes      | Select year to view attendance calendar    |
+
+---
+
+## Calendar Cell Interaction
+
+| Action              | Result                                                |
+| ------------------- | ----------------------------------------------------- |
+| **Click on a date** | Opens Attendance Day Popup (Screen 25.3.1)            |
+| **Hover on date**   | Tooltip: Punch In/Out times, task count from Mod 21   |
+
+---
+
+## Attendance Status Types
+
+| Status    | Code | Color  | Description                           |
+| --------- | ---- | ------ | ------------------------------------- |
+| Present   | P    | 🟢     | Employee was present                  |
+| Absent    | A    | 🔴     | Employee was absent (no leave/task)   |
+| Leave     | L    | 🔵     | Approved leave for this date          |
+| Week Off  | WO   | 🟡     | Weekly off day (from Module 8 config) |
+| Holiday   | HD   | Grey   | Company holiday                       |
+| Half Day  | HD   | Orange | Half-day attendance                   |
+
+---
+
+## Data Sources for Attendance
+
+| Source                  | Data Pulled                                    |
+| ----------------------- | ---------------------------------------------- |
+| Module 21 (Tasks)       | Task execution logs — Started At, Completed At |
+| Module 25 (Leave)       | Approved leave records → mark as Leave         |
+| Module 8 (Employee)     | Weekly off configuration                       |
+| Manual Entry            | HR manually entered punch-in/out               |
+
+---
+
+## Monthly Summary Fields
+
+| Field            | Type   | Description                                |
+| ---------------- | ------ | ------------------------------------------ |
+| Working Days     | Number | Business days in the month                 |
+| Present          | Number | Days employee was present                  |
+| Absent           | Number | Days absent (unmarked, no leave)           |
+| Leave            | Number | Approved leave days                        |
+| Holiday          | Number | Company holidays                           |
+| Week Off         | Number | Weekly off count                           |
+
+---
+
+## Form Actions
+
+| Action                   | Description                                   |
+| ------------------------ | --------------------------------------------- |
+| **+ Add Manual Entry**   | Opens Attendance Day Popup for manual entry    |
+| **Upload Attendance**    | Opens Upload Popup (Screen 25.3.2)            |
+
+---
+
+================================================================================
+
+# 25.3.1 Attendance Day Popup (View/Edit)
+
+**Description:**
+Popup triggered on clicking any date cell in the attendance calendar. Shows punch-in/out times and allows HR to edit or add attendance data manually.
+
+---
+
+## Popup Layout
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│            ATTENDANCE — 23 March 2026 (Monday)       [X Close]│
+│            Employee: EMP01 — John Doe                         │
+│                                                               │
+│  Status: 🟢 Present                                          │
+│                                                               │
+│  ─── PUNCH DETAILS ───────────────────────────────────────   │
+│  Punch In Time*  : [▼ 09:00 AM ▼]                           │
+│  Punch Out Time* : [▼ 06:30 PM ▼]                           │
+│  Total Hours     : 9h 30m (auto-calculated)                  │
+│                                                               │
+│  ─── TASK INTEGRATION (from Module 21) ───────────────────   │
+│  Tasks Assigned  : 3                                         │
+│  Tasks Completed : 2                                         │
+│  Tasks Pending   : 1                                         │
+│                                                               │
+│  ─── NOTES ───────────────────────────────────────────────   │
+│  Description/Notes : [Field work at client site__________]   │
+│                                                               │
+│                     [Cancel]    [Save]                        │
+└───────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Popup Fields
+
+| Field          | Type     | Required | Validation                        |
+| -------------- | -------- | -------- | --------------------------------- |
+| Date           | Display  | Auto     | Selected date (read-only)         |
+| Employee       | Display  | Auto     | Employee name & ID (read-only)    |
+| Punch In Time  | Time     | Yes      | Must be before Punch Out          |
+| Punch Out Time | Time     | Yes      | Must be after Punch In            |
+| Total Hours    | Display  | Auto     | Punch Out − Punch In              |
+| Tasks Assigned | Display  | Auto     | Count from Module 21              |
+| Tasks Completed| Display  | Auto     | Count from Module 21              |
+| Tasks Pending  | Display  | Auto     | Count from Module 21              |
+| Description    | Textarea | No       | Max 500 characters                |
+| status         | Badge    | Auto     | Present, Absent, Leave.           |
+
+---
+
+================================================================================
+
+# 25.3.2 Attendance Upload via Excel/CSV
+
+**Description:**
+Popup modal for bulk uploading monthly attendance data. Same structure as Salary Upload (25.2.1).
+
+---
+
+## Popup Layout
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│              UPLOAD ATTENDANCE DATA                  [X Close] │
+│                                                               │
+│  Upload monthly attendance data for this employee.           │
+│                                                               │
+│  ┌───────────────────────────────────────────────────────┐   │
+│  │       📁 Drag & Drop file here                       │   │
+│  │       or [Browse Files]                              │   │
+│  │                                                       │   │
+│  │       Supported: .xlsx, .xls, .csv                   │   │
+│  │       Max size: 10MB                                 │   │
+│  └───────────────────────────────────────────────────────┘   │
+│                                                               │
+│  📥 Download Sample Excel Sheet                              │
+│                                                               │
+│                    [Cancel]    [Upload & Process]             │
+└───────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Popup Fields
+
+| Field           | Type        | Required | Validation                              | Description                        |
+| --------------- | ----------- | -------- | --------------------------------------- | ---------------------------------- |
+| File Upload     | File Picker | Yes      | .xlsx / .xls / .csv; Max 10MB           | Drag & drop or browse to select    |
+| Download Sample | Link        | —        | —                                       | Download the pre-formatted template|
+
+> [!IMPORTANT]
+> To ensure correct data processing and avoid system errors, always **Download the Sample Excel Sheet** and enter your data into that pre-formatted template before uploading.
+
+---
+
+## Sample Excel Columns(For Backend to create sample Excel)
+
+| Column         | Description                             |
+| -------------- | --------------------------------------- |
+| Emp ID         | Employee ID (must exist in Module 8)    |
+| Date           | Attendance date (DD-MM-YYYY)            |
+| Punch In Time  | Punch in time (HH:MM AM/PM)            |
+| Punch Out Time | Punch out time (HH:MM AM/PM)           |
+| Status         | Present / Absent / Half Day / Week Off  |
+| Notes          | Optional description or remarks         |
+
+---
+
+================================================================================
+
+# 25.4 Leave Entry Form (Per Employee)
+
+**Description:**
+Form to apply for leave on behalf of an employee. Triggered from the Leave button in Tab 1 (Employee Management). Creates a leave record that flows into Tab 2 (Leave Requests) for approval.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to Employee List]        LEAVE APPLICATION                          │
+│                                    Employee: EMP01 — John Doe                │
+│                                                                              │
+│  ─── LEAVE BALANCE (from Module 6 Step 3 → Module 8 Step 4) ─────────────  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Casual Leave (CL) : 8 / 12 remaining                                   ││
+│  │ Sick Leave (SL)   : 5 / 6 remaining                                    ││
+│  │ Paid Leave (PL)   : 10 / 15 remaining                                  ││
+│  │ Annual Allocation : 37 days                                             ││
+│  │ Total Available   : 23 days                                             ││
+│  │                                                                          ││
+│  │ Carry Forward    : ☑ Allowed (Max 10 days)                              ││
+│  │ Approval Auth.   : Director  (from Role Config)                         ││
+│  │ Reset Cycle      : Yearly                                               ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  ─── LEAVE DETAILS ──────────────────────────────────────────────────────  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │ Leave Type*     : [▼ Casual Leave / Sick Leave / Paid Leave ▼]         ││
+│  │ From Date*      : [📅 ____________]                                     ││
+│  │ To Date*        : [📅 ____________]                                     ││
+│  │ Total Days      : 2 (auto-calculated, excludes week offs & holidays)    ││
+│  │                                                                          ││
+│  │ Description*    : [__________________________________________________] │  │
+│  │                   [Textarea — reason for leave]                          │  │
+│  │                                                                          │  │
+│  │ Status*         : [▼ Approved / Pending / Rejected ▼]                  │  │
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  ─── LEAVE HISTORY ──────────────────────────────────────────────────────  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Leave ID  │Type │From       │To         │Days│Status   │Reason          ││
+│  │──────────┼─────┼───────────┼───────────┼────┼─────────┼────────────────││
+│  │LV-0045   │CL   │11-Mar-26  │12-Mar-26  │2   │✅ Appr. │Family function ││
+│  │LV-0038   │SL   │05-Mar-26  │05-Mar-26  │1   │✅ Appr. │Fever           ││
+│  │LV-0032   │PL   │20-Feb-26  │22-Feb-26  │3   │❌ Rej.  │Travel — denied ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│       [Submit Leave]                                        [Cancel]         │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Leave Form Fields
+
+| Field         | Type     | Required | Validation                                        |
+| ------------- | -------- | -------- | ------------------------------------------------- |
+| Employee ID   | Display  | Auto     | Pre-filled (Read-only)                            |
+| Employee Name | Display  | Auto     | Pre-filled (Read-only)                            |
+| Leave Type    | Dropdown | Yes      | Casual Leave / Sick Leave / Paid Leave             |
+| From Date   | Date     | Yes      | Cannot be past date                               |
+| To Date     | Date     | Yes      | Must be ≥ From Date                               |
+| Total Days  | Display  | Auto     | Calculated: To − From + 1 (excl. week offs/holidays) |
+| Description | Textarea | Yes      | Reason for leave, min 10 characters               |
+| Status      | Dropdown | Yes      | Select status (Approved / Pending / Rejected)      |
+
+## Leave Balance Fields (Read-only — from Module 6 Step 3 → Module 8 Step 4)
+
+> Leave entitlements are configured role-wise in Module 6 (Step 3) and inherited into the employee record via Module 8 (Step 4). Module 25 displays the **current remaining balance** after deducting approved leaves.
+
+| Field                      | Type    | Source          | Description                                |
+| -------------------------- | ------- | --------------- | ------------------------------------------ |
+| Casual Leave (CL)         | Display | Mod 6 S3→Mod 8  | Remaining / Total CL days per year         |
+| Sick Leave (SL)           | Display | Mod 6 S3→Mod 8  | Remaining / Total SL days per year         |
+| Paid Leave (PL)           | Display | Mod 6 S3→Mod 8  | Remaining / Total PL days per year         |
+| Annual Leave Allocation    | Display | Mod 6 S3→Mod 8  | Total annual leave allocation              |
+| Total Available            | Display | Calculated      | Sum of all remaining leaves                |
+| Carry Forward Allowed      | Display | Mod 6 S3        | Yes / No (from role config)                |
+| Max Carry Forward Days     | Display | Mod 6 S3        | Max days that can be carried (if allowed)  |
+| Leave Approval Authority   | Display | Mod 6 S3        | Role responsible for approving leaves      |
+| Leave Reset Cycle          | Display | Mod 6 S3        | Yearly / Monthly / Custom (From–To)        |
+
+## Leave History Fields (Read-only)
+
+| Field    | Type    | Description                                      |
+| -------- | ------- | ------------------------------------------------ |
+| Leave ID | Display | Unique Leave Request ID                          |
+| Type     | Badge   | Leave type (CL / SL / PL)                        |
+| From     | Display | Start date of leave                              |
+| To       | Display | End date of leave                                |
+| Days     | Display | Total working days on leave                      |
+| Status   | Badge   | Current status (Approved / Rejected / Pending)    |
+| Reason   | Display | Description / Reason provided by user            |
+
+## Validation Rules
+
+| Rule                         | Description                                       |
+| ---------------------------- | ------------------------------------------------- |
+| Leave balance check          | Cannot apply if requested days > available balance |
+| Duplicate dates              | Cannot overlap with existing approved leaves       |
+| From ≤ To                    | From Date must be on or before To Date            |
+| Description required         | Minimum 10 characters                             |
+| Weekend/Holiday exclusion    | Auto-exclude from total day count                 |
+
+---
+
+## Form Actions
+
+| Action           | Description                                           |
+| ---------------- | ----------------------------------------------------- |
+| **Submit Leave** | Creates leave record with selected status. **Note:** If status = Pending, it flows to Tab 2 for approval. If Approved/Rejected, it records directly in history. |
+| **Cancel**       | Discards and returns to Employee List                 |
+
+---
+
+================================================================================
+
+# 25.5 Tab 2: Leave Requests
+
+**Description:**
+Dashboard for HR/Admin to view and manage leave requests **submitted by employees via the Mobile App / Self-Service portal**. Manual entries added by HR in Screen 25.4 bypass this queue if marked as Approved/Rejected.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     HRM - HUMAN RESOURCE MANAGEMENT                          │
+│                                                                              │
+│  [Tab 1: Employee Management]           [Tab 2: Leave Requests ●]           │
+│                                                                              │
+│  ┌─ FILTERS ──────────────────────────────────────────────────────────────┐  │
+│  │ Branch      : [▼ All Branches ▼]       Department : [▼ Dropdown ▼]    │  │
+│  │ Status      : [▼ All / Pending / Approved / Rejected ▼]               │  │
+│  │ Leave Type  : [▼ All / CL / SL / PL ▼]                                │  │
+│  │ Date Range  : [📅 From] — [📅 To]                                      │  │
+│  │                                                        [Reset Filters] │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  Search: [🔍 Employee Name / Leave ID / Department_______________]          │
+│                                                                              │
+│  LEAVE REQUESTS TABLE                                                        │
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Leave ID │Emp Name    │Department│Leave Type│From       │To         │Days ││
+│  │─────────┼────────────┼──────────┼──────────┼───────────┼───────────┼─────││
+│  │LV-0050  │John Doe    │Sales     │CL        │25-Mar-26  │26-Mar-26  │2    ││
+│  │LV-0049  │Jane Smith  │Operations│SL        │24-Mar-26  │24-Mar-26  │1    ││
+│  │LV-0048  │Rahul Patel │HR        │PL        │27-Mar-26  │31-Mar-26  │3    ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│  ┌──────────────────────────────────────────────────────────────────────────┐│
+│  │Description            │Status     │Submitted Date    │Actions           ││
+│  │───────────────────────┼───────────┼──────────────────┼──────────────────││
+│  │Family function        │⏳ Pending  │23-Mar-26 10:30   │[View][✅][❌][⏳] ││
+│  │Fever and cold         │⏳ Pending  │23-Mar-26 09:15   │[View][✅][❌][⏳] ││
+│  │Annual vacation trip   │✅ Approved │22-Mar-26 14:00   │[View]            ││
+│  └──────────────────────────────────────────────────────────────────────────┘│
+│                                                                              │
+│  Pagination:  Previous   1   2   3   ...   10   Next                        │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Table Fields
+
+| Field          | Type     | Description                                   |
+| -------------- | -------- | --------------------------------------------- |
+| Leave ID       | Link     | Unique leave request ID (e.g., LV-0050)       |
+| Employee Name  | Display  | Name of employee who submitted leave          |
+| Department     | Display  | Employee's department                         |
+| Leave Type     | Badge    | CL / SL / PL                                  |
+| From Date      | Date     | Leave start date                              |
+| To Date        | Date     | Leave end date                                |
+| Days           | Number   | Total leave days (excl. week offs & holidays)  |
+| Description    | Display  | Reason for leave                              |
+| Status         | Badge    | Pending / Approved / Rejected                 |
+| Submitted Date | DateTime | When the request was submitted                |
+| Actions        | Buttons  | View / Approve / Reject / Mark Pending        |
+
+---
+
+## Actions (Table Row)
+
+| Action           | Icon | Condition         | Description                              |
+| ---------------- | ---- | ----------------- | ---------------------------------------- |
+| **View**         | 👁   | All statuses      | Opens Leave Request Popup (Screen 25.5.1)|
+| **Approve**      | ✅   | Status = Pending  | Approves leave request                   |
+| **Reject**       | ❌   | Status = Pending  | Opens popup with mandatory reason        |
+| **Mark Pending** | ⏳   | Status = Approved/Rejected | Reverts status to Pending       |
+
+---
+
+## Filters
+
+| Filter      | Type     | Options                               |
+| ----------- | -------- | ------------------------------------- |
+| Branch      | Dropdown | All Branches / Specific Branch        |
+| Department  | Dropdown | All / Specific Department             |
+| Status      | Dropdown | All / Pending / Approved / Rejected   |
+| Leave Type  | Dropdown | All / CL / SL / PL                   |
+| Date Range  | Date     | Custom From – To range                |
+
+## Search
+
+| Field         | Type | Description                                        |
+| ------------- | ---- | -------------------------------------------------- |
+| Global Search | Text | Search by Employee Name, Leave ID, Department      |
+
+---
+
+================================================================================
+
+# 25.5.1 Leave View Action Popup
+
+**Description:**
+Popup opened on View/Action click from the Leave Requests table. Shows full leave details and allows HR/Admin to update status and provide reason.
+
+---
+
+## Popup Layout
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│               LEAVE REQUEST DETAILS                  [X Close] │
+│               Leave ID: LV-0050                               │
+│                                                               │
+│  ─── EMPLOYEE INFORMATION ────────────────────────────────   │
+│  Employee Name : John Doe                                    │
+│  Employee ID   : EMP01                                       │
+│  Department    : Sales                                       │
+│  Branch        : HSR                                         │
+│                                                               │
+│  ─── LEAVE DETAILS ──────────────────────────────────────    │
+│  Leave Type    : Casual Leave                                │
+│  From Date     : 25-Mar-2026                                 │
+│  To Date       : 26-Mar-2026                                 │
+│  Total Days    : 2                                           │
+│  Description   : Family function — need 2 days off           │
+│                                                               │
+│  ─── LEAVE BALANCE (from Module 6 → Module 8) ──────────────────────────    │
+│  CL Remaining  : 8 / 12                                     │
+│  SL Remaining  : 5 / 6                                      │
+│  PL Remaining  : 10 / 15                                    │
+│  Annual Alloc. : 37 days                                    │
+│  Carry Forward : Allowed (Max 10)                           │
+│  Approval Auth.: Director                                   │
+│                                                               │
+│  ─── ACTION ─────────────────────────────────────────────    │
+│  Status*       : [▼ Pending / Approved / Rejected ▼]        │
+│  Reason*       : [__________________________________________]│
+│                  (Mandatory if Status = Rejected)            │
+│  Reviewed By   : Auto: Current Logged-in User               │
+│  Review Date   : Auto: Current Date & Time                   │
+│                                                               │
+│           [Cancel]    [Mark Pending]   [Reject]   [Approve]  │
+└───────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Popup Fields
+
+| Field        | Type     | Editable | Validation                             |
+| ------------ | -------- | -------- | -------------------------------------- |
+| Employee Name| Display  | No       | From employee record                   |
+| Employee ID  | Display  | No       | From employee record                   |
+| Department   | Display  | No       | From employee record                   |
+| Branch       | Display  | No       | From employee record                   |
+| Leave Type   | Display  | No       | CL / SL / PL                          |
+| From Date    | Display  | No       | Leave start date                       |
+| To Date      | Display  | No       | Leave end date                         |
+| Total Days   | Display  | No       | Auto-calculated                        |
+| Description  | Display  | No       | Employee's reason                      |
+| Casual Leave (CL) Bal| Display  | No       | Current CL balance (Mod 6 S3 → Mod 8 S4) |
+| Sick Leave (SL) Bal  | Display  | No       | Current SL balance (Mod 6 S3 → Mod 8 S4) |
+| Paid Leave (PL) Bal  | Display  | No       | Current PL balance (Mod 6 S3 → Mod 8 S4) |
+| Annual Alloc.   | Display  | No       | Total annual allocation (Mod 6 S3)       |
+| Carry Forward   | Display  | No       | Allowed/Not (Mod 6 S3)                   |
+| Approval Auth.  | Display  | No       | Role who approves (Mod 6 S3)             |
+| Status          | Dropdown | Yes      | Pending / Approved / Rejected            |
+| Reason          | Textarea | Cond.    | **Mandatory** when Status = Rejected, min 10 chars |
+| Reviewed By     | Display  | Auto     | Logged-in user (auto-captured)           |
+| Review Date     | Display  | Auto     | Current date/time (auto-recorded)        |
+
+---
+
+## Popup Actions
+
+| Action           | Behaviour                                                      |
+| ---------------- | -------------------------------------------------------------- |
+| **Approve**      | Status → Approved; deducts from leave balance; updates calendar |
+| **Reject**       | Status → Rejected; reason required; no balance change          |
+| **Mark Pending** | Status → Pending; resets review info                           |
+| **Cancel**       | Closes popup without changes                                   |
+
+---
+
+================================================================================
+
+# 🔐 Role-Based Access Control (RBAC)
+
+| Feature                    | Super Admin | Admin/HR | Manager | Employee (App User) |
+| -------------------------- | ----------- | -------- | ------- | ------------------- |
+| View Employee Table        | ✅          | ✅       | ✅ (own branch) | ❌           |
+| Edit Salary                | ✅          | ✅       | ❌       | ❌                  |
+| Upload Salary Data         | ✅          | ✅       | ❌       | ❌                  |
+| Download Salary Slip       | ✅          | ✅       | ❌       | ✅ (own only)       |
+| View/Edit Attendance       | ✅          | ✅       | ✅ (own branch) | ❌           |
+| Upload Attendance Data     | ✅          | ✅       | ❌       | ❌                  |
+| Apply Leave (for others)   | ✅          | ✅       | ❌       | ❌                  |
+| Submit Leave Request (own) | ✅          | ✅       | ✅       | ✅                  |
+| Approve/Reject Leave       | ✅          | ✅       | ✅ (own team) | ❌             |
+| View Leave Requests Tab    | ✅          | ✅       | ✅ (own team) | ❌             |
+
+---
+
+================================================================================
+
+# 📋 User Flow Descriptions
+
+## Flow 1: View Employee Salary
+```
+HR logs in → Module 25 → Tab 1 (Employee Management)
+  → Click [💰 Salary] on employee row
+  → Salary View opens → Select Month/Year
+  → View/Edit salary components
+  → Mark as Paid / Download Salary Slip
+```
+
+## Flow 2: Record Attendance
+```
+HR logs in → Module 25 → Tab 1 → Click [📅 Attendance]
+  → Calendar opens → Click on a date
+  → Popup opens → Enter Punch In / Punch Out / Notes
+  → Save → Calendar updates with status
+```
+
+## Flow 3: Apply Leave (HR on behalf of Employee)
+```
+HR logs in → Module 25 → Tab 1 → Click [🏖️ Leave]
+  → Leave Form opens → Select Leave Type, From/To, Description, and **Status**
+  → Submit → If status = Approved, leave balance deducted & attendance updated immediately.
+```
+
+## Flow 4: Employee Submits Leave (via App)
+```
+Employee (App User) logs in → Leave Section
+  → Fill From Date, To Date, Description
+  → Submit → Request appears in Module 25, Tab 2
+```
+
+## Flow 5: Approve/Reject Leave Request
+```
+HR/Admin → Module 25 → Tab 2 (Leave Requests)
+  → View pending requests → Click [View] or action buttons
+  → Popup opens → Review details
+  → Approve: Leave balance deducted, Attendance calendar updated
+  → Reject: Reason mandatory, no balance change
+```
+
+## Flow 6: Bulk Upload Salary Data
+```
+HR → Module 25 → Tab 1 → Click [💰 Salary] on any employee
+  → Click [📤 Upload Salary Data]
+  → Popup opens → Download sample sheet → Fill data
+  → Upload file → System validates & imports
+```
+
+---
+====================================================================================
+
+
+# 🎯 MODULE 26: TECHNICIAN PERFORMANCE & PRODUCTIVITY
+
+## Overview
+
+The Technician Performance & Productivity module provides **Operations Managers, Branch Managers**, and **Company Admins** with a centralized analytics dashboard to evaluate field technician performance. This module is entirely **read-only** — it **does not create new data**. Instead, it aggregates and calculates KPIs from existing operational modules to produce actionable performance insights.
+
+**Module Connections:**
+
+- **Depends on:** Module 21 (Task Management — tasks assigned, completed, overdue, re-tasks), Module 20 (Sales Orders — revenue data), Module 25 (HRM — attendance, working hours), Module 11 (Stock Management — material usage), Module 8 (Employee Master — technician details & roles), Module 7 (Branch — branch assignment)
+- **Used by:** Management Reporting, HR Reviews, Incentive / Bonus Calculations
+- **Data Nature:** 100% computed from existing modules. No manual data entry screens.
+
+---
+
+The module contains the following screens:
+
+- 26.1 Performance Dashboard — Employee Table View (Default)
+- 26.2 Individual Employee Performance View (Detailed)
+
+---
+
+================================================================================
+
+# 26.1 Performance Dashboard — Employee Table View
+
+**Description:**
+The default landing screen for Module 26. Displays a **datatable of all technicians** with computed performance and productivity KPIs. Managers can filter by branch, role, and date range to compare technicians side-by-side. Includes summary KPI cards at the top for a quick organizational overview.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                   TECHNICIAN PERFORMANCE & PRODUCTIVITY                      │
+│                                                                              │
+│  ┌─ FILTERS ──────────────────────────────────────────────────────────────┐  │
+│  │ Branch    : [▼ All Branches ▼]     Role  : [▼ All Roles ▼]            │  │
+│  │ Period    : [▼ This Month ▼]       Date  : [📅 01 Mar] – [📅 31 Mar]  │  │
+│  │ Search    : [🔍 Employee Name / ID___________]     [Reset Filters]    │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ ORG-LEVEL SUMMARY CARDS ──────────────────────────────────────────────┐  │
+│  │ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐   │  │
+│  │ │ 📊 Total     │ │ ✅ Avg       │ │ ⏱ Avg        │ │ ⭐ Avg       │   │  │
+│  │ │ Technicians  │ │ Completion   │ │ Utilization  │ │ Customer     │   │  │
+│  │ │              │ │ Rate         │ │ Rate         │ │ Rating       │   │  │
+│  │ │    24        │ │   87.5%      │ │   72.3%      │ │   4.2 / 5    │   │  │
+│  │ └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘   │  │
+│  │ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐   │  │
+│  │ │ 📋 Total     │ │ 💰 Total     │ │ 🔄 Avg       │ │ 🏆 Top       │   │  │
+│  │ │ Tasks        │ │ Revenue      │ │ Re-Task      │ │ Performer    │   │  │
+│  │ │ Completed    │ │ Generated    │ │ Rate         │ │              │   │  │
+│  │ │    312       │ │  ₹14,85,000  │ │   4.2%       │ │  Ravi S.     │   │  │
+│  │ └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘   │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ EMPLOYEE PERFORMANCE TABLE ───────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │ Rank│ Employee     │ Branch  │ Role        │ Tasks    │ Tasks     │    │  │
+│  │     │              │         │             │ Assigned │ Completed │    │  │
+│  │─────┼──────────────┼─────────┼─────────────┼──────────┼───────────┼    │  │
+│  │  1  │ Ravi S.      │ Mumbai  │ Sr. Tech    │    18    │    17     │    │  │
+│  │  2  │ Anjali M.    │ Mumbai  │ Technician  │    16    │    15     │    │  │
+│  │  3  │ Suresh K.    │ Pune    │ Technician  │    14    │    12     │    │  │
+│  │  4  │ Amit T.      │ Delhi   │ Technician  │    15    │    12     │    │  │
+│  │  5  │ Priya D.     │ Mumbai  │ Sr. Tech    │    12    │    10     │    │  │
+│  │                                                                        │  │
+│  │ Completion│ Utiliz. │ Tasks/ │ Revenue     │ Avg     │ Re-Task │      │  │
+│  │ Rate      │ Rate    │ Day    │ Contributed │ Rating  │ Rate    │Score │  │
+│  │───────────┼─────────┼────────┼─────────────┼─────────┼─────────┼──────│  │
+│  │  94.4%    │  78.5%  │  3.4   │ ₹2,85,000   │ 4.6⭐   │  2.1%   │ 92  │  │
+│  │  93.8%    │  75.2%  │  3.0   │ ₹2,40,000   │ 4.4⭐   │  3.5%   │ 88  │  │
+│  │  85.7%    │  70.1%  │  2.4   │ ₹1,80,000   │ 4.2⭐   │  5.0%   │ 78  │  │
+│  │  80.0%    │  68.3%  │  2.4   │ ₹1,95,000   │ 3.8⭐   │  6.2%   │ 72  │  │
+│  │  83.3%    │  65.0%  │  2.0   │ ₹1,50,000   │ 4.0⭐   │  4.8%   │ 75  │  │
+│  │                                                                        │  │
+│  │ Actions: [👁 View] per row                                              │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│    Shows 1 to 5 of 24 technicians.                [ < Previous | Next > ]    │
+│                                                                              │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Filters
+
+| Filter   | Type                | Options                                                                     |
+| -------- | ------------------- | --------------------------------------------------------------------------- |
+| Branch   | Dropdown            | All Branches / Specific Branch (from Module 7)                             |
+| Role     | Dropdown            | All Roles / Technician / Senior Technician (from Module 8)                 |
+| Period   | Dropdown            | This Week / This Month / This Quarter / Custom Range                       |
+| Date     | Date Range Picker   | From Date – To Date (enabled when Period = Custom Range)                   |
+| Search   | Text (Autocomplete) | Search by Employee Name or Employee ID                                     |
+
+---
+
+## Org-Level Summary Cards (Read-Only)
+
+> These cards display **aggregated KPIs across all filtered technicians** for the selected date range. All values are **auto-calculated**.
+
+| Card                  | Type    | Description                                                                         | Calculation Source                         |
+| --------------------- | ------- | ----------------------------------------------------------------------------------- | ------------------------------------------ |
+| Total Technicians     | Number  | Count of active technicians matching the current filter criteria                     | Module 8 (Active employees with Tech role) |
+| Avg Completion Rate   | Percent | Average of all individual technician completion rates                                | Module 21 (Task statuses)                  |
+| Avg Utilization Rate  | Percent | Average of all individual technician utilization rates                                | Module 21 + Module 25 (Attendance)         |
+| Avg Customer Rating   | Rating  | Average customer rating across all technicians' completed tasks                      | Module 21.6 (Customer Feedback)            |
+| Total Tasks Completed | Number  | Sum of all completed tasks across all filtered technicians                           | Module 21 (Status = Completed)             |
+| Total Revenue         | Currency| Sum of revenue generated from all completed tasks                                   | Module 20 (SO line item values)            |
+| Avg Re-Task Rate      | Percent | Average re-task percentage across all technicians                                    | Module 21 (Type = Re-Task)                 |
+| Top Performer         | Name    | Technician with the highest Performance Score in the selected period                 | Calculated (see Backend Logic)             |
+
+---
+
+## Employee Performance Table — Columns
+
+| Column              | Type           | Sortable | Description                                                                              | Data Source                      |
+| ------------------- | -------------- | -------- | ---------------------------------------------------------------------------------------- | -------------------------------- |
+| Rank                | Number         | No       | Auto-calculated rank based on Performance Score (highest first)                           | Calculated                       |
+| Employee Name       | Display (Link) | Yes      | Technician's full name. Click → opens Individual View (Screen 26.2)                      | Module 8                         |
+| Employee ID         | Display        | Yes      | Unique employee ID (e.g., EMP-00124)                                                     | Module 8                         |
+| Branch              | Display        | Yes      | Assigned branch name                                                                     | Module 7 → Module 8             |
+| Role                | Badge          | Yes      | Technician / Senior Technician                                                           | Module 8                         |
+| Tasks Assigned      | Number         | Yes      | Total tasks assigned to this technician in the selected period                            | Module 21                        |
+| Tasks Completed     | Number         | Yes      | Total tasks with Status = Completed                                                      | Module 21                        |
+| Tasks Pending       | Number         | Yes      | Total tasks with Status = Pending or In Progress                                         | Module 21                        |
+| Tasks Overdue       | Number         | Yes      | Tasks past scheduled date with Status ≠ Completed                                       | Module 21                        |
+| Completion Rate (%) | Percent        | Yes      | (Tasks Completed ÷ Tasks Assigned) × 100                                                 | Calculated                       |
+| Utilization Rate (%)| Percent        | Yes      | (Total Task Hours ÷ Total Working Hours) × 100                                           | Module 21 + Module 25            |
+| Tasks / Day         | Number         | Yes      | Tasks Completed ÷ Total Working Days                                                     | Calculated                       |
+| Revenue Contributed | Currency       | Yes      | Total revenue from tasks where this technician was Primary or Support                    | Module 20 → Module 21           |
+| Avg Customer Rating | Rating (⭐)    | Yes      | Average of all customer ratings for this technician's completed tasks                    | Module 21.6                      |
+| Re-Task Rate (%)    | Percent        | Yes      | (Re-Tasks Count ÷ Tasks Completed) × 100                                                | Module 21                        |
+| Material Efficiency | Percent        | Yes      | (Total Std Qty ÷ Total Actually Used Qty) × 100 — capped at 100%                        | Module 21.6 + Module 11          |
+| Performance Score   | Score (0-100)  | Yes      | Weighted composite score (see Backend Calculation Logic)                                 | Calculated                       |
+| Actions             | Button         | No       | [👁 View] — Opens Individual Employee Performance View (Screen 26.2)                    | —                                |
+
+---
+
+## Table Row Actions
+
+| Action   | Icon | Condition | Description                                           |
+| -------- | ---- | --------- | ----------------------------------------------------- |
+| **View** | 👁   | Always    | Opens Individual Performance View (Screen 26.2)       |
+
+---
+
+
+
+================================================================================
+
+# 26.2 Individual Employee Performance View
+
+**Description:**
+A comprehensive, read-only performance profile of a single technician. Shows personal details, KPI scorecards, task breakdown, revenue details, material usage analysis, customer feedback history, and re-task records. All data is scoped to the selected date range filter.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back to Dashboard]              EMPLOYEE PERFORMANCE PROFILE            │
+│                                                                              │
+│  Filters: Period: [▼ This Month ▼]   Date: [📅 01 Mar] – [📅 31 Mar 2026]  │
+│                                                                              │
+│  ┌─ EMPLOYEE INFO ────────────────────────────────────────────────────────┐  │
+│  │  ┌─────┐                                                               │  │
+│  │  │ 👤  │  Ravi S.                  EMP-00124                          │  │
+│  │  │Photo│  Senior Technician        Mumbai Branch                      │  │
+│  │  │     │  📱 9876543210            📧 ravi.s@company.com              │  │
+│  │  └─────┘  Joining Date: 15 Jun 2024   Status: 🟢 Active              │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ KPI SCORECARDS ───────────────────────────────────────────────────────┐  │
+│  │ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐   │  │
+│  │ │ 🏆 Overall   │ │ ✅ Completion│ │ ⏱ Utilization│ │ 📊 Tasks/Day │   │  │
+│  │ │ Score        │ │ Rate         │ │ Rate         │ │              │   │  │
+│  │ │              │ │              │ │              │ │              │   │  │
+│  │ │   92 / 100   │ │   94.4%      │ │   78.5%      │ │    3.4       │   │  │
+│  │ │  🟢 Excellent │ │  🟢 Above Avg│ │  🟢 Good     │ │  🟢 High     │   │  │
+│  │ └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘   │  │
+│  │ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐   │  │
+│  │ │ ⭐ Avg       │ │ 💰 Revenue   │ │ 🧪 Material  │ │ 🔄 Re-Task  │   │  │
+│  │ │ Customer     │ │ Contribution │ │ Efficiency   │ │ Rate         │   │  │
+│  │ │ Rating       │ │              │ │              │ │              │   │  │
+│  │ │  4.6 / 5.0   │ │  ₹2,85,000   │ │   96.2%      │ │   2.1%       │   │  │
+│  │ │  🟢 Excellent │ │  🟢 Top 10%  │ │  🟢 Optimal  │ │  🟢 Low      │   │  │
+│  │ └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘   │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ TASK PERFORMANCE BREAKDOWN ───────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Total Assigned : 18          Completed    : 17                        │  │
+│  │  Pending        : 1           Overdue      : 0                         │  │
+│  │  Normal Tasks   : 15          Re-Tasks     : 2                         │  │
+│  │  On-Time Rate   : 94.1%      (16 of 17 completed within schedule)     │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ TIME & ATTENDANCE ANALYSIS ───────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Working Days     : 22         Present Days  : 20                      │  │
+│  │  Leave Days       : 1          Absent Days   : 0                       │  │
+│  │  Week Offs        : 8          Late Arrivals : 1                       │  │
+│  │  Attendance Rate  : 95.5%     (20 of 21 working days excl. leave)     │  │
+│  │                                                                        │  │
+│  │  Total Working Hrs: 168h       Task Execution Hrs: 131.9h             │  │
+│  │  Avg Hrs / Day    : 8h 24m     Avg Task Time     : 1h 45m             │  │
+│  │  Travel Time (est): 36.1h      Idle / Gap Time   : 0h                 │  │
+│  │  Utilization Rate : 78.5%     (Task Hrs ÷ Working Hrs × 100)          │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ REVENUE CONTRIBUTION ─────────────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Total Revenue Generated : ₹2,85,000                                   │  │
+│  │  As Primary Technician   : ₹2,10,000  (12 tasks)                      │  │
+│  │  As Support Technician   : ₹75,000    (5 tasks, shared proportionally) │  │
+│  │  Avg Revenue / Task      : ₹16,765                                     │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ MATERIAL USAGE EFFICIENCY ────────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │ Chemical / Product    │ Std Qty  │ Actually Used │ Variance │ Eff. %   │  │
+│  │───────────────────────┼──────────┼───────────────┼──────────┼──────────│  │
+│  │ Alpha Cypermethrin     │ 2,040 ml │ 1,870 ml      │ -170 ml  │ 109.1%  │  │
+│  │ Fipronil Gel           │ 34 tubes │ 34 tubes      │ 0        │ 100.0%  │  │
+│  │ Bromadiolone Cake      │ 48 nos   │ 52 nos        │ +4 nos   │ 92.3%   │  │
+│  │ Glue Trap Board        │ 80 nos   │ 78 nos        │ -2 nos   │ 102.6%  │  │
+│  │─────────────────────────────────────────────────────────────────────────│  │
+│  │ Overall Material Efficiency: 96.2%                                     │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ CUSTOMER SATISFACTION ────────────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Average Rating       : ⭐ 4.6 / 5.0                                   │  │
+│  │  Total Feedback Count : 17                                              │  │
+│  │                                                                        │  │
+│  │  Rating Breakdown:                                                      │  │
+│  │  5-Star: 12  |  4-Star: 3  |  3-Star: 2  |  2-Star: 0  |  1-Star: 0   │  │
+│  │                                                                        │  │
+│  │  Recent Feedback:                                                       │  │
+│  │  ┌──────────────────────────────────────────────────────────────┐      │  │
+│  │  │ TASK-2026-0201 │ ABC Corp │ 23 Mar │ ⭐⭐⭐⭐⭐ │ "Excellent" │      │  │
+│  │  │ TASK-2026-0198 │ PQR Foods│ 22 Mar │ ⭐⭐⭐⭐   │ "Good work" │      │  │
+│  │  │ TASK-2026-0195 │ XYZ Hotel│ 21 Mar │ ⭐⭐⭐⭐⭐ │ "Thorough"  │      │  │
+│  │  └──────────────────────────────────────────────────────────────┘      │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ RE-TASK / REWORK TRACKING ────────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Re-Tasks Assigned  : 2            Re-Task Rate : 2.1%                 │  │
+│  │  (Re-Tasks as Primary ÷ Total Completed as Primary × 100)             │  │
+│  │                                                                        │  │
+│  │  Re-Task Details:                                                       │  │
+│  │  ┌──────────────────────────────────────────────────────────────┐      │  │
+│  │  │ Task ID         │ Original Task │ Customer │ Date    │Status │      │  │
+│  │  │─────────────────┼───────────────┼──────────┼─────────┼───────│      │  │
+│  │  │ TASK-2026-0205  │ TASK-2026-0180│ ABC Corp │ 25 Mar  │ Done  │      │  │
+│  │  │ TASK-2026-0215  │ TASK-2026-0199│ LMN Pvt  │ 28 Mar  │Pendng │      │  │
+│  │  └──────────────────────────────────────────────────────────────┘      │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ PERFORMANCE SCORE BREAKDOWN ──────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Factor                 │ Weight │ Raw Value │ Weighted Score           │  │
+│  │─────────────────────────┼────────┼───────────┼──────────────────────────│  │
+│  │ Task Completion Rate    │  30%   │  94.4%    │  28.3 / 30              │  │
+│  │ Time Utilization Rate   │  15%   │  78.5%    │  11.8 / 15              │  │
+│  │ Customer Satisfaction   │  25%   │  4.6 / 5  │  23.0 / 25              │  │
+│  │ Revenue Contribution    │  10%   │  Top 10%  │   9.5 / 10              │  │
+│  │ Material Efficiency     │  10%   │  96.2%    │   9.6 / 10              │  │
+│  │ Re-Task Penalty         │  10%   │  2.1%     │   9.8 / 10              │  │
+│  │─────────────────────────┼────────┼───────────┼──────────────────────────│  │
+│  │ TOTAL PERFORMANCE SCORE │ 100%   │           │  92.0 / 100  🟢         │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  Score Rating: 🟢 Excellent (90-100) | 🔵 Good (75-89) |                    │
+│               🟡 Average (60-74) | 🔴 Below Average (<60)                   │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Employee Info Section (Read-Only)
+
+| Field          | Type    | Description                                               | Source           |
+| -------------- | ------- | --------------------------------------------------------- | ---------------- |
+| Profile Photo  | Image   | Employee photograph                                       | Module 8         |
+| Employee Name  | Display | Full name of the technician                               | Module 8         |
+| Employee ID    | Display | Unique ID (e.g., EMP-00124)                               | Module 8         |
+| Role           | Badge   | Technician / Senior Technician                            | Module 8         |
+| Branch         | Display | Assigned branch name                                      | Module 7 → 8    |
+| Phone          | Display | Registered mobile number                                  | Module 8         |
+| Email          | Display | Registered email address                                  | Module 8         |
+| Joining Date   | Date    | Date of employment start                                  | Module 8         |
+| Status         | Badge   | 🟢 Active / 🔴 Inactive                                   | Module 8         |
+
+---
+
+## KPI Scorecards (Read-Only)
+
+| Card                   | Type         | Description                                                       | Calculation                                          |
+| ---------------------- | ------------ | ----------------------------------------------------------------- | ---------------------------------------------------- |
+| Overall Score          | Score / 100  | Weighted composite performance score                               | See Backend Calculation Logic                        |
+| Score Grade            | Badge        | 🟢 Excellent / 🔵 Good / 🟡 Average / 🔴 Below Average            | Based on score range thresholds                      |
+| Completion Rate        | Percent      | Percentage of assigned tasks that were completed                   | (Completed ÷ Assigned) × 100                         |
+| Utilization Rate       | Percent      | Percentage of working hours spent on actual task execution          | (Task Hours ÷ Working Hours) × 100                   |
+| Tasks / Day            | Number       | Average tasks completed per working day                            | Completed ÷ Working Days Present                     |
+| Avg Customer Rating    | Rating (⭐)  | Mean of all customer ratings from completed tasks                  | Sum(ratings) ÷ Count(rated tasks)                    |
+| Revenue Contribution   | Currency     | Total revenue from tasks where this technician participated        | Sum of SO line item values (split logic applied)     |
+| Material Efficiency    | Percent      | How closely actual material usage matches the standard requirement | (Std Qty ÷ Actually Used Qty) × 100 — capped at 100 |
+| Re-Task Rate           | Percent      | Percentage of tasks that required a re-service                     | (Re-Tasks as Primary ÷ Completed as Primary) × 100  |
+
+---
+
+## Task Performance Breakdown (Read-Only)
+
+| Field                | Type    | Description                                                   | Source              |
+| -------------------- | ------- | ------------------------------------------------------------- | ------------------- |
+| Total Assigned       | Number  | All tasks assigned to this technician in the selected period  | Module 21           |
+| Completed            | Number  | Tasks with Status = Completed                                 | Module 21           |
+| Pending              | Number  | Tasks with Status = Pending or In Progress                    | Module 21           |
+| Overdue              | Number  | Past-date tasks with Status ≠ Completed                       | Module 21           |
+| Normal Tasks         | Number  | Tasks with Type = Normal (from SO)                            | Module 21           |
+| Re-Tasks             | Number  | Tasks with Type = Re-Task (from tickets)                      | Module 21           |
+| On-Time Rate         | Percent | Completed tasks that were finished within their scheduled slot | Module 21           |
+
+---
+
+## Time & Attendance Analysis (Read-Only)
+
+| Field                | Type    | Description                                                                     | Source                      |
+| -------------------- | ------- | ------------------------------------------------------------------------------- | --------------------------- |
+| Working Days         | Number  | Total working days in the period (excluding week offs and holidays)              | Module 25 + Module 6        |
+| Present Days         | Number  | Days with a Punch-In record                                                     | Module 25 (Attendance)      |
+| Leave Days           | Number  | Approved leave days in the period                                                | Module 25 (Leave)           |
+| Absent Days          | Number  | Working days with no Punch-In and no approved leave                              | Module 25 (Attendance)      |
+| Week Offs            | Number  | Weekends / configured week-off days                                              | Module 6 (Config)           |
+| Late Arrivals        | Number  | Days where Punch-In was after designated shift start time                        | Module 25 (Attendance)      |
+| Attendance Rate      | Percent | (Present Days ÷ Effective Working Days) × 100 — excl. approved leave            | Calculated                  |
+| Total Working Hours  | Hours   | Sum of (Punch Out − Punch In) across all present days                           | Module 25 (Attendance)      |
+| Task Execution Hours | Hours   | Sum of (Actual End Time − Actual Start Time) for all completed tasks            | Module 21.6                 |
+| Avg Hours / Day      | Hours   | Total Working Hours ÷ Present Days                                              | Calculated                  |
+| Avg Task Time        | Hours   | Task Execution Hours ÷ Tasks Completed                                          | Calculated                  |
+| Travel Time (est.)   | Hours   | Total Working Hours − Task Execution Hours (approximate travel + transit time)  | Calculated                  |
+| Utilization Rate     | Percent | (Task Execution Hours ÷ Total Working Hours) × 100                              | Calculated                  |
+
+
+---
+
+## Revenue Contribution (Read-Only)
+
+| Field                     | Type     | Description                                                                                                | Source                    |
+| ------------------------- | -------- | ---------------------------------------------------------------------------------------------------------- | ------------------------- |
+| Total Revenue Generated   | Currency | Sum of SO line item values for all completed tasks involving this technician                                | Module 20 → Module 21    |
+| As Primary Technician     | Currency | Revenue from tasks where this technician was the Primary (100% attribution)                                 | Module 21 (Primary role)  |
+| Primary Task Count        | Number   | Count of completed tasks as Primary                                                                         | Module 21                 |
+| As Support Technician     | Currency | Revenue from tasks where this technician was a Support (proportional share)                                 | Module 21 (Support role)  |
+| Support Task Count        | Number   | Count of completed tasks as Support                                                                          | Module 21                 |
+| Avg Revenue / Task        | Currency | Total Revenue ÷ Total Tasks Completed                                                                       | Calculated                |
+
+
+---
+
+## Material Usage Efficiency (Read-Only)
+
+| Column              | Type    | Description                                                                  | Source                   |
+| ------------------- | ------- | ---------------------------------------------------------------------------- | ------------------------ |
+| Chemical / Product  | Display | Name of chemical/product used across all tasks                                | Module 12 → Module 21.6 |
+| Std Qty (Total)     | Number  | Sum of standard/required quantities across all tasks for this chemical        | Module 21 (Task Plan)    |
+| Actually Used (Total)| Number | Sum of actually used quantities logged by the technician                      | Module 21.6              |
+| Variance            | Number  | Std Qty − Actually Used. Positive = saved, Negative = overused               | Calculated               |
+| Efficiency %        | Percent | (Std Qty ÷ Actually Used) × 100. Capped at 100% for underuse                | Calculated               |
+| Overall Efficiency  | Percent | Weighted average efficiency across all chemicals (weighted by Std Qty value) | Calculated               |
+
+---
+
+## Customer Satisfaction (Read-Only)
+
+| Field                | Type    | Description                                                        | Source              |
+| -------------------- | ------- | ------------------------------------------------------------------ | ------------------- |
+| Average Rating       | Rating  | Mean rating across all rated completed tasks                       | Module 21.6         |
+| Total Feedback Count | Number  | Count of tasks with customer ratings                                | Module 21.6         |
+
+| 5-Star Count         | Number  | Tasks rated 5 stars                                                 | Module 21.6         |
+| 4-Star Count         | Number  | Tasks rated 4 stars                                                 | Module 21.6         |
+| 3-Star Count         | Number  | Tasks rated 3 stars                                                 | Module 21.6         |
+| 2-Star Count         | Number  | Tasks rated 2 stars                                                 | Module 21.6         |
+| 1-Star Count         | Number  | Tasks rated 1 star                                                  | Module 21.6         |
+| Recent Feedback List | Table   | Last 5 feedback entries showing Task ID, Customer, Date, Rating, Comment | Module 21.6   |
+
+### Recent Feedback Table Columns
+
+| Column           | Type    | Description                                  |
+| ---------------- | ------- | -------------------------------------------- |
+| Task ID          | Link    | Task identifier — click opens Task Detail    |
+| Customer         | Display | Customer business name                       |
+| Date             | Date    | Service completion date                      |
+| Rating           | Stars   | Customer rating (1-5)                        |
+| Feedback Comment | Display | Written feedback (truncated to 50 chars)     |
+
+---
+
+## Re-Task / Rework Tracking (Read-Only)
+
+| Field              | Type    | Description                                                                 | Source              |
+| ------------------ | ------- | --------------------------------------------------------------------------- | ------------------- |
+| Re-Tasks Assigned  | Number  | Count of Re-Task type tasks assigned to this technician (as Primary)         | Module 21           |
+| Re-Task Rate       | Percent | (Re-Tasks as Primary ÷ Total Completed as Primary) × 100                    | Calculated          |
+| Re-Task Details    | Table   | List of all re-tasks with linked original task details                       | Module 21           |
+
+### Re-Task Detail Table Columns
+
+| Column         | Type    | Description                                      |
+| -------------- | ------- | ------------------------------------------------ |
+| Task ID        | Link    | Re-Task identifier — click opens Task Detail     |
+| Original Task  | Link    | Original task that triggered the re-service      |
+| Customer       | Display | Customer name                                    |
+| Date           | Date    | Scheduled date of re-task                        |
+| Status         | Badge   | Completed / Pending                              |
+
+---
+
+## Performance Score Breakdown (Read-Only)
+
+| Field                  | Type       | Description                                                             |
+| ---------------------- | ---------- | ----------------------------------------------------------------------- |
+| Factor Name            | Display    | Name of the KPI factor (e.g., Task Completion Rate)                     |
+| Weight                 | Percent    | Assigned weight in the performance formula                              |
+| Raw Value              | Display    | The actual calculated value (e.g., 94.4%, 4.6/5, etc.)                 |
+| Weighted Score         | Score      | (Normalized Raw Value × Weight) — the contribution to the total score  |
+| Total Performance Score| Score /100 | Sum of all weighted scores                                              |
+| Score Rating Badge     | Badge      | 🟢 Excellent / 🔵 Good / 🟡 Average / 🔴 Below Average                 |
+
+---
+
+## Form Actions
+
+| Action              | Description                                                        |
+| ------------------- | ------------------------------------------------------------------ |
+| **Back**            | Returns to Performance Dashboard (Screen 26.1)                     |
+
+---
+
+================================================================================
+
+# ⚙️ Backend Calculation Logic
+
+> This section documents the **exact formulas and logic** used by the backend to compute all performance metrics. This is the single source of truth for the development team.
+
+---
+
+## 1. Task Performance Calculations
+
+### 1.1 Completion Rate
+
+```
+Completion Rate (%) = (Tasks Completed ÷ Tasks Assigned) × 100
+```
+
+| Variable         | Source                            | Filter                                      |
+| ---------------- | --------------------------------- | ------------------------------------------- |
+| Tasks Completed  | Module 21 → Task records          | Status = "Completed" AND Technician = X AND Date within range |
+| Tasks Assigned   | Module 21 → Task records          | All tasks where Technician = X (Primary OR Support) AND Date within range |
+
+**Edge Cases:**
+- If Tasks Assigned = 0, Completion Rate = 0% (not null/error)
+- Both Primary and Support assignments count as "Assigned"
+- Only tasks where technician is Primary count toward "Completed" attribution
+
+---
+
+### 1.2 On-Time Completion Rate
+
+```
+On-Time Rate (%) = (On-Time Completed ÷ Tasks Completed) × 100
+```
+
+| Variable          | Definition                                                                 |
+| ----------------- | -------------------------------------------------------------------------- |
+| On-Time Completed | Tasks where `Actual End Time` ≤ `Scheduled End Time + Buffer (30 min)`     |
+
+**Business Rule:** A 30-minute buffer is allowed beyond the scheduled end time before a task is considered "delayed".
+
+---
+
+### 1.3 Overdue Identification
+
+```
+IF Task.Scheduled_Date < TODAY
+   AND Task.Status ∉ ['Completed', 'Cancelled']
+THEN Task.Status = 'Overdue'
+```
+
+---
+
+## 2. Time & Utilization Calculations
+
+### 2.1 Total Working Hours
+
+```
+Total Working Hours = SUM(Punch_Out_Time − Punch_In_Time)
+    for all days where Attendance.Status = 'Present'
+    within the selected date range
+```
+
+**Source:** Module 25 → Attendance records
+
+---
+
+### 2.2 Task Execution Hours
+
+```
+Task Execution Hours = SUM(Actual_End_Time − Actual_Start_Time)
+    for all tasks where Status = 'Completed'
+    AND Technician = X (Primary or Support)
+    within the selected date range
+```
+
+**Source:** Module 21.6 → Completion log
+
+---
+
+### 2.3 Utilization Rate
+
+```
+Utilization Rate (%) = (Task Execution Hours ÷ Total Working Hours) × 100
+```
+
+**Edge Cases:**
+- If Total Working Hours = 0, Utilization Rate = 0%
+- Capped at 100% (in rare cases where task time exceeds attendance time due to overtime)
+
+---
+
+### 2.4 Tasks Per Day (Productivity)
+
+```
+Tasks Per Day = Tasks Completed ÷ Present Days
+```
+
+| Variable      | Source                                              |
+| ------------- | --------------------------------------------------- |
+| Present Days  | Module 25 → Days with Punch-In within date range   |
+
+---
+
+### 2.5 Average Task Duration
+
+```
+Avg Task Duration = Task Execution Hours ÷ Tasks Completed
+```
+
+---
+
+## 3. Revenue Contribution Calculations
+
+### 3.1 Revenue Attribution Logic
+
+Revenue is attributed to technicians based on their role in the task:
+
+#### Case A: Single Technician (Primary Only, No Support)
+
+```
+Technician Revenue = SO Line Item Value (100%)
+```
+
+#### Case B: Primary + Support Technician(s)
+
+```
+Primary Technician Revenue = SO Line Item Value × 60%
+Support Technician Revenue  = (SO Line Item Value × 40%) ÷ Number of Support Technicians
+```
+
+**Example:**
+- SO Line Item Value = ₹10,000
+- 1 Primary (Ravi) + 2 Support (Anjali, Amit)
+- Ravi gets: ₹10,000 × 60% = ₹6,000
+- Anjali gets: (₹10,000 × 40%) ÷ 2 = ₹2,000
+- Amit gets: (₹10,000 × 40%) ÷ 2 = ₹2,000
+
+---
+
+### 3.2 Total Revenue for a Technician
+
+```
+Total Revenue = SUM(Revenue Attribution per completed task)
+    where Technician = X
+    AND Task.Status = 'Completed'
+    within date range
+```
+
+---
+
+### 3.3 Revenue Percentile Ranking
+
+```
+Revenue Percentile = (Number of technicians with lower revenue ÷ Total technicians) × 100
+```
+
+Used for the "Top 10%", "Top 25%" labels on the KPI card.
+
+---
+
+## 4. Material Efficiency Calculations
+
+### 4.1 Per-Chemical Efficiency
+
+```
+Efficiency (%) = (Std Qty ÷ Actually Used Qty) × 100
+```
+
+**Interpretation:**
+- \> 100% = Under-usage (technician used less than required) — capped at 100% in score
+- = 100% = Exact usage (perfect efficiency)
+- < 100% = Over-usage (technician used more than required)
+
+---
+
+### 4.2 Overall Material Efficiency (Weighted)
+
+```
+Overall Material Efficiency = 
+    SUM(Std_Qty_i × Efficiency_i) ÷ SUM(Std_Qty_i)
+    for all chemicals i used by Technician X within date range
+```
+
+**Rationale:** Chemicals with higher standard quantities have more weight, so a small overuse on a high-volume chemical matters more than on a low-volume one.
+
+**Capping Rule:** Overall efficiency is capped at 100% — a technician cannot score above 100% by under-using materials (as under-use can also indicate incomplete treatment).
+
+---
+
+## 5. Customer Satisfaction Calculations
+
+### 5.1 Average Customer Rating
+
+```
+Avg Rating = SUM(Customer_Rating) ÷ COUNT(Rated Tasks)
+    where Task.Technician = X (as Primary)
+    AND Task.Status = 'Completed'
+    AND Customer_Rating IS NOT NULL
+    within date range
+```
+
+**Note:** Only tasks where the technician is Primary count toward their rating. Support technicians do not receive individual ratings.
+
+---
+
+### 5.2 Rating Distribution
+
+```
+For each star level (1 to 5):
+    Count = COUNT(tasks where Customer_Rating = star_level)
+    Percentage = (Count ÷ Total Rated Tasks) × 100
+```
+
+---
+
+## 6. Re-Task / Rework Calculations
+
+### 6.1 Re-Task Rate
+
+```
+Re-Task Rate (%) = (Re-Task Count ÷ Completed as Primary) × 100
+```
+
+| Variable             | Definition                                                                   |
+| -------------------- | ---------------------------------------------------------------------------- |
+| Re-Task Count        | Tasks with Type = "Re-Task" where the **original task's Primary** = this technician |
+| Completed as Primary | Tasks completed where this technician was the Primary                        |
+
+**Important Logic:** Re-tasks are attributed to the technician who was Primary on the **original** task (not the re-task itself). This ensures the rework is tracked against the person responsible for the initial service.
+
+---
+
+## 7. Final Performance Score Calculation
+
+### 7.1 Weight Distribution
+
+| Factor                  | Weight | Max Score |
+| ----------------------- | ------ | --------- |
+| Task Completion Rate    | 30%    | 30        |
+| Customer Satisfaction   | 25%    | 25        |
+| Time Utilization Rate   | 15%    | 15        |
+| Revenue Contribution    | 10%    | 10        |
+| Material Efficiency     | 10%    | 10        |
+| Re-Task Penalty (Inv.)  | 10%    | 10        |
+| **Total**               | **100%** | **100** |
+
+---
+
+### 7.2 Normalization & Scoring Formulas
+
+Each factor is normalized to a 0–1 scale before applying weights:
+
+#### Task Completion Rate Score
+
+```
+Normalized = Completion Rate ÷ 100
+Weighted Score = Normalized × 30
+```
+
+#### Customer Satisfaction Score
+
+```
+Normalized = Avg Rating ÷ 5.0
+Weighted Score = Normalized × 25
+```
+
+#### Time Utilization Score
+
+```
+Normalized = Utilization Rate ÷ 100
+Weighted Score = Normalized × 15
+```
+
+#### Revenue Contribution Score
+
+```
+Revenue Percentile = (Rank from bottom ÷ Total technicians) × 100
+Normalized = Revenue Percentile ÷ 100
+Weighted Score = Normalized × 10
+```
+
+#### Material Efficiency Score
+
+```
+Normalized = Overall Material Efficiency ÷ 100
+Weighted Score = Normalized × 10
+```
+
+#### Re-Task Penalty Score (Inverted — lower re-task rate = higher score)
+
+```
+Normalized = MAX(0, (1 − (Re-Task Rate ÷ 20)))
+Weighted Score = Normalized × 10
+```
+
+**Explanation:** A 0% re-task rate gets full score (10/10). A 20%+ re-task rate gets 0/10. Linear scale in between.
+
+---
+
+### 7.3 Final Score Assembly
+
+```
+Performance Score = 
+    (Completion_Normalized × 30) +
+    (Satisfaction_Normalized × 25) +
+    (Utilization_Normalized × 15) +
+    (Revenue_Normalized × 10) +
+    (Material_Normalized × 10) +
+    (ReTask_Normalized × 10)
+```
+
+**Result Range:** 0 to 100
+
+---
+
+### 7.4 Score Rating Thresholds
+
+| Score Range | Rating         | Badge |
+| ----------- | -------------- | ----- |
+| 90 – 100    | Excellent      | 🟢    |
+| 75 – 89     | Good           | 🔵    |
+| 60 – 74     | Average        | 🟡    |
+| 0 – 59      | Below Average  | 🔴    |
+
+---
+
+### 7.5 Ranking Logic (Table View)
+
+```
+Technicians are ranked in DESCENDING order of Performance Score.
+If two technicians have the same score, tie-breaking order:
+    1. Higher Completion Rate
+    2. Higher Customer Rating
+    3. Lower Re-Task Rate
+    4. Alphabetical by Name (last resort)
+```
+
+---
+
+================================================================================
+
+# Access Control (RBAC)
+
+| Role                     | Permissions                                                                       |
+| ------------------------ | --------------------------------------------------------------------------------- |
+| **Company Admin**        | Full access: View all technicians across all branches, export data                |
+| **Operations Manager**   | Full access: View all technicians across all branches, export data                |
+| **Branch Manager**       | View technicians belonging to their assigned branch only                          |
+| **Technician Manager**   | View technicians belonging to their assigned branch only                          |
+| **Technician**           | ❌ No access (technicians cannot view their own or others' performance scores)    |
+| **Senior Technician**    | ❌ No access                                                                      |
+
+---
+
+================================================================================
+
+# Business Rules
+
+| Rule                            | Description                                                                                |
+| ------------------------------- | ------------------------------------------------------------------------------------------ |
+| Data is Read-Only               | This module does not create, edit, or delete any records. It only reads and calculates.    |
+| Date Range Filter Required      | All metrics are calculated within the user-selected date range. No default "all-time" view. |
+| Minimum Data Threshold          | Performance Score is calculated only if technician has ≥ 5 completed tasks in the period.  |
+| Below Threshold Display         | If < 5 tasks, Score column shows "—" with tooltip: "Insufficient data for scoring."       |
+| Real-Time Calculation           | All KPIs are recalculated on page load / filter change (no cached scores).                 |
+| Revenue Split: 60/40            | Primary gets 60%, Support share 40% equally. Configurable in admin settings.               |
+| Re-Task Attribution             | Re-tasks are attributed to the Primary technician of the **original** task, not the re-task. |
+| Material Efficiency Cap         | Capped at 100% to prevent gaming by intentional under-usage.                               |
+| Overdue Auto-Marking            | Tasks past scheduled date with Status ≠ Completed are auto-flagged as Overdue.             |
+| Score Weight Configurability    | The 30/25/15/10/10/10 weight distribution is configurable via admin settings.              |
+| Export Includes All Columns     | Excel/PDF exports include all visible columns plus hidden fields (Employee ID, Branch ID). |
+| No Data Periods                 | If technician was on leave the entire period, all metrics show "N/A" with explanation.     |
+
+---
+
+> **Note:** This module is designed as a management-only analytics tool. Technicians do not have visibility into their scores or comparative rankings through the mobile app or this ERP module.
+
+---
+=================================================================================================
+
+# 🎯 MODULE 27: USER PROFILE
+
+## Overview
+
+The User Profile module provides a **360-degree, read-only view of any employee or technician** within the Pest Control ERP-CRM system. It consolidates personal details, organization hierarchy, salary configuration, banking details, uploaded documents, and leave summaries into a single, section-wise profile page.
+
+Additionally, for users with the **CEO** role, the profile includes a **Company Profile** section that displays and allows editing of the company details originally submitted during Onboarding (Module 2), along with additional branding fields such as Company Logo, Website, and Tagline.
+
+All data displayed in this module is **sourced from existing modules** — no new data entry occurs here. The profile can be **edited only by users with appropriate RBAC permissions** through the underlying source modules (Employee Management, IAM, HRM).
+
+**Module Connections:**
+
+- **Depends on:** Module 1 (IAM — Account ID, password, login status), Module 2 (Company Onboarding — company details, documents), Module 7 (Branch Management — branch assignment), Module 8 (Employee Master — personal details, role, designation, documents), Module 6 (Configuration — leave types, salary structure, shift settings), Module 25 (HRM — attendance, leave, salary)
+- **Used by:** All ERP users (self-view), HR Managers (employee review), Company Admins (full access), CEO (company profile management)
+- **Data Nature:** Read-only profile view. Editable only through source modules with RBAC control. Company Profile section is editable only by CEO.
+
+---
+
+The module contains the following screens:
+
+- 27.1 User Profile – View Mode (Default)
+- 27.2 User Profile – Edit Mode (RBAC-controlled)
+- 27.3 Company Profile – View & Edit (CEO Only)
+
+---
+
+================================================================================
+
+# 27.1 User Profile – View Mode
+
+**Description:**
+A comprehensive, section-wise profile page displaying all relevant information about an employee or technician. The page is rendered as a single scrollable view with collapsible sections. Accessible by the employee themselves (self-view) or by authorized managers/admins.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Back]              USER PROFILE                         [✏️ Edit]       │
+│                                                                              │
+│  ┌─ SECTION 1: BASIC USER INFORMATION ────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Profile Photo  : ┌─────┐                                              │  │
+│  │                   │ 👤  │                                              │  │
+│  │                   └─────┘                                              │  │
+│  │                                                                        │  │
+│  │  EMP ID         : EMP-00124                                            │  │
+│  │  First Name     : Ravi                                                 │  │
+│  │  Last Name      : Sharma                                               │  │
+│  │  Full Name      : Ravi Sharma (auto-generated)                         │  │
+│  │  Email          : ravi.s@company.com                                   │  │
+│  │  Contact Number : 9876543210                                           │  │
+│  │  Alternate Number: 9123456789                                          │  │
+│  │  Account ID     : ravi.s                                               │  │
+│  │  Password       : ●●●●●●●●                                            │  │
+│  │  Status         : 🟢 Active                                            │  │
+│  │  Date of Joining: 15 Jun 2024                                          │  │
+│  │  Employment Type: Permanent                                            │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ SECTION 2: ORGANIZATION INFORMATION ──────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Department    : Operations                                            │  │
+│  │  Designation   : Senior Pest Control Technician                        │  │
+│  │  Role          : Senior Technician                                     │  │
+│  │  Branch        : Mumbai — Andheri                                      │  │
+│  │  Reporting Mgr : Anil K. (Branch Manager)                              │  │
+│  │  App User      : ✅ Yes (Mobile App Access Enabled)                    │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ SECTION 3: ADDRESS INFORMATION ───────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  ── Current Address ──────────────────────────────                      │  │
+│  │  Address Line 1     : 42, Shanti Nagar, Andheri West                   │  │
+│  │  Address Line 2     : Near City Mall                                   │  │
+│  │  City               : Mumbai                                           │  │
+│  │  State              : Maharashtra                                      │  │
+│  │  Country            : India                                            │  │
+│  │  Pincode            : 400058                                           │  │
+│  │                                                                        │  │
+│  │  ☑ Same as Current Address                                             │  │
+│  │                                                                        │  │
+│  │  ── Permanent Address ────────────────────────────                      │  │
+│  │  Address Line 1     : 42, Shanti Nagar, Andheri West  (auto-filled)    │  │
+│  │  Address Line 2     : Near City Mall                  (auto-filled)    │  │
+│  │  City               : Mumbai                         (auto-filled)    │  │
+│  │  State              : Maharashtra                    (auto-filled)    │  │
+│  │  Country            : India                          (auto-filled)    │  │
+│  │  Pincode            : 400058                         (auto-filled)    │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ SECTION 4: SALARY INFORMATION ────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Salary Type    : CTC                                                  │  │
+│  │  Basic Salary   : ₹20,000                                              │  │
+│  │  HRA            : ₹5,000                                               │  │
+│  │  Other Allowance: ₹3,000                                               │  │
+│  │  Incentive      : ₹2,000                                               │  │
+│  │  Deductions     : ₹2,500                                               │  │
+│  │                                                                        │  │
+│  │  PF Applicable  : ✅ Yes                                                │  │
+│  │  ESI Applicable : ✅ Yes                                                │  │
+│  │  TDS Applicable : ❌ No                                                 │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ SECTION 5: BANK INFORMATION ──────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Bank Name          : State Bank of India                              │  │
+│  │  Account Number     : ●●●●●●●●4321  (masked)                          │  │
+│  │  Account Holder Name: Ravi Sharma                                      │  │
+│  │  IFSC Code          : SBIN0001234                                      │  │
+│  │  UPI ID             : ravi.s@sbi                                       │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ SECTION 6: DOCUMENTS ─────────────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Document Type          │ File Name           │ Status    │ Actions    │  │
+│  │────────────────────────┼─────────────────────┼───────────┼────────────│  │
+│  │  Government ID Proof    │ aadhaar_ravi.pdf    │ ✅ Uploaded│ [📥 ][👁] │  │
+│  │  Address Proof          │ utility_bill.pdf    │ ✅ Uploaded│ [📥 ][👁] │  │
+│  │  Employment Contract    │ contract_ravi.pdf   │ ✅ Uploaded│ [📥 ][👁] │  │
+│  │  Education Certificates │ degree_cert.pdf     │ ✅ Uploaded│ [📥 ][👁] │  │
+│  │  Other Documents        │ —                   │ ❌ Pending │     —      │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ SECTION 7: LEAVE SUMMARY ─────────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  CL Balance     : 8 / 12                                               │  │
+│  │  SL Balance     : 5 / 6                                                │  │
+│  │  PL Balance     : 10 / 15                                              │  │
+│  │  Total Leaves Taken : 4                                                │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ SECTION 8: COMPANY PROFILE (CEO Only) ─────────────────────────────────┐ │
+│  │  ⚠️ This section is ONLY visible when the logged-in user has CEO role   │ │
+│  │                                                                        │  │
+│  │  Company Logo   : ┌─────┐                                              │  │
+│  │                   │ 🏢  │                                              │  │
+│  │                   └─────┘                                              │  │
+│  │                                                                        │  │
+│  │  Company Name   : Acme Pest Solutions Pvt. Ltd.                        │  │
+│  │  Tagline        : "Protecting Homes Since 2010"                        │  │
+│  │  Industry Type  : Pest Control                                         │  │
+│  │  Website        : www.acmepest.com                                     │  │
+│  │  Founding Year  : 2010                                                 │  │
+│  │                                                                        │  │
+│  │  ── Contact Person ──────────────────────────────                      │  │
+│  │  Name           : John Doe                                             │  │
+│  │  Email          : john@acmepest.com                                    │  │
+│  │  Phone          : 9988776655                                           │  │
+│  │                                                                        │  │
+│  │  ── Legal & Tax Information ─────────────────────                      │  │
+│  │  GST Number     : 27AAAAA0000A1Z5                                      │  │
+│  │  PAN Number     : ABCDE1234F                                           │  │
+│  │  License Number : PCO-MH-2024-1234 (Optional)                          │  │
+│  │                                                                        │  │
+│  │  ── Registered Address ──────────────────────────                      │  │
+│  │  Address Line 1 : Tower A, IT Park                                     │  │
+│  │  Address Line 2 : —                                                    │  │
+│  │  City           : Noida                                                │  │
+│  │  State          : Uttar Pradesh                                        │  │
+│  │  Pincode        : 201301                                               │  │
+│  │                                                                        │  │
+│  │  ── Company Documents ───────────────────────────                      │  │
+│  │  GST Certificate         │ gst_cert.pdf     │ ✅ Uploaded │ [📥][👁]  │  │
+│  │  PAN Card                │ pan_card.pdf     │ ✅ Uploaded │ [📥][👁]  │  │
+│  │  Business Registration   │ biz_reg.pdf      │ ✅ Uploaded │ [📥][👁]  │  │
+│  │                                                                        │  │
+│  │  ── Onboarding Status ───────────────────────────                      │  │
+│  │  Status         : ✅ Approved                                          │  │
+│  │  Company Code   : ACME-PINE-456 (read-only)                            │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Section 1: Basic User Information (Read-Only)
+
+| Field             | Type              | Required | Validation                    | Description                                                        | Source              |
+| ----------------- | ----------------- | -------- | ----------------------------- | ------------------------------------------------------------------ | ------------------- |
+| Profile Photo     | Display (Image)   | No       | JPG/PNG, Max 2MB              | Employee's profile photograph                                       | Module 8            |
+| EMP ID            | Display           | Auto     | System-generated, unique      | Unique employee identifier (e.g., EMP-00124)                       | Module 8            |
+| First Name        | Display           | Yes      | Min 2 chars, Max 50 chars     | Employee's first name                                               | Module 8            |
+| Last Name         | Display           | Yes      | Min 1 char, Max 50 chars      | Employee's last name                                                | Module 8            |
+| Full Name         | Display (Auto)    | Auto     | Auto-generated                | Concatenation of First Name + Last Name                             | Calculated          |
+| Email             | Display           | Yes      | Valid email format, unique     | Official email used for login and communication                     | Module 8            |
+| Contact Number    | Display           | Yes      | Valid 10-digit mobile number   | Primary phone number                                                | Module 8            |
+| Alternate Number  | Display           | No       | Valid 10-digit mobile number   | Backup contact number                                               | Module 8            |
+| Account ID        | Display           | Auto     | Unique, from IAM               | Login credential used for application authentication               | Module 1 (IAM)      |
+| Password          | Display (Masked)  | —        | ●●●●●●●● (always masked)      | Login password — never shown in plain text                          | Module 1 (IAM)      |
+| Status            | Display (Badge)   | Auto     | 🟢 Active / 🔴 Inactive       | Current employment status                                           | Module 8            |
+| Date of Joining   | Display           | Yes      | Cannot be future date          | Date the employee joined the company                                | Module 8            |
+| Employment Type   | Display (Badge)   | Yes      | Permanent / Contract / Intern  | Type of employment engagement                                       | Module 8            |
+
+---
+
+## Section 2: Organization Information (Read-Only)
+
+| Field                      | Type            | Required | Validation                         | Description                                                                                   | Source           |
+| -------------------------- | --------------- | -------- | ---------------------------------- | --------------------------------------------------------------------------------------------- | ---------------- |
+| Department                 | Display         | Yes      | Must select from configured list   | Business unit (Operations, Sales, Admin, etc.)                                                | Module 8         |
+| Designation                | Display         | Yes      | Must select from configured list   | Job title (e.g., Senior Pest Control Technician)                                              | Module 8         |
+| Role                       | Display         | Yes      | Must select from system roles      | System role controlling RBAC permissions                                                       | Module 1 (IAM)   |
+| Branch                     | Display         | Yes      | Must select from active branches   | Assigned branch for operations                                                                 | Module 7 → 8     |
+| Reporting Manager          | Display         | Yes      | Must be an active employee         | Direct supervisor or manager                                                                   | Module 8         |
+| Is Application User        | Display (Yes/No)| —        | Boolean (Yes/No)                   | If enabled, user accesses only the mobile app; ERP module permissions are disabled             | Module 1 (IAM)   |
+
+---
+
+## Section 3: Address Information (Read-Only)
+
+| Field                       | Type       | Required    | Validation              | Description                                              | Source    |
+| --------------------------- | ---------- | ----------- | ----------------------- | -------------------------------------------------------- | --------- |
+| Current Address Line 1      | Display    | Yes         | Min 5 chars, Max 200    | Primary address line                                     | Module 8  |
+| Current Address Line 2      | Display    | No          | Max 200 chars           | Additional address information (landmark, floor, etc.)   | Module 8  |
+| City                        | Display    | Yes         | Min 2 chars             | City of residence                                        | Module 8  |
+| State                       | Display    | Yes         | From predefined list    | State / Province                                         | Module 8  |
+| Country                     | Display    | Yes         | Default: India          | Country of residence                                     | Module 8  |
+| Pincode                     | Display    | Yes         | 6-digit numeric         | Postal code                                              | Module 8  |
+| Same as Current (Checkbox)  | Display    | —           | Boolean                 | If checked, auto-copies current address to permanent     | Module 8  |
+| Permanent Address Line 1    | Display    | Conditional | Required if checkbox off| Permanent residential address line 1                     | Module 8  |
+| Permanent Address Line 2    | Display    | No          | Max 200 chars           | Additional permanent address details                     | Module 8  |
+| Permanent City              | Display    | Conditional | Required if checkbox off| Permanent address city                                   | Module 8  |
+| Permanent State             | Display    | Conditional | Required if checkbox off| Permanent address state                                  | Module 8  |
+| Permanent Country           | Display    | Conditional | Default: India          | Permanent address country                                | Module 8  |
+| Permanent Pincode           | Display    | Conditional | 6-digit numeric         | Permanent address postal code                            | Module 8  |
+
+---
+
+## Section 4: Salary Information (Read-Only)
+
+| Field            | Type              | Required | Validation              | Description                                              | Source                |
+| ---------------- | ----------------- | -------- | ----------------------- | -------------------------------------------------------- | --------------------- |
+| Salary Type      | Display           | Yes      | CTC / Fixed / Hourly    | Payment model for this employee                          | Module 6 → Module 25  |
+| Basic Salary     | Display (Currency)| Yes      | ≥ 0                     | Base monthly salary                                      | Module 25 (Salary)    |
+| HRA              | Display (Currency)| No       | ≥ 0                     | House Rent Allowance                                     | Module 25 (Salary)    |
+| Other Allowance  | Display (Currency)| No       | ≥ 0                     | Additional company allowances                            | Module 25 (Salary)    |
+| Incentive        | Display (Currency)| No       | ≥ 0                     | Performance-based bonus                                  | Module 25 (Salary)    |
+| Deductions       | Display (Currency)| No       | ≥ 0                     | Total deductions (tax, benefits, etc.)                   | Module 25 (Salary)    |
+| PF Applicable    | Display (Yes/No)  | —        | ✅ Yes / ❌ No           | Whether Provident Fund deduction applies                 | Module 6 → Module 25  |
+| ESI Applicable   | Display (Yes/No)  | —        | ✅ Yes / ❌ No           | Whether Employee State Insurance applies                 | Module 6 → Module 25  |
+| TDS Applicable   | Display (Yes/No)  | —        | ✅ Yes / ❌ No           | Whether Tax Deduction at Source applies                  | Module 6 → Module 25  |
+
+---
+
+## Section 5: Bank Information (Read-Only)
+
+| Field              | Type             | Required | Validation               | Description                                  | Source    |
+| ------------------ | ---------------- | -------- | ------------------------ | -------------------------------------------- | --------- |
+| Bank Name          | Display          | Yes      | Min 3 chars              | Bank used for salary payments                | Module 8  |
+| Account Number     | Display (Masked) | Yes      | Partially masked display | Employee's bank account number               | Module 8  |
+| Account Holder Name| Display          | Yes      | Min 2 chars              | Name as per bank records                     | Module 8  |
+| IFSC Code          | Display          | Yes      | 11-char alphanumeric     | Bank branch identification code              | Module 8  |
+| UPI ID             | Display          | No       | Valid UPI format         | Digital payment identifier (optional)        | Module 8  |
+
+---
+
+## Section 6: Documents (Read-Only)
+
+| Field                    | Type        | Required | Validation                   | Description                                      | Source    |
+| ------------------------ | ----------- | -------- | ---------------------------- | ------------------------------------------------ | --------- |
+| Government ID Proof      | Display (Link)| Yes      | PDF/JPG/PNG, Max 5MB         | Aadhaar / PAN / Voter ID or equivalent           | Module 8  |
+| Address Proof            | Display (Link)| Yes      | PDF/JPG/PNG, Max 5MB         | Utility bill, rental agreement, etc.             | Module 8  |
+| Employment Contract      | Display (Link)| Yes      | PDF only, Max 10MB           | Signed employment agreement                       | Module 8  |
+| Education Certificates   | Display (Link)| No       | PDF/JPG/PNG, Max 5MB         | Qualification / degree certificates               | Module 8  |
+| Other Documents          | Display (Link)| No       | PDF/JPG/PNG, Max 5MB each    | Any additional employee documentation             | Module 8  |
+
+### Document Actions (View Mode)
+
+| Action       | Icon | Description                                           |
+| ------------ | ---- | ----------------------------------------------------- |
+| **Download** | 📥   | Download the uploaded document to local device         |
+| **View**     | 👁   | Open document in browser preview (PDF/Image viewer)   |
+
+> **Note:** Upload and Delete actions are only available in **Edit Mode** (Screen 27.2).
+
+---
+
+## Section 7: Leave Summary (Read-Only)
+
+| Field              | Type    | Description                                                        | Source              |
+| ------------------ | ------- | ------------------------------------------------------------------ | ------------------- |
+| CL Balance         | Display | Casual Leave: Used / Total allocation                              | Module 6 → Module 25|
+| SL Balance         | Display | Sick Leave: Used / Total allocation                                | Module 6 → Module 25|
+| PL Balance         | Display | Paid Leave: Used / Total allocation                                | Module 6 → Module 25|
+| Total Leaves Taken | Number  | Total leave days consumed in current year                          | Module 25 (Leave)   |
+
+---
+
+## Section 8: Company Profile (CEO Only)
+
+> **Visibility Rule:** This entire section is **only visible** when the logged-in user has the **CEO** role. For all other roles, this section is completely hidden.
+
+### 8A. Company Identity
+
+| Field              | Type              | Required | Validation                         | Description                                                        | Source              |
+| ------------------ | ----------------- | -------- | ---------------------------------- | ------------------------------------------------------------------ | ------------------- |
+| Company Logo       | Display (Image)   | No       | JPG/PNG, Max 2MB, Recommended 200×200px | Company logo image used across the ERP and invoices           | **New** (Module 27) |
+| Company Name       | Display           | Yes      | Min 3 chars, Max 150 chars         | Registered company name                                            | Module 2            |
+| Tagline            | Display           | No       | Max 200 chars                      | Company motto or short branding text                               | **New** (Module 27) |
+| Industry Type      | Display (Badge)   | Yes      | Must be from predefined list       | Business sector (Grocery / Pest Control / Clothing)                | Module 2            |
+| Website            | Display           | No       | Valid URL format                   | Company website URL                                                | **New** (Module 27) |
+| Founding Year      | Display           | No       | 4-digit year, cannot be future     | Year the company was established                                   | **New** (Module 27) |
+
+### 8B. Contact Person
+
+| Field                | Type     | Required | Validation                    | Description                                                | Source    |
+| -------------------- | -------- | -------- | ----------------------------- | ---------------------------------------------------------- | --------- |
+| Contact Person Name  | Display  | Yes      | Min 2 chars, Max 120 chars    | Primary contact person for the company                     | Module 2  |
+| Contact Person Email | Display  | Yes      | Valid email format            | Contact person's email address                             | Module 2  |
+| Contact Person Phone | Display  | Yes      | Exactly 10 digits, numeric   | Contact person's phone number                              | Module 2  |
+
+### 8C. Legal & Tax Information
+
+| Field          | Type     | Required | Validation                              | Description                                    | Source    |
+| -------------- | -------- | -------- | --------------------------------------- | ---------------------------------------------- | --------- |
+| GST Number     | Display  | Yes      | 15-char valid GSTIN format              | Goods & Services Tax Identification Number     | Module 2  |
+| PAN Number     | Display  | Yes      | 10-char alphanumeric (AAAAA9999A)       | Permanent Account Number                       | Module 2  |
+| License Number | Display  | No       | Alphanumeric if provided                | Business or pest control license number        | Module 2  |
+
+### 8D. Registered Address
+
+| Field            | Type     | Required | Validation             | Description                                    | Source    |
+| ---------------- | -------- | -------- | ---------------------- | ---------------------------------------------- | --------- |
+| Address Line 1   | Display  | Yes      | Min 5 chars, Max 200   | Primary company address line                   | Module 2  |
+| Address Line 2   | Display  | No       | Max 200 chars          | Additional address info (floor, landmark, etc.)| Module 2  |
+| City             | Display  | Yes      | Min 2 chars, alphabets | City of registered office                      | Module 2  |
+| State            | Display  | Yes      | Min 2 chars, alphabets | State of registered office                     | Module 2  |
+| Pincode          | Display  | Yes      | 6-digit numeric        | Postal code of registered office               | Module 2  |
+
+### 8E. Company Documents
+
+| Field                          | Type          | Required | Validation                 | Description                                   | Source    |
+| ------------------------------ | ------------- | -------- | -------------------------- | --------------------------------------------- | --------- |
+| GST Certificate                | Display (Link)| Yes      | PDF/JPG/PNG, Max 5MB       | Uploaded GST certificate document             | Module 2  |
+| PAN Card                       | Display (Link)| Yes      | PDF/JPG/PNG, Max 5MB       | Uploaded PAN card document                    | Module 2  |
+| Business / Registration Doc    | Display (Link)| Yes      | PDF/JPG/PNG, Max 10MB      | Trade license or incorporation document       | Module 2  |
+
+### 8F. Onboarding Status (Read-Only)
+
+| Field              | Type            | Required | Description                                              | Source    |
+| ------------------ | --------------- | -------- | -------------------------------------------------------- | --------- |
+| Onboarding Status  | Display (Badge) | Auto     | 🟢 Approved / 🟡 Pending / 🔴 Rejected                  | Module 2  |
+| Company Code       | Display         | Auto     | System-generated unique company identifier (read-only)   | Module 2  |
+
+---
+
+## Page-Level Actions
+
+| Action   | Condition                              | Behaviour                                                     |
+| -------- | -------------------------------------- | ------------------------------------------------------------- |
+| **Back** | Always visible                         | Returns to previous page (Employee List or Dashboard)         |
+| **Edit** | Visible only if user has Edit RBAC     | Opens Edit Mode (Screen 27.2) — toggles fields to editable   |
+
+---
+
+================================================================================
+
+# 27.2 User Profile – Edit Mode
+
+**Description:**
+Same layout as View Mode, but applicable fields become editable. Accessible by the user themselves (self-edit for limited fields) or by authorized managers/admins (full edit). Certain fields remain read-only even in Edit Mode (EMP ID, Account ID, Status).
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  [← Cancel]            EDIT PROFILE                         [💾 Save]       │
+│                                                                              │
+│  ┌─ SECTION 1: BASIC USER INFORMATION ────────────────────────────────────┐  │
+│  │  ┌─────┐                                                               │  │
+│  │  │ 👤  │  EMP ID : EMP-00124 (read-only)                              │  │
+│  │  │Photo│                                                               │  │
+│  │  │     │  First Name  : [Ravi_______________]                          │  │
+│  │  └─────┘  Last Name   : [Sharma______________]                         │  │
+│  │           Full Name   : Ravi Sharma (auto)                             │  │
+│  │                                                                        │  │
+│  │  Email          : [ravi.s@company.com_____]                            │  │
+│  │  Contact Number : [9876543210_____________]                            │  │
+│  │  Alt Number     : [9123456789_____________]                            │  │
+│  │  Account ID     : ravi.s (read-only)                                   │  │
+│  │  Password       : ●●●●●●●● (read-only)                                │  │
+│  │  Status         : 🟢 Active (read-only)                                │  │
+│  │  Date of Joining: [📅 15 Jun 2024________]                             │  │
+│  │  Employment Type: [▼ Permanent ▼_________]                             │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ SECTION 2: ORGANIZATION INFORMATION ──────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Department    : [▼ Operations ▼_________]                             │  │
+│  │  Designation   : [▼ Senior Pest Control Technician ▼]                  │  │
+│  │  Role          : [▼ Senior Technician ▼__]                             │  │
+│  │  Branch        : [▼ Mumbai — Andheri ▼___]                             │  │
+│  │  Reporting Mgr : [🔍 Anil K.____________]                              │  │
+│  │  App User      : [☑] Yes                                               │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ SECTION 3: ADDRESS INFORMATION ───────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  ── Current Address ──────────────────────────────                      │  │
+│  │  Address Line 1 : [42, Shanti Nagar, Andheri West__]                   │  │
+│  │  Address Line 2 : [_______________________________]                    │  │
+│  │  City           : [Mumbai_____________________]                        │  │
+│  │  State          : [▼ Maharashtra ▼____________]                        │  │
+│  │  Country        : [▼ India ▼__________________]                        │  │
+│  │  Pincode        : [400058_____________________]                        │  │
+│  │                                                                        │  │
+│  │  [☑] Same as Current Address                                           │  │
+│  │                                                                        │  │
+│  │  ── Permanent Address ────────────────────────────  (disabled)          │  │
+│  │  (Auto-filled from Current Address)                                    │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ SECTION 4: SALARY INFORMATION ────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Salary Type    : [▼ CTC ▼________________]                            │  │
+│  │  Basic Salary   : [₹ 20,000_______________]                            │  │
+│  │  HRA            : [₹ 5,000________________]                            │  │
+│  │  Other Allowance: [₹ 3,000________________]                            │  │
+│  │  Incentive      : [₹ 2,000________________]                            │  │
+│  │  Deductions     : [₹ 2,500________________]                            │  │
+│  │                                                                        │  │
+│  │  PF Applicable  : [☑] Yes                                              │  │
+│  │  ESI Applicable : [☑] Yes                                              │  │
+│  │  TDS Applicable : [☐] No                                               │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ SECTION 5: BANK INFORMATION ──────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Bank Name      : [State Bank of India____]                            │  │
+│  │  Account Number : [123456784321___________]                            │  │
+│  │  Account Holder : [Ravi Sharma____________]                            │  │
+│  │  IFSC Code      : [SBIN0001234____________]                            │  │
+│  │  UPI ID         : [ravi.s@sbi_____________]                            │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ SECTION 6: DOCUMENTS ─────────────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Document Type          │ File Name           │ Status    │ Actions    │  │
+│  │────────────────────────┼─────────────────────┼───────────┼────────────│  │
+│  │  Government ID Proof    │ aadhaar_ravi.pdf    │ ✅ Uploaded│[📥][👁][🗑]│  │
+│  │  Address Proof          │ utility_bill.pdf    │ ✅ Uploaded│[📥][👁][🗑]│  │
+│  │  Employment Contract    │ contract_ravi.pdf   │ ✅ Uploaded│[📥][👁][🗑]│  │
+│  │  Education Certificates │ degree_cert.pdf     │ ✅ Uploaded│[📥][👁][🗑]│  │
+│  │  Other Documents        │ —                   │ ❌ Pending │ [📤 Upload]│  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ SECTION 7: LEAVE SUMMARY ─────────────────────────────────────────────┐  │
+│  │                                                                        │  │
+│  │  Leave Balance  : CL: 8/12  |  SL: 5/6  |  PL: 10/15  (read-only)    │  │
+│  │  Leaves Taken   : 4                                     (read-only)    │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌─ SECTION 8: COMPANY PROFILE (CEO Only) ─────────────────────────────────┐ │
+│  │  ⚠️ Visible only to CEO role. Editable only by CEO.                     │ │
+│  │                                                                        │  │
+│  │  Company Logo   : ┌─────┐  [📤 Upload Logo]                            │  │
+│  │                   │ 🏢  │                                              │  │
+│  │                   └─────┘                                              │  │
+│  │                                                                        │  │
+│  │  Company Name   : [Acme Pest Solutions Pvt. Ltd.__]                    │  │
+│  │  Tagline        : [Protecting Homes Since 2010____]                    │  │
+│  │  Industry Type  : [▼ Pest Control ▼_______________]                    │  │
+│  │  Website        : [www.acmepest.com_______________]                    │  │
+│  │  Founding Year  : [2010___________________________]                    │  │
+│  │                                                                        │  │
+│  │  ── Contact Person ──────────────────────────────                      │  │
+│  │  Name           : [John Doe_______________________]                    │  │
+│  │  Email          : [john@acmepest.com______________]                    │  │
+│  │  Phone          : [9988776655_____________________]                    │  │
+│  │                                                                        │  │
+│  │  ── Legal & Tax Information ─────────────────────                      │  │
+│  │  GST Number     : [27AAAAA0000A1Z5________________]                    │  │
+│  │  PAN Number     : [ABCDE1234F_____________________]                    │  │
+│  │  License Number : [PCO-MH-2024-1234_______________]                    │  │
+│  │                                                                        │  │
+│  │  ── Registered Address ──────────────────────────                      │  │
+│  │  Address Line 1 : [Tower A, IT Park_______________]                    │  │
+│  │  Address Line 2 : [______________________________]                     │  │
+│  │  City           : [Noida_________________________]                     │  │
+│  │  State          : [Uttar Pradesh_________________]                     │  │
+│  │  Pincode        : [201301________________________]                     │  │
+│  │                                                                        │  │
+│  │  ── Company Documents ────────────────────────── (read-only)           │  │
+│  │  GST Certificate       │ gst_cert.pdf   │ ✅ Uploaded │  [📥][👁]    │  │
+│  │  PAN Card              │ pan_card.pdf   │ ✅ Uploaded │  [📥][👁]    │  │
+│  │  Business Registration │ biz_reg.pdf    │ ✅ Uploaded │  [📥][👁]    │  │
+│  │                                                                        │  │
+│  │  ── Onboarding Status ──────────────────────────── (read-only)         │  │
+│  │  Status         : ✅ Approved                                          │  │
+│  │  Company Code   : ACME-PINE-456                                        │  │
+│  │                                                                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐  │
+│  │                     [💾 Save]        [✖ Cancel]                        │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Editable vs Read-Only Rules (Admin / HR Manager Edit)
+
+| Section                  | Editable Fields                                                          | Always Read-Only Fields                                   |
+| ------------------------ | ------------------------------------------------------------------------ | --------------------------------------------------------- |
+| 1. Basic Info            | First Name, Last Name, Email, Contact, Alt Number, Employment Type       | EMP ID, Full Name (auto), Account ID, Password, Status ,Date of joining    |
+| 2. Organization Info     | Department, Designation, Role, Branch, Reporting Mgr, App User           | —                                                         |
+| 3. Address               | All address fields                                                       | —                                                         |
+| 4. Salary                | All salary fields                                                        | —                                                         |
+| 5. Bank Info             | All bank fields                                                          | —                                                         |
+| 6. Documents             | Upload / Delete documents                                                | —                                                         |
+| 7. Leave Summary         | —                                                                        | All fields (managed via Module 25 HRM)                    |
+| 8. Company Profile       | Company Logo, Name, Tagline, Industry Type, Website, Founding Year, Contact Person (Name/Email/Phone), GST Number, PAN Number, License Number, Address fields | Onboarding Status, Company Code, Company Documents (always read-only once uploaded) |
+
+---
+
+## Self-Edit Rules (Employee editing their own profile)
+
+> When a user opens their own profile and taps **Edit**, only the following fields are editable. All other fields remain read-only.
+
+| Section                  | Self-Editable Fields                                                          |
+| ------------------------ | ----------------------------------------------------------------------------- |
+| 1. Basic Info            | Contact Number, Alternate Number                                              |
+| 2. Organization Info     | — (Read-Only)                                                                 |
+| 3. Address               | All current & permanent address fields                                        |
+| 4. Salary                | — (Read-Only, view own salary only)                                           |
+| 5. Bank Info             | Bank Name, Account Number, Account Holder Name, IFSC Code, UPI ID            |
+| 6. Documents             | Upload own documents (Gov ID, Address Proof, Education Certs, Other Docs)    |
+| 7. Leave Summary         | — (Read-Only)                                                                 |
+| 8. Company Profile       | All fields (CEO role only — see Section 8 details)                           |
+
+> **Note:** Employment Contract can only be uploaded by HR Manager or Admin — not by the employee.
+> **Note:** Section 8 (Company Profile) is only visible and editable for users with the CEO role.
+
+### Document Actions (Edit Mode)
+
+| Action       | Icon | Condition                              | Description                                           |
+| ------------ | ---- | -------------------------------------- | ----------------------------------------------------- |
+| **Upload**   | 📤   | Edit Mode only                         | Upload a new document (opens file picker)             |
+| **Download** | 📥   | Always (also in View Mode)             | Download the uploaded document to local device         |
+| **View**     | 👁   | Always (also in View Mode)             | Open document in browser preview (PDF/Image viewer)   |
+| **Delete**   | 🗑   | Edit Mode only (Admin/HR only)         | Remove uploaded document (confirmation required)       |
+
+---
+
+## Edit Mode Actions
+
+| Action     | Trigger    | System Behaviour                                                                                      |
+| ---------- | ---------- | ----------------------------------------------------------------------------------------------------- |
+| **Save**   | Tap button | Validates all modified fields → Saves changes to respective source modules → Logs changes in audit trail → Shows success toast: "Profile updated successfully." → Returns to View Mode |
+| **Cancel** | Tap button | Discards all unsaved changes → Returns to View Mode. Confirmation dialog: "Discard unsaved changes?" |
+
+---
+
+## Validation Rules (Edit Mode)
+
+| Field            | Validation                                                             |
+| ---------------- | ---------------------------------------------------------------------- |
+| Email            | Must be valid email format. Must be unique across all employees.       |
+| Contact Number   | Must be valid 10-digit Indian mobile number.                           |
+| Pincode          | Must be 6-digit numeric.                                               |
+| IFSC Code        | Must be 11-character alphanumeric (standard bank format).              |
+| UPI ID           | Must follow `name@bank` format if provided.                            |
+| Basic Salary     | Must be ≥ 0. Cannot be blank.                                          |
+| Documents        | File size limits enforced. Only PDF/JPG/PNG accepted.                  |
+| Reporting Manager| Must be an active employee. Cannot be self.                            |
+
+### Section 8 — Company Profile Validation (CEO Only)
+
+| Field                     | Validation                                                                  |
+| ------------------------- | --------------------------------------------------------------------------- |
+| Company Logo              | JPG/PNG only. Max 2MB. Recommended 200×200px. Optional.                     |
+| Company Name              | Min 3, Max 150 chars. Alphanumeric and spaces allowed.                      |
+| Tagline                   | Max 200 chars. Optional.                                                    |
+| Industry Type             | Must select from predefined dropdown (Grocery / Pest Control / Clothing).   |
+| Website                   | Must be a valid URL format if provided. Optional.                           |
+| Founding Year             | Must be a 4-digit year. Cannot be in the future. Optional.                  |
+| Contact Person Name       | Min 2, Max 120 chars. No numbers or special characters.                     |
+| Contact Person Email      | Must be valid email format.                                                 |
+| Contact Person Phone      | Exactly 10 digits, numeric only.                                            |
+| GST Number                | 15-character valid GSTIN format (2 digits + PAN + 3 chars).                 |
+| PAN Number                | 10 characters, format: AAAAA9999A.                                          |
+| License Number            | Alphanumeric if provided. Optional.                                         |
+| Company Address Line 1    | Min 5 chars, Max 200 chars.                                                 |
+| Company City              | Min 2 chars, alphabets only.                                                |
+| Company State             | Min 2 chars, alphabets only.                                                |
+| Company Pincode           | 6-digit numeric.                                                            |
+
+> **Note:** Company Documents (GST Certificate, PAN Card, Business Registration) are read-only in the User Profile and are not editable or re-uploadable. They can only be managed through Module 2 (Onboarding).
+
+---
+
+================================================================================
+
+# Access Control (RBAC)
+
+| Role                   | View Own Profile | View Others' Profile | Edit Profile | Upload Documents | View Salary | Company Profile (Sec 8) |
+| ---------------------- | ---------------- | -------------------- | ------------ | ---------------- | ----------- | ----------------------- |
+| **CEO**                | ✅               | ✅ (All employees)   | ✅ (All)     | ✅                | ✅           | ✅ View & Edit           |
+| **Company Admin**      | ✅               | ✅ (All employees)   | ✅ (All)     | ✅                | ✅           | ❌ Hidden                |
+| **HR Manager**         | ✅               | ✅ (All employees)   | ✅ (All)     | ✅                | ✅           | ❌ Hidden                |
+| **Branch Manager**     | ✅               | ✅ (Own branch only) | ✅ (Branch)  | ✅ (Branch)       | ❌           | ❌ Hidden                |
+| **Technician Manager** | ✅               | ✅ (Own branch only) | ❌           | ❌                | ❌           | ❌ Hidden                |
+| **Operations Manager** | ✅               | ✅ (All employees)   | ❌           | ❌                | ❌           | ❌ Hidden                |
+| **Technician**         | ✅ (Self only)   | ❌                   | ❌           | ✅ (Own docs)     | ✅ (Own)     | ❌ Hidden                |
+| **Senior Technician**  | ✅ (Self only)   | ❌                   | ❌           | ✅ (Own docs)     | ✅ (Own)     | ❌ Hidden                |
+
+---
+
+================================================================================
+
+# Business Rules
+
+| Rule                        | Description                                                                                  |
+| --------------------------- | -------------------------------------------------------------------------------------------- |
+| Self-View Default           | When a user opens Profile without specifying an employee, their own profile is displayed.     |
+| Password Never Exposed      | Password is always displayed as masked (●●●●●●●●). Cannot be viewed or copied from Profile. |
+| Bank Account Masking         | Account Number is partially masked (e.g., ●●●●●●●●4321) in View Mode. Full number visible only in Edit Mode for authorized users. |
+| App User Logic              | If "Is Application User" = Yes, the user only accesses the mobile app; ERP module-level permissions are managed via IAM. |
+| Address Auto-Copy           | If "Same as Current Address" checkbox is enabled, permanent address fields are auto-populated and disabled. |
+| Document Requirements       | Government ID Proof, Address Proof, and Employment Contract are mandatory for profile completion. Missing documents show ❌ Pending status. |
+| Status Change Restriction    | Employee Status (Active/Inactive) can only be changed by HR Manager or Company Admin. Deactivating an employee also deactivates their IAM account. |
+| Salary Visibility           | Salary section is hidden for users without salary view permission. Technicians and Senior Technicians can only see their own salary. |
+| Role Change Cascade         | Changing an employee's Role automatically updates their Module Permissions in Module 1 (IAM). |
+| Profile Completeness        | A profile completion indicator (e.g., "85% Complete") can be shown based on how many required fields and documents are filled. |
+| Company Profile Visibility  | Section 8 (Company Profile) is **only rendered** when the logged-in user's role = CEO. For all other roles, the section DOM element is not rendered at all. |
+| Company Profile Source      | Fields in Section 8 are populated from the Module 2 (Onboarding) company details API (`GET /api/v1/company-details`). New fields (Logo, Tagline, Website, Founding Year) are stored as extensions to the company profile. |
+| Company Logo Usage          | The uploaded Company Logo is used on invoices (Module 28), quotations, and other customer-facing documents generated by the ERP. |
+| Company Doc Read-Only     | Once company documents (GST Certificate, PAN Card, Business Registration) are uploaded during onboarding (Module 2), they become **permanently read-only** in the User Profile. The CEO can only Download (📥) and View (👁) them — no re-upload or delete is allowed. Any document changes must go through Module 2 onboarding flow. |
+| Onboarding Status Read-Only | The Onboarding Status and Company Code fields are always read-only and cannot be modified by any user, including the CEO. They reflect the current verification state from Module 2 → Module 3.
+
+---
+
+> **Note:** This module acts as a consolidated view and editing interface for employee data that is primarily stored in Module 1 (IAM), Module 8 (Employee Master), Module 25 (HRM), and Module 6 (Configuration). Changes made through this profile are written back to the respective source modules.
+
+
+=============================================================================================
+
+
+# 🎯 MODULE 28: INVOICING (SALES)
+
+## Overview
+
+Invoicing module manages all **Accounts Receivable** operations — creating, tracking, and managing sales invoices sent to customers. Supports both **Sales Order (SO) linked invoices** and **direct/ad-hoc invoices**. Integrates with Contract billing terms (advance, monthly, per-service) for automated invoice generation. Handles GST compliance including E-Invoice generation, Credit Notes, and multi-branch tax logic (CGST+SGST vs IGST).
+
+**Module Connections:**
+
+- **Depends on:** Module 18 (Customer Master — billing address, GSTIN, state), Module 19 (Contract — billing terms & schedule), Module 20 (Sales Order — pricing, line items), Module 21 (Task Management — service completion trigger), Module 9 (Tax Master — GST rates, HSN codes), Module 7 (Branch — branch state for tax logic)
+- **Used by:** Module 30 (Payments — receipt adjustment against invoices), Module 31 (Ledger — customer balance update), Module 33 (Reports — revenue, GST returns, ageing)
+- **Prerequisites:** Module 9 (Tax), Module 18 (Customer), Module 20 (Sales Order) must be configured
+
+---
+
+The module contains the following screens:
+
+- 28.1 Invoice Dashboard (Table View)
+- 28.2 Create Invoice (From SO / Direct)
+- 28.3 View Invoice Detail (Read-only)
+- 28.4 Edit Invoice (Draft Only)
+- 28.5 Credit Note
+
+---
+
+================================================================================
+
+# 28.1 Invoice Dashboard (Table View)
+
+**Description:**
+The default landing screen for Module 28. Displays all sales invoices in a **table/list format** with summary cards showing total receivable, overdue, paid, and draft counts. Allows filtering, searching, and quick actions on invoices. Supports batch PDF export and Tally-compatible export.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           INVOICING (SALES)                                  │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Filters                                                                │  │
+│  │                                                                        │  │
+│  │ Branch     : [▼ All Branches ▼]                                       │  │
+│  │ Customer   : [🔍 Search Customer ▼]                                   │  │
+│  │ Status     : [☑ Draft ☑ Sent ☑ Partial ☑ Paid ☑ Overdue ☑ Cancelled]│  │
+│  │ Invoice Type: [☑ Tax Invoice ☑ Proforma ☑ Credit Note]              │  │
+│  │ Date Range : [📅 From] - [📅 To]                                      │  │
+│  │ SO Number  : [____________________]                                    │  │
+│  │                                                                        │  │
+│  │ Search: [____________________] (Invoice # / Customer / SO #)          │  │
+│  │                                                 [Reset Filters]       │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [+ CREATE INVOICE]   [📥 EXPORT PDF BATCH]   [📊 TALLY EXPORT]             │
+│                                                                              │
+│  INVOICE SUMMARY CARDS                                                       │
+│  ┌──────────────┬──────────────┬──────────────┬──────────────┐               │
+│  │ Total        │ Overdue      │ Paid         │ Drafts       │               │
+│  │ Receivable   │              │ (This Month) │              │               │
+│  │ ₹ 4,50,000   │ ₹ 85,000     │ ₹ 12,20,000  │ 12 Invoices  │               │
+│  └──────────────┴──────────────┴──────────────┴──────────────┘               │
+│                                                                              │
+│  INVOICE LIST TABLE                                                          │
+│  ┌──────────┬──────────┬─────────────┬──────────┬───────────┬──────────────┐ │
+│  │Invoice # │Inv. Date │Customer     │SO #      │Inv. Amt   │Pending Amt   │ │
+│  │──────────┼──────────┼─────────────┼──────────┼───────────┼──────────────│ │
+│  │INV-10024 │15 Mar 26 │ABC Corp Ltd │SO-2045   │₹ 15,000   │₹ 15,000      │ │
+│  │INV-10025 │16 Mar 26 │XYZ Hotels   │SO-2048   │₹  8,500   │₹  0          │ │
+│  │INV-10026 │16 Mar 26 │Global Biz   │—         │₹ 22,000   │₹ 22,000      │ │
+│  └──────────┴──────────┴─────────────┴──────────┴───────────┴──────────────┘ │
+│                                                                              │
+│  ┌──────────┬──────────────┬──────────────────────────────────────────────┐  │
+│  │Due Date  │Status        │Actions                                       │  │
+│  │──────────┼──────────────┼──────────────────────────────────────────────│  │
+│  │30 Mar 26 │🟡 SENT       │[View] [Edit] [Record Payment] [Send] [PDF]  │  │
+│  │31 Mar 26 │🟢 PAID       │[View] [PDF] [Receipt]                       │  │
+│  │—         │⚪ DRAFT      │[View] [Edit] [Delete] [Approve & Send]      │  │
+│  └──────────┴──────────────┴──────────────────────────────────────────────┘  │
+│                                                                              │
+│  Pagination:  Previous   1   2   3   ...   10   Next                         │
+│                                                                              │
+│  Legend: ⚪ Draft  🟡 Sent  🟠 Partial  🟢 Paid  🔴 Overdue  ⛔ Cancelled   │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Table View Fields
+
+| Field        | Type   | Required | Description                                                    |
+| ------------ | ------ | -------- | -------------------------------------------------------------- |
+| Invoice No   | Text   | Auto     | System-generated unique invoice number (INV-XXXXX)             |
+| Invoice Date | Date   | Auto     | Date when invoice was created                                  |
+| Customer     | Text   | Auto     | Customer name from Module 18                                   |
+| SO No        | Link   | Auto     | Linked Sales Order number (clickable → opens Module 20)        |
+| Invoice Amt  | Number | Auto     | Total invoice amount including taxes                           |
+| Pending Amt  | Number | Auto     | Remaining unpaid amount (Invoice Amt - Received Amt)           |
+| Due Date     | Date   | Auto     | Payment due date (Invoice Date + Credit Period)                |
+| Status       | Badge  | Auto     | Draft / Sent / Partial / Paid / Overdue / Cancelled            |
+| Actions      | Buttons| —        | View / Edit / Delete / Download PDF / Record Payment ↔ Download Receipt |
+
+---
+
+## Summary Card Fields
+
+| Field           | Type   | Description                                              |
+| --------------- | ------ | -------------------------------------------------------- |
+| Total Receivable| Number | Sum of all unpaid invoice amounts (Sent + Partial + Overdue) |
+| Overdue         | Number | Sum of invoices past due date and not fully paid          |
+| Paid (Month)    | Number | Total amount received this month against invoices         |
+| Drafts          | Number | Count of invoices in Draft status                         |
+
+---
+
+## Filters
+
+| Filter       | Type         | Options                                                |
+| ------------ | ------------ | ------------------------------------------------------ |
+| Branch       | Dropdown     | All Branches / Specific Branch (from Module 7)         |
+| Status       | Multi-select | Draft / Sent / Partial / Paid / Overdue / Cancelled    |
+| Date Range   | Date Range   | From – To                                              |
+
+---
+
+## Search
+
+Searchable by:
+
+- Invoice Number
+- Customer Name
+- Sales Order Number
+
+---
+
+## Actions (Table Row)
+
+| Action             | Type   | Condition              | Description                                            |
+| ------------------ | ------ | ---------------------- | ------------------------------------------------------ |
+| **View**           | Button | All statuses           | Opens invoice detail in read-only mode (Screen 28.3)   |
+| **Edit**           | Button | Draft only             | Opens invoice in edit mode (Screen 28.4)               |
+| **Delete**         | Button | Draft only             | Deletes draft invoice after confirmation               |
+| **Record Payment** | Button | Sent / Partial / Overdue | Redirects to Module 30 with invoice pre-selected      |
+| **Download Receipt**| Button | Paid                   | Downloads the linked payment receipt PDF from Module 30 |
+| **Download PDF**   | Button | Sent / Paid / Partial  | Downloads the invoice copy as PDF                      |
+
+> **Conditional Button Note:**
+> - **Record Payment** and **Download Receipt** occupy the **same button position** in each row.
+> - If Invoice Status = `Sent` / `Partial` / `Overdue` → Button shows **“Record Payment”** → Redirects to Module 30 with this invoice pre-selected.
+> - If Invoice Status = `Paid` → Button changes to **“Download Receipt”** → Downloads the payment receipt PDF from Module 30.
+> - If Invoice Status = `Draft` / `Cancelled` → This button is **hidden**.
+
+---
+
+## Form Actions
+
+| Action              | Description                                               |
+| ------------------- | --------------------------------------------------------- |
+| **+ Create Invoice**| Opens the **Create Invoice Form** (Screen 28.2)           |
+
+---
+
+## Business Rules
+
+| Rule                                  | Description                                                  |
+| ------------------------------------- | ------------------------------------------------------------ |
+| Draft invoices do not affect Ledger   | Only Sent/Approved invoices post entries to the Customer Ledger (Module 31). Ledger master creation is independent (no invoice linkage needed in Module 31.2). |
+| Overdue auto-detection                | System marks invoices as Overdue when Due Date passes        |
+| Deletion restricted to Draft          | Only Draft invoices can be deleted; Sent invoices need Credit Note |
+| Branch-based access                   | Users see invoices for their assigned branches only          |
+| Numbering is sequential per branch    | Invoice numbers follow branch-wise sequence (INV-BLR-10001) |
+
+---
+
+## System Behavior
+
+| Event                        | System Action                                                  |
+| ---------------------------- | -------------------------------------------------------------- |
+| Full payment received        | Invoice status → Paid, Pending Amt → 0                        |
+| Partial payment received     | Invoice status → Partial, Pending Amt reduced                 |
+| Due date passes (unpaid)     | Invoice status → Overdue, Notification to accounts team       |
+| Credit Note issued           | Original invoice amount reduced, Ledger adjusted              |
+
+---
+
+================================================================================
+
+# 28.2 Create Invoice (From SO / Direct)
+
+**Description:**
+Form screen to create a new sales invoice. Supports two creation modes: **(1) From Sales Order** — auto-populates line items, pricing, and customer details from the linked SO, **(2) Direct** — manual entry for ad-hoc services or products not tied to an SO. Automatically calculates taxes based on HSN codes and inter-state/intra-state logic.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        CREATE INVOICE                                        │
+│                                                                              │
+│  INVOICE SOURCE                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Creation Mode*: (•) From Sales Order    ( ) Direct Invoice           │  │
+│  │                                                                       │  │
+│  │ ── If "From Sales Order" selected ──                                  │  │
+│  │ Sales Order*  : [🔍 Search SO # / Customer ▼]     [FETCH DETAILS]    │  │
+│  │               (Shows only SOs with status = Confirmed/In Progress)    │  │
+│  │                                                                       │  │
+│  │ ── If "Direct Invoice" selected ──                                    │  │
+│  │ Customer*     : [🔍 Search Customer Name / Code ▼]  [FETCH DETAILS]  │  │
+│  │               (Fetches billing details from Module 18)                │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  INVOICE DETAILS                                                             │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Invoice Type*    : [▼ Tax Invoice ▼]                                  │  │
+│  │ Invoice Date*    : [📅 28 Mar 2026]       (Default: Today)            │  │
+│  │ Credit Period*   : [30] days              Due Date: 27 Apr 2026       │  │
+│  │ Branch*          : [▼ Mumbai ▼]           (Auto from SO if linked)    │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  CUSTOMER DETAILS (Auto-fetched from Module 18)                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Customer Name    : ABC Corp Ltd.                                      │  │
+│  │ GSTIN            : 27AAACB1234F1Z5                                    │  │
+│  │ Billing Address  : 45 MG Road, Fort, Mumbai 400001                    │  │
+│  │ State            : Maharashtra                        [Change ▼]      │  │
+│  │ Contact Person   : Mr. Ravi Sharma — 9876543210                       │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  LINE ITEMS (Editable Grid)                                                  │
+│  ┌───┬──────┬────────────┬────────┬─────┬──────┬──────┬──────┬─────┬───────┐  │
+│  │Sr │Type  │Description │HSN/SAC │Qty  │UOM   │Rate  │Disc% │Tax% │Amount │  │
+│  │───┼──────┼────────────┼────────┼─────┼──────┼──────┼──────┼─────┼───────│  │
+│  │ 1 │Svc   │Cockroach   │998531  │  1  │ —    │2,500 │ 0%   │18%  │₹2,950│  │
+│  │   │      │Treatment   │        │     │      │      │      │     │      │  │
+│  │ 2 │Svc   │Termite     │998531  │  1  │ —    │5,000 │ 5%   │18%  │₹5,605│  │
+│  │   │      │Control     │        │     │      │      │      │     │      │  │
+│  │ 3 │Prod  │Rodent Bait │392690  │  5  │PKT   │  200 │ 0%   │12%  │₹1,120│  │
+│  │   │      │Box         │        │     │      │      │      │     │      │  │
+│  └───┴──────┴────────────┴────────┴─────┴──────┴──────┴──────┴─────┴───────┘  │
+│  [+ ADD LINE ITEM]    [🗑 REMOVE SELECTED]                                   │
+│                                                                              │
+│  TAX BREAKDOWN                                                               │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Subtotal (Before Tax)                              ₹ 9,200            │  │
+│  │ Discount                                           - ₹ 250            │  │
+│  │ ──────────────────────────────────────                                 │  │
+│  │ Taxable Amount                                     ₹ 8,950            │  │
+│  │ CGST (9%)                                          ₹ 805.50           │  │
+│  │ SGST (9%)                                          ₹ 805.50           │  │
+│  │ IGST (if inter-state)                              —                   │  │
+│  │ ══════════════════════════════════════                                 │  │
+│  │ GRAND TOTAL                                        ₹ 10,561           │  │
+│  │ (In Words: Rupees Ten Thousand Five Hundred Sixty-One Only)           │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ADDITIONAL DETAILS                                                          │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Notes / Terms    : [_____________________________________________]    │  │
+│  │ Internal Remarks : [_____________________________________________]    │  │
+│  │ Attachment       : [📎 Upload Supporting Document]                    │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [SAVE AS DRAFT]    [APPROVE & SEND]    [CANCEL]                             │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Screen Fields: Invoice Header
+
+| Field          | Type         | Required | Description                                           |
+| -------------- | ------------ | -------- | ----------------------------------------------------- |
+| Creation Mode  | Radio        | Yes      | From Sales Order / Direct Invoice                     |
+| Sales Order    | Search + dropdown      | Cond.    | Required if mode = From SO. Fetches SO details. Hidden if mode = Direct |
+| Customer       | Search + dropdown     | Cond.    | Required if mode = Direct. Search by Name/Code. Fetches billing details from Module 18. Hidden if mode = From SO |
+| Invoice Type   | Dropdown     | Yes      | Tax Invoice / Proforma Invoice                        |
+| Invoice Date   | Date Picker  | Yes      | Defaults to today. Cannot be future date              |
+| Credit Period  | Number       | Yes      | Days allowed for payment (default from Contract)      |
+| Due Date       | Date (Auto)  | Auto     | Calculated: Invoice Date + Credit Period              |
+| Branch         | Dropdown     | Yes      | Auto-filled from SO, editable for direct invoices     |
+
+---
+
+## Screen Fields: Customer Details
+
+| Field           | Type     | Required | Description                                         |
+| --------------- | -------- | -------- | --------------------------------------------------- |
+| Customer Name   | Display  | Auto     | Fetched from Module 18 — Customer Master            |
+| GSTIN           | Display  | Auto     | Customer's GST number from Module 18                |
+| Billing Address | Display  | Auto     | Default billing address from Module 18              |
+| State           | Dropdown | Auto     | **Default:** Auto-fetched from Module 18 billing address. **User can override** via `[Change ▼]` to select a different state (e.g., for inter-branch billing). Changing state **re-triggers tax logic** (CGST/SGST ↔ IGST). Options: All Indian states & UTs from Module 9 (Tax Config) |
+| Contact Person  | Display (name + mobile) | Auto     | Primary contact from Module 18                      |
+
+> **Data Source:** The entire Customer Details section is auto-populated when a Sales Order is fetched (mode = From SO) or when a Customer is selected (mode = Direct). All data originates from **Module 18 — Customer Master** (billing address, GSTIN, contact). The State field additionally references **Module 9 — Tax Configuration** for the dropdown list and for determining CGST/SGST vs IGST split.
+
+---
+
+## Screen Fields: Line Items Grid
+
+| Field       | Type     | Required | Description                                           |
+| ----------- | -------- | -------- | ----------------------------------------------------- |
+| Sr. No      | Number   | Auto     | Sequential row number                                 |
+| Type        | Tag/Badge| Auto     | Indicates item source: **Svc** (Service — Module 12) or **Prod** (Product — Module 10). Auto-determined when item is added from SO; user selects when adding manually |
+| Description | Text     | Yes      | **Product:** `productName` from Module 10. **Service:** `serviceName` from Module 12. Auto-filled from SO line items if linked; manual entry for direct invoices |
+| HSN/SAC     | Text     | Yes      | **Product:** `hsnCode` from Module 10. **Service:** SAC code from Module 12 service category. Auto-fetched based on selected item |
+| Qty         | Number   | Yes      | Quantity of items. Default 1 for services. For products, must be ≤ available stock (Module 10) |
+| UOM         | Dropdown | Auto     | **Product only:** `baseUom` from Module 10 — Options: `LTR` / `KG` / `GRAM` / `ML` / `SET` / `PKT`. **Service:** UOM is not applicable (shows `—`), as services are billed per visit/contract from Module 12 pricing model |
+| Rate        | Number   | Yes      | **Product:** `sellingPrice` from Module 10. **Service:** Rate determined by Module 12 `priceType` (Fixed / Area-Based / Inspection). Auto-filled from SO, editable by user |
+| Discount %  | Number   | No       | Line-level discount percentage (default 0)            |
+| Tax %       | Number   | Auto     | GST rate from Module 9 (Tax Config) based on HSN/SAC code |
+| Amount      | Number   | Auto     | Calculated: (Qty × Rate − Discount) + Tax            |
+
+> **Data Source Mapping:**
+> - **From SO (Mode = From Sales Order):** Line items auto-populated from **Module 20 — Sales Order** line items. Each SO line item already references either a Product (Module 10) or Service (Module 12), so all fields (Description, HSN/SAC, UOM, Rate) are pre-filled.
+> - **Direct Invoice (Mode = Direct):** User manually searches and selects items from **Module 10 — Product Master** or **Module 12 — Service Master**. On selection, Description, HSN/SAC, UOM, and Rate are auto-fetched from the respective module.
+> - **UOM Note:** UOM applies only to products (physical goods measured in LTR, KG, GRAM, ML, SET, PKT as defined in Module 10). Services are priced per visit/contract via Module 12 pricing models and do not use physical measurement UOM.
+
+**Grid Action Buttons (Below the line items table):**
+
+| Button                | Action                                                                        |
+| --------------------- | ----------------------------------------------------------------------------- |
+| **[+ ADD LINE ITEM]** | Opens the **Add Line Item Modal** (see below) to search and select from Module 10/12. |
+| **[🗑 REMOVE SELECTED]** | Removes the currently selected/highlighted row(s). Disabled if no row is selected. At least 1 line item must remain (cannot remove all rows) |
+
+### Add Line Item Modal (Popup)
+
+**Description:**
+Triggered by clicking `[+ ADD LINE ITEM]`. Allows the user to specify whether they are adding a Service or a Product, search the respective master data (Module 12 or Module 10), preview the details, and add it to the invoice grid.
+
+**Modal Wireframe:**
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  ADD LINE ITEM                                               [X] │
+│  ──────────────────────────────────────────────────────────────  │
+│                                                                  │
+│  Item Type*  :  (•) Service          ( ) Product                 │
+│                 (Fetches Mod 12)     (Fetches Mod 10)            │
+│  Search Item*:  [🔍 Search by Name / Code ▼]                     │
+│                                                                  │
+│  ────────────────── ITEM DETAILS & PRICING ────────────────────  │
+│  Name           : Termite Barrier                                │
+│  SAC/HSN        : 998531                                         │
+│  Tax %          : 18%                                            │
+│                                                                  │
+│  ── Dynamic Form Based on Price Type (From Mod 12) ────────────  │
+│                                                                  │
+│  == [IF Service Price Type = FIXED_PRICE] =====================  │
+│  Category       : [▼ Residential (Internal/External) ]           │
+│  Property Type  : [▼ 1BHK ]                                      │
+│  Predefined Rate: ₹ 1,500                                        │
+│  ==============================================================  │
+│                                                                  │
+│  == [IF Service Price Type = AREA_BASED] ======================  │
+│  Category       : [▼ Commercial (Internal/External)  ]           │
+│  Base Price     : ₹ 500.00                                       │
+│  Rate Per Sq.Ft : ₹ 2.00                                         │
+│  Input Area*    : [   1000  ] SQFT                               │
+│  Calculated     : ₹ 500 + (1000 × ₹ 2) = ₹ 2,500                 │
+│  ==============================================================  │
+│                                                                  │
+│  == [IF Service Price Type = INSPECTION_BASED] ================  │
+│  Inspection Fee : ₹ 500 (Final price quoted after visit)         │
+│  ==============================================================  │
+│                                                                  │
+│  == [IF Service Price Type = CUSTOM] ==========================  │
+│  Config Name    : [▼ Select Custom Config (e.g. Warehouse) ]     │
+│  Rate           : — (Manual Entry Required)                      │
+│  ==============================================================  │
+│                                                                  │
+│  == [IF Item Type = Product] ==================================  │
+│  UOM            : LTR / KG / Nos (From Mod 10)                   │
+│  Selling Price  : ₹ 1,200        (From Mod 10)                   │
+│  Stock Available: 50             (From Mod 11 Inventory)         │
+│  ==============================================================  │
+│                                                                  │
+│  Final Rate (₹)*: [  2500  ] (Editable override / manual input)  │
+│  Quantity*      : [  1     ]                                     │
+│  ──────────────────────────────────────────────────────────────  │
+│                                                                  │
+│                   [CANCEL]    [ADD TO INVOICE]                   │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+**Modal Fields & Actions:**
+
+| Field / Action | Description |
+| -------------- | ----------- |
+| **Item Type** | Radio buttons. Defaults to Service. Dictates which API is called for the search field below. |
+| **Search Item** | Auto-complete search. If Type=Service, searches **Module 12** active services. If Type=Product, searches **Module 10** active inventory products. |
+| **Item Details** | Read-only preview showing Name, SAC/HSN, UOM, and Tax%. |
+| **Pricing Calculation** | **Dynamic Form Based on Price Type (From Mod 12):**<br><br>• **FIXED PRICE:** Renders dropdown for Category (Residential/Commercial) and Property Type (1BHK, 2BHK, Small Office). Auto-fetches the predefined rate.<br><br>• **AREA_BASED:** Renders dropdown for Category. Shows the predefined `Base Price` + `Rate per SQFT`. Renders an `Input Area (SQFT)` field. Auto-calculates `Base Price + (Area × Rate)`.<br><br>• **INSPECTION_BASED:** Shows only the flat `Inspection Fee`.<br><br>• **CUSTOM:** Renders custom configuration dropdown fields mapped from Module 12. Prompt user for manual rate entry. |
+| **Final Rate (₹)** | **Editable Input.** Auto-populated based on the `Pricing Calculation` logic above. The user can keep the calculated rate or manually override it (e.g., negotiated discount). If a Product is selected, it defaults to the `sellingPrice` (Mod 10). |
+| **Quantity** | Input field for quantity. Defaults to 1. For products, system validates against available stock in Module 10 (or warns about negative inventory). |
+| **[ADD TO INVOICE]**| Closes modal and appends the selected item, calculated/overridden rate, and quantity as a new row at the Invoice Line Items grid. |
+| **[CANCEL] / [X]** | Closes modal without making changes to the grid. |
+
+---
+
+## Screen Fields: Tax Breakdown
+
+| Field          | Type    | Description                                             |
+| -------------- | ------- | ------------------------------------------------------- |
+| Subtotal       | Number  | Sum of (Qty × Rate) for all line items                  |
+| Discount       | Number  | Sum of all line-level discounts                         |
+| Taxable Amount | Number  | Subtotal - Discount                                     |
+| CGST           | Number  | Central GST (if Customer State = Branch State)          |
+| SGST           | Number  | State GST (if Customer State = Branch State)            |
+| IGST           | Number  | Integrated GST (if Customer State ≠ Branch State)       |
+| Grand Total    | Number  | Taxable Amount + CGST + SGST (or IGST)                  |
+| Amount in Words| Text    | Auto-generated text representation of Grand Total       |
+
+---
+
+## Screen Fields: Additional Details
+
+| Field            | Type        | Required | Description                                    |
+| ---------------- | ----------- | -------- | ---------------------------------------------- |
+| Notes / Terms    | Textarea    | No       | Payment terms, warranty info shown on invoice  |
+| Internal Remarks | Textarea    | No       | Internal notes (not printed on invoice)        |
+| Attachment       | File Upload | No       | Supporting documents (PDF/JPG/PNG, max 5MB)    |
+
+---
+
+## Validation Rules
+
+| Field          | Rule                                                         |
+| -------------- | ------------------------------------------------------------ |
+| Sales Order    | Must exist and have status = Confirmed or In Progress        |
+| Invoice Date   | Cannot be a future date. Cannot be before SO date            |
+| Credit Period  | Must be a positive number (1–365 days)                       |
+| Customer GSTIN | If B2B, GSTIN is mandatory. Validated against GST portal     |
+| Line Items     | Minimum 1 line item required                                 |
+| Qty            | Must be greater than 0                                       |
+| Rate           | Must be greater than 0                                       |
+| Discount %     | Must be between 0 and 100                                    |
+| HSN/SAC Code   | Must be a valid code from Module 9 Tax configuration         |
+| Attachment     | Optional. Max 5MB. Allowed: PDF, JPG, PNG                    |
+
+---
+
+## Business Rules
+
+| Rule                           | Description                                                     |
+| ------------------------------ | --------------------------------------------------------------- |
+| SO Partial Invoicing           | An SO can have multiple invoices (monthly billing, milestone)   |
+| Tax Logic (Intra-state)        | If Customer State = Branch State → CGST + SGST (50/50 split)   |
+| Tax Logic (Inter-state)        | If Customer State ≠ Branch State → IGST (full rate)            |
+| E-Invoice                      | If B2B invoice > ₹50,000 → E-Invoice with IRN is mandatory    |
+| Contract Billing Terms         | If linked to Contract (Module 19), billing mode auto-applied   |
+| Duplicate Prevention           | System warns if another invoice exists for same SO + same month|
+| Round-off                      | Grand Total rounded to nearest ₹1                              |
+
+---
+
+## Form Actions
+
+| Action             | Description                                                      |
+| ------------------ | ---------------------------------------------------------------- |
+| **Save as Draft**  | Saves invoice without finalizing. Does NOT update Ledger         |
+| **Cancel**         | Discards all changes and returns to Dashboard (28.1)             |
+
+---
+
+## System Behavior
+
+| Event                      | System Action                                                   |
+| -------------------------- | --------------------------------------------------------------- |
+| SO Selected (Fetch)        | Auto-populates Customer, Line Items, Pricing, Tax               |
+| Approve & Send clicked     | Generates Invoice #, updates Customer Ledger (Dr), sends PDF    |
+| Save as Draft              | Saves record with status = Draft, no Ledger impact              |
+| E-Invoice triggered        | Generates IRN via GST portal API, adds QR code to invoice PDF   |
+| Customer GSTIN missing     | Warning: "Customer GSTIN not found. B2C invoice will be created"|
+
+---
+
+================================================================================
+
+# 28.3 View Invoice Detail (Read-only)
+
+**Description:**
+A read-only screen showing the complete invoice with all details — customer info, line items, tax breakdown, payment history, and audit trail. Displays the invoice in a print-ready format. Shows linked SO number, payment receipts, and credit notes if any.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       INVOICE DETAIL — INV-10024                             │
+│                                                                              │
+│  Status: 🟡 SENT                     Due Date: 30 Mar 2026                   │
+│                                                                              │
+│  ┌──────────────────────────────┬────────────────────────────────────────┐  │
+│  │ FROM                          │ TO                                     │  │
+│  │ Pest Shield Services Pvt Ltd │ ABC Corp Ltd                           │  │
+│  │ GSTIN: 27AAAPS1234F1Z5       │ GSTIN: 27AAACB1234F1Z5               │  │
+│  │ 12 Business Park, Andheri    │ 45 MG Road, Fort                      │  │
+│  │ Mumbai 400058                │ Mumbai 400001                          │  │
+│  │ Maharashtra                   │ Maharashtra                            │  │
+│  └──────────────────────────────┴────────────────────────────────────────┘  │
+│                                                                              │
+│  Invoice #     : INV-10024               Invoice Date : 15 Mar 2026         │
+│  SO Reference  : SO-2045 (Clickable)     Credit Period: 15 Days             │
+│  Contract Ref  : CON-1008 (Clickable)    Due Date     : 30 Mar 2026        │
+│                                                                              │
+│  LINE ITEMS                                                                  │
+│  ┌───┬────────────────────┬────────┬─────┬──────┬──────┬──────┬──────────┐  │
+│  │Sr │Description         │HSN/SAC │Qty  │Rate  │Disc% │Tax%  │Amount    │  │
+│  │───┼────────────────────┼────────┼─────┼──────┼──────┼──────┼──────────│  │
+│  │ 1 │Cockroach Treatment │998531  │  1  │2,500 │ 0%   │ 18%  │₹ 2,950  │  │
+│  │ 2 │Termite Control     │998531  │  1  │5,000 │ 5%   │ 18%  │₹ 5,605  │  │
+│  │ 3 │Rodent Bait Box     │392690  │  5  │  200 │ 0%   │ 12%  │₹ 1,120  │  │
+│  └───┴────────────────────┴────────┴─────┴──────┴──────┴──────┴──────────┘  │
+│                                                                              │
+│  TAX SUMMARY                                                                 │
+│  ┌──────────────────────────────────────────────────────────────┐            │
+│  │ Subtotal          : ₹ 9,200       CGST (9%)  : ₹ 805.50    │            │
+│  │ Discount          : - ₹ 250       SGST (9%)  : ₹ 805.50    │            │
+│  │ Taxable Amount    : ₹ 8,950       IGST       : —            │            │
+│  │ ────────────────────────────────────────────────             │            │
+│  │ GRAND TOTAL       : ₹ 10,561                                │            │
+│  └──────────────────────────────────────────────────────────────┘            │
+│                                                                              │
+│  TRANSACTION LEDGER (PAYMENTS & CREDIT NOTES)                                │
+│  ┌──────────┬───────────┬────────────┬──────────────────┬──────────────┬──────────────┬────────┐  │
+│  │Date      │Type       │Reference # │Description       │Credit Amount │Running Bal   │Action  │  │
+│  │──────────┼───────────┼────────────┼──────────────────┼──────────────┼──────────────┼────────│  │
+│  │ 15 Mar   │ Invoice   │INV-10024   │Goods Sold        │     —        │ ₹ 10,000     │.       │  │
+│  │ 18 Mar   │ Payment   │RCPT-8021   │Bank Transfer     │ ₹ 5,000      │ ₹ 5,000      │[View]  │  │
+│  │ 20 Mar   │Credit Note│CN-5001     │Discount Applied  │ ₹ 5,000      │ ₹ 0          │[View]  │  │
+│  └──────────┴───────────┴────────────┴──────────────────┴──────────────┴──────────────┴────────┘  │
+│  [+ RECORD PAYMENT] (To Mod 30)   [+ ISSUE CREDIT NOTE] (To 28.5)            │
+│                                                                              │
+│  AUDIT LOG                                                                   │
+│  ┌──────────────────────────────────────────────────────────────────────┐    │
+│  │ 15 Mar 2026 10:30 — Created by Amit Shah (Draft)                    │    │
+│  │ 15 Mar 2026 11:15 — Approved & Sent by Priya Patel                 │    │
+│  └──────────────────────────────────────────────────────────────────────┘    │
+│                                                                              │
+│  [📥 DOWNLOAD PDF]  [✉ RESEND]  [🧾 RECORD PAYMENT]                        │
+│  [🔙 BACK TO LIST]                                                          │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 1. HEADER
+
+| Field Name    | Description                                            |
+| ------------- | ------------------------------------------------------ |
+| Invoice Title | Displays invoice detail heading with invoice number    |
+| Status        | Current status of invoice (Draft, Sent, Paid, Overdue) |
+| Due Date      | Final date by which payment should be completed        |
+
+
+### 2. FROM (Company Details)
+| Field Name     | Description                                      |
+| -------------- | ------------------------------------------------ |
+| Company Name   | Name of the service provider issuing the invoice |
+| GSTIN (From)   | GST identification number of the issuing company |
+| Address (From) | Full address of the issuing company              |
+| State (From)   | State of the issuing company                     |
+
+
+### 3. TO (Customer Details)
+| Field Name    | Description                               |
+| ------------- | ----------------------------------------- |
+| Customer Name | Name of the client receiving the invoice  |
+| GSTIN (To)    | GST identification number of the customer |
+| Address (To)  | Full address of the customer              |
+| State (To)    | State of the customer                     |
+
+
+### 4. Invoice Info
+| Field Name              | Description                            |
+| ----------------------- | -------------------------------------- |
+| Invoice Number          | Unique identifier of the invoice       |
+| Invoice Date            | Date when the invoice is generated     |
+| SO Reference            | Linked sales order reference           |
+| Credit Period           | Allowed payment duration in days       |
+| Contract Reference      | Linked contract reference              |
+| Due Date (Info Section) | Calculated or defined payment due date |
+
+
+### 5. Line Items
+| Field Name   | Description                          |
+| ------------ | ------------------------------------ |
+| Sr No        | Serial number of line item           |
+| Description  | Service or product description       |
+| HSN/SAC Code | Tax classification code              |
+| Quantity     | Number of units                      |
+| Rate         | Price per unit                       |
+| Discount %   | Discount applied on item             |
+| Tax %        | Applicable tax percentage            |
+| Amount       | Final calculated amount for the item |
+
+
+### 6. Tax Summary
+
+| Field Name     | Description                           |
+| -------------- | ------------------------------------- |
+| Subtotal       | Total amount before discount and tax  |
+| Discount       | Total discount applied                |
+| Taxable Amount | Amount after discount before tax      |
+| CGST           | Central GST amount                    |
+| SGST           | State GST amount                      |
+| IGST           | Integrated GST amount (if applicable) |
+| Grand Total    | Final payable amount                  |
+
+
+### 7. Transaction Ledger
+
+| Field Name     | Description                                               |
+| -------------- | --------------------------------------------------------- |
+| Date           | Date of the transaction                                   |
+| Type           | Source of transaction. Determines the view action. Options: **Invoice** (current document), **Payment** (money received), **Credit Note** (adjustment). |
+| Reference #    | Identifying number (INV #, RCPT #, CN #)                  |
+| Description    | Reason or mode (e.g., "Bank Transfer", or Credit Note reason from Mod 28.5) |
+| Credit Amount  | The amount credited (paid or adjusted) against the invoice|
+| Running Bal    | The remaining pending invoice amount after this line      |
+| Action         | Dynamic view button. **If Payment:** opens Mod 30 receipt. **If Credit Note:** opens Mod 28.5 view. |
+| **[+ RECORD PAYMENT]** | Button that redirects to **Module 30**           |
+| **[+ ISSUE CREDIT NOTE]** | Button that redirects to **Screen 28.5 (Credit Note)** |
+
+### 8. Audit Log
+
+| Field Name           | Description                                           |
+| -------------------- | ----------------------------------------------------- |
+| Activity Date & Time | Timestamp of action performed                         |
+| Activity Description | Description of action (Created, Approved, Sent, etc.) |
+| Performed By         | User who performed the action                         |
+| Status Change        | Status associated with the activity                   |
+
+---
+
+## Actions (View Screen)
+
+| Action              | Type   | Condition          | Description                                      |
+| ------------------- | ------ | ------------------ | ------------------------------------------------ |
+| **Download PDF**    | Button | Sent / Paid        | Download formatted invoice PDF                   |
+| **send**          | Button | Sent / Overdue     | Re-send via Email or WhatsApp                    |
+| **Record Payment**  | Button | Sent / Partial     | Redirect to Module 30 with this invoice          |
+| **Back to List**    | Button | All                | Returns to Invoice Dashboard (28.1)              |
+
+---
+
+================================================================================
+
+# 28.4 Edit Invoice (Draft Only)
+
+**Description:**
+Allows editing of an invoice that is still in **Draft** status. Once an invoice is Approved & Sent, it cannot be edited — a Credit Note must be issued instead. The edit form uses the exact same UI, components, and dynamic logic as the **Create Invoice form (28.2)**. 
+
+*Note for Developers: Re-use the 28.2 UI layout strictly. The "Add Line Item" modal with the dynamic `FIXED_PRICE`/`AREA_BASED` configurations from Module 12 behaves identically here, with all existing data pre-populated.*
+
+---
+
+## Business Rules
+
+| Rule                           | Description                                              |
+| ------------------------------ | -------------------------------------------------------- |
+| Edit allowed only for Draft    | Sent / Paid / Overdue invoices cannot be modified        |
+| Audit trail maintained         | Every edit is logged with user name and timestamp        |
+| Re-save as Draft               | Changes are saved without affecting the Ledger           |
+| Approve & Send from Edit       | Draft can be finalized directly from the edit screen     |
+
+---
+
+## System Behavior
+
+| Event                    | System Action                                              |
+| ------------------------ | ---------------------------------------------------------- |
+| User opens Edit          | All fields loaded from saved Draft data                    |
+| User modifies line items | Tax breakdown auto-recalculates                            |
+| Save as Draft pressed    | Updates existing draft, no Ledger change                   |
+| Approve & Send pressed   | Finalizes, generates Invoice #, sends, updates Ledger      |
+
+---
+
+================================================================================
+
+# 28.5 Credit Note (Adjustment)
+
+**Description:**
+Used to reduce the pending value of an issued invoice. This is a simplified manual adjustment ledger entry. It does not require selecting individual line items or an approval workflow. It can be issued manually here, or auto-generated by **Module 30 (Payments)** when a user records a short payment and chooses to "Settle & Close" the remaining balance.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         ISSUE CREDIT NOTE / ADJUSTMENT                       │
+│                                                                              │
+│  ORIGINAL INVOICE                                                            │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Invoice #      : INV-10024                                            │  │
+│  │ Customer       : ABC Corp Ltd                                         │  │
+│  │ Invoice Amount : ₹ 10,561                                             │  │
+│  │ Pending Amount : ₹ 10,561                                             │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ADJUSTMENT DETAILS                                                          │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Credit Note Date* : [📅 28 Mar 2026]                                  │  │
+│  │ Reason*           : [▼ Select Reason ▼]                               │  │
+│  │                     (Payment Settlement / Pricing Error / Service      │  │
+│  │                      Issue / Full Cancellation / Other)                │  │
+│  │ Other Reason*     : [_____________________________________________]   │  │
+│  │                     (Visible only when Reason = "Other")               │  │
+│  │ Remarks*           : [_____________________________________________]   │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ADJUSTMENT AMOUNT                                                           │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Adjust Credit Amt*: [ ₹ 10,000 ]                                       │  │
+│  │                                                                       │  │
+│  │ ── Summary ────────────────────────────────────────────────────────── │  │
+│  │ New Pending Amt   : ₹ 10,561 - ₹ 10,000 = ₹ 561                      │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [ISSUE CREDIT NOTE]    [CANCEL]                                             │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 1. ORIGINAL INVOICE
+| Field Name     | Description                                                              |
+| -------------- | ------------------------------------------------------------------------ |
+| Invoice Number | Reference of the original invoice for which credit note is being created |
+| Customer Name  | Name of the customer associated with the invoice                         |
+| Invoice Amount | Total amount of the original invoice                                     |
+| Pending Amount | Remaining unpaid amount of the invoice                                   |
+
+
+### 2. Adjustment Details
+| Field Name       | Type      | Required | Description                                                                             |
+| ---------------- | --------- | -------- | --------------------------------------------------------------------------------------- |
+| Credit Note Date | Date      | Yes      | Date on which the credit note is issued                                                 |
+| Reason           | Dropdown  | Yes      | Reason for the adjustment. Options: Payment Settlement / Pricing Error / Service Issue / Full Cancellation / Other |
+| Other Reason     | Text      | Cond.    | **Visible only when Reason = "Other"**. Free-text reason. Required if Reason = Other    |
+| Remarks          | Textarea  | Yes       | Additional comments or explanation for the credit note                                  |
+| Adjust Credit Amt| Number    | Yes      | The total manual amount to credit against the invoice's pending balance                 |
+
+---
+
+## Validation Rules
+
+| Field            | Rule                                                       |
+| ---------------- | ---------------------------------------------------------- |
+| Credit Note Date | Cannot be before original invoice date                     |
+| Reason           | Must select from dropdown                                  |
+| Other Reason     | Required if Reason = "Other". Cannot be blank whitespace   |
+| Credit Amount    | Cannot exceed the current `Pending Amount` of the invoice  |
+
+---
+
+## System Behavior & Automation
+
+| Event                      | System Action                                             |
+| -------------------------- | --------------------------------------------------------- |
+| Credit Note issued         | Auto-approved immediately. CN number generated (CN-XXXXX) |
+| Ledger adjustment          | Customer Ledger credited by CN amount                     |
+| Invoice pending reduced    | Original invoice's pending amount reduced by CN amount    |
+| **Auto-Generate via Payment**| If Payment (Module 30) is ₹561 against ₹10,561, user can choose "Settle". System auto-creates a ₹10,000 CN internally. |
+
+---
+
+## Status Flow (Module 28 Overall)
+
+```
+                    ┌──────────┐
+                    │  DRAFT   │
+                    └────┬─────┘
+                         │ (Approve & Send)
+                         ▼
+                    ┌──────────┐
+                    │   SENT   │
+                    └────┬─────┘
+                    ┌────┴─────┐
+                    │          │
+                    ▼          ▼
+             ┌──────────┐ ┌──────────┐
+             │ PARTIAL  │ │ OVERDUE  │
+             │ (Payment)│ │(Due Date)│
+             └────┬─────┘ └────┬─────┘
+                  │            │ (Payment received)
+                  ▼            ▼
+             ┌──────────────────┐
+             │      PAID        │
+             └──────────────────┘
+
+  Side flows:
+  DRAFT → CANCELLED (Delete)
+  SENT/PAID → CREDIT NOTE ISSUED (Partial/Full)
+```
+
+---
+
+
+=========================================================================================
+
+
+# 🎯 MODULE 29: BILLS (PURCHASES)
+
+## Overview
+
+Bills module manages all **Accounts Payable** operations — recording, tracking, and managing purchase bills received from vendors/suppliers. Supports both **Purchase Order (PO) linked bills** and **direct expense bills** (rent, utilities, office). Handles vendor TDS deduction, GST Input Tax Credit (ITC), and Debit Notes for purchase returns.
+
+**Module Connections:**
+
+- **Depends on:** Module 11 (Stock Management — PO, GRN, vendor details), Module 10 (Product Master — item prices, HSN), Module 9 (Tax Master — GST rates, TDS rates), Module 7 (Branch — branch state for tax logic)
+- **Used by:** Module 30 (Payments — vendor payment adjustment), Module 31 (Ledger — vendor balance update), Module 33 (Reports — expenses, GST ITC, ageing)
+- **Prerequisites:** Module 9 (Tax), Module 10 (Product Master), Module 11 (Stock) must be configured
+
+---
+
+The module contains the following screens:
+
+- 29.1 Bills Dashboard (Table View)
+- 29.2 Add Purchase Bill (From PO / Direct)
+- 29.3 View Bill Detail (Read-only)
+- 29.4 Edit Bill (Draft Only)
+- 29.5 Debit Note (Adjustment)
+
+---
+
+================================================================================
+
+# 29.1 Bills Dashboard (Table View)
+
+**Description:**
+The default landing screen for Module 29. Displays all purchase bills in a **table/list format** with summary cards showing total payable, overdue, paid, and drafts. Supports filtering by vendor, branch, status, date range, and bill type. Includes Vendor Aging Report shortcut.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            BILLS (PURCHASES)                                 │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Filters                                                                │  │
+│  │                                                                        │  │
+│  │ Branch     : [▼ All Branches ▼]                                       │  │
+│  │ Vendor     : [🔍 Search Vendor ▼]                                     │  │
+│  │ Status     : [☑ Draft ☑ Pending ☑ Paid ☑ Overdue ☑ Cancelled]      │  │
+│  │ Bill Type  : [☑ Purchase Bill ☑ Expense Bill]                        │  │
+│  │ Date Range : [📅 From] - [📅 To]                                      │  │
+│  │ PO Number  : [____________________]                                    │  │
+│  │                                                                        │  │
+│  │ Search: [____________________] (Bill # / Vendor / PO #)              │  │
+│  │                                                 [Reset Filters]       │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [+ ADD PURCHASE BILL]   [📊 VENDOR AGING REPORT]   [📁 BULK UPLOAD]        │
+│                                                                              │
+│  BILLS SUMMARY CARDS                                                         │
+│  ┌──────────────┬──────────────┬──────────────┬──────────────┐               │
+│  │ Total        │ Overdue      │ Paid         │ Drafts       │               │
+│  │ Payable      │              │ (This Month) │              │               │
+│  │ ₹ 8,20,000   │ ₹ 1,40,000   │ ₹ 5,50,000   │ 8 Bills      │               │
+│  └──────────────┴──────────────┴──────────────┴──────────────┘               │
+│                                                                              │
+│  BILLS LIST TABLE                                                            │
+│  ┌──────────┬──────────┬─────────────┬──────────┬───────────┬──────────────┐ │
+│  │Bill #    │Bill Date │Vendor       │PO #      │Bill Amt   │Pending Amt   │ │
+│  │──────────┼──────────┼─────────────┼──────────┼───────────┼──────────────│ │
+│  │BILL-5524 │10 Mar 26 │Industrial X │PO-3012   │₹ 85,000   │₹ 85,000      │ │
+│  │BILL-5525 │12 Mar 26 │Agro Chem P  │PO-3015   │₹ 1,20,000 │₹ 0           │ │
+│  │BILL-5526 │14 Mar 26 │Office Mart  │—         │₹ 5,000    │₹ 5,000       │ │
+│  └──────────┴──────────┴─────────────┴──────────┴───────────┴──────────────┘ │
+│                                                                              │
+│  ┌──────────┬──────────────┬───────────────────────────────────────┐         │
+│  │Due Date  │Status        │Actions                                │         │
+│  │──────────┼──────────────┼───────────────────────────────────────│         │
+│  │10 Apr 26 │🟡 PENDING    │[View] [Make Payment]                  │         │
+│  │12 Apr 26 │🟢 PAID       │[View] [PDF] [Payment Ref]             │         │
+│  │—         │⚪ DRAFT      │[View] [Edit] [Delete] [Confirm]       │         │
+│  └──────────┴──────────────┴───────────────────────────────────────┘         │
+│                                                                              │
+│  Pagination:  Previous   1   2   3   ...   10   Next                         │
+│                                                                              │
+│  Legend: ⚪ Draft  🟡 Pending  🟢 Paid  🟠 Partial  🔴 Overdue  ⛔ Cancelled │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Table View Fields
+
+| Field        | Type   | Required | Description                                                  |
+| ------------ | ------ | -------- | ------------------------------------------------------------ |
+| Bill #       | Text   | Auto     | System-generated bill number (BILL-XXXXX)                    |
+| Bill Date    | Date   | Auto     | Date on the vendor's physical invoice                        |
+| Vendor       | Text   | Auto     | Vendor/Supplier name from Module 11                          |
+| PO #         | Link   | Auto     | Linked Purchase Order number (clickable → Module 11)         |
+| Bill Amount  | Number | Auto     | Total bill amount including taxes                            |
+| Pending Amt  | Number | Auto     | Remaining unpaid amount                                      |
+| Due Date     | Date   | Auto     | Bill Date + Credit Period                                    |
+| Status       | Badge  | Auto     | Draft / Pending / Paid / Partial / Overdue / Cancelled       |
+| Actions      | Buttons| —        | View / Edit / Delete / Download PDF / Make Payment ↔ Download Receipt |
+
+---
+
+## Summary Card Fields
+
+| Field           | Type   | Description                                               |
+| --------------- | ------ | --------------------------------------------------------- |
+| Total Payable   | Number | Sum of all unpaid bill amounts                            |
+| Overdue         | Number | Sum of bills past due date and not fully paid             |
+| Paid (Month)    | Number | Total vendor payments this month                          |
+| Drafts          | Number | Count of bills in Draft status                            |
+
+---
+
+## Filters
+
+| Filter     | Type         | Options                                              |
+| ---------- | ------------ | ---------------------------------------------------- |
+| Branch     | Dropdown     | All Branches / Specific Branch (from Module 7)       |
+| Status     | Multi-select | Draft / Pending / Paid / Overdue / Cancelled           |
+| Bill Type  | Multi-select | Purchase Bill / Expense Bill                         |
+| Date Range | Date Range   | From – To                                            |
+
+---
+
+## Search
+
+Searchable by:
+
+- Bill Number
+- Vendor Name
+- Purchase Order Number
+
+---
+
+## Actions (Table Row)
+
+| Action           | Type   | Condition            | Description                                             |
+| ---------------- | ------ | -------------------- | ------------------------------------------------------- |
+| **View**         | Button | All statuses         | Opens bill detail in read-only mode (Screen 29.3)       |
+| **Edit**         | Button | Draft only           | Opens bill in edit mode (Screen 29.4)                   |
+| **Delete**       | Button | Draft only           | Deletes draft bill after confirmation                   |
+| **Make Payment** | Button | Pending / Partial / Overdue | Redirects to Module 30 with bill pre-selected for payment |
+| **Download Receipt** | Button | Paid             | Downloads the linked payment voucher/receipt from Module 30 |
+| **Download PDF** | Button | Pending / Paid / Partial | Downloads the bill copy as PDF                        |
+
+> **Conditional Button Note:**
+> - **Make Payment** and **Download Receipt** occupy the **same button position** in each row.
+> - If Bill Status = `Pending` / `Partial` / `Overdue` → Button shows **"Make Payment"** → Redirects to Module 30 with this bill pre-selected.
+> - If Bill Status = `Paid` → Button changes to **"Download Receipt"** → Downloads the payment voucher/receipt PDF from Module 30.
+> - If Bill Status = `Draft` / `Cancelled` → This button is **hidden**.
+
+---
+
+## Form Actions
+
+| Action                 | Description                                              |
+| ---------------------- | -------------------------------------------------------- |
+| **+ Add Purchase Bill**| Opens the **Add Bill Form** (Screen 29.2)                |
+| **Vendor Aging Report**| Opens aging summary grouped by vendor                    |
+| **Bulk Upload**        | Upload multiple vendor bills via CSV/Excel template      |
+
+---
+
+## Business Rules
+
+| Rule                                | Description                                                  |
+| ----------------------------------- | ------------------------------------------------------------ |
+| Draft bills do not affect Ledger    | Only Confirmed bills post entries to the Vendor Ledger (Module 31). Ledger master creation is independent (no bill linkage needed in Module 31.2). |
+| Auto-Draft from Stock Entry         | When stock is added in Module 11, a Draft Bill is auto-created |
+| Overdue auto-detection              | Bills marked Overdue when Due Date passes without full payment |
+| TDS auto-calculation                | If vendor is TDS applicable, TDS is auto-deducted            |
+
+---
+
+## System Behavior
+
+| Event                           | System Action                                                |
+| ------------------------------- | ------------------------------------------------------------ |
+| Bill Confirmed                  | Vendor Ledger credited, Bill status → Pending                |
+| Full payment made               | Bill status → Paid, Pending Amt → 0                          |
+| Partial payment made            | Bill status → Partial, Pending Amt reduced                   |
+| Due date passes (unpaid)        | Bill status → Overdue, Notification to accounts team         |
+
+---
+
+================================================================================
+
+# 29.2 Add Purchase Bill (From PO / Direct)
+
+**Description:**
+Form screen to record a new purchase bill received from a vendor. Supports two modes: **(1) From Purchase Order** — auto-populates line items from linked PO and validates against GRN, **(2) Direct Expense** — for bills not tied to a PO (rent, utilities, subscriptions). Calculates GST Input Tax Credit and TDS automatically.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        ADD PURCHASE BILL                                     │
+│                                                                              │
+│  BILL SOURCE                                                                 │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Bill Type*    : (•) Purchase Bill (PO Linked)   ( ) Expense Bill     │  │
+│  │                                                                       │  │
+│  │ Purchase Order: [🔍 Search PO # / Vendor ▼]       [FETCH DETAILS]    │  │
+│  │               (Shows only POs with GRN completed / partially received)│  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  BILL HEADER                                                                 │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Vendor Bill #*  : [________________________]  (Vendor's invoice no.)  │  │
+│  │ Bill Date*      : [📅 10 Mar 2026]            (Date on vendor bill)   │  │
+│  │ Credit Period*  : [30] days                   Due Date: 10 Apr 2026   │  │
+│  │ Branch*         : [▼ Mumbai ▼]                                        │  │
+│  │ Expense Category: [▼ Chemical / Equipment / Rent / Utilities / Other] │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  VENDOR DETAILS (Auto-fetched from Module 11)                                │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Vendor Name      : Industrial Chemicals Pvt Ltd                       │  │
+│  │ GSTIN            : 29AABCI1234F1Z5                                    │  │
+│  │ Vendor State     : Karnataka                                          │  │
+│  │ TDS Applicable   : Yes — Section 194C (1%)                            │  │
+│  │ Payment Terms    : Net 30                                             │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  LINE ITEMS (Auto-populated from PO, editable)                               │
+│  ┌───┬────────────┬────────┬─────┬──────┬──────┬──────┬─────┬────────────┐  │
+│  │Sr │Description │HSN     │Qty  │UOM   │Rate  │Disc% │Tax% │Amount      │  │
+│  │───┼────────────┼────────┼─────┼──────┼──────┼──────┼─────┼────────────│  │
+│  │ 1 │Chemical X  │380890  │ 50  │Ltr   │1,200 │ 0%   │18%  │₹ 70,800   │  │
+│  │ 2 │Chemical Y  │380890  │ 50  │Ltr   │  600 │ 0%   │18%  │₹ 35,400   │  │
+│  └───┴────────────┴────────┴─────┴──────┴──────┴──────┴─────┴────────────┘  │
+│  [+ ADD LINE ITEM]    [🗑 REMOVE SELECTED]                                   │
+│                                                                              │
+│  TAX & TDS BREAKDOWN                                                         │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Subtotal (Before Tax)                              ₹ 90,000          │  │
+│  │ Discount                                           - ₹ 0             │  │
+│  │ ──────────────────────────────────────                                │  │
+│  │ Taxable Amount                                     ₹ 90,000          │  │
+│  │ CGST (9%)                                          —                  │  │
+│  │ SGST (9%)                                          —                  │  │
+│  │ IGST (18%)  (Inter-state: MH → KA)                ₹ 16,200          │  │
+│  │ ──────────────────────────────────────                                │  │
+│  │ Total Before TDS                                   ₹ 1,06,200        │  │
+│  │ TDS (1% u/s 194C)                                  - ₹ 900           │  │
+│  │ ══════════════════════════════════════                                │  │
+│  │ NET PAYABLE                                        ₹ 1,05,300        │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ATTACHMENTS                                                                 │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Vendor Bill Copy* : [📎 Upload Vendor Invoice]  (MANDATORY)           │  │
+│  │ GRN Document      : [📎 Upload GRN]             (Optional)            │  │
+│  │ Internal Remarks  : [_____________________________________________]   │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [SAVE AS DRAFT]    [CONFIRM BILL]    [CANCEL]                               │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Screen Fields: Bill Header
+
+| Field            | Type        | Required | Description                                          |
+| ---------------- | ----------- | -------- | ---------------------------------------------------- |
+| Bill Type        | Radio       | Yes      | Purchase Bill (PO linked) / Expense Bill             |
+| Purchase Order   | Search      | Cond.    | Required if Bill Type = Purchase Bill                |
+| Vendor Bill #    | Text        | Yes      | The invoice number printed on the vendor's bill      |
+| Bill Date        | Date Picker | Yes      | Date mentioned on the vendor's invoice               |
+| Credit Period    | Number      | Yes      | Payment terms in days (default from vendor master)   |
+| Due Date         | Date (Auto) | Auto     | Calculated: Bill Date + Credit Period                |
+| Branch           | Dropdown    | Yes      | Branch receiving the goods/services                  |
+| Expense Category | Dropdown    | Cond.    | Required if Bill Type = Expense Bill                 |
+
+---
+
+## Screen Fields: Vendor Details
+
+| Field         | Type    | Required | Description                                          |
+| ------------- | ------- | -------- | ---------------------------------------------------- |
+| Vendor Name   | Display | Auto     | Fetched from Module 13 Vendor Management             |
+| GSTIN         | Display | Auto     | Vendor's GST number                                  |
+| Vendor State  | Display | Auto     | Determines CGST/SGST vs IGST                        |
+| TDS Applicable| Display | Auto     | Whether TDS applies and under which section          |
+| Payment Terms | Display | Auto     | Default credit period from vendor master             |
+
+---
+
+## Screen Fields: Line Items Grid
+
+| Field       | Type    | Required | Description                                          |
+| ----------- | ------- | -------- | ---------------------------------------------------- |
+| Sr. No      | Number  | Auto     | Sequential row number                                |
+| Description | Text    | Yes      | Item name (auto-filled from PO if linked)            |
+| HSN         | Text    | Yes      | HSN code from Product Master                         |
+| Qty         | Number  | Yes      | Quantity received (validated against GRN)             |
+| UOM         | Text    | Auto     | Unit from Product Master                             |
+| Rate        | Number  | Yes      | Per-unit cost from vendor bill                       |
+| Discount %  | Number  | No       | Line-level discount (default 0)                      |
+| Tax %       | Number  | Auto     | GST rate from Module 9 based on HSN code             |
+| Amount      | Number  | Auto     | Calculated: (Qty × Rate - Discount) + Tax            |
+
+---
+
+## Screen Fields: Tax & TDS Breakdown
+
+| Field          | Type   | Description                                              |
+| -------------- | ------ | -------------------------------------------------------- |
+| Subtotal       | Number | Sum of (Qty × Rate) for all line items                   |
+| Discount       | Number | Sum of all line-level discounts                          |
+| Taxable Amount | Number | Subtotal - Discount                                      |
+| CGST           | Number | Central GST (if Vendor State = Branch State)             |
+| SGST           | Number | State GST (if Vendor State = Branch State)               |
+| IGST           | Number | Integrated GST (if Vendor State ≠ Branch State)          |
+| TDS            | Number | Auto-deducted based on vendor's TDS section and rate     |
+| Net Payable    | Number | Taxable Amount + GST - TDS                               |
+
+---
+
+## Screen Fields: Attachments
+
+| Field           | Type        | Required | Description                                    |
+| --------------- | ----------- | -------- | ---------------------------------------------- |
+| Vendor Bill Copy| File Upload | Yes      | Scanned copy of vendor's physical bill         |
+| GRN Document    | File Upload | No       | Goods Receipt Note (if applicable)             |
+| Internal Remarks| Textarea    | No       | Notes for internal accounting team             |
+
+---
+
+## Validation Rules
+
+| Field          | Rule                                                          |
+| -------------- | ------------------------------------------------------------- |
+| Vendor Bill #  | Must be unique per vendor (no duplicate bill numbers)         |
+| Bill Date      | Cannot be a future date                                       |
+| Credit Period  | Must be a positive number (1–365 days)                        |
+| Purchase Order | Must exist and have GRN status = Received / Partial          |
+| Qty            | Cannot exceed GRN received quantity                           |
+| Rate           | Must be greater than 0                                        |
+| Line Items     | Minimum 1 line item required                                  |
+| Vendor Bill Copy| Mandatory upload. Max 10MB. Allowed: PDF, JPG, PNG           |
+| HSN Code       | Must be valid from Module 9                                   |
+
+---
+
+## Business Rules
+
+| Rule                         | Description                                                     |
+| ---------------------------- | --------------------------------------------------------------- |
+| Duplicate Bill Check         | System warns if same Vendor Bill # exists for the same vendor   |
+| TDS Deduction                | If vendor has TDS flag, TDS auto-deducted before payable calc   |
+| GST ITC (Input Tax Credit)   | Tax paid on purchase bills is recorded as Input Credit           |
+| Auto-Draft from Module 11    | Stock entry in Module 11 auto-creates a Draft bill              |
+| Expense categorization       | Expense bills must be mapped to COA account head (Module 32)    |
+
+---
+
+## Form Actions
+
+| Action                     | Description                                                   |
+| -------------------------- | ------------------------------------------------------------- |
+| **Save as Draft**          | Saves bill without finalizing. No Ledger impact               |
+| **Confirm Bill**           | Confirms the bill and moves status to Pending. Updates Ledger |
+| **Cancel**                 | Discards changes and returns to Dashboard (29.1)              |
+
+---
+
+## System Behavior
+
+| Event                        | System Action                                                 |
+| ---------------------------- | ------------------------------------------------------------- |
+| PO Selected (Fetch)          | Auto-populates Vendor, Line Items, GRN quantities             |
+| Confirm Bill clicked         | Bill status → Pending; Vendor Ledger credited; GST recorded   |
+
+---
+
+================================================================================
+
+# 29.3 View Bill Detail (Read-only)
+
+**Description:**
+A read-only screen showing the complete bill with all details — vendor info, line items, tax/TDS breakdown, payment history, and audit trail. Shows linked PO, GRN references, and Debit Notes if any.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       BILL DETAIL — BILL-5524                                │
+│                                                                              │
+│  Status: 🟡 PENDING                 Due Date: 10 Apr 2026                   │
+│                                                                              │
+│  ┌──────────────────────────────┬────────────────────────────────────────┐  │
+│  │ FROM (Vendor)                │ TO (Our Company)                       │  │
+│  │ Industrial Chemicals Pvt Ltd │ Pest Shield Services Pvt Ltd          │  │
+│  │ GSTIN: 29AABCI1234F1Z5      │ GSTIN: 27AAAPS1234F1Z5               │  │
+│  │ Bangalore, Karnataka        │ Mumbai, Maharashtra                    │  │
+│  └──────────────────────────────┴────────────────────────────────────────┘  │
+│                                                                              │
+│  Vendor Bill #  : VEN-INV-2026-456      Bill Date    : 10 Mar 2026          │
+│  Our Bill #     : BILL-5524             Credit Period: 30 Days              │
+│  PO Reference   : PO-3012 (Clickable)  Due Date     : 10 Apr 2026         │
+│  GRN Reference  : GRN-1150 (Clickable)                                     │
+│                                                                              │
+│  LINE ITEMS                                                                  │
+│  ┌───┬────────────────────┬────────┬─────┬──────┬──────┬──────┬──────────┐  │
+│  │Sr │Description         │HSN     │Qty  │Rate  │Disc% │Tax%  │Amount    │  │
+│  │───┼────────────────────┼────────┼─────┼──────┼──────┼──────┼──────────│  │
+│  │ 1 │Chemical X          │380890  │ 50  │1,200 │ 0%   │ 18%  │₹ 70,800 │  │
+│  │ 2 │Chemical Y          │380890  │ 50  │  600 │ 0%   │ 18%  │₹ 35,400 │  │
+│  └───┴────────────────────┴────────┴─────┴──────┴──────┴──────┴──────────┘  │
+│                                                                              │
+│  TAX & TDS SUMMARY                                                           │
+│  ┌──────────────────────────────────────────────────────────────┐            │
+│  │ Taxable Amount    : ₹ 90,000     IGST (18%)  : ₹ 16,200    │            │
+│  │ TDS (1% u/s 194C) : - ₹ 900                                 │            │
+│  │ ────────────────────────────────────────────────             │            │
+│  │ NET PAYABLE       : ₹ 1,05,300                              │            │
+│  └──────────────────────────────────────────────────────────────┘            │
+│                                                                              │
+│  TRANSACTION LEDGER (PAYMENTS & DEBIT NOTES)                                 │
+│  ┌──────────┬───────────┬────────────┬──────────────────┬──────────────┬──────────────┬────────┐  │
+│  │Date      │Type       │Reference # │Description       │Debit Amount  │Running Bal   │Action  │  │
+│  │──────────┼───────────┼────────────┼──────────────────┼──────────────┼──────────────┼────────│  │
+│  │ 10 Mar   │ Bill      │BILL-5524   │Purchase          │     —        │ ₹ 1,05,300   │[View]  │  │
+│  │ 12 Mar   │ Payment   │RCPT-8021   │Bank Transfer     │ ₹ 50,000     │ ₹ 55,300     │[View]  │  │
+│  │ 15 Mar   │Debit Note │DN-5001     │Discount Applied  │ ₹ 10,000     │ ₹ 45,300     │[View]  │  │
+│  └──────────┴───────────┴────────────┴──────────────────┴──────────────┴──────────────┴────────┘  │
+│  [+ RECORD PAYMENT] (To Mod 30)   [+ ISSUE DEBIT NOTE] (To Mod 29.5)         │
+│                                                                              │
+│  ATTACHED DOCUMENTS                                                          │
+│  ┌──────────────────────────────────────────────────────────────────────┐    │
+│  │ 📎 Vendor_Invoice_VEN-INV-2026-456.pdf    [👁 View] [📥 Download]   │    │
+│  └──────────────────────────────────────────────────────────────────────┘    │
+│                                                                              │
+│  AUDIT LOG                                                                   │
+│  ┌──────────────────────────────────────────────────────────────────────┐    │
+│  │ 10 Mar 2026 09:00 — Created by Suresh Kumar (Draft)                 │    │
+│  │ 10 Mar 2026 09:30 — Auto-linked to PO-3012 and GRN-1150            │    │
+│  │ 10 Mar 2026 10:00 — Confirmed by Suresh Kumar                      │    │
+│  └──────────────────────────────────────────────────────────────────────┘    │
+│                                                                              │
+│  [📥 DOWNLOAD PDF]  [🧾 MAKE PAYMENT]  [📄 DEBIT NOTE]                     │
+│  [🔙 BACK TO LIST]                                                          │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## View Fields
+
+### 1. HEADER
+| Field Name    | Description                                            |
+| ------------- | ------------------------------------------------------ |
+| Bill Title    | Displays bill detail heading with our bill number      |
+| Status        | Current status of bill (Pending, Paid, Overdue, etc.)  |
+| Due Date      | Final date by which payment should be completed        |
+
+### 2. FROM (Vendor Details)
+| Field Name     | Description                                      |
+| -------------- | ------------------------------------------------ |
+| Vendor Name    | Name of the vendor issuing the bill              |
+| GSTIN (From)   | GST identification number of the vendor          |
+| Address (From) | Address of the vendor                            |
+
+### 3. TO (Company Details)
+| Field Name     | Description                               |
+| -------------- | ----------------------------------------- |
+| Company Name   | Name of our company receiving the bill    |
+| GSTIN (To)     | Our GST identification number             |
+| Address (To)   | Our billing address                       |
+
+### 4. Bill Info
+| Field Name              | Description                            |
+| ----------------------- | -------------------------------------- |
+| Vendor Bill #           | Vendor's own invoice number            |
+| Our Bill #              | System-generated internal bill number  |
+| Bill Date               | Date printed on the vendor's bill      |
+| Credit Period           | Credit days agreed with vendor         |
+| PO Reference            | Linked Purchase Order (Clickable)      |
+| GRN Reference           | Linked Goods Receipt Note (Clickable)  |
+
+### 5. Line Items
+| Field Name       | Description                              |
+| ---------------- | ---------------------------------------- |
+| Sr / Description | Name of product/service                  |
+| HSN              | HSN/SAC code of the item                 |
+| Qty / Rate       | Quantity and per-unit rate               |
+| Disc% / Tax%     | Discount and tax rates applied to row    |
+| Amount           | Total amount for the row                 |
+
+### 6. Tax & TDS Summary
+| Field Name     | Description                           |
+| -------------- | ------------------------------------- |
+| Taxable Amount | Total amount before tax but after discount |
+| SGST/CGST/IGST | Applicable tax amounts                |
+| TDS            | TDS section and deducted amount       |
+| Net Payable    | Final payable amount to vendor        |
+
+### 7. Transaction Ledger
+| Field Name     | Description                                               |
+| -------------- | --------------------------------------------------------- |
+| Date           | Date of the transaction                                   |
+| Type           | Source of transaction. Determines the view action. Options: **Bill** (current doc), **Payment** (money paid), **Debit Note** (adjustment). |
+| Reference #    | Identifying number (BILL #, RCPT #, DN #)                 |
+| Description    | Reason or mode (e.g., "Bank Transfer", or DN reason)      |
+| Debit Amount   | The amount debited (paid or adjusted) against the bill    |
+| Running Bal    | The remaining pending bill amount                         |
+| Action         | Dynamic view button. **If Payment:** opens Mod 30 view. **If Debit Note:** opens Mod 29.5 view. |
+| **[+ RECORD PAYMENT]** | Button that redirects to **Module 30**           |
+| **[+ ISSUE DEBIT NOTE]** | Button that redirects to **Screen 29.5 (Debit Note)** |
+
+### 8. Attached Documents
+| Field Name           | Description                                           |
+| -------------------- | ----------------------------------------------------- |
+| Original Bill File   | Downloadable/viewable vendor invoice attachment       |
+
+### 9. Audit Log
+| Field Name           | Description                                           |
+| -------------------- | ----------------------------------------------------- |
+| Activity Date & Time | Timestamp of action performed                         |
+| Activity Description | Description of action (Created, Linked, Confirmed, etc.) |
+| Performed By         | User who performed the action                         |
+
+---
+
+## Actions (View Screen)
+
+| Action           | Type   | Condition          | Description                                      |
+| ---------------- | ------ | ------------------ | ------------------------------------------------ |
+| **Make Payment** | Button | Pending / Overdue  | Redirect to Module 30 with bill pre-selected     |
+| **Debit Note**   | Button | Pending / Paid     | Opens Debit Note form (Screen 29.5)              |
+| **Download PDF** | Button | All except Draft   | Download bill details as PDF                     |
+| **Back to List** | Button | All                | Returns to Bills Dashboard (29.1)                |
+
+---
+
+================================================================================
+
+# 29.4 Edit Bill (Draft Only)
+
+**Description:**
+Allows editing of a bill that is still in **Draft** status. Once the bill is confirmed, it cannot be edited. The edit form has the same layout as Add Bill (29.2) with all fields pre-populated.
+
+---
+
+## Business Rules
+
+| Rule                            | Description                                              |
+| ------------------------------- | -------------------------------------------------------- |
+| Edit allowed only for Draft     | Pending/Paid bills cannot be modified                    |
+| Audit trail maintained          | Every edit is logged with user name and timestamp        |
+| Re-save as Draft                | Changes saved without affecting the Ledger               |
+| Confirm from Edit               | Draft can be confirmed directly from the edit screen     |
+
+---
+
+## System Behavior
+
+| Event                     | System Action                                              |
+| ------------------------- | ---------------------------------------------------------- |
+| User opens Edit           | All fields loaded from saved Draft data                    |
+| User modifies line items  | Tax/TDS breakdown auto-recalculates                        |
+| Save as Draft pressed     | Updates existing draft, no Ledger change                   |
+| Confirm Bill              | Bill is confirmed, vendor ledger updated, status → Pending |
+
+---
+
+================================================================================
+
+# 29.5 Debit Note (Adjustment)
+
+**Description:**
+A form to issue a Debit Note against an existing purchase bill. Used to reduce the vendor's payable balance in scenarios like purchase returns, billing errors, or post-purchase discounts. Supports auto-generation during the payment settlement process (Module 30).
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           ISSUE DEBIT NOTE                                   │
+│                                                                              │
+│  REFERENCE DETAILS                                                           │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Select Bill*      : [🔍 Search Vendor / Bill # ▼]                     │  │
+│  │                     (Shows only Pending or Paid bills)                │  │
+│  │                                                                       │  │
+│  │ Vendor            : Industrial Chemicals Pvt Ltd                      │  │
+│  │ Bill Amount       : ₹ 1,05,300                                       │  │
+│  │ Pending Amount    : ₹ 55,300                                         │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ADJUSTMENT DETAILS                                                          │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Date*             : [📅 15 Mar 2026]                                  │  │
+│  │ Reason*           : [▼ Purchase Return / Discount / Error / Other]    │  │
+│  │ Adjust Debit Amt* : [₹ 10,000      ]                                  │  │
+│  │                     (Must be ≤ Pending Amount. Current max: ₹ 55,300)│  │
+│  │ Remarks           : [_______________________________________________] │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ATTACHMENTS                                                                 │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Supporting Doc    : [📎 Upload Return LR / Vendor Email]              │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│                                              [ISSUE DEBIT NOTE] [CANCEL]     │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Screen Fields
+
+| Field            | Type        | Required | Description                                                  |
+| ---------------- | ----------- | -------- | ------------------------------------------------------------ |
+| Select Bill      | Search/Drop | Yes      | Select the original bill against which Debit Note is issued  |
+| Date             | Date Picker | Yes      | Date of issuing the Debit Note                               |
+| Reason           | Dropdown    | Yes      | Reason for adjustment                                        |
+| Adjust Debit Amt | Number      | Yes      | The flat amount by which the bill value is reduced           |
+| Remarks          | Textarea    | No       | Notes regarding the return/adjustment                        |
+| Supporting Doc   | File Upload | No       | Proof of return, vendor communication, etc.                  |
+
+---
+
+## Validation Rules
+
+| Field            | Rule                                                          |
+| ---------------- | ------------------------------------------------------------- |
+| Adjust Debit Amt | Must be greater than 0                                        |
+| Adjust Debit Amt | CANNOT exceed the current Pending Amount of the selected bill |
+| Selected Bill    | Must be in Pending or Paid status (cannot be Draft/Cancelled) |
+
+---
+
+## Business Rules
+
+| Rule                               | Description                                                    |
+| ---------------------------------- | -------------------------------------------------------------- |
+| Flat Adjustment                    | Affects the overall bill value; does not require line-item selection |
+| GST / Tax Reversal                 | Expected to be handled manually or proportionally applied at the accounting layer |
+| Auto-Generation (Module 30)        | When a payment is settled for less than the pending amount and marked "Settle & Close," a Debit Note is auto-generated for the shortfall. |
+
+---
+
+## System Behavior
+
+| Event                           | System Action                                                |
+| ------------------------------- | ------------------------------------------------------------ |
+| "Issue Debit Note" Clicked      | Debit Note created (DN-XXXXX)                                |
+| Ledger Effect                   | Vendor's payable balance is reduced by the Debit Amount      |
+| Bill Record Update              | Original bill's Pending Amount is reduced by the Debit Amount|
+| Status Update (If Fully Adjusted)| If the Debit Note reduces the Pending Amount to 0, bill status changes to Paid |
+
+---
+
+## Status Flow (Module 29 Overall)
+
+```
+                    ┌──────────┐
+                    │  DRAFT   │
+                    └────┬─────┘
+                         │ (Confirm Bill)
+                         ▼
+                    ┌──────────┐
+                    │ PENDING  │
+                    └────┬─────┘
+                         │
+              ┌──────────┴──────────┐
+              ▼                     ▼
+       ┌──────────┐          ┌──────────┐
+       │ PARTIAL  │          │ OVERDUE  │
+       │ (Payment)│          │(Due Date)│
+       └────┬─────┘          └────┬─────┘
+            │                     │
+            ▼                     ▼
+       ┌─────────────────────────────┐
+       │           PAID              │
+       └─────────────────────────────┘
+
+  Side flows:
+  DRAFT → CANCELLED
+  PENDING/PAID → DEBIT NOTE ISSUED (Adjustment)
+```
+
+---
+
+====================================================================================================
+
+
+# 🎯 MODULE 30: PAYMENTS (RECEIPTS & VOUCHERS)
+
+## Overview
+
+Payments module manages all **Cash and Bank transactions** — recording money received from customers (Receipts) and money paid to vendors/expenses (Payments). Supports multiple payment modes (Cash, Bank Transfer, UPI, Cheque, Card). Links every transaction to specific Invoices (Module 28) or Bills (Module 29) for reconciliation. Handles Contra entries (inter-bank transfers), Journal entries (non-cash adjustments), **Shortfall Settlement** (auto-generates Credit/Debit Notes), and **Advance Adjustment** (auto-allocates "On Account" balances against new documents).
+
+**Module Connections:**
+
+- **Depends on:** Module 28 (Invoicing — receipt allocation against sales invoices), Module 29 (Bills — payment allocation against purchase bills), Module 18 (Customer Master — customer details), Module 14 (Vendor Master — vendor details, TDS config), Module 31 (Ledger — party balance), Module 32 (Chart of Accounts — bank/cash account heads)
+- **Used by:** Module 31 (Ledger — balance reduction on payment/receipt), Module 33 (Reports — cash flow, bank reconciliation)
+- **Triggers:** Module 28.5 (Credit Note — auto-generated on receipt shortfall settlement), Module 29.5 (Debit Note — auto-generated on payment shortfall settlement)
+- **Deep-link Sources:** Module 28.3 `[+ RECORD PAYMENT]` button pre-populates Receipt Entry (30.2), Module 29.3 `[+ MAKE PAYMENT]` button pre-populates Payment Entry (30.3)
+
+---
+
+The module contains the following screens:
+
+- 30.1 Payment Register Dashboard (Table View)
+- 30.2 Receipt Entry (Money IN — from Customer)
+- 30.3 Payment Entry (Money OUT — to Vendor)
+- 30.4 Contra Entry (Inter-Bank Transfer)
+- 30.5 Journal Entry (Non-Cash Adjustments)
+- 30.6 View Voucher Detail (Read-only)
+
+---
+
+================================================================================
+
+# 30.1 Payment Register Dashboard (Table View)
+
+**Description:**
+The default landing screen for Module 30. Displays all payment and receipt vouchers in a unified table. Shows summary cards for total receipts, total payments, and net cash flow for the selected period. Supports tab-based filtering: **All / Receipts / Payments / Contra / Journal**.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        PAYMENT REGISTER                                      │
+│                                                                              │
+│  TABS: [ ALL ]  [ RECEIPTS ]  [ PAYMENTS ]  [ CONTRA ]  [ JOURNAL ]         │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Filters                                                                │  │
+│  │                                                                        │  │
+│  │ Branch     : [▼ All Branches ▼]                                       │  │
+│  │ Party      : [🔍 Search Customer / Vendor ▼]                         │  │
+│  │ Mode       : [☑ Cash ☑ Bank ☑ UPI ☑ Cheque ☑ Card]                 │  │
+│  │ Date Range : [📅 From] - [📅 To]                                      │  │
+│  │ Bank A/C   : [▼ All Bank Accounts ▼]                                  │  │
+│  │                                                                        │  │
+│  │ Search: [____________________] (Voucher # / Party / Ref #)           │  │
+│  │                                                 [Reset Filters]       │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [+ RECEIPT]  [+ PAYMENT]  [+ CONTRA]  [+ JOURNAL]                          │
+│                                                                              │
+│  SUMMARY CARDS (For selected period)                                         │
+│  ┌──────────────┬──────────────┬──────────────┬──────────────┐               │
+│  │ Total        │ Total        │ Net Cash     │ Unallocated  │               │
+│  │ Receipts     │ Payments     │ Flow         │ Advances     │               │
+│  │ ₹ 8,50,000   │ ₹ 5,20,000   │ ₹ 3,30,000   │ ₹ 45,000     │               │
+│  └──────────────┴──────────────┴──────────────┴──────────────┘               │
+│                                                                              │
+│  VOUCHER LIST TABLE                                                          │
+│  ┌──────────┬──────┬──────────┬──────────────┬──────────┬──────────────┐     │
+│  │Voucher # │Type  │Date      │Party         │Ref #     │Amount        │     │
+│  │──────────┼──────┼──────────┼──────────────┼──────────┼──────────────│     │
+│  │RCP-3001  │🟢 IN │25 Mar 26 │ABC Corp Ltd  │UTR123456 │₹ 15,000      │     │
+│  │PAY-4001  │🔴 OUT│26 Mar 26 │Industrial X  │CHQ-78901 │₹ 85,000      │     │
+│  │CNT-101   │🔵 CNT│27 Mar 26 │— (Self)      │—         │₹ 2,00,000    │     │
+│  │JRN-201   │⚙️ JRN│28 Mar 26 │— (Internal)  │—         │₹ 5,000       │     │
+│  └──────────┴──────┴──────────┴──────────────┴──────────┴──────────────┘     │
+│                                                                              │
+│  ┌────────────┬──────────────┬───────────┬─────────────────────────────┐     │
+│  │Mode        │Allocated To  │Settlement │Actions                      │     │
+│  │────────────┼──────────────┼───────────┼─────────────────────────────│     │
+│  │UPI         │INV-10024     │—          │[View] [PDF] [Print Receipt] │     │
+│  │Cheque      │BILL-5524     │DN-5001    │[View] [PDF] [Print Voucher]│     │
+│  │Bank Trfr   │HDFC → SBI    │—          │[View]                      │     │
+│  │Adjustment  │TDS Adj.      │—          │[View]                      │     │
+│  └────────────┴──────────────┴───────────┴─────────────────────────────┘     │
+│                                                                              │
+│  Pagination:  Previous   1   2   3   ...   10   Next                         │
+│                                                                              │
+│  Legend: 🟢 Receipt  🔴 Payment  🔵 Contra  ⚙️ Journal                      │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Table View Fields
+
+| Field         | Type   | Required | Description                                               |
+| ------------- | ------ | -------- | --------------------------------------------------------- |
+| Voucher #     | Text   | Auto     | System-generated (RCP-XXXX / PAY-XXXX / CNT-XXX / JRN-XXX)|
+| Type          | Badge  | Auto     | Receipt (IN) / Payment (OUT) / Contra / Journal           |
+| Date          | Date   | Auto     | Transaction date                                          |
+| Party         | Text   | Auto     | Customer / Vendor name (or "Self" / "Internal")           |
+| Ref #         | Text   | Auto     | UTR / Cheque # / Transaction ID                          |
+| Amount        | Number | Auto     | Transaction amount                                        |
+| Mode          | Text   | Auto     | Cash / Bank / UPI / Cheque / Card / Adjustment            |
+| Allocated To  | Link   | Auto     | Invoice # / Bill # it was adjusted against (clickable)    |
+| Settlement    | Link   | Auto     | Linked CN # / DN # if auto-generated (clickable)         |
+| Actions       | Buttons| —        | View / PDF / Print                                        |
+
+---
+
+## Summary Card Fields
+
+| Field            | Type   | Description                                             |
+| ---------------- | ------ | ------------------------------------------------------- |
+| Total Receipts   | Number | Sum of all receipt vouchers in the period                |
+| Total Payments   | Number | Sum of all payment vouchers in the period                |
+| Net Cash Flow    | Number | Total Receipts - Total Payments                         |
+| Unallocated Adv. | Number | Money received but not allocated to any specific invoice |
+
+---
+
+## Filters
+
+| Filter     | Type         | Options                                               |
+| ---------- | ------------ | ----------------------------------------------------- |
+| Branch     | Dropdown     | All Branches / Specific Branch (from Module 7)        |
+| Party      | Search       | Customer / Vendor name                                |
+| Mode       | Multi-select | Cash / Bank / UPI / Cheque / Card                     |
+| Date Range | Date Range   | From – To                                             |
+| Bank A/C   | Dropdown     | All / HDFC / SBI / etc. (from Module 32)              |
+
+---
+
+## Search
+
+Searchable by:
+
+- Voucher Number
+- Party Name
+- Reference Number (UTR / Cheque #)
+
+---
+
+## Actions (Table Row)
+
+| Action            | Type   | Condition | Description                                       |
+| ----------------- | ------ | --------- | ------------------------------------------------- |
+| **View**          | Button | All       | Opens voucher in read-only mode (Screen 30.6)     |
+| **PDF**           | Button | All       | Download voucher as PDF                           |
+| **Print Receipt** | Button | Receipts  | Print formatted receipt for customer              |
+| **Print Voucher** | Button | Payments  | Print payment voucher for vendor records          |
+
+---
+
+## Form Actions
+
+| Action         | Description                                               |
+| -------------- | --------------------------------------------------------- |
+| **+ Receipt**  | Opens Receipt Entry form (Screen 30.2)                    |
+| **+ Payment**  | Opens Payment Entry form (Screen 30.3)                    |
+| **+ Contra**   | Opens Contra Entry form (Screen 30.4)                     |
+| **+ Journal**  | Opens Journal Entry form (Screen 30.5)                    |
+
+---
+
+================================================================================
+
+# 30.2 Receipt Entry (Money IN — from Customer)
+
+**Description:**
+Form to record money received from a customer. The amount is allocated against one or more pending invoices from Module 28. If the amount exceeds all pending invoices, the excess is marked as **"On Account" (Advance)**. If the amount is less than the total pending, the user can choose to **Settle & Close** (auto-generates Credit Note via Module 28.5 for the shortfall) or **Keep Open** (invoice remains Partial). Supports all payment modes. Auto-updates Customer Ledger upon saving.
+
+**Deep-Link:** When opened via `[+ RECORD PAYMENT]` from Module 28.3, the `Customer` and target `Invoice` are pre-selected and the invoice is auto-checked in the allocation grid. The customer field is locked (read-only).
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        RECEIPT ENTRY (MONEY IN)                              │
+│                                                                              │
+│  RECEIPT DETAILS                                                             │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Receipt Date*    : [📅 28 Mar 2026]        (Default: Today)           │  │
+│  │ Branch*          : [▼ Mumbai ▼]                                       │  │
+│  │ Customer*        : [🔍 Search Customer ▼]  (🔒 if deep-linked)       │  │
+│  │ Current Balance  : ₹ 45,000 (Owed by customer)     [DISPLAY]         │  │
+│  │ Advance Balance  : ₹ 2,000 (On Account)             [DISPLAY]        │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ADVANCE ADJUSTMENT (Visible only if Advance Balance > 0)                    │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Adjust Advance?  : [☑ Yes]                                            │  │
+│  │ Advance Applied  : ₹ 2,000 (Auto-applied to oldest invoice first)    │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  PAYMENT INFORMATION                                                         │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Payment Mode*    : [▼ Bank Transfer ▼]                                │  │
+│  │ Bank Account*    : [▼ HDFC Current A/C - 1234 ▼]                     │  │
+│  │ Ref / UTR / Chq# : [________________________]                        │  │
+│  │ Cheque Date      : [📅 ________]          (Only if Mode = Cheque)     │  │
+│  │ Amount Received* : ₹ [________]                                       │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  INVOICE ALLOCATION (Adjust against pending invoices)                        │
+│  ┌───┬────────────┬────────────┬────────────┬────────────┬───────────────┐  │
+│  │ ☑ │Invoice #   │Inv. Date   │Total Amt   │Pending Amt │Allocate Amt   │  │
+│  │───┼────────────┼────────────┼────────────┼────────────┼───────────────│  │
+│  │ ☑ │INV-10024   │15 Mar 26   │₹ 15,000    │₹ 15,000    │₹ [15,000]    │  │
+│  │ ☑ │INV-10022   │01 Mar 26   │₹ 12,000    │₹ 5,000     │₹ [5,000]     │  │
+│  │ ☐ │INV-10018   │15 Feb 26   │₹ 8,000     │₹ 8,000     │₹ [      ]    │  │
+│  └───┴────────────┴────────────┴────────────┴────────────┴───────────────┘  │
+│  Note: Only invoices with status Pending / Partial / Overdue are shown.      │
+│  If deep-linked from Mod 28.3, the source invoice is pre-checked.            │
+│                                                                              │
+│  ALLOCATION SUMMARY                                                          │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Advance Applied       : ₹ 2,000                                       │  │
+│  │ Amount Received        : ₹ 25,000                                     │  │
+│  │ Total Settled          : ₹ 27,000                                     │  │
+│  │ Allocated to Invoices  : ₹ 20,000                                     │  │
+│  │ ──────────────────────────────────────                                 │  │
+│  │ Unallocated (Advance)  : ₹ 7,000                                     │  │
+│  │ Carry to Advance?      : [☑ Yes]                                      │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  SETTLEMENT ACTION (Visible when allocated < pending of checked invoices)    │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Invoice INV-10024: Pending ₹15,000 → Allocated ₹13,000               │  │
+│  │ Shortfall: ₹ 2,000                                                    │  │
+│  │                                                                       │  │
+│  │ What to do with shortfall?                                            │  │
+│  │ (•) Keep Open — Invoice stays as "Partial"                            │  │
+│  │ ( ) Settle & Close — Auto-generate Credit Note (CN) for ₹2,000       │  │
+│  │     Reason: [▼ Payment Settlement ▼]                                  │  │
+│  │     → Invoice INV-10024 will be marked PAID                           │  │
+│  │     → CN-XXXXX will be created in Module 28.5                         │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ADDITIONAL                                                                  │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ TDS Deducted by Customer : ₹ [______]     (If customer deducted TDS) │  │
+│  │ Notes                    : [_________________________________]        │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [SAVE & PRINT RECEIPT]    [SAVE]    [CANCEL]                                │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Screen Fields: Receipt Details
+
+| Field           | Type    | Required | Description                                        |
+| --------------- | ------- | -------- | -------------------------------------------------- |
+| Receipt Date    | Date    | Yes      | Date of receipt (default: today)                   |
+| Branch          | Dropdown| Yes      | Branch receiving the payment                       |
+| Customer        | Search  | Yes      | Select customer (fetches pending invoices). **Locked if deep-linked from Mod 28.3** |
+| Current Balance | Display | Auto     | Total outstanding from Customer Ledger (Module 31) |
+| Advance Balance | Display | Auto     | Existing "On Account" advance from Customer Ledger |
+
+---
+
+## Screen Fields: Advance Adjustment
+
+| Field           | Type    | Required | Description                                        |
+| --------------- | ------- | -------- | -------------------------------------------------- |
+| Adjust Advance? | Toggle  | No       | If ON, applies existing advance to oldest invoice first (FIFO) |
+| Advance Applied | Display | Auto     | Amount of advance being applied in this transaction |
+
+> **Visibility:** This section is visible ONLY when Customer has Advance Balance > 0.
+
+---
+
+## Screen Fields: Payment Information
+
+| Field          | Type     | Required | Description                                       |
+| -------------- | -------- | -------- | ------------------------------------------------- |
+| Payment Mode   | Dropdown | Yes      | Cash / Bank Transfer / UPI / Cheque / Card        |
+| Bank Account   | Dropdown | Cond.    | Required if Mode ≠ Cash. From Module 32           |
+| Ref / UTR      | Text     | Cond.    | Required if Mode = Bank/UPI. Transaction reference|
+| Cheque Date    | Date     | Cond.    | Required if Mode = Cheque                         |
+| Amount Received| Number   | Yes      | Total amount received from customer               |
+
+---
+
+## Screen Fields: Invoice Allocation Grid
+
+| Field        | Type     | Required | Description                                       |
+| ------------ | -------- | -------- | ------------------------------------------------- |
+| Select       | Checkbox | No       | Select invoices to allocate against               |
+| Invoice #    | Display  | Auto     | Invoice number from Module 28 (clickable link)    |
+| Invoice Date | Display  | Auto     | Date of original invoice                          |
+| Total Amount | Display  | Auto     | Original invoice amount                           |
+| Pending Amt  | Display  | Auto     | Remaining unpaid amount                           |
+| Allocate Amt | Number   | Cond.    | Amount to allocate (editable, cannot exceed pending)|
+
+> **Grid Filter:** Only invoices with status `Pending`, `Partial`, or `Overdue` are listed. Sorted oldest-first (FIFO default).
+
+> **Deep-Link Behavior:** If opened from Module 28.3 `[+ RECORD PAYMENT]`, the source invoice row is pre-checked with `Allocate Amt` pre-filled to its full `Pending Amt`.
+
+---
+
+## Screen Fields: Settlement Action
+
+| Field             | Type     | Required | Description                                       |
+| ----------------- | -------- | -------- | ------------------------------------------------- |
+| Shortfall Amount  | Display  | Auto     | Per-invoice: Pending Amt − Allocate Amt           |
+| Settlement Choice | Radio    | Cond.    | **Keep Open** (default) / **Settle & Close**      |
+| Reason            | Dropdown | Cond.    | Required if "Settle & Close". Options: Payment Settlement / Pricing Error / Service Issue / Other |
+
+> **Visibility:** This section appears ONLY when at least one checked invoice has `Allocate Amt < Pending Amt`. It shows a row for each such invoice.
+
+> **Settle & Close Effect:** On Save, the system auto-generates a Credit Note (CN-XXXXX) in Module 28.5 for the shortfall amount with `Reason = Payment Settlement` and links it to this receipt voucher.
+
+---
+
+## Screen Fields: Additional
+
+| Field               | Type   | Required | Description                                    |
+| ------------------- | ------ | -------- | ---------------------------------------------- |
+| TDS Deducted        | Number | No       | If customer deducted TDS before paying         |
+| Carry to Advance    | Toggle | Auto     | If unallocated amount exists, carry as advance |
+| Notes               | Text   | No       | Remarks for internal reference                 |
+
+---
+
+## Validation Rules
+
+| Field           | Rule                                                          |
+| --------------- | ------------------------------------------------------------- |
+| Receipt Date    | Cannot be a future date                                       |
+| Customer        | Must exist in Module 18 (Customer Master)                     |
+| Payment Mode    | Must select one option                                        |
+| Bank Account    | Required if Mode is Bank/UPI/Cheque/Card (from Module 32)     |
+| Ref / UTR       | Required for Bank/UPI modes. Must be unique across all vouchers|
+| Cheque Date     | Required if Mode = Cheque. Cannot be older than 3 months      |
+| Amount Received | Must be greater than 0                                        |
+| Allocate Amount | Cannot exceed Pending Amount of individual invoice             |
+| Total Allocation| Sum of all allocations cannot exceed (Amount Received + Advance Applied) |
+| Settle & Close  | Reason is required when "Settle & Close" is selected          |
+
+---
+
+## Business Rules
+
+| Rule                            | Description                                                  |
+| ------------------------------- | ------------------------------------------------------------ |
+| FIFO Allocation default         | System auto-suggests allocation to oldest invoice first      |
+| Partial allocation allowed      | An invoice can be partially paid across multiple receipts    |
+| Advance handling                | Unallocated amount saved as "On Account" in Customer Ledger  |
+| Advance adjustment              | If customer has existing advance, it can be auto-applied before cash allocation |
+| Cheque clearance                | Cheque receipts marked "Subject to Clearance" until confirmed|
+| TDS by customer                 | If customer deducted TDS, it is recorded separately          |
+| Settle & Close auto-CN          | When selected, auto-generates Credit Note (CN) in Module 28.5 for shortfall amount |
+| Deep-link from Mod 28           | Customer & Invoice pre-selected when redirected from Mod 28.3 `[+ RECORD PAYMENT]` |
+
+---
+
+## System Behavior
+
+| Event                        | System Action                                                |
+| ---------------------------- | ------------------------------------------------------------ |
+| Customer selected            | Fetches all pending invoices (Pending/Partial/Overdue) and current balance from Module 31 |
+| Customer has advance         | Shows Advance Adjustment section with existing advance amount |
+| Amount entered               | Auto-suggests FIFO allocation across checked invoices        |
+| Allocation < Pending         | Settlement Action section appears for each shortfall invoice |
+| "Settle & Close" selected    | On Save: Auto-generates CN-XXXXX in Module 28.5 with `Reason = Payment Settlement` and `Amount = Shortfall` |
+| Save clicked                 | Voucher RCP-XXXX created                                     |
+| **Ledger posting**           | **Dr** Bank/Cash Account (Module 32) → **Cr** Customer A/C (Sundry Debtor) |
+| Full allocation on invoice   | Invoice status → **Paid** (Module 28)                        |
+| Partial allocation           | Invoice status → **Partial** (Module 28), pending reduced    |
+| Settle & Close on invoice    | Invoice status → **Paid** (via CN auto-adjustment)           |
+| Advance (unallocated)        | Amount recorded as "On Account" in Customer Ledger (Module 31)|
+| **Mod 28.3 Ledger entry**    | This receipt appears as a new row in the invoice's Transaction Ledger: `Type = Payment, Ref = RCP-XXXX, Credit Amount = allocated, Running Bal = reduced` |
+
+---
+
+================================================================================
+
+# 30.3 Payment Entry (Money OUT — to Vendor)
+
+**Description:**
+Form to record money paid to a vendor/supplier. The amount is allocated against one or more pending bills from Module 29. Handles TDS deduction at source. If the amount paid is less than total pending, user can **Settle & Close** (auto-generates Debit Note via Module 29.5) or **Keep Open** (bill remains Partial). Layout mirrors the Receipt Entry (30.2) but with vendor-specific fields.
+
+**Deep-Link:** When opened via `[+ MAKE PAYMENT]` from Module 29.3, the `Vendor` and target `Bill` are pre-selected and the bill is auto-checked in the allocation grid. The vendor field is locked (read-only).
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        PAYMENT ENTRY (MONEY OUT)                             │
+│                                                                              │
+│  PAYMENT DETAILS                                                             │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Payment Date*    : [📅 28 Mar 2026]        (Default: Today)           │  │
+│  │ Branch*          : [▼ Mumbai ▼]                                       │  │
+│  │ Vendor*          : [🔍 Search Vendor ▼]   (🔒 if deep-linked)        │  │
+│  │ Current Balance  : ₹ 1,05,300 (We owe vendor)    [DISPLAY]           │  │
+│  │ Advance Balance  : ₹ 0 (Advance paid to vendor)  [DISPLAY]           │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ADVANCE ADJUSTMENT (Visible only if Advance Balance > 0)                    │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Adjust Advance?  : [☑ Yes]                                            │  │
+│  │ Advance Applied  : ₹ 0                                                │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  PAYMENT INFORMATION                                                         │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Payment Mode*    : [▼ Bank Transfer (NEFT) ▼]                         │  │
+│  │ Bank Account*    : [▼ HDFC Current A/C - 1234 ▼]                     │  │
+│  │ Ref / UTR / Chq# : [________________________]                        │  │
+│  │ Cheque Date      : [📅 ________]          (Only if Mode = Cheque)     │  │
+│  │ Amount Paid*     : ₹ [________]                                       │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  BILL ALLOCATION (Adjust against pending bills)                              │
+│  ┌───┬────────────┬────────────┬────────────┬────────────┬───────────────┐  │
+│  │ ☑ │Bill #      │Bill Date   │Total Amt   │Pending Amt │Allocate Amt   │  │
+│  │───┼────────────┼────────────┼────────────┼────────────┼───────────────│  │
+│  │ ☑ │BILL-5524   │10 Mar 26   │₹ 1,05,300  │₹ 1,05,300  │₹ [85,000]   │  │
+│  │ ☐ │BILL-5520   │01 Mar 26   │₹ 25,000    │₹ 25,000    │₹ [      ]   │  │
+│  └───┴────────────┴────────────┴────────────┴────────────┴───────────────┘  │
+│  Note: Only bills with status Pending / Partial / Overdue are shown.         │
+│  If deep-linked from Mod 29.3, the source bill is pre-checked.              │
+│                                                                              │
+│  TDS DEDUCTION                                                               │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ TDS Applicable    : Yes — Section 194C (from Vendor Master Mod 14)    │  │
+│  │ TDS Rate          : 1%                                                │  │
+│  │ TDS Amount        : ₹ 850     (Auto-calculated on taxable amount)     │  │
+│  │ Net Payable       : ₹ 84,150                                         │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ALLOCATION SUMMARY                                                          │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Advance Applied       : ₹ 0                                           │  │
+│  │ Amount Paid           : ₹ 85,000                                      │  │
+│  │ TDS Deducted          : ₹ 850                                         │  │
+│  │ Total Settled          : ₹ 85,850                                     │  │
+│  │ Allocated to Bills    : ₹ 85,850                                      │  │
+│  │ ──────────────────────────────────────                                 │  │
+│  │ Unallocated (Advance) : ₹ 0                                          │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  SETTLEMENT ACTION (Visible when allocated < pending of checked bills)       │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Bill BILL-5524: Pending ₹1,05,300 → Allocated ₹85,850                │  │
+│  │ Shortfall: ₹ 19,450                                                   │  │
+│  │                                                                       │  │
+│  │ What to do with shortfall?                                            │  │
+│  │ (•) Keep Open — Bill stays as "Partial"                               │  │
+│  │ ( ) Settle & Close — Auto-generate Debit Note (DN) for ₹19,450       │  │
+│  │     Reason: [▼ Payment Settlement ▼]                                  │  │
+│  │     → Bill BILL-5524 will be marked PAID                              │  │
+│  │     → DN-XXXXX will be created in Module 29.5                         │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  Notes: [_____________________________________________]                      │
+│                                                                              │
+│  [SAVE & PRINT VOUCHER]    [SAVE]    [CANCEL]                                │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Screen Fields: Payment Details
+
+| Field          | Type     | Required | Description                                       |
+| -------------- | -------- | -------- | ------------------------------------------------- |
+| Payment Date   | Date     | Yes      | Date of payment (default: today)                  |
+| Branch         | Dropdown | Yes      | Branch making the payment                         |
+| Vendor         | Search   | Yes      | Select vendor (fetches pending bills). **Locked if deep-linked from Mod 29.3** |
+| Current Balance| Display  | Auto     | Total outstanding from Vendor Ledger (Module 31)  |
+| Advance Balance| Display  | Auto     | Existing "On Account" advance from Vendor Ledger  |
+
+---
+
+## Screen Fields: Payment Information
+
+| Field        | Type     | Required | Description                                       |
+| ------------ | -------- | -------- | ------------------------------------------------- |
+| Payment Mode | Dropdown | Yes      | Cash / Bank Transfer (NEFT/RTGS) / UPI / Cheque   |
+| Bank Account | Dropdown | Cond.    | Required if Mode ≠ Cash. From Module 32           |
+| Ref / UTR    | Text     | Cond.    | Required if Mode = Bank/UPI                       |
+| Cheque Date  | Date     | Cond.    | Required if Mode = Cheque                         |
+| Amount Paid  | Number   | Yes      | Total amount being paid to vendor                 |
+
+---
+
+## Screen Fields: TDS Deduction
+
+| Field         | Type    | Required | Description                                        |
+| ------------- | ------- | -------- | -------------------------------------------------- |
+| TDS Applicable| Display | Auto     | Fetched from Vendor Master (Module 14)             |
+| TDS Rate      | Display | Auto     | Based on TDS section (194C = 1%, 194J = 10%, etc.) |
+| TDS Amount    | Number  | Auto     | Auto-calculated on taxable amount                  |
+| Net Payable   | Number  | Auto     | Amount Paid − TDS Deducted                         |
+
+---
+
+## Screen Fields: Settlement Action
+
+| Field             | Type     | Required | Description                                       |
+| ----------------- | -------- | -------- | ------------------------------------------------- |
+| Shortfall Amount  | Display  | Auto     | Per-bill: Pending Amt − Allocate Amt              |
+| Settlement Choice | Radio    | Cond.    | **Keep Open** (default) / **Settle & Close**      |
+| Reason            | Dropdown | Cond.    | Required if "Settle & Close". Options: Payment Settlement / Purchase Return / Discount / Error / Other |
+
+> **Visibility:** This section appears ONLY when at least one checked bill has `Allocate Amt < Pending Amt`.
+
+> **Settle & Close Effect:** On Save, the system auto-generates a Debit Note (DN-XXXXX) in Module 29.5 for the shortfall amount with `Reason = Payment Settlement` and links it to this payment voucher.
+
+---
+
+## Validation Rules
+
+| Field           | Rule                                                          |
+| --------------- | ------------------------------------------------------------- |
+| Payment Date    | Cannot be a future date                                       |
+| Vendor          | Must exist in Module 14 (Vendor Master)                       |
+| Payment Mode    | Must select one option                                        |
+| Bank Account    | Required for non-cash modes (from Module 32)                  |
+| Ref / UTR       | Required for Bank/UPI. Must be unique across all vouchers     |
+| Amount Paid     | Must be greater than 0                                        |
+| Allocate Amount | Cannot exceed Pending Amount of individual bill               |
+| Total Allocation| Cannot exceed (Amount Paid + Advance Applied − TDS)           |
+| Settle & Close  | Reason is required when selected                              |
+| TDS             | Auto-calculated; cannot be manually overridden unless Manager role |
+
+---
+
+## Business Rules
+
+| Rule                            | Description                                                  |
+| ------------------------------- | ------------------------------------------------------------ |
+| FIFO Allocation default         | System auto-suggests allocation to oldest bill first         |
+| Partial allocation allowed      | A bill can be partially paid across multiple payments        |
+| TDS auto-deduction              | Based on Vendor Master (Mod 14) TDS section config           |
+| Settle & Close auto-DN          | When selected, auto-generates Debit Note (DN) in Mod 29.5   |
+| Deep-link from Mod 29           | Vendor & Bill pre-selected from Mod 29.3 `[+ MAKE PAYMENT]` |
+| Advance handling                | Unallocated excess saved as "On Account" in Vendor Ledger    |
+| Advance adjustment              | If vendor has existing advance, it can be applied before cash|
+
+---
+
+## System Behavior
+
+| Event                      | System Action                                                |
+| -------------------------- | ------------------------------------------------------------ |
+| Vendor selected            | Fetches all pending bills (Pending/Partial/Overdue) and current balance from Module 31 |
+| Vendor has advance         | Shows Advance Adjustment section                             |
+| TDS auto-calculated        | Based on vendor TDS section and rate (Module 14)             |
+| Allocation < Pending       | Settlement Action section appears for each shortfall bill    |
+| "Settle & Close" selected  | On Save: Auto-generates DN-XXXXX in Module 29.5             |
+| Save clicked               | Voucher PAY-XXXX created                                     |
+| **Ledger posting**         | **Dr** Vendor A/C (Sundry Creditor) → **Cr** Bank/Cash Account (Module 32) |
+| **If TDS deducted**        | Additional: **Dr** Vendor A/C → **Cr** TDS Payable A/C      |
+| Full allocation on bill    | Bill status → **Paid** (Module 29)                           |
+| Partial allocation         | Bill status → **Partial** (Module 29), pending reduced       |
+| Settle & Close on bill     | Bill status → **Paid** (via DN auto-adjustment)              |
+| **Mod 29.3 Ledger entry**  | This payment appears as a row in the bill's Transaction Ledger: `Type = Payment, Ref = PAY-XXXX, Debit Amount = allocated, Running Bal = reduced` |
+
+---
+
+================================================================================
+
+# 30.4 Contra Entry (Inter-Bank Transfer)
+
+**Description:**
+Records transfer of funds between the company's own bank accounts or between cash and bank. No external party is involved. Used for Cash Deposit to Bank, Bank Withdrawal, and Inter-bank Fund Transfers.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          CONTRA ENTRY                                        │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Date*           : [📅 28 Mar 2026]                                    │  │
+│  │ Branch*         : [▼ Mumbai ▼]                                        │  │
+│  │                                                                       │  │
+│  │ Transfer From*  : [▼ Cash-in-Hand ▼]                                  │  │
+│  │ Transfer To*    : [▼ HDFC Current A/C - 1234 ▼]                      │  │
+│  │ Amount*         : ₹ [________]                                        │  │
+│  │ Reference       : [________________________]                          │  │
+│  │ Notes           : [________________________]                          │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [SAVE]    [CANCEL]                                                          │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Screen Fields
+
+| Field         | Type     | Required | Description                                       |
+| ------------- | -------- | -------- | ------------------------------------------------- |
+| Date          | Date     | Yes      | Date of transfer (default: today)                 |
+| Branch        | Dropdown | Yes      | Branch performing the transfer                    |
+| Transfer From | Dropdown | Yes      | Source: Cash / Bank Account (from Module 32)      |
+| Transfer To   | Dropdown | Yes      | Destination: Cash / Bank Account (from Module 32) |
+| Amount        | Number   | Yes      | Transfer amount                                   |
+| Reference     | Text     | No       | Internal reference or bank slip number            |
+| Notes         | Text     | No       | Additional remarks                                |
+
+---
+
+## Validation Rules
+
+| Field         | Rule                                                       |
+| ------------- | ---------------------------------------------------------- |
+| Transfer From | Cannot be same as Transfer To                              |
+| Amount        | Must be greater than 0, cannot exceed source balance       |
+| Date          | Cannot be a future date                                    |
+
+---
+
+## System Behavior
+
+| Event              | System Action                                              |
+| ------------------ | ---------------------------------------------------------- |
+| Save clicked       | Voucher CNT-XXX created                                    |
+| **Ledger posting** | **Dr** Destination Account → **Cr** Source Account         |
+| Audit log          | Entry logged with user, timestamp, and both accounts       |
+
+---
+
+================================================================================
+
+# 30.5 Journal Entry (Non-Cash Adjustments)
+
+**Description:**
+Used for internal adjustments that do not involve actual cash movement. Examples: TDS adjustments, depreciation entries, interest accrual, salary accrual, GST set-off, and write-offs. Follows standard double-entry: **Total Debits = Total Credits**.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          JOURNAL ENTRY                                       │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Date*         : [📅 28 Mar 2026]                                      │  │
+│  │ Branch*       : [▼ Mumbai ▼]                                          │  │
+│  │ Narration*    : [_____________________________________________]       │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  JOURNAL LINES                                                               │
+│  ┌───┬──────────────────────────┬──────────────┬──────────────┐             │
+│  │Sr │Account Head              │Debit (Dr)    │Credit (Cr)   │             │
+│  │───┼──────────────────────────┼──────────────┼──────────────│             │
+│  │ 1 │TDS Receivable (194C)     │₹ 900         │—             │             │
+│  │ 2 │Sundry Creditors - Vendor │—             │₹ 900         │             │
+│  └───┴──────────────────────────┴──────────────┴──────────────┘             │
+│  [+ ADD LINE]    [🗑 REMOVE SELECTED]                                       │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Total Debit  : ₹ 900       Total Credit : ₹ 900       ✅ Balanced    │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [SAVE]    [CANCEL]                                                          │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Screen Fields
+
+| Field        | Type     | Required | Description                                        |
+| ------------ | -------- | -------- | -------------------------------------------------- |
+| Date         | Date     | Yes      | Journal date                                       |
+| Branch       | Dropdown | Yes      | Branch for the entry                               |
+| Narration    | Textarea | Yes      | Description/reason for the journal entry           |
+| Account Head | Search   | Yes      | Account from Chart of Accounts (Module 32)         |
+| Debit (Dr)   | Number   | Cond.    | Debit amount (mutually exclusive with Credit)      |
+| Credit (Cr)  | Number   | Cond.    | Credit amount (mutually exclusive with Debit)      |
+
+---
+
+## Validation Rules
+
+| Field        | Rule                                                         |
+| ------------ | ------------------------------------------------------------ |
+| Date         | Cannot be a future date                                      |
+| Narration    | Cannot be empty                                              |
+| Lines        | Minimum 2 lines required                                     |
+| Balance      | Total Debits MUST equal Total Credits                        |
+| Account Head | Must exist in Module 32                                      |
+| Each line    | Must have either Debit OR Credit, not both                   |
+
+---
+
+## System Behavior
+
+| Event                 | System Action                                           |
+| --------------------- | ------------------------------------------------------- |
+| Line added            | Dr/Cr balance auto-recalculated                         |
+| Imbalance detected    | Save button disabled; "Unbalanced" warning shown        |
+| Save clicked          | JRN-XXX number generated                                |
+| **Ledger posting**    | Each line creates entry in the respective ledger account|
+
+---
+
+================================================================================
+
+# 30.6 View Voucher Detail (Read-only)
+
+**Description:**
+Read-only view of any voucher (Receipt / Payment / Contra / Journal). Shows the full transaction details, linked invoices/bills, settlement notes (auto-generated CN/DN), double-entry ledger posting, and audit trail.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       VOUCHER DETAIL — RCP-3001                              │
+│                                                                              │
+│  Voucher Type : 🟢 Receipt (IN)       Date: 25 Mar 2026                     │
+│  Party        : ABC Corp Ltd          Mode: Bank Transfer (UPI)              │
+│  Amount       : ₹ 15,000              Ref : UTR123456                        │
+│                                                                              │
+│  INVOICE ALLOCATION                                                          │
+│  ┌────────────┬──────────────┬──────────────┬──────────────┐                │
+│  │Invoice #   │Total Amt     │Allocated Amt │Status After  │                │
+│  │────────────┼──────────────┼──────────────┼──────────────│                │
+│  │INV-10024   │₹ 15,000      │₹ 13,000      │Partial       │                │
+│  │INV-10022   │₹ 12,000      │₹ 2,000       │Partial       │                │
+│  └────────────┴──────────────┴──────────────┴──────────────┘                │
+│                                                                              │
+│  LINKED SETTLEMENT NOTE (If auto-generated)                                  │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ ⚠️ No settlement note generated (Kept Open)                          │  │
+│  │ OR                                                                    │  │
+│  │ ✅ Credit Note CN-5001 auto-generated for ₹2,000 (Payment Settlement)│  │
+│  │    → INV-10024 status changed to PAID                                 │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  LEDGER POSTING (Double Entry)                                               │
+│  ┌──────────────────────────────┬──────────────┬──────────────┐             │
+│  │Account Head                  │Debit (Dr)    │Credit (Cr)   │             │
+│  │──────────────────────────────┼──────────────┼──────────────│             │
+│  │HDFC Current A/C (Bank)       │₹ 15,000      │—             │             │
+│  │ABC Corp Ltd (Sundry Debtor)  │—             │₹ 15,000      │             │
+│  └──────────────────────────────┴──────────────┴──────────────┘             │
+│                                                                              │
+│  TDS DETAILS (If applicable)                                                 │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ TDS Section: —    TDS Amount: ₹ 0    Net Amount: ₹ 15,000            │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  Notes: Payment against March invoices                                       │
+│                                                                              │
+│  AUDIT LOG                                                                   │
+│  ┌──────────────────────────────────────────────────────────────────────┐    │
+│  │ 25 Mar 2026 14:30 — Created by Priya Patel                          │    │
+│  └──────────────────────────────────────────────────────────────────────┘    │
+│                                                                              │
+│  [📥 DOWNLOAD PDF]  [🖨 PRINT]  [🔙 BACK TO REGISTER]                     │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## View Fields
+
+| Field                | Type    | Description                                              |
+| -------------------- | ------- | -------------------------------------------------------- |
+| Voucher #            | Text    | System-generated number                                  |
+| Type                 | Badge   | Receipt / Payment / Contra / Journal                     |
+| Date                 | Date    | Transaction date                                         |
+| Party                | Text    | Customer / Vendor (or Self / Internal)                   |
+| Amount               | Number  | Transaction amount                                       |
+| Mode                 | Text    | Cash / Bank / UPI / Cheque / Card                        |
+| Ref / UTR            | Text    | Transaction reference number                             |
+| Allocation Table     | Table   | Invoices/Bills adjusted with amounts & resulting status  |
+| Settlement Note      | Display | Linked CN/DN number if auto-generated, with amount       |
+| Ledger Posting       | Table   | Double-entry showing Dr/Cr accounts and amounts          |
+| TDS Details          | Summary | If applicable, TDS section and amount                    |
+| Notes                | Text    | Remarks                                                  |
+| Audit Log            | List    | Created by, Date, Time                                   |
+
+---
+
+## Actions (View Screen)
+
+| Action              | Type   | Description                                      |
+| ------------------- | ------ | ------------------------------------------------ |
+| **Download PDF**    | Button | Download formatted voucher PDF                   |
+| **Print**           | Button | Print receipt or voucher                         |
+| **Back to Register**| Button | Returns to Payment Register (30.1)              |
+
+---
+
+================================================================================
+
+# Ledger Integration — Double-Entry Posting Reference
+
+Every transaction in Module 30 creates an automatic double-entry posting in Module 31 (Ledger). Below is the complete posting reference:
+
+## Receipt (30.2) — Money IN from Customer
+
+| Debit Account (Dr)              | Credit Account (Cr)             | Trigger                       |
+| ------------------------------- | ------------------------------- | ----------------------------- |
+| Bank / Cash Account (Mod 32)    | Customer A/C — Sundry Debtor    | Receipt saved                 |
+| TDS Receivable (if applicable)  | Customer A/C — Sundry Debtor    | Customer deducted TDS         |
+
+**Effect on Module 28:** The allocated amount appears as a new row in Invoice's Transaction Ledger (28.3) → `Type = Payment, Ref = RCP-XXXX, Credit Amount = X, Running Balance = reduced`. Invoice status updates to `Partial` or `Paid`.
+
+**If Settle & Close:** Auto-generated CN appears as additional row → `Type = Adjustment, Ref = CN-XXXXX`.
+
+---
+
+## Payment (30.3) — Money OUT to Vendor
+
+| Debit Account (Dr)              | Credit Account (Cr)             | Trigger                       |
+| ------------------------------- | ------------------------------- | ----------------------------- |
+| Vendor A/C — Sundry Creditor    | Bank / Cash Account (Mod 32)    | Payment saved                 |
+| Vendor A/C — Sundry Creditor    | TDS Payable (if applicable)     | TDS deducted at source        |
+
+**Effect on Module 29:** The allocated amount appears as a new row in Bill's Transaction Ledger (29.3) → `Type = Payment, Ref = PAY-XXXX, Debit Amount = X, Running Balance = reduced`. Bill status updates to `Partial` or `Paid`.
+
+**If Settle & Close:** Auto-generated DN appears as additional row → `Type = Debit Note, Ref = DN-XXXXX`.
+
+---
+
+## Contra (30.4) — Internal Transfer
+
+| Debit Account (Dr)              | Credit Account (Cr)             |
+| ------------------------------- | ------------------------------- |
+| Destination Bank/Cash (Mod 32)  | Source Bank/Cash (Mod 32)       |
+
+---
+
+## Journal (30.5) — Non-Cash Adjustment
+
+| Debit Account (Dr)              | Credit Account (Cr)             |
+| ------------------------------- | ------------------------------- |
+| As entered per journal line     | As entered per journal line     |
+
+> **Rule:** Total Debit = Total Credit (always balanced)
+
+---
+
+================================================================================
+
+# Status Flow (Module 30 & Impact on Module 28 / 29)
+
+```
+  ══════════════════════════════════════════════════════════════
+  RECEIPT FLOW (30.2):
+  ══════════════════════════════════════════════════════════════
+
+  Customer Pays
+       ↓
+  Receipt Created (RCP-XXXX)
+       ↓
+  ┌────────────────────────────────────────────────────────┐
+  │ Allocated to Invoice(s)?                                │
+  │                                                        │
+  │ YES (Full)    → Invoice status → PAID                  │
+  │ YES (Partial) → Invoice status → PARTIAL               │
+  │                 ┌──────────────────────────────────┐   │
+  │                 │ Settlement Action?                │   │
+  │                 │ • Keep Open → stays PARTIAL       │   │
+  │                 │ • Settle & Close →                │   │
+  │                 │   Auto-CN (28.5) → Invoice → PAID│   │
+  │                 └──────────────────────────────────┘   │
+  │ NO (Excess)   → On Account (Advance) in Ledger        │
+  └────────────────────────────────────────────────────────┘
+       ↓
+  Ledger Updated: Dr Bank → Cr Customer
+
+  ══════════════════════════════════════════════════════════════
+  PAYMENT FLOW (30.3):
+  ══════════════════════════════════════════════════════════════
+
+  We Pay Vendor
+       ↓
+  Payment Created (PAY-XXXX)
+       ↓
+  ┌────────────────────────────────────────────────────────┐
+  │ Allocated to Bill(s)?                                   │
+  │                                                        │
+  │ YES (Full)    → Bill status → PAID                     │
+  │ YES (Partial) → Bill status → PARTIAL                  │
+  │                 ┌──────────────────────────────────┐   │
+  │                 │ Settlement Action?                │   │
+  │                 │ • Keep Open → stays PARTIAL       │   │
+  │                 │ • Settle & Close →                │   │
+  │                 │   Auto-DN (29.5) → Bill → PAID   │   │
+  │                 └──────────────────────────────────┘   │
+  │ NO (Excess)   → On Account (Advance) in Vendor Ledger  │
+  └────────────────────────────────────────────────────────┘
+       ↓
+  Ledger Updated: Dr Vendor → Cr Bank
+  (+ Dr Vendor → Cr TDS Payable if TDS applicable)
+
+  ══════════════════════════════════════════════════════════════
+  CONTRA FLOW (30.4):
+  ══════════════════════════════════════════════════════════════
+
+  Cash → Bank / Bank → Cash / Bank → Bank
+       ↓
+  Both accounts updated: Dr Destination → Cr Source
+
+  ══════════════════════════════════════════════════════════════
+  JOURNAL FLOW (30.5):
+  ══════════════════════════════════════════════════════════════
+
+  Debit Account(s) + Credit Account(s)
+       ↓
+  All Ledgers updated
+  Rule: Total Dr = Total Cr (Always balanced)
+```
+
+---
+
+================================================================================
+
+# Module 28 to Module 30 Data Flow (End-to-End)
+
+This section details the exact data flow and system behavior when moving from an Invoice (Module 28) to a Payment Receipt (Module 30), covering all possible payment scenarios.
+
+## Scenario 1: Full Payment (Exact Match)
+
+**1. Module 28 (Invoicing)**
+- Invoice `INV-100` created for **₹10,000**. Status: `PENDING`.
+- User clicks `[+ RECORD PAYMENT]` on INV-100 in Screen 28.3.
+
+**2. Data Passed to Module 30 (Receipt Entry 30.2)**
+- `Customer`: Auto-filled and locked.
+- `Allocation Grid`: `INV-100` row is auto-checked. 
+- `Allocate Amt`: Auto-filled with `₹10,000`.
+
+**3. Action in Module 30**
+- User enters `Amount Received`: **₹10,000**.
+- `Settlement Action`: Hidden (since Allocated = Pending).
+- User clicks `[SAVE]`. Voucher `RCP-101` created.
+
+**4. System Updates & Data Flow Back**
+- **Ledger (Mod 31):** Dr Bank ₹10k → Cr Customer ₹10k.
+- **Module 28:** 
+  - `INV-100` Pending Amount becomes **₹0**.
+  - `INV-100` Status changes to `PAID`.
+  - Transaction Ledger on `INV-100` gets new row: `[Payment | RCP-101 | Cr ₹10,000]`.
+
+---
+
+## Scenario 2: Partial Payment (Keep Open)
+
+**1. Module 28 (Invoicing)**
+- Invoice `INV-101` created for **₹10,000**. Status: `PENDING`.
+- User clicks `[+ RECORD PAYMENT]`.
+
+**2. Data Passed to Module 30**
+- `Customer` locked, `INV-101` auto-checked, `Allocate Amt` pre-filled ₹10,000.
+
+**3. Action in Module 30**
+- User realizes customer only sent ₹6,000.
+- User enters `Amount Received`: **₹6,000**.
+- User manually changes `Allocate Amt` for INV-101 to **₹6,000**.
+- `Settlement Action` appears because Allocate (₹6k) < Pending (₹10k). Shortfall = ₹4,000.
+- User selects **Keep Open**.
+- User clicks `[SAVE]`. Voucher `RCP-102` created.
+
+**4. System Updates & Data Flow Back**
+- **Ledger (Mod 31):** Dr Bank ₹6k → Cr Customer ₹6k.
+- **Module 28:** 
+  - `INV-101` Pending Amount reduces to **₹4,000**.
+  - `INV-101` Status changes to `PARTIAL`.
+  - Transaction Ledger on `INV-101` gets new row: `[Payment | RCP-102 | Cr ₹6,000]`.
+
+---
+
+## Scenario 3: Shortfall Payment (Settle & Close)
+
+**1. Module 28 (Invoicing)**
+- Invoice `INV-102` created for **₹10,500**. Status: `PENDING`.
+- User clicks `[+ RECORD PAYMENT]`.
+
+**2. Data Passed to Module 30**
+- `Customer` locked, `INV-102` auto-checked, `Allocate Amt` pre-filled ₹10,500.
+
+**3. Action in Module 30**
+- Customer paid ₹10,000 flat, deducting ₹500 for a minor dispute or discount.
+- User enters `Amount Received`: **₹10,000**.
+- User changes `Allocate Amt` to **₹10,000**.
+- `Settlement Action` appears. Shortfall = ₹500.
+- User selects **Settle & Close**. Selects Reason: `Payment Settlement`.
+- User clicks `[SAVE]`. Voucher `RCP-103` created.
+
+**4. System Updates & Data Flow Back**
+- **Module 28.5 (Credit Note):** 
+  - System auto-generates `CN-001` for **₹500** against INV-102.
+- **Ledger (Mod 31):** 
+  - From Receipt: Dr Bank ₹10k → Cr Customer ₹10k.
+  - From Auto-CN: Dr Discount/Adjustment A/C ₹500 → Cr Customer ₹500.
+- **Module 28 (Invoicing):** 
+  - `INV-102` Pending Amount reduces to ₹500 (via payment), then to **₹0** (via CN).
+  - `INV-102` Status changes to `PAID`.
+  - Transaction Ledger on `INV-102` gets TWO rows:
+    - 1. `[Payment | RCP-103 | Cr ₹10,000]`
+    - 2. `[Adjustment| CN-001 | Cr ₹500]`
+
+---
+
+## Scenario 4: Overpayment / Advance (Carry Forward)
+
+**1. Module 28 (Invoicing)**
+- Invoice `INV-103` created for **₹10,000**. Status: `PENDING`.
+- User clicks `[+ RECORD PAYMENT]`.
+
+**2. Data Passed to Module 30**
+- `Customer` locked, `INV-103` checked, `Allocate Amt` pre-filled ₹10,000.
+
+**3. Action in Module 30**
+- Customer accidentally transferred ₹12,000.
+- User enters `Amount Received`: **₹12,000**.
+- `Allocate Amt` remains ₹10,000 (cannot exceed pending).
+- `Allocation Summary` shows: Allocated = ₹10,000, Unallocated = ₹2,000.
+- `Carry to Advance?` is checked `[ON]`.
+- User clicks `[SAVE]`. Voucher `RCP-104` created.
+
+**4. System Updates & Data Flow Back**
+- **Ledger (Mod 31):** Dr Bank ₹12k → Cr Customer ₹12k. (Customer ledger now shows ₹2,000 credit balance).
+- **Module 28:** 
+  - `INV-103` Pending Amount becomes **₹0**. Status changes to `PAID`.
+  - Transaction Ledger on `INV-103` gets new row: `[Payment | RCP-104 | Cr ₹10,000]`.
+- **Future Flow:** When the next invoice (`INV-104`) is generated and user clicks `[+ RECORD PAYMENT]`, the `Advance Adjustment` section in Module 30 will automatically appear, showing the ₹2,000 balance available to apply before asking for a new bank transfer amount.
+
+---
+
+## Scenario 5: Adjusting Existing Advance
+
+**1. Module 28 (Invoicing)**
+- Invoice `INV-104` created for **₹8,000**. Status: `PENDING`.
+- Customer has an existing advance balance of **₹2,000** (from Scenario 4).
+- User clicks `[+ RECORD PAYMENT]`.
+
+**2. Data Passed to Module 30**
+- `Customer` locked, `INV-104` checked.
+- `Advance Balance` shows **₹2,000**.
+- `Adjust Advance?` toggle is `[ON]`.
+- `Advance Applied` shows **₹2,000**.
+- `Allocate Amt` pre-filled with remaining ₹6,000 (after advance).
+
+**3. Action in Module 30**
+- User enters `Amount Received`: **₹6,000** (the actual new bank transfer).
+- `Allocation Summary` shows: Advance Applied = ₹2,000, Amount Received = ₹6,000, Total Settled = ₹8,000.
+- User clicks `[SAVE]`. Voucher `RCP-105` created.
+
+**4. System Updates & Data Flow Back**
+- **Ledger (Mod 31):** Dr Bank ₹6k → Cr Customer ₹6k. (Customer advance balance reduces from ₹2k to ₹0).
+- **Module 28:** 
+  - `INV-104` Pending Amount becomes **₹0**, Status changes to `PAID`.
+  - Transaction Ledger on `INV-104` gets TWO rows: 
+    - `[Advance Adj | RCP-105 | Cr ₹2,000]`
+    - `[Payment     | RCP-105 | Cr ₹6,000]`
+
+---
+
+================================================================================
+
+# Module 29 to Module 30 Data Flow (End-to-End)
+
+This section details the exact data flow and system behavior when moving from a Purchase Bill (Module 29) to a Payment Entry (Module 30), covering all possible payment scenarios.
+
+## Scenario 1: Full Payment (Exact Match)
+
+**1. Module 29 (Bills)**
+- Bill `BILL-200` created for **₹50,000**. Status: `PENDING`.
+- User clicks `[+ MAKE PAYMENT]` on BILL-200 in Screen 29.3.
+
+**2. Data Passed to Module 30 (Payment Entry 30.3)**
+- `Vendor`: Auto-filled and locked.
+- `Allocation Grid`: `BILL-200` row is auto-checked. 
+- `Allocate Amt`: Auto-filled with `₹50,000`.
+
+**3. Action in Module 30**
+- `TDS Deduction`: Checked. Assumes 0% for this example.
+- User enters `Amount Paid`: **₹50,000**.
+- `Settlement Action`: Hidden.
+- User clicks `[SAVE]`. Voucher `PAY-201` created.
+
+**4. System Updates & Data Flow Back**
+- **Ledger (Mod 31):** Dr Vendor ₹50k → Cr Bank ₹50k.
+- **Module 29:** 
+  - `BILL-200` Pending Amount becomes **₹0**.
+  - `BILL-200` Status changes to `PAID`.
+  - Transaction Ledger on `BILL-200` gets new row: `[Payment | PAY-201 | Dr ₹50,000]`.
+
+---
+
+## Scenario 2: Partial Payment (Keep Open)
+
+**1. Module 29 (Bills)**
+- Bill `BILL-201` created for **₹50,000**. Status: `PENDING`.
+- User clicks `[+ MAKE PAYMENT]`.
+
+**2. Data Passed to Module 30**
+- `Vendor` locked, `BILL-201` checked, `Allocate Amt` pre-filled ₹50,000.
+
+**3. Action in Module 30**
+- User decides to pay only ₹20,000 now.
+- User enters `Amount Paid`: **₹20,000**.
+- User manually changes `Allocate Amt` to **₹20,000**.
+- `Settlement Action` appears because Allocate (₹20k) < Pending (₹50k). Shortfall = ₹30,000.
+- User selects **Keep Open**.
+- User clicks `[SAVE]`. Voucher `PAY-202` created.
+
+**4. System Updates & Data Flow Back**
+- **Ledger (Mod 31):** Dr Vendor ₹20k → Cr Bank ₹20k.
+- **Module 29:** 
+  - `BILL-201` Pending Amount reduces to **₹30,000**.
+  - `BILL-201` Status changes to `PARTIAL`.
+  - Transaction Ledger gets new row: `[Payment | PAY-202 | Dr ₹20,000]`.
+
+---
+
+## Scenario 3: Shortfall Payment (Settle & Close)
+
+**1. Module 29 (Bills)**
+- Bill `BILL-202` created for **₹50,500**. Status: `PENDING`.
+- User clicks `[+ MAKE PAYMENT]`.
+
+**2. Data Passed to Module 30**
+- `Vendor` locked, `BILL-202` checked, `Allocate Amt` pre-filled ₹50,500.
+
+**3. Action in Module 30**
+- Vendor agreed to a ₹500 discount, so we are paying ₹50,000 flat.
+- User enters `Amount Paid`: **₹50,000**.
+- User changes `Allocate Amt` to **₹50,000**.
+- `Settlement Action` appears. Shortfall = ₹500.
+- User selects **Settle & Close**. Selects Reason: `Discount`.
+- User clicks `[SAVE]`. Voucher `PAY-203` created.
+
+**4. System Updates & Data Flow Back**
+- **Module 29.5 (Debit Note):** 
+  - System auto-generates `DN-001` for **₹500** against BILL-202.
+- **Ledger (Mod 31):** 
+  - From Payment: Dr Vendor ₹50k → Cr Bank ₹50k.
+  - From Auto-DN: Dr Vendor ₹500 → Cr Discount Received A/C ₹500.
+- **Module 29 (Bills):** 
+  - `BILL-202` Pending Amount reduces to ₹500 (via payment), then to **₹0** (via DN).
+  - `BILL-202` Status changes to `PAID`.
+  - Transaction Ledger on `BILL-202` gets TWO rows:
+    - 1. `[Payment    | PAY-203 | Dr ₹50,000]`
+    - 2. `[Debit Note | DN-001  | Dr ₹500]`
+
+---
+
+## Scenario 4: Overpayment / Advance (Carry Forward)
+
+**1. Module 29 (Bills)**
+- Bill `BILL-203` created for **₹50,000**. Status: `PENDING`.
+- User clicks `[+ MAKE PAYMENT]`.
+
+**2. Data Passed to Module 30**
+- `Vendor` locked, `BILL-203` checked, `Allocate Amt` pre-filled ₹50,000.
+
+**3. Action in Module 30**
+- We pre-transfer ₹60,000 for this bill and future orders.
+- User enters `Amount Paid`: **₹60,000**.
+- `Allocate Amt` remains ₹50,000 (cannot exceed pending).
+- `Allocation Summary` shows: Allocated = ₹50,000, Unallocated = ₹10,000.
+- `Carry to Advance?` is automatically handled.
+- User clicks `[SAVE]`. Voucher `PAY-204` created.
+
+**4. System Updates & Data Flow Back**
+- **Ledger (Mod 31):** Dr Vendor ₹60k → Cr Bank ₹60k. (Vendor ledger now shows ₹10,000 debit balance / advance paid).
+- **Module 29:** 
+  - `BILL-203` Pending Amount becomes **₹0**, Status changes to `PAID`.
+  - Transaction Ledger on `BILL-203` gets new row: `[Payment | PAY-204 | Dr ₹50,000]`.
+
+---
+
+## Scenario 5: Adjusting Existing Advance
+
+**1. Module 29 (Bills)**
+- Bill `BILL-204` created for **₹25,000**. Status: `PENDING`.
+- Vendor has an existing advance balance of **₹10,000** (from Scenario 4).
+- User clicks `[+ MAKE PAYMENT]`.
+
+**2. Data Passed to Module 30**
+- `Vendor` locked, `BILL-204` checked.
+- `Advance Balance` shows **₹10,000**.
+- `Adjust Advance?` toggle is `[ON]`.
+- `Advance Applied` shows **₹10,000**.
+- `Allocate Amt` pre-filled with remaining ₹15,000.
+
+**3. Action in Module 30**
+- User enters `Amount Paid`: **₹15,000** (the actual new bank transfer).
+- `Allocation Summary` shows: Advance Applied = ₹10,000, Amount Paid = ₹15,000, Total Settled = ₹25,000.
+- User clicks `[SAVE]`. Voucher `PAY-205` created.
+
+**4. System Updates & Data Flow Back**
+- **Ledger (Mod 31):** Dr Vendor ₹15k → Cr Bank ₹15k. (Vendor advance balance reduces from ₹10k to ₹0).
+- **Module 29:** 
+  - `BILL-204` Pending Amount becomes **₹0**, Status changes to `PAID`.
+  - Transaction Ledger on `BILL-204` gets TWO rows: 
+    - `[Advance Adj | PAY-205 | Dr ₹10,000]`
+    - `[Payment     | PAY-205 | Dr ₹15,000]`
+
+---
+
+====================================================================================================
+
+# 📌 Developer Note: Finance → Ledger Posting (Modules 28/29/30 → Module 31) — Dynamic Flow
+
+This note is added to prevent confusion when implementing Modules **28 (Invoices)**, **29 (Bills)**, and **30 (Payments)** with Module **31 (Ledger)**.
+
+## Key Principle (Most important)
+
+- **Module 31.2 “Create / Edit Ledger” is NOT linked to Module 28 or 29 documents.**
+  - Ledger creation is **master-data driven** (Customer/Vendor masters + Chart of Accounts groups).
+  - Modules **28/29/30** only **post transactions** into existing ledgers after documents are approved/confirmed/saved.
+
+## Beginner-friendly mental model
+
+- Think of **Module 31** as two parts:
+  - **(A) Ledger Master**: “Which accounts exist?” (created from masters / COA)
+  - **(B) Ledger Entries**: “What transactions happened?” (posted from Invoices/Bills/Payments)
+- Modules **28/29/30** should never “create a ledger by linking a document”. They only **post entries** (and show references back to documents).
+
+## What “linkage” means (to avoid wrong implementation)
+
+- **Master linkage (allowed in Ledger creation)**:
+  - Customer/Vendor selection (Module 18 / Module 11)
+  - Account Group selection (Module 32)
+- **Document linkage (NOT part of Ledger creation)**:
+  - Selecting specific Invoices (Module 28) or Bills (Module 29) inside Module 31.2
+- **Ledger statement references (optional display)**:
+  - Ledger statement rows may show `Ref #` (INV/BILL/RCP/PAY/CN/DN) and allow deep-link to the source document *when it exists*.
+
+## Quick cheat-sheet (Event → Ledger posting?)
+
+| Module | Event / Status | Post ledger entry? | Notes |
+| ------ | -------------- | ------------------ | ----- |
+| 28 | Save as `Draft` | No | No ledger effect |
+| 28 | `Approve & Send` / Finalize | Yes | Creates invoice posting(s) |
+| 29 | Save as `Draft` | No | No ledger effect |
+| 29 | `Confirm Bill` | Yes | Creates bill posting(s) |
+| 30 | Save voucher (`Receipt/Payment/Contra/Journal`) | Yes | Creates voucher posting(s); also updates 28/29 allocations and document status |
+
+## Posting Triggers Summary (When to write Ledger entries)
+
+- **Module 28 (Invoice)**
+  - `Draft` → **No posting**
+  - `Approve & Send` / Finalize → **Post to Ledger**
+    - Customer Ledger (Sundry Debtor): **Debit**
+    - Sales/Tax ledgers as per accounting design (Module 32/COA)
+- **Module 29 (Bill)**
+  - `Draft` → **No posting**
+  - `Confirm Bill` → **Post to Ledger**
+    - Vendor Ledger (Sundry Creditor): **Credit**
+    - Expense/ITC/TDS ledgers as per accounting design (Module 32/COA)
+- **Module 30 (Receipt/Payment/Contra/Journal)**
+  - On `Save` (voucher created) → **Post to Ledger**
+    - Bank/Cash ledger affected + Party ledger affected
+    - Also drives status updates and transaction-ledger rows inside Module 28/29
+
+## End-to-End Dynamic Flow (System view) — “Swimlane” style
+
+This diagram is intentionally **step-by-step** so a beginner dev can implement event handlers in the right module.
+
+```mermaid
+flowchart LR
+  %% Lanes (visual grouping)
+  subgraph MASTERS["Masters - create ledgers"]
+    M18[18: Customer Master] -->|Create/Update| L31M[31.2: Ledger Master<br/>Create/Edit Ledger]
+    M13[13: Vendor Management] -->|Create/Update| L31M
+    M32[32: Chart of Accounts] -->|Account groups/heads| L31M
+  end
+
+  subgraph DOCS["Documents - cause postings"]
+    I28D[28: Invoice Draft] -->|Approve & Send| I28F[28: Invoice Final]
+    B29D[29: Bill Draft] -->|Confirm Bill| B29F[29: Bill Confirmed]
+  end
+
+  subgraph PAY["Payments / Vouchers"]
+    V30R[30.2: Receipt Entry] --> V30S[30: Save Voucher]
+    V30P[30.3: Payment Entry] --> V30S
+    V30C[30.4/30.5: Contra/Journal] --> V30S
+  end
+
+  %% Posting engine (module 31 entries)
+  I28F -->|Post entries| L31E[31: Ledger Entries<br/>(posting engine)]
+  B29F -->|Post entries| L31E
+  V30S -->|Post entries| L31E
+
+  %% COA is used during posting and reporting
+  M32 -->|Classifies accounts + determines report groups| L31E
+  M32 -->|Report structure / grouping| R33
+
+  %% Where user sees results
+  L31E --> L31Dash[31.1 Dashboard<br/>Balances, ageing totals]
+  L31E --> L31Stmt[31.3 Statement<br/>Running balance + Ref#]
+
+  %% Feedback loops
+  V30S -->|Allocation + status update<br/>Paid/Partial/Overdue| I28F
+  V30S -->|Allocation + status update<br/>Paid/Partial/Overdue| B29F
+
+  %% Reports (Module 33)
+  L31E --> R33[33: Reports<br/>Balance Sheet, P&L, Trial Balance,<br/>GST, Ageing, Cashflow, BRS, TDS]
+```
+
+## Conditional flows (common cases) — step-by-step
+
+This section is the **full developer flow** across:
+- `Module31_Ledger.md` (Ledger master + statement)
+- `Module32_ChartsOfAccounts.md` (COA groups + account heads used for classification)
+- `Module33_Reports.md` (reports generated from Ledger + COA + statutory sources)
+
+### A) Invoice lifecycle → Ledger → Reports (Module 28 → 31 → 32 → 33)
+
+- **If invoice = `Draft`**
+  - Do **not** post anything in Module 31
+  - Do **not** impact ageing / receivable totals
+- **If invoice is finalized (`Approve & Send`)**
+  - Post entries to **Module 31** (Customer balance increases)
+  - Use **Module 32 (COA)** to classify the posting into correct income/tax heads (Sales, GST Payable, etc. as per COA design)
+  - Statement row ref: `INV-xxxx`
+  - Reports (Module 33) will start reflecting receivable/revenue as per **COA grouping (Module 32)** + **Ledger entries (Module 31)**
+
+### B) Bill lifecycle → Ledger → Reports (Module 29 → 31 → 32 → 33)
+
+- **If bill = `Draft`**
+  - Do **not** post anything in Module 31
+- **If bill is confirmed (`Confirm Bill`)**
+  - Post entries to **Module 31** (Vendor payable increases)
+  - Use **Module 32 (COA)** to classify the posting into correct expense/ITC/TDS heads (as per COA design)
+  - Statement row ref: `BILL-xxxx`
+  - Reports (Module 33) will reflect payable/expense/ITC as per **COA grouping (Module 32)** + **Ledger entries (Module 31)**
+
+### C) Receipt against invoices (Module 30.2) — allocation conditions (28 ↔ 30 ↔ 31 ↔ 32 ↔ 33)
+
+- **If receipt amount == total allocated**
+  - Post voucher entries to **Module 31** (Bank/Cash + Customer)
+  - Bank/Cash ledger selection must come from **Module 32 (COA)** bank/cash heads
+  - Update invoice status in Module 28: `Paid` / `Partial` depending on pending
+- **If receipt amount < invoice pending**
+  - **Keep Open** → invoice stays `Partial`, pending remains
+  - **Settle & Close** → auto-generate Credit Note (Module 28.5) for shortfall; ledger adjusted by CN
+- **If receipt amount > pending (overpayment)**
+  - Extra becomes **Advance / On Account** in Customer Ledger (Module 31)
+  - Future invoices can use **Advance Adjustment** (Module 30)
+
+### D) Payment against bills (Module 30.3) — allocation conditions (29 ↔ 30 ↔ 31 ↔ 32 ↔ 33)
+
+- **If payment amount == total allocated**
+  - Post voucher entries to **Module 31** (Bank/Cash + Vendor)
+  - Bank/Cash ledger selection must come from **Module 32 (COA)** bank/cash heads
+  - Update bill status in Module 29 accordingly
+- **If payment amount < bill pending**
+  - **Keep Open** → bill stays `Partial`
+  - **Settle & Close** → auto-generate Debit Note (Module 29.5) for shortfall; ledger adjusted by DN
+- **If payment amount > pending (advance paid to vendor)**
+  - Extra becomes **Advance** on Vendor ledger (shows as debit balance / advance)
+  - Future bills can adjust via advance in Module 30
+
+### E) Edge cases (must be handled cleanly)
+
+- **Ledger is Inactive (Module 31 status = Inactive)**
+  - Modules 28/29/30 must block posting with a clear validation error (“Cannot post to inactive ledger”)
+- **Party ledger missing**
+  - Preferred: ensure ledgers are auto-created from **Module 18 (Customer)** / **Module 13 (Vendor)** master flows
+  - Otherwise: fail fast with controlled error; do not try to “create ledger by linking invoice/bill”
+
+## Module 33 usage (what it consumes)
+
+- Module 33 should consume **ledger entries (Module 31)** + **COA structure/mapping (Module 32)** as the primary source of truth.
+- For specific statutory reports, Module 33 additionally references:
+  - **Module 28**: invoice-level tax breakdown for GSTR-1 / output tax categorization
+  - **Module 29**: bill-level ITC breakdown for GSTR-3B / input tax categorization
+  - **Module 30**: voucher stream for cash-flow and bank reconciliation flows
+  - **Module 9 (Tax)**: GST rules/rates/HSN configuration used to validate and summarize compliance
+
+### Report → Primary data source (beginner mapping)
+
+| Report (Module 33) | Primary Source | Secondary Sources (if needed) |
+| --- | --- | --- |
+| Profit & Loss | Module 31 + Module 32 | — |
+| Balance Sheet | Module 31 + Module 32 | — |
+| Trial Balance | Module 31 + Module 32 | — |
+| Cash Flow | Module 30 + Module 31 | Module 32 |
+| GST (GSTR-1, GSTR-3B) | Module 28 + Module 29 | Module 9, Module 31 (validation/reconciliation) |
+| Ageing (AR/AP) | Module 31 (open positions) | Module 28/29 due-dates (if designed) |
+| Bank Reconciliation | Module 30 + Module 31 | — |
+| TDS Report | Module 30 + vendor/customer masters | Module 14 (TDS config), Module 31 (posting audit) |
+
+## ASCII Flowchart (Modules 28 → 33) — with conditional branches
+
+Use this when implementing event handlers. Rule of thumb: **documents/vouchers POST**, ledger master **does not “link” documents**.
+
+```
+                               ┌─────────────────────────────────────────────┐
+                               │                MASTERS                       │
+                               │  M18 Customer / M13 Vendor / M32 COA         │
+                               └──────────────────────────┬──────────────────┘
+                                                          │ (create/update master)
+                                                          ▼
+                               ┌─────────────────────────────────────────────┐
+                               │  MODULE 31.2: LEDGER MASTER (Create/Edit)    │
+                               │  - Allowed links: Customer/Vendor + COA      │
+                               │  - NOT allowed: pick Invoice/Bill here       │
+                               └──────────────────────────┬──────────────────┘
+                                                          │ (exists before posting)
+                                                          ▼
+                               ┌─────────────────────────────────────────────┐
+                               │  MODULE 32: COA (Chart of Accounts)          │
+                               │  - Defines account groups & nature (Dr/Cr)   │
+                               │  - Used by: posting classification + reports │
+                               └─────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                  DOCUMENTS THAT CAUSE POSTINGS                                 │
+└───────────────────────────────────────────────────────────────────────────────────────────────┘
+
+   ┌───────────────────────────────┐                               ┌───────────────────────────────┐
+   │ MODULE 28: INVOICE            │                               │ MODULE 29: BILL                │
+   └───────────────┬───────────────┘                               └───────────────┬───────────────┘
+                   │                                                   │
+                   ▼                                                   ▼
+         ┌─────────────────┐                                 ┌─────────────────┐
+         │ Save as DRAFT    │                                 │ Save as DRAFT    │
+         └───────┬─────────┘                                 └───────┬─────────┘
+                 │                                                     │
+                 │  (NO Ledger posting)                                │  (NO Ledger posting)
+                 │                                                     │
+                 ▼                                                     ▼
+     ┌──────────────────────────┐                         ┌──────────────────────────┐
+     │ Approve & Send / Finalize │                         │ Confirm Bill              │
+     └───────────────┬──────────┘                         └───────────────┬──────────┘
+                     │ (POST to Ledger)                                    │ (POST to Ledger)
+                     │                                                     │
+                     ▼                                                     ▼
+          ┌─────────────────────────────────────────────────────────────────────────────┐
+          │                 MODULE 31: LEDGER ENTRIES (Posting Engine)                   │
+          │  Creates entries with optional Ref#: INV-xxx / BILL-xxx                       │
+          └───────────────────────────────┬─────────────────────────────────────────────┘
+                                          │
+                                          │
+                                          ▼
+                        ┌─────────────────────────────────────────────┐
+                        │ MODULE 31.1 Dashboard / 31.3 Statement        │
+                        │ - Running balance + optional deep-links by Ref#│
+                        └──────────────────────────┬──────────────────┘
+                                                   │
+                                                   ▼
+                        ┌─────────────────────────────────────────────┐
+                        │ MODULE 33 Reports                              │
+                        │ P&L / Balance Sheet / Trial Balance / Cashflow │
+                        │ GST (GSTR-1/3B) / Ageing / BRS / TDS           │
+                        │ Inputs: Ledger(31) + COA(32) + Tax(9) + Docs   │
+                        └─────────────────────────────────────────────┘
+
+
+┌───────────────────────────────────────────────────────────────────────────────────────────────┐
+│                         PAYMENTS / ALLOCATIONS (MODULE 30) — CONDITIONAL FLOWS                 │
+└───────────────────────────────────────────────────────────────────────────────────────────────┘
+
+   ┌─────────────────────────────────────────────────────┐
+   │ MODULE 30.2: RECEIPT (Money IN)                      │
+   │ Inputs: Customer + Amount + Mode + Allocation Grid   │
+   └──────────────────────────┬──────────────────────────┘
+                              │ SAVE (Voucher created)
+                              ▼
+                 ┌─────────────────────────────────────────────┐
+                 │ POST to Module 31 (Voucher posting)          │
+                 │ - Dr Bank/Cash  / Cr Customer (typical)      │
+                 └───────────────────┬─────────────────────────┘
+                                     │
+                                     ▼
+                       ┌──────────────────────────────────────┐
+                       │ Allocation decision (against invoices) │
+                       └───────────────┬───────────────────────┘
+                                       │
+         ┌─────────────────────────────┼──────────────────────────────┐
+         │                             │                              │
+         ▼                             ▼                              ▼
+┌──────────────────────┐     ┌──────────────────────┐        ┌──────────────────────────┐
+│ Amount == allocated  │     │ Amount < pending     │        │ Amount > pending         │
+└──────────┬───────────┘     └──────────┬───────────┘        └──────────┬───────────────┘
+           │                              │                              │
+           ▼                              ▼                              ▼
+┌──────────────────────┐     ┌──────────────────────────────┐   ┌──────────────────────────┐
+│ Update Module 28:     │     │ Choose settlement action      │   │ Advance / On Account      │
+│ Paid or Partial       │     │ - Keep Open  → Partial stays  │   │ - Save extra to Ledger     │
+└──────────────────────┘     │ - Settle&Close→ create CN (28.5)│   │ - Future adjust in 30      │
+                             └──────────┬─────────────────────┘   └──────────────────────────┘
+                                        │
+                                        ▼
+                             ┌──────────────────────────────┐
+                             │ If CN created (28.5):         │
+                             │ - POST CN adjustment to Ledger │
+                             │ - Invoice becomes closed       │
+                             └──────────────────────────────┘
+
+
+   ┌─────────────────────────────────────────────────────┐
+   │ MODULE 30.3: PAYMENT (Money OUT)                     │
+   │ Inputs: Vendor + Amount + Mode + Allocation Grid     │
+   └──────────────────────────┬──────────────────────────┘
+                              │ SAVE (Voucher created)
+                              ▼
+                 ┌─────────────────────────────────────────────┐
+                 │ POST to Module 31 (Voucher posting)          │
+                 │ - Dr Vendor / Cr Bank/Cash (typical)         │
+                 └───────────────────┬─────────────────────────┘
+                                     │
+                                     ▼
+                       ┌────────────────────────────────────┐
+                       │ Allocation decision (against bills) │
+                       └───────────────┬────────────────────┘
+                                       │
+         ┌─────────────────────────────┼──────────────────────────────┐
+         │                             │                              │
+         ▼                             ▼                              ▼
+┌──────────────────────┐     ┌──────────────────────┐        ┌──────────────────────────┐
+│ Amount == allocated  │     │ Amount < pending     │        │ Amount > pending         │
+└──────────┬───────────┘     └──────────┬───────────┘        └──────────┬───────────────┘
+           │                              │                              │
+           ▼                              ▼                              ▼
+┌──────────────────────┐     ┌──────────────────────────────┐   ┌──────────────────────────┐
+│ Update Module 29:     │     │ Choose settlement action      │   │ Vendor Advance            │
+│ Paid or Partial       │     │ - Keep Open  → Partial stays  │   │ - Save extra in Ledger     │
+└──────────────────────┘     │ - Settle&Close→ create DN (29.5)│   │ - Future adjust in 30      │
+                             └──────────┬─────────────────────┘   └──────────────────────────┘
+                                        │
+                                        ▼
+                             ┌──────────────────────────────┐
+                             │ If DN created (29.5):         │
+                             │ - POST DN adjustment to Ledger │
+                             │ - Bill becomes closed          │
+                             └──────────────────────────────┘
+
+
+┌───────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                           EDGE CASES                                           │
+└───────────────────────────────────────────────────────────────────────────────────────────────┘
+
+  [Ledger inactive in Module 31]  → Block posting from 28/29/30 with clear validation error
+  [Party ledger missing]          → Create via master flow (18/13) OR fail fast (do NOT link doc to 31.2)
+```
+
+## Implementation Guardrails (for dev)
+
+- **Do not build any UI in Module 31.2** to pick `Invoice #` / `Bill #` as part of ledger creation.
+- **Posting must be event-driven** from Modules 28/29/30 status transitions (Finalize/Confirm/Save).
+- **If a party ledger does not exist** (edge case), system should create it via master flow (Module 18 / Module 13) or raise a controlled validation error — but it should not “attach” the document to ledger creation.
+
+============================================================================================
+
+# 🎯 MODULE 31: LEDGER MANAGEMENT
+
+## Overview
+
+Ledger module is the **central account book ("Bahi Khata")** of the ERP system. Every Customer, Vendor, Bank Account, and internal account (Expenses, Income) has a Ledger showing the complete transaction history and current balance. All financial transactions from Invoicing (Module 28), Bills (Module 29), and Payments (Module 30) automatically post to the relevant Ledger. Supports opening balances, credit limits, ageing analysis, and account reconciliation.
+
+**Module Connections:**
+
+- **Depends on:** Module 18 (Customer Master — customer details), Module 13 (Vendor Management — vendor details), Module 32 (Chart of Accounts — account group classification)
+- **Fed by (postings):** Module 28 (Invoices → Customer Ledger Debit), Module 29 (Bills → Vendor Ledger Credit), Module 30 (Payments → Both Ledgers)
+- **Used by:** Module 33 (Reports — Balance Sheet, P&L, Ageing), Module 28 (Outstanding check), Module 30 (Balance display)
+
+**Important note (No direct link at creation):**
+- Creating a Ledger in **31.2** does **not** require selecting/attaching any Invoice (Module 28) or Bill (Module 29).
+- Module 28/29 only *feed* the Ledger later by posting transactions against an existing party/account ledger.
+
+---
+
+The module contains the following screens:
+
+- 31.1 Ledger Dashboard (Table View)
+- 31.2 Create / Edit Ledger
+- 31.3 Ledger Statement View (Account Passbook)
+
+---
+
+## UI/UX blueprint (for designers)
+
+Use this to align layouts, navigation, and component choices before pixel design.
+
+| Screen | Primary user goal | Entry points | Exit / next |
+|--------|-------------------|--------------|-------------|
+| **31.1 Dashboard** | Find a ledger, see balances, open statement | Main menu → Ledger | Row → View / Edit / Statement |
+| **31.2 Create/Edit** | Add or fix a ledger (master only; no invoice/bill pick) | `[+ CREATE]` from 31.1, or Edit | Save → back to 31.1; Cancel → back |
+| **31.3 Statement** | See passbook + export | Statement from 31.1 row | Back → 31.1; Ref# → source doc (28/30) |
+
+**Layout pattern (recommended):**
+- **31.1:** Sticky top bar (title + primary `[+ CREATE LEDGER]`); tabs under title; filter card collapsible on mobile; table with zebra rows; row actions as icon buttons or kebab menu.
+- **31.2:** Single-column form on desktop; group into **Basic → Party (conditional) → Bank (conditional) → Financial**; show Party/Bank sections only when Account Group implies them.
+- **31.3:** Header strip (ledger name + account group); date range + Generate; summary cards in one row; transaction table full width; footer actions (PDF / Email / Print / Back).
+
+**Visual hierarchy:** Summary cards → main table (31.1) or transaction grid (31.3) should be the focal area; filters secondary.
+
+---
+
+================================================================================
+
+# 31.1 Ledger Dashboard (Table View)
+
+**Description:**
+The default landing screen for Module 31. Displays all ledger accounts in a **table/list format** with tab-based grouping: **All / Customers (Sundry Debtors) / Vendors (Sundry Creditors) / Bank & Cash / Income & Expenses**. Shows total receivable, payable, and cash position.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          LEDGER MANAGEMENT                                   │
+│                                                                              │
+│  TABS: [ ALL ] [ CUSTOMERS ] [ VENDORS ] [ BANK & CASH ] [ INCOME/EXPENSE ] │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Filters                                                                │  │
+│  │                                                                        │  │
+│  │ Branch        : [▼ All Branches ▼]                                    │  │
+│  │ Account Group : [▼ Sundry Debtors / Sundry Creditors / Bank / etc ▼] │  │
+│  │ Balance Type  : [☑ Debit (Dr) ☑ Credit (Cr) ☑ Zero]                │  │
+│  │ Status        : [☑ Active ☑ Inactive]                                │  │
+│  │                                                                        │  │
+│  │ Search: [____________________] (Ledger Name / GSTIN / PAN)           │  │
+│  │                                                 [Reset Filters]       │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [+ CREATE LEDGER]   [📥 EXPORT ALL]   [📊 AGEING REPORT]                   │
+│                                                                              │
+│  SUMMARY CARDS                                                               │
+│  ┌──────────────┬──────────────┬──────────────┬──────────────┐               │
+│  │ Total        │ Total        │ Cash &       │ Overdue      │               │
+│  │ Receivable   │ Payable      │ Bank Balance │ (>30 days)   │               │
+│  │ ₹ 12,50,000  │ ₹ 8,20,000   │ ₹ 4,80,000   │ ₹ 2,10,000   │               │
+│  └──────────────┴──────────────┴──────────────┴──────────────┘               │
+│                                                                              │
+│  LEDGER LIST TABLE                                                           │
+│  ┌──────────────────┬──────────────────┬─────────────┬──────────────────┐    │
+│  │Ledger Name       │Account Group     │GSTIN / PAN  │Opening Bal.      │    │
+│  │──────────────────┼──────────────────┼─────────────┼──────────────────│    │
+│  │ABC Corp Ltd      │Sundry Debtors    │27AAACB1234F │₹ 5,000 Dr        │    │
+│  │Industrial Chem X │Sundry Creditors  │29AABCI1234F │₹ 15,000 Cr       │    │
+│  │HDFC Current A/C  │Bank Accounts     │—            │₹ 3,50,000 Dr     │    │
+│  │Petty Cash        │Cash-in-Hand      │—            │₹ 25,000 Dr       │    │
+│  │Service Income    │Income (Direct)   │—            │₹ 0                │    │
+│  │Electricity Exp   │Expenses(Indirect)│—            │₹ 0                │    │
+│  └──────────────────┴──────────────────┴─────────────┴──────────────────┘    │
+│                                                                              │
+│  ┌──────────────┬──────────────┬─────────────┬──────────────────────────┐    │
+│  │Total Dr      │Total Cr      │Closing Bal  │Actions                   │    │
+│  │──────────────┼──────────────┼─────────────┼──────────────────────────│    │
+│  │₹ 1,50,000    │₹ 1,20,000    │₹ 35,000 Dr  │[View] [Edit] [Statement] │    │
+│  │₹ 50,000      │₹ 1,55,000    │₹ 1,05,000 Cr│[View] [Edit] [Statement] │    │
+│  │₹ 8,50,000    │₹ 5,00,000    │₹ 7,00,000 Dr│[View] [Statement]       │    │
+│  │₹ 1,00,000    │₹ 75,000      │₹ 50,000 Dr  │[View] [Statement]       │    │
+│  │—             │₹ 18,50,000   │₹ 18,50,000Cr│[View] [Statement]       │    │
+│  │₹ 2,50,000    │—             │₹ 2,50,000 Dr│[View] [Statement]       │    │
+│  └──────────────┴──────────────┴─────────────┴──────────────────────────┘    │
+│                                                                              │
+│  Pagination:  Previous   1   2   3   ...   10   Next                         │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Table View Fields
+
+| Field          | Type   | Required | Description                                                |
+| -------------- | ------ | -------- | ---------------------------------------------------------- |
+| Ledger Name    | Text   | Auto     | Name of the party / account                                |
+| Account Group  | Text   | Auto     | Classification from Module 32 (Debtors/Creditors/Bank etc) |
+| GSTIN / PAN    | Text   | Auto     | Tax identification (for customers/vendors)                 |
+| Opening Balance| Number | Auto     | Starting balance when ERP was initialized                  |
+| Total Debit    | Number | Auto     | Sum of all debit entries                                   |
+| Total Credit   | Number | Auto     | Sum of all credit entries                                  |
+| Closing Balance| Number | Auto     | Opening + Total Dr - Total Cr (or vice versa depending on nature) |
+| Actions        | Buttons| —        | View / Edit / Statement                                    |
+
+---
+
+## Summary Card Fields
+
+| Field           | Type   | Description                                              |
+| --------------- | ------ | -------------------------------------------------------- |
+| Total Receivable| Number | Sum of all Sundry Debtors' Dr balances                   |
+| Total Payable   | Number | Sum of all Sundry Creditors' Cr balances                 |
+| Cash & Bank     | Number | Sum of all bank and cash account Dr balances              |
+| Overdue (>30d)  | Number | Receivable + Payable amounts older than 30 days          |
+
+---
+
+## Filters
+
+| Filter        | Type         | Options                                              |
+| ------------- | ------------ | ---------------------------------------------------- |
+| Branch        | Dropdown     | All Branches / Specific Branch                       |
+| Account Group | Dropdown     | Sundry Debtors / Sundry Creditors / Bank / Cash / Income / Expenses |
+| Balance Type  | Multi-select | Debit (Dr) / Credit (Cr) / Zero                     |
+| Status        | Multi-select | Active / Inactive                                    |
+
+---
+
+## Search
+
+Searchable by:
+
+- Ledger Name
+- GSTIN
+- PAN Number
+
+---
+
+## Actions (Table Row)
+
+| Action           | Type   | Description                                              |
+| ---------------- | ------ | -------------------------------------------------------- |
+| **View**         | Button | Opens ledger detail in read-only mode                    |
+| **Edit**         | Button | Edit ledger details (name, opening balance, credit limit)|
+| **Statement**    | Button | Opens Ledger Statement View (Screen 31.3)                |
+
+---
+
+## Form Actions
+
+| Action              | Description                                             |
+| ------------------- | ------------------------------------------------------- |
+| **+ Create Ledger** | Opens Create Ledger form (Screen 31.2)                  |
+| **Export All**       | Export ledger list as Excel/CSV                          |
+| **Ageing Report**   | Opens ageing analysis for all debtors/creditors         |
+
+---
+
+================================================================================
+
+# 31.2 Create / Edit Ledger
+
+**Description:**
+Form to create a new ledger account or edit an existing one. Used for adding new parties (Customers, Vendors), bank accounts, or internal account heads. Customer and Vendor ledgers are auto-created when a new Customer (Module 18) or Vendor (Module 13) is added — this form is for manual creation or modification.
+
+This screen is **master-data driven**:
+- Links (if any) are only to **Customer/Vendor master** (Module 18 / Module 13) and **Account Group** (Module 32).
+- There is **no selection/linking of specific Invoices (Module 28) or Bills (Module 29)** during Ledger creation.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        CREATE / EDIT LEDGER                                  │
+│                                                                              │
+│  BASIC DETAILS                                                               │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Ledger Name*       : [________________________]                       │  │
+│  │ Account Group*     : [▼ Sundry Debtors ▼]                             │  │
+│  │                     (Sundry Debtors / Sundry Creditors / Bank /       │  │
+│  │                      Cash / Fixed Assets / Income / Expense /         │  │
+│  │                      Duties & Taxes / Capital / Loans)                │  │
+│  │ Branch             : [▼ Mumbai ▼]                                     │  │
+│  │ Status             : (•) Active    ( ) Inactive                       │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  PARTY DETAILS (For Sundry Debtors / Creditors only)                         │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Linked Customer/Vendor: [🔍 Search ▼] (Auto-links from Mod 18/13)    │  │
+│  │ GSTIN               : [________________________]                      │  │
+│  │ PAN                 : [________________________]                      │  │
+│  │ Contact Person      : [________________________]                      │  │
+│  │ Phone               : [________________________]                      │  │
+│  │ Email               : [________________________]                      │  │
+│  │ Address             : [________________________________________________]│  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  BANK DETAILS (For Bank Accounts only)                                       │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Bank Name           : [________________________]                      │  │
+│  │ Account Number      : [________________________]                      │  │
+│  │ IFSC Code           : [________________________]                      │  │
+│  │ Account Type        : [▼ Current / Savings ▼]                         │  │
+│  │ Branch Name         : [________________________]                      │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  FINANCIAL SETTINGS                                                          │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Opening Balance*    : ₹ [________]      Type: (•) Dr  ( ) Cr          │  │
+│  │ As on Date          : [📅 01 Apr 2025]  (Financial year opening)      │  │
+│  │ Credit Limit        : ₹ [________]      (0 = No Limit)               │  │
+│  │ Credit Period (Days): [30]              (Default payment terms)       │  │
+│  │ TDS Applicable      : [☐ Yes]           Section: [▼ 194C ▼]          │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [SAVE]    [CANCEL]                                                          │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Screen Fields: Basic Details
+
+| Field         | Type     | Required | Description                                          |
+| ------------- | -------- | -------- | ---------------------------------------------------- |
+| Ledger Name   | Text     | Yes      | Party or account name                                |
+| Account Group | Dropdown | Yes      | Classification from Module 32 hierarchy              |
+| Branch        | Dropdown | No       | Associate with specific branch (or All)              |
+| Status        | Radio    | Yes      | Active / Inactive (default: Active)                  |
+
+---
+
+## Editability rules (Create vs Edit)
+
+| Field | Create mode | Edit mode (before any transactions) | Edit mode (after first transaction posted) |
+|------|-------------|--------------------------------------|-------------------------------------------|
+| Ledger Name | Editable | Editable | **Locked** (read-only) |
+| Account Group | Editable | Editable | **Locked** (read-only) |
+| Linked Party | Optional | Optional | **Locked** (recommended; changing link can break history) |
+| Opening Balance + Type + As on Date | Editable | Editable | **Locked** (read-only) |
+| Status | Editable | Editable | Editable (but blocks new postings when Inactive) |
+| Credit Limit / Credit Period / TDS flags | Editable | Editable | Editable |
+
+---
+
+## Dropdown enums (Module 31.2)
+
+| Dropdown | Options / Source | Notes |
+|---------|-------------------|-------|
+| Account Group | **From Module 32 (COA)** | Show only **Active** account heads allowed for ledger classification (e.g., Sundry Debtors, Sundry Creditors, Bank, Cash, Income, Expense, Duties & Taxes, etc.). |
+| Branch | All Branches + branch list | If Branch-wise ledgers are supported; otherwise hide and default to company-wide. |
+| Status | `Active`, `Inactive` | If Inactive, block new postings from Modules 28/29/30. |
+| Balance Type | `Dr`, `Cr` | Dr = Debit, Cr = Credit. |
+| Account Type (Bank) | `Current`, `Savings` | Optional additional types can be added later. |
+| TDS Applicable | `Yes/No` (checkbox) | When checked, enable `TDS Section`. |
+| TDS Section | `194C`, `194J`, `194H`, `194I`, `194Q`, `192`, `Other` | Keep list configurable if you expect changes; Phase 1 can be fixed enums. |
+
+---
+
+## Screen Fields: Party Details
+
+| Field             | Type    | Required | Description                                     |
+| ----------------- | ------- | -------- | ----------------------------------------------- |
+| Linked Party      | Search  | No       | Auto-link to Customer (Mod 18) / Vendor (Mod 13)|
+| GSTIN             | Text    | Cond.    | Mandatory for GST-registered parties            |
+| PAN               | Text    | Cond.    | Mandatory for TDS-applicable parties            |
+| Contact Person    | Text    | No       | Primary contact name                            |
+| Phone             | Phone   | No       | Contact phone (10 digits)                       |
+| Email             | Email   | No       | Contact email                                   |
+| Address           | Textarea| No       | Full address                                    |
+
+---
+
+## Screen Fields: Bank Details
+
+| Field          | Type     | Required | Description                                      |
+| -------------- | -------- | -------- | ------------------------------------------------ |
+| Bank Name      | Text     | Cond.    | Required if Account Group = Bank                 |
+| Account Number | Text     | Cond.    | Required if Account Group = Bank                 |
+| IFSC Code      | Text     | Cond.    | Required if Account Group = Bank                 |
+| Account Type   | Dropdown | Cond.    | Current / Savings                                |
+| Branch Name    | Text     | No       | Bank branch name                                 |
+
+---
+
+## Screen Fields: Financial Settings
+
+| Field          | Type    | Required | Description                                       |
+| -------------- | ------- | -------- | ------------------------------------------------- |
+| Opening Balance| Number  | Yes      | Starting balance (default: 0)                     |
+| Balance Type   | Radio   | Yes      | Dr (Debit) or Cr (Credit)                         |
+| As on Date     | Date    | Yes      | Date of opening balance (usually FY start)        |
+| Credit Limit   | Number  | No       | Maximum credit allowed (0 = unlimited)            |
+| Credit Period  | Number  | No       | Default payment terms in days                     |
+| TDS Applicable | Checkbox| No       | Whether TDS applies to this party                 |
+| TDS Section    | Dropdown| Cond.    | Required if TDS = Yes (194C / 194J / 194H etc.)  |
+
+---
+
+## Validation Rules
+
+| Field           | Rule                                                        |
+| --------------- | ----------------------------------------------------------- |
+| Ledger Name     | Must be unique within the same Account Group                |
+| Account Group   | Must select from Module 32 categories                       |
+| GSTIN           | If provided, must be valid 15-character GSTIN format        |
+| PAN             | If provided, must be valid 10-character PAN format          |
+| Opening Balance | Must be >= 0                                                |
+| Credit Limit    | Must be >= 0                                                |
+| IFSC Code       | If Bank account, must be valid 11-character IFSC            |
+| Account Number  | If Bank account, must be provided                           |
+
+---
+
+## Business Rules
+
+| Rule                              | Description                                               |
+| --------------------------------- | --------------------------------------------------------- |
+| Auto-creation from Module 18/13   | When new Customer or Vendor is created, Ledger is auto-created |
+| Credit Limit enforcement          | System warns when new invoice exceeds customer's credit limit |
+| Inactive Ledger                   | Cannot post new transactions to inactive ledgers          |
+| Opening Balance only once         | Can only be set during creation or FY opening; locked after first transaction |
+| Edit restrictions                 | Ledger Name and Account Group cannot be changed after first transaction |
+| No document linkage at creation   | Ledger creation/edit does not link to specific Invoices/Bills; documents only post transactions later |
+
+---
+
+## System Behavior
+
+| Event                           | System Action                                             |
+| ------------------------------- | --------------------------------------------------------- |
+| Save clicked (new)              | Ledger created with opening balance entry                 |
+| Customer created in Module 18   | Auto-creates Sundry Debtor ledger                         |
+| Vendor created in Module 13     | Auto-creates Sundry Creditor ledger                       |
+| Credit limit exceeded           | Warning popup when creating new Invoice/Bill              |
+
+---
+
+================================================================================
+
+# 31.3 Ledger Statement View (Account Passbook)
+
+**Description:**
+The statement screen shows a **chronological transaction history** for a specific ledger, similar to a bank passbook. Displays every Debit and Credit entry with running balance. Supports date-range filtering, PDF export, and email to party.
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    LEDGER STATEMENT — ABC Corp Ltd                            │
+│                    Account Group: Sundry Debtors                             │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Date Range : [📅 01 Apr 2025] - [📅 28 Mar 2026]                     │  │
+│  │                                                    [GENERATE]        │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  PARTY DETAILS                                                               │
+│  ┌──────────────────────────────┬────────────────────────────────────────┐  │
+│  │ Name    : ABC Corp Ltd       │ GSTIN     : 27AAACB1234F1Z5           │  │
+│  │ Address : 45 MG Road, Fort,  │ Credit Limit : ₹ 2,00,000            │  │
+│  │           Mumbai 400001      │ Credit Period: 15 Days                │  │
+│  └──────────────────────────────┴────────────────────────────────────────┘  │
+│                                                                              │
+│  ACCOUNT SUMMARY                                                             │
+│  ┌──────────────┬──────────────┬──────────────┬──────────────┐               │
+│  │ Opening Bal  │ Total Debit  │ Total Credit │ Closing Bal  │               │
+│  │ ₹ 5,000 Dr   │ ₹ 1,50,000   │ ₹ 1,20,000   │ ₹ 35,000 Dr  │               │
+│  └──────────────┴──────────────┴──────────────┴──────────────┘               │
+│                                                                              │
+│  TRANSACTION HISTORY                                                         │
+│  ┌──────────┬──────────┬──────────────────┬──────────┬──────────┬─────────┐  │
+│  │Date      │Ref #     │Particulars       │Debit(Dr) │Credit(Cr)│Balance  │  │
+│  │──────────┼──────────┼──────────────────┼──────────┼──────────┼─────────│  │
+│  │01 Apr 25 │—         │Opening Balance   │₹  5,000  │—         │₹  5,000 │  │
+│  │          │          │                  │          │          │   Dr    │  │
+│  │15 Jun 25 │INV-10001 │Sales Invoice     │₹ 25,000  │—         │₹ 30,000 │  │
+│  │          │          │(Monthly Service) │          │          │   Dr    │  │
+│  │25 Jun 25 │RCP-3001  │Receipt (UPI)     │—         │₹ 25,000  │₹  5,000 │  │
+│  │          │          │                  │          │          │   Dr    │  │
+│  │15 Jul 25 │INV-10005 │Sales Invoice     │₹ 25,000  │—         │₹ 30,000 │  │
+│  │          │          │(Monthly Service) │          │          │   Dr    │  │
+│  │20 Jul 25 │RCP-3010  │Receipt (Cheque)  │—         │₹ 20,000  │₹ 10,000 │  │
+│  │          │          │Subject to Clr    │          │          │   Dr    │  │
+│  │15 Mar 26 │INV-10024 │Sales Invoice     │₹ 15,000  │—         │₹ 35,000 │  │
+│  │          │          │(Termite+Cockroach│          │          │   Dr    │  │
+│  │          │          │ Treatment)       │          │          │         │  │
+│  └──────────┴──────────┴──────────────────┴──────────┴──────────┴─────────┘  │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Closing Balance: ₹ 35,000 Dr (ABC Corp Ltd owes us ₹ 35,000)        │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [📥 DOWNLOAD PDF]  [📧 EMAIL TO PARTY]  [🖨 PRINT]  [🔙 BACK TO LIST]    │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Statement Fields
+
+| Field          | Type    | Description                                               |
+| -------------- | ------- | --------------------------------------------------------- |
+| Date           | Date    | Transaction date                                          |
+| Ref #          | Link    | Clickable reference when source document exists (Invoice / Receipt / Bill / Payment); blank/non-clickable for manual entries/opening balance |
+| Particulars    | Text    | Description of the transaction                            |
+| Debit (Dr)     | Number  | Amount increasing the balance (for debtors)               |
+| Credit (Cr)    | Number  | Amount decreasing the balance (for debtors)               |
+| Balance        | Number  | Running cumulative balance with Dr/Cr indicator           |
+
+---
+
+## Account Summary Fields
+
+| Field          | Type   | Description                                               |
+| -------------- | ------ | --------------------------------------------------------- |
+| Opening Balance| Number | Balance at the start of selected period                   |
+| Total Debit    | Number | Sum of all Debit entries in the period                    |
+| Total Credit   | Number | Sum of all Credit entries in the period                   |
+| Closing Balance| Number | Opening + Debits - Credits (for Debtors)                  |
+
+---
+
+## Actions (Statement Screen)
+
+| Action              | Type   | Description                                          |
+| ------------------- | ------ | ---------------------------------------------------- |
+| **Download PDF**    | Button | Download formatted statement as PDF                  |
+| **Email to Party**  | Button | Send statement to party's registered email           |
+| **Print**           | Button | Print formatted statement                            |
+| **Back to List**    | Button | Returns to Ledger Dashboard (31.1)                   |
+
+---
+
+## Business Rules
+
+| Rule                          | Description                                                |
+| ----------------------------- | ---------------------------------------------------------- |
+| Running balance               | Each row shows cumulative balance (not just trans. amount) |
+| Clickable references          | Ref # links open the original document (Invoice/Receipt)  |
+| Date range filter             | Default: Current financial year (01 Apr - 31 Mar)         |
+| Dr / Cr logic per group       | Debtors: Dr = Owes more, Cr = Paid. Creditors: Reversed  |
+| Interest calculation (Future) | Optional auto-interest on overdue balances                |
+
+---
+
+## System Behavior
+
+| Event                      | System Action                                             |
+| -------------------------- | --------------------------------------------------------- |
+| Ledger selected            | Fetches all transactions in default date range            |
+| Date range changed         | Re-fetches transactions, recalculates opening/closing     |
+| PDF Downloaded             | Formatted with company letterhead and party details       |
+| Email sent                 | PDF attached, sent to party's email, logged in audit      |
+
+---
+
+
+==========================================================================================
+
+
+# 🎯 MODULE 32: CHART OF ACCOUNTS (COA)
+
+## Overview
+
+Chart of Accounts (COA) defines the **account groups and account heads** used to classify every financial posting in the ERP. In Phase 1, COA should be **simple to configure and easy to pick from** in Modules 28–31.
+
+In practical terms:
+- **Module 31 (Ledger)** uses COA to assign each ledger to an **Account Group** (e.g., Sundry Debtors, Bank Accounts, Direct Income).
+- **Module 30 (Payments)** uses COA to select **Bank/Cash** accounts.
+- **Modules 28/29 (Invoice/Bill)** use COA for **Income/Expense/Tax/TDS/ITC classification** (as per your accounting design).
+- **Module 33 (Reports)** uses COA as the **structure** to group totals into P&L and Balance Sheet.
+
+**Module Connections:**
+
+- **Depends on:** Module 2 (Company Onboarding — initial COA setup), Module 7 (Branch — branch-wise account visibility)
+- **Used by:** Module 31 (Ledger — account group assignment), Module 30 (Payments — bank/cash account selection), Module 33 (Reports — report grouping), Module 28 (Income/GST classification), Module 29 (Expense/ITC/TDS classification)
+- **Prerequisites:** Configure basic COA before starting posting in Modules 28–30 and before creating internal ledgers in Module 31.
+
+---
+
+The module contains the following screens:
+
+- 32.1 COA List View (Default — Phase 1)
+- 32.2 Add / Edit Account Head (Group)
+- 32.3 View Account Head Detail
+- 32.4 COA Tree View (Phase 2 — Optional Enhancement)
+
+---
+
+## UI/UX blueprint (for designers)
+
+| Screen | Primary user goal | Entry points | Exit / next |
+|--------|-------------------|--------------|-------------|
+| **32.1 List** | Browse/search COA heads; open detail or edit | Main menu → Chart of Accounts | Row → View / Edit |
+| **32.2 Add/Edit** | Create or change a COA group/head | `[+ ADD]` from 32.1, or Edit | Save → 32.1 or 32.3 |
+| **32.3 Detail** | Confirm head metadata; see which ledgers use it | View from 32.1 | Edit → 32.2; Back → 32.1 |
+
+**Layout pattern (Phase 1):**
+- **32.1:** Same pattern as other admin lists: filter row → toolbar (`Add`, `Export`) → data table → pagination.
+- **32.2:** Single-page form; Primary Group + Parent Group as dependent dropdowns (parent options filter by primary).
+- **32.3:** Read-only header card (name, code, groups, nature, status) → optional **“Used by ledgers”** table below (scroll if long).
+
+**Link to Module 31:** Account Group dropdown in **31.2** must list the same COA heads that appear in 32.1 (filtered to allowed types, e.g. groups usable for ledger classification).
+
+---
+
+================================================================================
+
+# 32.1 COA List View (Default — Phase 1)
+
+**Description:**
+Phase‑1 default screen. Shows COA heads in a **simple sortable table** with filters and search.
+
+This avoids building a complex dynamic tree while still supporting:
+- Fast selection of account heads in Modules 28–31
+- Consistent grouping for Module 33 reports
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       CHART OF ACCOUNTS (PHASE 1)                            │
+│                                                                              │
+│  VIEW: [📋 LIST VIEW]  [🌳 TREE VIEW (Phase 2)]                              │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Search: [____________________] (Account Name / Code / Path)           │  │
+│  │ Primary Group: [▼ All ▼]  Type: [▼ All (Group/Ledger) ▼]              │  │
+│  │ Status: [☑ Active ☑ Inactive]   Branch: [▼ All Branches ▼]           │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  [+ ADD ACCOUNT HEAD]   [📥 EXPORT CSV]                                      │
+│                                                                              │
+│  COA LIST TABLE                                                              │
+│  ┌──────────┬──────────────────────┬──────────────┬──────────────────┬─────┐  │
+│  │Code      │Account Head Name     │Primary Group │Parent Group       │Type │  │
+│  │──────────┼──────────────────────┼──────────────┼──────────────────┼─────│  │
+│  │A-001     │Bank Accounts         │Assets        │Current Assets     │Group│  │
+│  │A-001-001 │HDFC Current A/C      │Assets        │Bank Accounts      │Ledger│ │
+│  │A-003     │Sundry Debtors        │Assets        │Current Assets     │Group│  │
+│  │L-001     │Sundry Creditors      │Liabilities   │Current Liab.      │Group│  │
+│  │I-001     │Service Income        │Income        │Direct Income      │Ledger│ │
+│  │E-001     │Electricity Expense   │Expense       │Indirect Expense   │Ledger│ │
+│  └──────────┴──────────────────────┴──────────────┴──────────────────┴─────┘  │
+│                                                                              │
+│  Actions: [View] [Edit] (per row)                                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Table Fields (Phase 1)
+
+| Field         | Type     | Required | Description |
+|--------------|----------|----------|-------------|
+| Code         | Text     | Auto     | Hierarchical code (editable as per business rule) |
+| Account Name | Text     | Yes      | Group/head name |
+| Primary Group| Dropdown | Yes      | Assets / Liabilities / Income / Expense / Capital |
+| Parent Group | Dropdown | Yes      | Parent group under which this head exists |
+| Type         | Badge    | Auto     | Group / Ledger |
+| Nature       | Text     | Yes      | Default Dr / Cr side (used in reports + validations) |
+| Status       | Badge    | Yes      | Active / Inactive |
+| Branch Scope | Badge    | No       | All branches or restricted branch |
+
+---
+
+## Filters
+
+| Filter        | Type         | Options |
+|--------------|--------------|---------|
+| Search       | Text         | Code / Account Name / Path |
+| Primary Group| Dropdown     | Assets / Liabilities / Income / Expense / Capital |
+| Type         | Dropdown     | All / Group / Ledger |
+| Status       | Multi-select | Active / Inactive |
+| Branch       | Dropdown     | All Branches / Specific Branch |
+
+---
+
+## Actions (Phase 1)
+
+| Action              | Type   | Description |
+|---------------------|--------|-------------|
+| **+ Add Account Head** | Button | Opens Add/Edit form (32.2) |
+| **View**            | Button | Opens detail screen (32.3) |
+| **Edit**            | Button | Opens Add/Edit screen (32.2) |
+| **Export CSV**      | Button | Exports current filtered table |
+
+---
+
+================================================================================
+
+# 32.2 Add / Edit Account Head (Group)
+
+**Description:**
+Create or edit a COA **group/head**. In Phase 1, keep it simple: COA manages **groups**, and ledger accounts are created/managed in Module 31.
+
+Notes for alignment with Modules 28–31:
+- When creating ledgers in **Module 31.2**, users must be able to pick an **Account Group** from this COA.
+- When posting from **Module 30**, users must be able to pick **Bank/Cash** ledgers (which are still Ledger accounts in Module 31, but grouped here).
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    ADD / EDIT COA ACCOUNT HEAD (GROUP)                       │
+│                                                                              │
+│  Account Name*   : [________________________]                                │
+│  Primary Group*  : [▼ Assets/Liabilities/Income/Expense/Capital ▼]           │
+│  Parent Group*   : [▼ Select Parent Group ▼]                                 │
+│  Nature*         : (•) Dr   ( ) Cr                                           │
+│                                                                              │
+│  Code            : [AUTO] (Editable, must remain unique)                     │
+│  Branch Scope    : [▼ All Branches ▼]                                        │
+│  Affects GP?     : [☐ Yes] (Only relevant for P&L grouping)                  │
+│  Status          : (•) Active   ( ) Inactive                                 │
+│                                                                              │
+│  [SAVE]  [CANCEL]                                                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Fields
+
+| Field         | Type     | Required | Description |
+|--------------|----------|----------|-------------|
+| Account Name | Text     | Yes      | Group/head name |
+| Primary Group| Dropdown | Yes      | Assets/Liabilities/Income/Expense/Capital |
+| Parent Group | Dropdown | Yes      | Parent group (cannot be self) |
+| Nature       | Radio    | Yes      | Default Dr/Cr side |
+| Code (not add in UI)        | Text     | Auto     | Unique code (system generated, editable) |
+| Branch Scope | Dropdown | No       | All / specific branch (if branch-wise COA needed) |
+| Affects GP   | Checkbox | No       | For P&L grouping (Direct vs Indirect) |
+| Status       | Radio    | Yes      | Active / Inactive |
+
+---
+
+## Editability rules (Module 32.2 — Create vs Edit)
+
+| Field | Create mode | Edit mode (unused head) | Edit mode (already used by any ledger/posting/report) |
+|------|-------------|--------------------------|--------------------------------------------------------|
+| Account Name | Editable | Editable | Editable (renaming affects report labels; allow with caution) |
+| Primary Group | Editable | Editable | **Locked** (changing Assets→Income breaks reporting) |
+| Parent Group | Editable | Editable | Limited (allow only within same Primary Group) |
+| Nature | Editable | Editable | **Locked** (changing Dr/Cr side can impact reports) |
+| Code | Editable | Editable | **Locked** or “admin-only” (recommended) |
+| Branch Scope | Editable | Editable | Editable (if your access model supports it) |
+| Affects GP | Editable | Editable | Editable |
+| Status | Editable | Editable | Editable (Inactive should prevent new selection) |
+
+---
+
+## Dropdown enums (Module 32)
+
+| Dropdown | Options / Source | Notes |
+|---------|-------------------|-------|
+| Primary Group | `Assets`, `Liabilities`, `Income`, `Expense`, `Capital` | Fixed enums (Phase 1). |
+| Parent Group | **Filtered list from existing COA heads** | Filter parent list by selected Primary Group. Disallow selecting self. |
+| Nature | `Dr`, `Cr` | Default suggestion based on Primary Group; allow override only if accounting team wants. |
+| Branch Scope | `All Branches`, `<Branch List>` | Optional for Phase 1; can be hidden if not needed. |
+| Status | `Active`, `Inactive` | Inactive heads should not appear in Module 31.2 selection. |
+
+---
+
+## Validation Rules (Phase 1)
+
+| Rule | Description |
+|------|-------------|
+| Unique code | `Code` must be unique across the company |
+| Unique name under same parent | Same `Account Name` cannot repeat under same `Parent Group` |
+| Root groups locked | Primary groups (Assets/Liabilities/Income/Expense/Capital) cannot be deleted |
+| Deletion | Group can be deleted only if it has no child groups and no ledgers assigned |
+| Nature consistency | `Nature` should match expected default for primary group (configurable override allowed) |
+
+---
+
+## Business Rules (Aligned with Modules 28–31)
+
+| Rule | Why it matters |
+|------|----------------|
+| COA before postings | Modules 28/29/30 should not post if required COA heads are missing |
+| Ledger creation happens in Module 31 | COA creates **groups/heads**; Ledger accounts are managed in Module 31 |
+| Bank/Cash heads required | Module 30 requires bank/cash ledgers grouped under COA Bank/Cash |
+| Income/Expense mapping | Module 28/29 must map postings to correct COA heads for reporting |
+
+---
+
+## System Behavior (Phase 1)
+
+| Event | System Action |
+|------|---------------|
+| Open Module 32 | Loads list view with filters |
+| Save new head | Creates COA head and makes it selectable in Module 31.2 account group dropdown |
+| Inactivate head | Prevent selection in new postings; existing ledgers remain classified (read-only impact) |
+
+---
+
+================================================================================
+
+# 32.3 View Account Head Detail
+
+**Description:**
+Read-only view of a COA head showing its details and where it is used (ledgers assigned under it).
+
+---
+
+## Meaning of “Used By Ledgers”
+
+**What it is:** A **secondary table** on this screen that lists every **Ledger** record in **Module 31** whose **Account Group** (or equivalent classification field) points to **this COA head**.
+
+**Why it exists:** COA defines *categories*; Module 31 defines *actual accounts* (e.g. “ABC Corp Ltd” under Sundry Debtors). This table answers: *“Which party/bank/income ledgers are filed under this account head?”*
+
+**Example:** If the COA row is **Sundry Debtors (Group)**, the table might show ledgers such as `ABC Corp Ltd`, `XYZ Hotels` — each row is a Module 31 ledger, not an invoice.
+
+**Empty state:** If no ledger uses this head yet, show *“No ledgers assigned to this account head.”*
+
+**Optional UX:** Each ledger name can link to **Module 31.3** (statement) for that ledger.
+
+---
+
+## Buttons on this screen (avoid confusion)
+
+| Control | What it does | Does **not** do |
+|--------|----------------|-----------------|
+| **← Back to list** | Returns to **32.1 COA List** | — |
+| **`[ EDIT ACCOUNT HEAD ]`** (footer) | Opens **32.2 Add/Edit** with **this COA account head** pre-loaded so the user can change name, parent, nature, status, etc. | Does **not** edit any row in “Used By Ledgers”; those rows are **Module 31** ledgers. |
+| **Ledger row: Statement** (or clickable ledger name) | Opens **31.3 Ledger Statement** for **that one ledger** (e.g. ABC Corp Ltd) | Does **not** open COA edit. Not the same as “Edit Account Head”. |
+
+**Why two different “edit” concepts exist:**  
+- **COA head** = category (Sundry Debtors). Edit via **`[ EDIT ACCOUNT HEAD ]`** → **32.2**.  
+- **Ledger** = party/account under that category. View transactions via **Statement** → **31.3** (edit ledger itself from **31.2**, not from this COA detail table).
+
+---
+
+## Screen Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  ← Back to list                    ACCOUNT HEAD DETAIL                        │
+│                                                                              │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │  Account Name     : Sundry Debtors                                     │  │
+│  │  Code             : A-003                                              │  │
+│  │  Primary Group    : Assets          Parent Group : Current Assets      │  │
+│  │  Nature           : Debit (Dr)      Status        : Active             │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  USED BY LEDGERS (Module 31 — ledgers under this COA head)                    │
+│  ┌────────────────────────────┬────────────────────┬──────────────┬──────────────────┐  │
+│  │ Ledger Name               │ Branch             │ Closing Bal. │ Go to ledger      │  │
+│  │────────────────────────────┼────────────────────┼──────────────┼──────────────────│  │
+│  │ ABC Corp Ltd  (clickable)  │ Mumbai             │ ₹ 35,000 Dr  │ [ Statement ]     │  │
+│  │ XYZ Hotels Pvt Ltd         │ Mumbai             │ ₹ 22,000 Dr  │ [ Statement ]     │  │
+│  └────────────────────────────┴────────────────────┴──────────────┴──────────────────┘  │
+│  (Empty: “No ledgers assigned to this account head.”)                        │
+│                                                                              │
+│  [ EDIT THIS COA HEAD → opens 32.2 ]     (edits Sundry Debtors, not a row)   │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## View Fields
+
+| Field | Type | Description |
+|------|------|-------------|
+| Account Name | Display | COA head name |
+| Code | Display | Unique code |
+| Primary Group | Display | Assets/Liabilities/Income/Expense/Capital |
+| Parent Group | Display | Parent grouping |
+| Nature | Display | Dr/Cr |
+| Status | Display | Active/Inactive |
+| Used By Ledgers | Table | **Ledgers in Module 31** under this COA head. Columns: **Ledger Name** (optional link), **Branch**, **Closing Bal.**, **Go to ledger** = **Statement** button → **31.3** only (not COA edit). |
+
+---
+
+## Actions
+
+| Action | Type | Description |
+|--------|------|-------------|
+| Back to List | Button | Returns to List View (**32.1**) |
+| Edit this COA head | Button | Opens **32.2** to edit **the account head shown at top** (same as footer in wireframe). |
+| Statement (per ledger row) | Button / link | Opens **31.3** for **that ledger row** only. |
+
+---
+
+================================================================================
+
+# 32.4 COA Tree View (Phase 2 — Optional Enhancement)
+
+**Description:**
+Phase‑2 enhancement. If needed later, render COA as an expandable tree.
+
+For Phase 1 delivery, the **List View (32.1)** + **View Detail (32.3)** already supports the full accounting flow required for Modules 28–31 and reporting in Module 33.
+
+---
+
+
+====================== END HERE ===================================================
