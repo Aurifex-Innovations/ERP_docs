@@ -4557,8 +4557,7 @@ Global search supports:
 │ │ (Base unit conversion value)                             │ │
 │ │                                                          │ │
 │ │ Variant Pack Size (Per SKU)                              │ │
-│ │ Qty Per SKU Pack*     : [________] (e.g. 0.1 Ltr)         │ │
-│ │ Units Per Carton      : [________] (e.g. 12 bottles/box)  │ │
+│ │ Units Per package     : [________] (e.g. 12 bottles/box)  │ │
 │ │                                                          │ │
 │ │ Barcode / QR Code     : [________________________]       │ │
 │ │ (Scanner or manual entry)                                │ │
@@ -4633,10 +4632,10 @@ Global search supports:
 | 3       | Quantity Per Package            | Number             | Yes      | Root/default pack size (used as default for variants)              |
 | 3       | Units Per Package               | Number             | No       | Root/default carton size (used as default for variants)            |
 | 4       | Variant Name                    | Text               | Yes      | Required when variant added                                        |
-| 4       | Variant SKU                     | Text               | No       | Auto or manual                                                     |
+| 4       | Variant Product Code                    | Text               | No       | Auto or manual                                                     |
 | 4       | Variant Package Type            | Dropdown           | No       | Packaging type                                                     |
 | 4       | Variant Quantity                | Number             | Yes      | Base conversion                                                    |
-| 4       | Variant Packaging (Per variant) | Optional           | Optional | Package Type / Qty per pack / Units per carton **per variant**     |
+| 4       | Variant Unit Per Package         | Optional           | Optional | Units per package **per variant**     |
 | 4       | Barcode / QR Code               | Text               | No       | Scanner input supported                                            |
 | 4       | Variant Status                  | Toggle             | No       | Active / Inactive                                                  |
 | 5       | HSN Code                        | Search Dropdown    | Yes      | From Tax Module                                                    |
