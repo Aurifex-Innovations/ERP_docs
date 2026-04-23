@@ -1,523 +1,553 @@
-# Module 11 (11.1–11.4) — Stock Management APIs (Beginner-friendly frontend guide)
+# Module 11 — Stock Management (Combined Flow-wise Guide)
 
-This guide maps each **Module 11 Stock screen** to a clear set of **backend API endpoints**, explains the **CEO / Head Office central stock entry** flow, and then covers the **branch request → approve → dispatch → receive** lifecycle.
+This is the **combined** and **flow-wise** document for:
 
-It is written to stay aligned with the **Module 10 refactor** where **each variant is a SKU row**.
+- `docs/module-11-stock-management-frontend-api.md` (full API workflow contract)
+- `docs/module-11-stock-management-frontend-guide.md` (beginner-friendly screen mapping)
 
----
+It explains, in simple English:
 
-## Core alignment with Module 10 (Variants/SKUs)
+- How **Head Office / Central users (CEO and upper roles)** manage Central stock (add/edit + logs)
+- How **Branch users** see branch stock, raise request, and receive after approval
+- How **Transfers** work (direct + generated from approval with OTHER_BRANCH)
+- Screen-wise: **which endpoint to call**, query params, payload notes
+- **Enums and allowed values**
+- **Conditional UI filters** (RBAC + CENTRAL visibility)
 
-### Product dropdown (used everywhere in Module 11)
-
-- **API**: `GET /api/v1/inventory-products/dropdown`
-- **Rule**: **each dropdown option = one SKU/variant**
-- **Frontend must store**:
-  - `inventoryProductId = option.id` (**primary key for stock**)
-  - `productCode` (display only; do not use as DB key)
-  - `productName`, `variantName`, `baseUom`, `hsnCode`
-  - `groupKey` (optional: only for “view all variants” screens)
-
-### Stock is always tracked at SKU level
-
-All Module 11 stock / request / transfer records should reference:
-
-- `inventoryProductId` (variant/SKU ID from Module 10)
-- `branchId` (Central or specific branch)
-- `stockType` (ASSET / CONSUMABLE / RESELL)
+Where rules feel strict (“hard lines”), an easy Gujarati explanation is provided.
 
 ---
 
-## Base path recommendation (Module 11)
+## 0) Quick glossary (simple)
 
-Use one backend base path for stock operations:
-
-- Base path: **`/api/v1/stock`**
-
-If your backend already uses a different base path, keep the **screen-to-endpoint mapping** below but rename the base path consistently.
-
----
-
-## Common headers
-
-- **Auth**: JWT Bearer token
-- **Tenant (if enabled)**: `X-Tenant-ID: <tenantSchemaOrTenantId>`
-- **Content-Type**: `application/json`
-
----
-
-## Glossary (beginner friendly)
-
-- **Central**: Head Office / Central Warehouse stock location.
-- **Branch**: Any non-central location (BLR / HYD / BOM etc.).
+- **Central**: Head Office warehouse branch (id usually `CENTRAL`)
+- **Branch**: Any other branch id like `BR-001`, `BR-002`
+- **SKU / Variant**: In Module 10 refactor, **each variant is a SKU row** and has its own id
 - **Stock types**:
-  - **Assets**: individually tracked units (each has an `assetId`)
-  - **Consumables**: bulk quantity
-  - **Resell**: quantity meant for sale
-- **Reserved**: approved quantity locked at source, not yet received.
-- **In-Transit**: dispatched quantity moving between locations.
+  - `ASSET`: unit-based, each item can have an `assetId`
+  - `CONSUMABLE`: bulk quantity
+  - `RESELL`: quantity for sale
+- **Reserved**: quantity “locked” for a request (note: some parts are “recommended” and not fully automated in backend)
+- **In-Transit**: dispatched and moving between branches
 
 ---
 
-## CEO / Higher-level scenario (Central entry → allocation → transfers)
+## 1) Must-follow: Product is always SKU-level (Module 10 alignment)
 
-CEO / Head Ops typically does:
+### Product dropdown (used everywhere)
 
-- Add new purchase into **Central** (creates a **Central Stock Entry**)
-- Optionally allocate some quantity to branches immediately (creates transfers)
-- Later, branches request stock; HO approves and dispatches; branch receives
+- **Endpoint**: `GET /api/v1/inventory-products/dropdown`
+- **Rule**: Each dropdown option is a **SKU/variant**
+- **Frontend must store & send**:
+  - `productId` / `inventoryProductId` (your backend uses both naming styles across docs; treat as **SKU id**)
+  - `productCode` (display only)
+  - `productName`, `variantName`, `baseUom`, `hsnCode`
 
-High-level ASCII flow:
+**Hard line (why)**:
+
+- Do **not** use `productCode` as database key.
+- Always send the SKU id (`productId` / `inventoryProductId`) in stock APIs.
+
+**Gujarati (easy)**:
+
+- **ProductCode** matra display mate chhe. DB ma actual mapping **SKU id** par chalse.  
+  એટલે request/stock ma hamesha **productId / inventoryProductId** j moklo.
+
+---
+
+## 2) RBAC + Filters (CENTRAL visibility)
+
+### 2.1 Branch filter behavior (recommended UI rule)
+
+In **Stock Dashboard** and **lists**, show filters based on permission:
+
+- **If user has “Central Stock Add” permission** (example: **CEO role** and upper roles):
+  - Show **extra dropdown**: `Scope Enum = CENTRAL | BRANCH`
+  - When `CENTRAL` selected, default branch becomes `CENTRAL`
+  - When `BRANCH` selected, show branch dropdown (non-central)
+
+- **All other users**:
+  - Do **not** show the CENTRAL scope enum
+  - Show only **branch dropdown(s)** they can access (often “My Branch” default)
+
+### 2.2 Suggested enums for UI filter (frontend-only enum)
+
+This scope enum is UI-side unless you implement it in backend:
+
+- `CENTRAL`
+- `BRANCH`
+
+If you implement backend param, a safe name is `viewScope`, but the contract already supports plain `branchId`.
+
+---
+
+## 3) Common enums (backend)
+
+From the contract:
+
+- **RequestStatus**:
+  - `DRAFT`, `PENDING_APPROVAL`, `APPROVED`, `PARTIALLY_APPROVED`, `REJECTED`, `HOLD`,
+  - `DISPATCH`, `IN_TRANSIT`, `PARTIALLY_RECEIVED`, `RECEIVED`,
+  - `ISSUE_REPORTED`, `REVOKED`
+- **RequestType**:
+  - `STOCK_REQUEST`, `INTERNAL_TRANSFER`, `ASSET_ISSUE`
+  - (UI docs also mention `TRANSFER_REQUEST` — keep FE mapping consistent with your backend actual enum)
+- **RequestPriority**: `LOW`, `NORMAL`, `HIGH`, `URGENT`
+- **TransferType** (contract): `REGULAR`, `EMERGENCY`, `RETURN`
+  - (guide mentions `SCHEDULED` too; verify with backend, but document both as “spec vs contract”)
+- **ReceiptCondition**: `GOOD`, `DAMAGED` (contract)
+  - Transfer receive also uses: `MISSING_ITEMS` (documented in transfer receive)
+- **StockAvailabilityStatus**: `AVAILABLE`, `OUT`
+- **AssetCondition** (receive): `NEW`, `GOOD`, `FAIR`, `DAMAGED`, `NEEDS_REPAIR`
+
+---
+
+## 4) Screen 11.1 — Stock Dashboard (table)
+
+### What user sees
+
+- A single table with SKU-wise stock (assets/consumables/resell + totals)
+- Filters: branch, search, status
+- Optional columns: `inTransitQty`, `reservedQty`
+
+### API
+
+- **Endpoint**: `GET /api/v1/stock/dashboard?pageNo=0&pageSize=10&branchId=&search=&status=`
+  - `branchId` optional
+  - `status` optional: `AVAILABLE | OUT`
+  - `search` optional
+
+### Row actions (recommended)
+
+- **View** → Product Stock Ledger (movement log)
+- **Central Edit** → only when:
+  - row belongs to Central entry context **and**
+  - RBAC allows edit
+
+---
+
+## 5) Screen 11.1.A — Product Stock Ledger (movement log)
+
+This is the **log-wise view** the user requested.
+
+### What user sees
+
+- “Stock movement” entries for one SKU: central entry receipt, requests, transfers
+
+### APIs (guide)
+
+- Summary: `GET /api/v1/stock/ledger/summary?inventoryProductId=<id>&branchId=<optional>`
+- List: `GET /api/v1/stock/ledger`
+  - Query: `inventoryProductId` required
+  - Optional: `entryTypes=CENTRAL_ENTRY|STOCK_REQUEST|BRANCH_TRANSFER`, `direction=IN|OUT`, date range, paging
+
+### Linking from ledger → detail screens
+
+- `CENTRAL_ENTRY` → Central Stock Entry view
+- `STOCK_REQUEST` → Stock Request view
+- `BRANCH_TRANSFER` → Transfer view
+
+---
+
+## 6) Central flow (CEO / Head Office) — Add Central Stock, Edit, View, Logs
+
+### 6.1 Flow diagram (Central procurement → stock updated)
 
 ```text
-PHASE 1: CENTRAL PROCUREMENT (Head Ops / CEO view)
-┌─────────────────┐     ┌─────────────────────────┐
-│ Product Master  │────▶│ Add to Central Stock    │
-│ (Module 10 SKU) │     │ (creates entry CSTK-*)  │
-└─────────────────┘     └──────────┬──────────────┘
-                                   │
-                                   ▼
-                       ┌─────────────────────────┐
-                       │ Split by stock type     │
-                       │ Assets / Cons / Resell  │
-                       └──────────┬──────────────┘
-                                   │
-                 ┌─────────────────┼─────────────────┐
-                 ▼                 ▼                 ▼
-          ┌────────────┐   ┌────────────┐    ┌────────────┐
-          │ Asset rows  │   │ Cons qty    │    │ Resell qty  │
-          │ (assetId)   │   │ (bulk)      │    │ (bulk)      │
-          └──────┬──────┘   └──────┬──────┘    └──────┬──────┘
-                 └─────────────────┼───────────────────┘
-                                   ▼
-                        ┌────────────────────────┐
-                        │ Central stock updated  │
-                        └────────────────────────┘
+Central user (CEO / HO)                                System
+┌────────────────────────────┐
+│ 11.1 Add to Central Stock  │
+│ pick SKU + qty split       │
+└──────────────┬─────────────┘
+               │ POST /central-entries
+               ▼
+┌────────────────────────────┐
+│ Central Entry created       │
+│ (CSTK-xxxx)                 │
+└──────────────┬─────────────┘
+               │
+               ▼
+┌────────────────────────────┐
+│ Dashboard qty updated       │
+│ Ledger logs created         │
+└────────────────────────────┘
 ```
 
----
+### 6.2 Screen 11.1.1 — Add to Central Stock (form)
 
-## 11.1 Tab 1 — Stock Dashboard (Table View)
+#### Key UX rule
 
-### Screen needs
+When SKU selected, show **Current Central Stock** in read-only section.
 
-- Unified table of SKU-wise quantities across accessible branches
-- Filters: branch view, category, stock type, status, date range, search
-- Columns: Assets/Consumable/Resell + Total + In-Transit + Reserved
+#### APIs
 
-### API to call
+1. Load current central stock (display-only):
 
-**`GET /api/v1/stock/dashboard`**
+- `GET /api/v1/stock/central-stock-level?productId=...`
 
-#### Query params (all optional)
+2. (Optional) Preview asset IDs:
 
-- `branchId` (Central or specific branch; omit for role-based default)
-- `viewScope` (optional, if you implement: `COMPANY_WIDE | CENTRAL | MY_BRANCHES | BRANCH`)
-- `categories` (multi) — values from Module 10 enum
-- `stockTypes` (multi): `ASSET`, `CONSUMABLE`, `RESELL`
-- `status` (multi): `AVAILABLE`, `LOW`, `OUT`, `INACTIVE`
-- `fromDate`, `toDate` (ISO date)
-- `search` (productCode / productName / assetId / hsnCode)
-- `pageNo`, `pageSize`
+- `POST /api/v1/stock/asset-ids/preview`
 
-#### Response (high level)
-
-`StockDashboardPage`:
-
-- `count`
-- `data[]` rows:
-  - `inventoryProductId` (**SKU id**)
-  - `productCode`, `productName`, `variantName`, `baseUom`, `hsnCode`, `category`, `brand`, `imageUrls`
-  - `assetsQty`, `consumableQty`, `resellQty`, `totalQty`
-  - `inTransitQty`, `reservedQty`, `availableQty`
-  - `status`
-
-### Row actions
-
-- **View** → 11.1.A Product Stock Ledger
-- **Edit** → 11.1.2 Edit Central Stock Entry (when entry-type is central entry & user has permission)
-- **Delete** → optional (usually soft-disable; permission gated)
-
----
-
-## 11.1.A Product Stock Ledger (Stock Movement Log)
-
-### Screen needs
-
-- Movement log for a **single SKU** across entries (stock request receipts + transfers)
-
-### APIs to call
-
-1. **Header summary**
-
-- `GET /api/v1/stock/ledger/summary?inventoryProductId=<id>&branchId=<optional>`
-
-2. **Movement list**
-
-- `GET /api/v1/stock/ledger`
-
-#### Query params
-
-- `inventoryProductId` (**required**)
-- `entryTypes` (multi): `CENTRAL_ENTRY`, `STOCK_REQUEST`, `BRANCH_TRANSFER`
-- `direction` (optional): `IN`, `OUT`
-- `branchId` (optional)
-- `fromDate`, `toDate`
-- `search` (entryId / supplier / branch / createdBy)
-- `pageNo`, `pageSize`
-
-#### Response row (high level)
-
-- `entryId` (CSTK-_ or SR-_ or TR-\*)
-- `entryType`, `direction`, `date`
-- `fromBranch`, `toBranch`
-- `assetsDelta`, `consumableDelta`, `resellDelta`
-- `createdBy`
-- `referenceId` (link to details screen)
-
-### Row navigation
-
-- If `entryType=CENTRAL_ENTRY` → 11.1.3 View Central Stock Entry
-- If `entryType=STOCK_REQUEST` → 11.2.2 View Stock Request
-- If `entryType=BRANCH_TRANSFER` → 11.4 View Branch Transfer (or transfer detail endpoint)
-
----
-
-## 11.1.1 Add Stock — Mode: Add to Central Stock (Head Ops)
-
-### Screen needs
-
-- Select SKU, enter total quantity, split into Assets/Consumable/Resell
-- If Assets > 0: generate asset IDs (auto/manual) + default assignment
-- Purchase/tax details (supplier, invoice, batch/expiry for consumables)
-- Optional initial allocation to branches (creates transfers)
-
-### APIs to call
-
-1. **Create central stock entry**
+3. Create entry:
 
 - `POST /api/v1/stock/central-entries`
 
-#### Body (high level)
+#### Create validation “hard line”
 
-- `inventoryProductId` (**required**)
-- `totalQty` (**required**)
-- `allocations`:
-  - `assetsQty`, `consumableQty`, `resellQty` (sum = total)
-- `assetGeneration` (only if assetsQty > 0):
-  - `mode`: `AUTO | MANUAL`
-  - `prefix` (if auto), `startSequence` (if auto)
-  - `defaultAssignment`: `CENTRAL | BRANCH`
-  - `defaultBranchId` (if defaultAssignment = BRANCH)
-  - `assignmentType`: `BRANCH_POOL | DIRECT_TO_EMPLOYEE`
-  - `employeeAssignments[]` (if direct assignment)
-- `purchase`:
-  - `supplierId`, `purchaseOrderRef`, `invoiceNumber`, `invoiceDate`
-  - `invoiceAmount`, `taxAmount`, `totalWithTax`
-  - `invoiceFileId` (if file upload handled separately)
-  - `batchNumber`, `manufacturingDate`, `expiryDate` (for consumables if required)
-- `initialBranchAllocations[]` (optional):
-  - `toBranchId`, `assetsQty`, `consumableQty`, `resellQty`
+- `assetsQty + consumableQty + resellQty = totalQty`
 
-2. **(Optional) Upload invoice file**
+**Gujarati**:
 
-- `POST /api/v1/files` (or your existing file module)
+- Total qty ne 3 part ma split karo. 3 no sum barabar **totalQty** j hovo joiye.  
+  Nahi to backend error aapse (balance mismatch).
 
-### Response (high level)
+#### Invoice copy note (hard line)
 
-- `centralEntryId` (e.g., `CSTK-000482`)
-- created asset IDs (if generated)
-- ledger impact summary
+- Invoice is accepted as **Base64** (`invoiceCopy`) with max decoded size **5MB**
+- Response does not return Base64 back; it returns metadata + download URL
 
----
+**Gujarati**:
 
-## 11.1.2 Edit Central Stock Entry (Head Ops)
+- Invoice upload ma base64 moklo. Response ma file data back nathi avtu;  
+  tamne download endpoint thi file levi pade.
 
-### Screen needs
+### 6.3 Screen 11.1.2 — Edit Central Stock Entry
 
-- Edit type split, some allocation fields, replace invoice copy
-- Must preserve audit integrity (lock product, lock totalQty, protect issued/transferred assets)
+#### API
 
-### APIs to call
+- Load: `GET /api/v1/stock/central-entries?entryId=...`
+- Update: `PUT /api/v1/stock/central-entries?entryId=...`
 
-1. **Load entry**
+#### Locked fields (contract)
 
-- `GET /api/v1/stock/central-entries/<centralEntryId>`
+Backend rejects edits to:
 
-2. **Update entry**
+- `totalQty`, product identity fields, many procurement fields, and asset ID config (`assetIdPrefix`, etc.)
+  Editable: split fields + assignment + invoice replacement + batch/expiry + optional `initialAllocations`
 
-- `PUT /api/v1/stock/central-entries/<centralEntryId>`
+**Hard line (why)**:
+This preserves audit integrity for procurement and prevents changing the “receipt truth”.
 
-### Important backend rule
+**Gujarati**:
 
-Reject edits if any of the entry’s stock has been:
+- Central entry ek “purchase receipt” jvi chhe. Ekvar create thay pachi  
+  **totalQty/product/invoice details** badliye to audit kharab thai.  
+  Tethi backend ae fields lock kare chhe.
 
-- issued to employees, transferred, sold, consumed
+#### Log-wise behavior (important for audit)
 
----
+On successful update, backend writes a movement log row with an action like:
 
-## 11.1.3 View Central Stock Entry (Head Ops) — read-only
+- `CENTRAL_STOCK_UPDATED` (remarks summarize changed fields)
 
-### Screen needs
+### 6.4 Screen 11.1.3 — View Central Stock Entry (read-only)
 
-- Full entry detail: procurement + split + asset list + branch allocations
+- `GET /api/v1/stock/central-entries?entryId=...`
+- Invoice download:
+  - `GET /api/v1/stock/central-entries/invoice-copy?entryId=...`
 
-### API to call
+### 6.5 (Optional) Initial allocation from Central → branches
 
-- `GET /api/v1/stock/central-entries/<centralEntryId>`
+Two options:
 
-### Variant-level display rule (important)
-
-Always show:
-
-- `productCode` of the **SKU** (e.g., `BSP3-001`)
-- `productName + (variantName)`
-  Never show a shortened base code (ambiguous when variants exist).
+- Send `initialAllocations` inside `POST /central-entries`
+- Or do it later:
+  - `POST /api/v1/stock/central-entries/initial-allocations?entryId=...`
 
 ---
 
-## 11.2 Tab 2 — My Requests (list)
+## 7) Branch flow — Branch stock view, request, approval, receive
 
-### Screen needs
+### 7.1 What a normal branch user can do (scenario)
 
-- List of stock requests and transfer requests created by user / branch
-- Filter by status, type, from-to branch, date range, priority
+- Open Dashboard and see **their branch stock**
+- Create a **Stock Request** to Central (or a transfer request if supported)
+- Track status until approved/dispatched
+- When goods arrive: **Receive** and confirm
 
-### API to call
+### 7.2 Branch user views branch stock (Dashboard)
 
-- `GET /api/v1/stock/requests`
+- `GET /api/v1/stock/dashboard?branchId=<theirBranchId>&...`
 
-#### Query params
+RBAC rule reminder:
 
-- `type`: `STOCK_REQUEST | TRANSFER_REQUEST`
-- `status` (multi): `DRAFT | PENDING | APPROVED | REJECTED | DISPATCH | IN_TRANSIT | PARTIALLY_RECEIVED | RECEIVED | ISSUE_REPORTED | REVOKED | ON_HOLD`
-- `fromBranchId`, `toBranchId`
-- `fromDate`, `toDate`
-- `priority`: `LOW | NORMAL | HIGH | URGENT`
-- `pageNo`, `pageSize`
+- Normal user UI should not expose CENTRAL scope filter.
 
----
+### 7.3 End-to-end scenario (Branch → Central → Branch receive)
 
-## 11.2.1 Stock Request (Branch → Central)
-
-### Screen needs
-
-- Create request with branch, required-by date, purpose
-- Add items (each item is a **SKU**), with type-wise quantities
-- Show “current branch stock” as reference
-
-### APIs to call
-
-1. **Create draft / submit**
-
-- `POST /api/v1/stock/requests`
-
-#### Body (high level)
-
-- `type`: `STOCK_REQUEST`
-- `requestingBranchId`
-- `requestToBranchId` = Central branch id
-- `priority`, `requiredByDate`, `purpose`
-- `items[]`:
-  - `inventoryProductId` (**required**)
-  - `assetsQty`, `consumableQty`, `resellQty`
-  - `itemPurpose` (optional)
-- `status`: `DRAFT` or `PENDING`
-
-2. **Fetch current stock (reference column)**
-
-- `GET /api/v1/stock/availability?branchId=<branch>&inventoryProductId=<id>`
-
----
-
-## 11.2.1.1 Submit Stock Request — Select Recipients (Popup)
-
-### Screen needs
-
-- Choose recipients at HO for notifications
-
-### APIs to call
-
-1. **Load recipient options**
-
-- `GET /api/v1/stock/requests/<requestId>/recipients`
-
-2. **Submit with recipients**
-
-- `POST /api/v1/stock/requests/<requestId>/submit`
-
-Body:
-
-- `recipientUserIds[]`
-
----
-
-## 11.2.2 View Stock Request (read-only lifecycle)
-
-### APIs to call
-
-- `GET /api/v1/stock/requests/<requestId>`
-- `GET /api/v1/stock/requests/<requestId>/timeline`
-
----
-
-## 11.3 Tab 3 — Received Requests (approval + receipt queue)
-
-### Screen needs
-
-- Queue for approvers to approve/reject/hold and for receivers to receive
-
-### API to call
-
-- `GET /api/v1/stock/inbox`
-
-Query params:
-
-- `mode`: `PENDING_APPROVAL | PENDING_RECEIPT | COMPLETED_TODAY | ALL_HISTORY`
-- same filtering options as 11.2 list
-
----
-
-## 11.3.1 Request Approval Form (Approve / Reject / Hold)
-
-### Screen needs
-
-- Validate central availability per item (A/C/R)
-- Approve quantities (full/partial)
-- Enter dispatch details (carrier, LR, expected delivery)
-- If insufficient stock: alternative source = other branch transfer or purchase order
-
-### APIs to call
-
-1. **Get approval view**
-
-- `GET /api/v1/stock/requests/<requestId>/approval-view`
-
-2. **Approve / reject / hold**
-
-- `POST /api/v1/stock/requests/<requestId>/decision`
-
-Body (high level):
-
-- `decision`: `APPROVE | REJECT | HOLD`
-- `approvalType`: `FULL | PARTIAL` (when decision=APPROVE)
-- `approvedItems[]`:
-  - `inventoryProductId`
-  - `approvedAssetsQty`, `approvedConsumableQty`, `approvedResellQty`
-  - `alternativeSource`: `NONE | OTHER_BRANCH | PURCHASE_ORDER`
-  - `sourceBranchId` (if OTHER_BRANCH)
-- `dispatch` (when dispatch starts here):
-  - `dispatchDate`, `expectedDeliveryDate`, `carrierId`, `lrNumber`, `trackingId`
-  - `assetIdAssignmentMode`: `AUTO | MANUAL` (if relevant)
-- `remarks`
-
-### Status behavior (recommended)
-
-- On approval + dispatch: status moves to `IN_TRANSIT`
-- Reserved quantities lock at source until received
-
----
-
-## 11.2.3 Receive Stock / Asset Allocation (Destination Branch)
-
-### Screen needs
-
-- Confirm receipt, verify quantities, verify asset conditions
-- Assign assets to Employee / Branch Pool / Quarantine
-- Upload receipt photo and confirm
-
-### APIs to call
-
-1. **Load receipt form**
-
-- `GET /api/v1/stock/transfers/<transferId>/receive-view`
-
-2. **Confirm receipt**
-
-- `POST /api/v1/stock/transfers/<transferId>/receive`
-
-Body (high level):
-
-- `receivedDate`, `packageCondition`, `remarks`
-- `receivedItems[]`:
-  - `inventoryProductId`
-  - `receivedAssetsQty`, `receivedConsumableQty`, `receivedResellQty`
-- `assetReceipts[]` (for assets):
-  - `assetId`
-  - `receivedCondition` (`NEW|GOOD|FAIR|DAMAGED|NEEDS_REPAIR`)
-  - `assignTo` (`EMPLOYEE|BRANCH_POOL|QUARANTINE`)
-  - `employeeId` (if EMPLOYEE)
-- `receiptPhotoFileId` (optional)
-- `confirmReceipt` (boolean)
-
-3. **Report issue (if needed)**
-
-- `POST /api/v1/stock/transfers/<transferId>/issues`
-
----
-
-## 11.4 Branch Transfer (Direct transfer or generated from approval)
-
-### Screen needs
-
-- Create TR with from/to branch, type, reference request (optional)
-- Add SKU products + type-wise quantities
-- Select asset IDs when assets > 0
-- Next: dispatch details
-
-### APIs to call
-
-1. **Create transfer draft**
-
-- `POST /api/v1/stock/transfers`
-
-Body (high level):
-
-- `fromBranchId`, `toBranchId`
-- `transferType`: `EMERGENCY | REGULAR | SCHEDULED`
-- `referenceRequestId` (optional)
-- `items[]`:
-  - `inventoryProductId`
-  - `assetsQty`, `consumableQty`, `resellQty`
-  - `assetIds[]` (required when assetsQty > 0)
-  - `assetTransferWith` (`REASSIGN_AT_DESTINATION | ASSIGN_TO_EMPLOYEE | BRANCH_POOL`)
-  - `destinationEmployeeId` (if ASSIGN_TO_EMPLOYEE)
-
-2. **Dispatch transfer**
-
-- `POST /api/v1/stock/transfers/<transferId>/dispatch`
-
-Body:
-
-- `dispatchDate`, `carrierId`, `lrNumber`, `trackingId`, `expectedDeliveryDate`
-
-3. **View transfer**
-
-- `GET /api/v1/stock/transfers/<transferId>`
-
-4. **Receive transfer**
-
-- Use 11.2.3 receive endpoints (same flow)
-
----
-
-## End-to-end lifecycle example (from Module 11 spec)
-
-This ASCII timeline is a practical reference for beginner devs to test the UI end-to-end:
+This is the simplest “happy path” for QA and onboarding.
 
 ```text
-15-Feb 09:00  Branch creates request → DRAFT
-15-Feb 11:15  Submit → PENDING APPROVAL (notify HO)
-15-Feb 15:00  HO approves → APPROVED (reserve qty at source)
-16-Feb 16:00  Dispatch → IN TRANSIT (carrier + LR recorded)
-18-Feb 11:50  Branch receives + assigns assets → RECEIVED
+Branch User                           HO Approver / Central                Branch User
+┌───────────────┐                     ┌──────────────────────┐            ┌────────────────┐
+│ Create SR     │── submit ──────────▶│ Approve + dispatch    │── goods ──▶│ Receive & close│
+│ (draft/ready) │                     │ (or hold/reject)      │            │ (confirmReceipt)│
+└───────────────┘                     └──────────────────────┘            └────────────────┘
 ```
+
+**Exact API order (recommended)**
+
+- Branch creates draft/ready:
+  - `POST /api/v1/stock/requests?draft=true|false`
+- Branch selects recipients + submits:
+  - `GET /api/v1/stock/requests/recipient-candidates`
+  - `POST /api/v1/stock/requests/submit?requestId=...` with `{ "notifyAll": true }` (or specific recipients)
+- HO sees it in inbox:
+  - `GET /api/v1/stock/requests/received?segment=PENDING_APPROVAL...`
+- HO opens approval view:
+  - `GET /api/v1/stock/approval/requests/approval-view?requestId=...`
+- HO approves (or hold/reject):
+  - `POST /api/v1/stock/approval/requests/approve?requestId=...`
+- Branch tracks request:
+  - `GET /api/v1/stock/requests?requestId=...`
+- Branch receives:
+  - `POST /api/v1/stock/requests/receive?requestId=...`
 
 ---
 
-## Frontend “must do” checklist (to stay variant-aligned)
+## 8) Screen 11.2 — My Requests (Branch user)
 
-- Always store and send **`inventoryProductId`** from Module 10 dropdown.
-- Show label as: `productName (variantName) - productCode` for clarity.
-- Never aggregate by `productName` unless you intentionally build a **groupKey** report.
-- Central entry view must show full SKU code (avoid ambiguous base codes).
+### Table/list
+
+- Contract endpoint:
+  - `GET /api/v1/stock/requests/my?pageNo=0&pageSize=10`
+  - With filters like `statuses=...`, `branchAnyId`, `priority`, date range, search
+
+### Create (11.2.1 Stock Request)
+
+- `POST /api/v1/stock/requests?draft=false`
+  - Use `draft=true` for “Save Draft”
+  - Use `draft=false` for ready-to-submit validations
+
+#### “Hard line” validations for submit-ready (contract)
+
+- `purpose` trimmed length **≥ 20**
+- `requiredByDate` **≥ tomorrow**
+- at least one line with qty > 0
+
+**Gujarati**:
+
+- Submit mate purpose ne minimum 20 character rakho.  
+  requiredByDate “aaj” na hovu joiye; **aavti kale** thi start.  
+  Ane least 1 item ma qty > 0 hovi joiye.
+
+### Recipient picker + submit (11.2.1.1)
+
+- Candidates:
+  - `GET /api/v1/stock/requests/recipient-candidates`
+- Submit:
+  - `POST /api/v1/stock/requests/submit?requestId=...`
+  - Body optional:
+    - `{ "notifyAll": true }` OR `{ "notifyAll": false, "recipients": ["a@x.com"] }`
+
+### View request details (read-only lifecycle)
+
+- `GET /api/v1/stock/requests?requestId=...`
+
+---
+
+## 9) Screen 11.3 — Received Requests (Central/Approver inbox)
+
+This is the “receive request flow and approval” part.
+
+### 9.1 Inbox list
+
+Two patterns exist in docs; use the contract ones for consistency:
+
+- `GET /api/v1/stock/requests/received?pageNo=0&pageSize=10`
+  - `segment=PENDING_APPROVAL | PENDING_RECEIPT | COMPLETED_TODAY | ALL_HISTORY`
+  - `workflows=APPROVAL | RECEIPT` (unions statuses; precedence over segment)
+
+**Hard line (visibility)**
+
+- Only requests where `sentTo` contains current user email are visible.
+- Draft is never shown to approvers.
+
+**Gujarati**:
+
+- Approver inbox ma request tabhi j avse jyare user ae submit kari ne  
+  recipients set karye hoy. Draft ma request “invisible” rahe chhe.
+
+### 9.2 Approval view (open the detail for approve screen)
+
+- `GET /api/v1/stock/approval/requests/approval-view?requestId=...`
+  - (Contract also notes `GET /requests?requestId=...` has same JSON shape for read-only)
+
+### 9.3 Approve / Reject / Hold
+
+- Approve:
+  - `POST /api/v1/stock/approval/requests/approve?requestId=...`
+- Reject:
+  - `POST /api/v1/stock/approval/requests/reject?requestId=...` (reason min 10 chars)
+- Hold:
+  - `POST /api/v1/stock/approval/requests/hold?requestId=...` (reason min 10 chars)
+
+**Hard line (remarks min length)**
+
+- Approve remarks min 10 chars; hold/reject reason min 10 chars.
+
+**Gujarati**:
+
+- Backend empty/short remark allow nathi karto.  
+  Minimum 10 character no reason/remarks jaruri chhe (audit clarity mate).
+
+### 9.4 Approval edit (after approval)
+
+- `PUT /api/v1/stock/approval/requests/approval?requestId=...`
+  - Draft mode: `"saveAsDraft": true` (remarks ≥ 3)
+  - Finalize: `dispatchDate`, `expectedDeliveryDate`, `carrier` required (remarks ≥ 10)
+
+---
+
+## 10) Receive flow (Destination branch) — after dispatch/in-transit
+
+There are two receive APIs in docs: **request receive** and **transfer receive**.
+
+### 10.1 Receive a Stock Request (simpler receive)
+
+- `POST /api/v1/stock/requests/receive?requestId=...`
+  Body:
+- `receivedDate` required
+- `packageCondition`: `GOOD | DAMAGED | MISSING_ITEMS`
+- `confirmReceipt` must be `true`
+
+Status outcome:
+
+- `GOOD` → `RECEIVED`
+- `DAMAGED` / `MISSING_ITEMS` → `ISSUE_REPORTED`
+
+### 10.2 Receive a Transfer (full receive with asset assignment)
+
+- `POST /api/v1/stock/transfers/receive?transferId=...`
+
+Supports:
+
+- receipt photo (Base64, 5MB)
+- optional `receivedItems[]` match check
+- `assetReceipts[]` with:
+  - `receivedCondition`: `NEW|GOOD|FAIR|DAMAGED|NEEDS_REPAIR`
+  - `assignmentType`: `EMPLOYEE|BRANCH_POOL|QUARANTINE`
+
+**Hard line (confirmReceipt must be true)**
+Backend requires a positive confirmation to close the receive step.
+
+**Gujarati**:
+
+- Receive finalize karva mate `confirmReceipt=true` jaruri chhe.  
+  Nahi to backend “confirm nathi” em samji ne reject kare chhe.
+
+---
+
+## 11) Branch Transfer flow (11.4) — direct transfer + approval-generated transfer
+
+Transfers are used when:
+
+- HO decides alternate source: `OTHER_BRANCH`, or
+- You do a direct branch-to-branch movement.
+
+### 11.1 Flow diagram (approval → linked transfer → dispatch → receive)
+
+```text
+Branch SR submitted
+      │
+      ▼
+Central approves with alternativeSource=OTHER_BRANCH
+      │ (system creates/updates transfer draft)
+      ▼
+Transfer DRAFT (TR-xxxx)  ──► operator completes asset lines (if needed)
+      │
+      ▼
+Dispatch transfer ──► In transit ──► Receive at destination (assign assets)
+```
+
+### 11.2 Transfer APIs (contract)
+
+- Create: `POST /api/v1/stock/transfers`
+- Update: `PUT /api/v1/stock/transfers?transferId=...`
+- View: `GET /api/v1/stock/transfers?transferId=...`
+- Dispatch: `POST /api/v1/stock/transfers/dispatch?transferId=...`
+- Mark in transit: `POST /api/v1/stock/transfers/mark-in-transit?transferId=...`
+- Receive: `POST /api/v1/stock/transfers/receive?transferId=...`
+- List: `GET /api/v1/stock/transfers?pageNo=0&pageSize=10&branchId=&status=&search=`
+
+### 11.3 Transfer “hard lines”
+
+- `fromBranchId` ≠ `toBranchId`
+- Each line qty sum > 0
+- Source stock must be sufficient
+- If assets are transferred, `assetLines` count must match assets qty before dispatch
+
+**Gujarati**:
+
+- Transfer ma from/to same nathi hovu joiye.  
+  Qty zero hoy to line invalid.  
+  Asset transfer ma actual assetId select karva pade; count match na thay to dispatch block thase.
+
+---
+
+## 12) Screen-wise summary (quick mapping)
+
+### Dashboard
+
+- `GET /stock/dashboard`
+
+### Product stock detail (dashboard row drilldown)
+
+- `GET /stock/dashboard/detail?productId=...`
+
+### Central Stock Entry
+
+- Current central stock: `GET /stock/central-stock-level?productId=...`
+- Create: `POST /stock/central-entries`
+- View: `GET /stock/central-entries?entryId=...`
+- Edit: `PUT /stock/central-entries?entryId=...`
+- Delete/inactivate: `DELETE /stock/central-entries?entryId=...`
+- Invoice download: `GET /stock/central-entries/invoice-copy?entryId=...`
+- Initial allocations: `POST /stock/central-entries/initial-allocations?entryId=...`
+
+### Requests
+
+- My list: `GET /stock/requests/my`
+- Create: `POST /stock/requests?draft=...`
+- Update: `PUT /stock/requests?requestId=...&draft=...`
+- Submit: `POST /stock/requests/submit?requestId=...`
+- Recipient candidates: `GET /stock/requests/recipient-candidates`
+- Save recipients: `POST /stock/requests/recipients?requestId=...`
+- Detail: `GET /stock/requests?requestId=...`
+- Revoke: `POST /stock/requests/revoke?requestId=...`
+- Receive (simple): `POST /stock/requests/receive?requestId=...`
+
+### Approval (HO inbox)
+
+- Received list: `GET /stock/requests/received`
+- Approval view: `GET /stock/approval/requests/approval-view?requestId=...`
+- Approve: `POST /stock/approval/requests/approve?requestId=...`
+- Reject: `POST /stock/approval/requests/reject?requestId=...`
+- Hold: `POST /stock/approval/requests/hold?requestId=...`
+- Update approval: `PUT /stock/approval/requests/approval?requestId=...`
+
+### Transfers
+
+- Create/update/get/list/dispatch/in-transit/receive: see section 11.2
+
+---
+
+## 13) Notes on naming mismatches (to avoid frontend bugs)
+
+Across docs you will see both:
+
+- `inventoryProductId` (guide)
+- `productId` (contract)
+
+Treat both as the **same idea**: “SKU/variant primary id from Module 10”.
+
+**Recommendation for frontend state**
+
+- Keep one internal key: `skuId`
+- Map it to payload key expected by endpoint you call (`productId` vs `inventoryProductId`)
+
+**Gujarati**
+
+- Naming alag chhe pan concept same chhe: **SKU id**.  
+  FE ma `skuId` rakhine endpoint pramane key map karo.
