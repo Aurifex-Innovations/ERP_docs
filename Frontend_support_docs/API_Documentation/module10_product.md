@@ -176,6 +176,7 @@ Notes:
 
 - **Product Code**: in this variant-wise model, **each variant must have its own `productCode`** (ex: `P1-V1`, `P1-V2`). That `id` returned per variant is what stock uses later.
 - **Images**: backend enforces **max 5 images**, **max 2MB each**.
+- **Packaging fields (important)**: you can now pass `packageType`, `quantityPerPackage`, `unitsPerPackage` **inside each `variants[]` line** (recommended when bottle sizes differ, e.g. 100ml vs 250ml). If omitted, backend falls back to the common fields in the bulk request.
 
 ---
 
