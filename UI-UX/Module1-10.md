@@ -880,19 +880,19 @@ Your document has been resubmitted for verification.
 
 ### Subscription Screen Fields
 
-| Field                | Type                 | Required | Behavior                            |
-| -------------------- | -------------------- | -------- | ----------------------------------- |
-| Plan Selection       | Dropdown             | Yes      | Lists active plans from Super Admin |
-| Plan Details         | Text (Read-only)     | Auto     | Description of selected plan        |
-| Per Branch Price     | Currency (Read-only) | Auto     | From plan configuration             |
-| Per Technician Price | Currency (Read-only) | Auto     | From plan configuration             |
+| Field                  | Type                 | Required | Behavior                            |
+| ---------------------- | -------------------- | -------- | ----------------------------------- |
+| Plan Selection         | Dropdown             | Yes      | Lists active plans from Super Admin |
+| Plan Details           | Text (Read-only)     | Auto     | Description of selected plan        |
+| Per Branch Price       | Currency (Read-only) | Auto     | From plan configuration             |
+| Per Technician Price   | Currency (Read-only) | Auto     | From plan configuration             |
 | Exrta Technician Price | Currency (Read-only) | Auto     | From plan configuration             |
 | Extra Branch Price     | Currency (Read-only) | Auto     | From plan configuration             |
-| Branch Count         | Number               | Yes      | Number of branches to subscribe     |
-| Technician Count     | Number               | Yes      | Number of technicians to subscribe  |
-| Duration             | Radio Button         | Yes      | Monthly/Quarterly/Yearly/Custom     |
-| Calculate Total      | Button               | -        | Shows calculation breakdown         |
-| Pay Now              | Button               | -        | Triggers payment gateway            |
+| Branch Count           | Number               | Yes      | Number of branches to subscribe     |
+| Technician Count       | Number               | Yes      | Number of technicians to subscribe  |
+| Duration               | Radio Button         | Yes      | Monthly/Quarterly/Yearly/Custom     |
+| Calculate Total        | Button               | -        | Shows calculation breakdown         |
+| Pay Now                | Button               | -        | Triggers payment gateway            |
 
 ### Validation Rules
 
@@ -979,7 +979,6 @@ Each record represents a **subscription purchase entry**.
 | View   | Opens detailed subscription information |
 
 ---
-
 
 ## **Filters & Search Configuration**
 
@@ -1232,35 +1231,35 @@ Internal Seravion operations module for tenant management, subscription oversigh
 
 ### Company Details Fields
 
-| Field                   | Type            | Required    | Behavior                                   |
-| ----------------------- | --------------- | ----------- | ------------------------------------------ |
-| Company ID              | Text / Label    | No          | System generated unique company identifier |
-| Company Name            | Text            | Yes         | Registered company name                    |
-| Industry Type           | Dropdown        | Yes         | Select industry category                   |
-| Contact Person Name     | Text            | Yes         | Primary contact person                     |
-| Contact Email           | Email           | Yes         | Used for communication and login           |
-| Contact Phone           | Phone           | Yes         | Registered contact number                  |
-| Shop No                 | Text            | No          | Shop or office number                      |
-| Address Line 1          | Text            | Yes         | Primary business address                   |
-| Address Line 2          | Text            | No          | Additional address information             |
-| Country                 | Dropdown        | Yes         | Country selection                          |
-| State                   | Dropdown        | Yes         | State based on selected country            |
-| City                    | Dropdown / Text | Yes         | City location                              |
-| Pincode                 | Number          | Yes         | Postal code                                |
-| GST Number              | Text            | Conditional | Required if GST registered                 |
-| PAN Number              | Text            | Yes         | Business PAN number                        |
-| License Number          | Text            | Conditional | Business license number                    |
-| Business Certificate    | File Upload     | Conditional | Upload supporting certificate              |
-| Aadhaar Document        | File Upload     | Conditional | Aadhaar verification document              |
-| GST Document            | File Upload     | Conditional | GST certificate upload                     |
-| Status                  | Dropdown        | Yes         | Controls company approval state            |
-| Rejection Reason        | Textarea        | Conditional | Required if Status = Rejected              |
-| Enable Trial            | Checkbox        | No          | Enables trial period configuration         |
-| Trial From Date         | Date            | Conditional | Required if Enable Trial = true            |
-| Trial To Date           | Date            | Conditional | Required if Enable Trial = true            |
-| Number of Branches      | Number          | Yes         | Total allowed branches                     |
-| Number of Technicians   | Number          | Yes         | Total allowed technicians                  |
-| Admin Comment           | Textarea        | No          | Internal notes by admin                    |
+| Field                 | Type            | Required    | Behavior                                   |
+| --------------------- | --------------- | ----------- | ------------------------------------------ |
+| Company ID            | Text / Label    | No          | System generated unique company identifier |
+| Company Name          | Text            | Yes         | Registered company name                    |
+| Industry Type         | Dropdown        | Yes         | Select industry category                   |
+| Contact Person Name   | Text            | Yes         | Primary contact person                     |
+| Contact Email         | Email           | Yes         | Used for communication and login           |
+| Contact Phone         | Phone           | Yes         | Registered contact number                  |
+| Shop No               | Text            | No          | Shop or office number                      |
+| Address Line 1        | Text            | Yes         | Primary business address                   |
+| Address Line 2        | Text            | No          | Additional address information             |
+| Country               | Dropdown        | Yes         | Country selection                          |
+| State                 | Dropdown        | Yes         | State based on selected country            |
+| City                  | Dropdown / Text | Yes         | City location                              |
+| Pincode               | Number          | Yes         | Postal code                                |
+| GST Number            | Text            | Conditional | Required if GST registered                 |
+| PAN Number            | Text            | Yes         | Business PAN number                        |
+| License Number        | Text            | Conditional | Business license number                    |
+| Business Certificate  | File Upload     | Conditional | Upload supporting certificate              |
+| Aadhaar Document      | File Upload     | Conditional | Aadhaar verification document              |
+| GST Document          | File Upload     | Conditional | GST certificate upload                     |
+| Status                | Dropdown        | Yes         | Controls company approval state            |
+| Rejection Reason      | Textarea        | Conditional | Required if Status = Rejected              |
+| Enable Trial          | Checkbox        | No          | Enables trial period configuration         |
+| Trial From Date       | Date            | Conditional | Required if Enable Trial = true            |
+| Trial To Date         | Date            | Conditional | Required if Enable Trial = true            |
+| Number of Branches    | Number          | Yes         | Total allowed branches                     |
+| Number of Technicians | Number          | Yes         | Total allowed technicians                  |
+| Admin Comment         | Textarea        | No          | Internal notes by admin                    |
 
 ---
 
@@ -1534,7 +1533,6 @@ The screen displays **plan summary statistics** along with the **plan list table
 | Description                    | Textarea     | No       | Plan features                              |
 | Duration                       | Multi-select | Yes      | Available billing cycles                   |
 
-
 ### Validation Rules
 
 | Field                  | Rule                                                |
@@ -1557,7 +1555,7 @@ The screen displays **plan summary statistics** along with the **plan list table
 │                                                              │
 │  ┌─────────────────────────────────────────────────────┐    │
 │  │  Same fields as Add Plan screen                      │    │
-│  │  Pre-filled with existing data  
+│  │  Pre-filled with existing data
 │  │    Status : Active
 │  │                                                      │    │
 │  │  ⚠️ Changes apply only to new subscriptions         │    │
@@ -1570,6 +1568,7 @@ The screen displays **plan summary statistics** along with the **plan list table
 ```
 
 ### Edit Plan Fields
+
 | Field                          | Type         | Required | Notes                |
 | ------------------------------ | ------------ | -------- | -------------------- |
 | Plan Name                      | Text         | Yes      | Pre-filled, editable |
@@ -1580,9 +1579,8 @@ The screen displays **plan summary statistics** along with the **plan list table
 | Price Per Technician           | Currency     | Yes      | Pre-filled, editable |
 | **Extra Price Per Technician** | Currency     | Yes      | Pre-filled, editable |
 | Description                    | Textarea     | No       | Pre-filled, editable |
-| Status                         | Badge        |	Auto     |	Active / Inactive   |
+| Status                         | Badge        | Auto     | Active / Inactive    |
 | Duration                       | Multi-select | Yes      | Pre-filled, editable |
-
 
 ### Validation Rules
 
@@ -2441,12 +2439,12 @@ Manages organizational locations with hierarchical structure and employee associ
 
 # Filters / Search Fields
 
-| Field              | Type     | Required | Notes                                        |
-| ------------------ | -------- | -------- | -------------------------------------------- |
-| Search             | Text     | No       | Search by Branch ID, Name, Code              |
-| Status Filter      | Dropdown | No       | All / Active / Inactive                      |
-| City Filter        | Dropdown | No       | Populated from branch records                |
-| State Filter       | Dropdown | No       | Populated from branch records                |
+| Field         | Type     | Required | Notes                           |
+| ------------- | -------- | -------- | ------------------------------- |
+| Search        | Text     | No       | Search by Branch ID, Name, Code |
+| Status Filter | Dropdown | No       | All / Active / Inactive         |
+| City Filter   | Dropdown | No       | Populated from branch records   |
+| State Filter  | Dropdown | No       | Populated from branch records   |
 
 ---
 
@@ -2705,14 +2703,14 @@ Below is the **corrected version of 7.5.2 with all missing fields added** based 
 
 # Filters
 
-| Filter             | Type                | Required | Description                                |
-| ------------------ | ------------------- | -------- | ------------------------------------------ |
-| Branch             | Multi-select        | No       | Filter employees by assigned branch        |
-| Department         | Dropdown            | No       | Filter by department                       |
-| Designation        | Dropdown            | No       | Filter by designation                      |
-| Role               | Dropdown            | No       | Filter by system role                      |
-| Status             | Dropdown            | No       | Active / Inactive                          |
-| Created Date Range | Date Range          | No       | Filter employees created within date range |
+| Filter             | Type         | Required | Description                                |
+| ------------------ | ------------ | -------- | ------------------------------------------ |
+| Branch             | Multi-select | No       | Filter employees by assigned branch        |
+| Department         | Dropdown     | No       | Filter by department                       |
+| Designation        | Dropdown     | No       | Filter by designation                      |
+| Role               | Dropdown     | No       | Filter by system role                      |
+| Status             | Dropdown     | No       | Active / Inactive                          |
+| Created Date Range | Date Range   | No       | Filter employees created within date range |
 
 ---
 
@@ -2854,14 +2852,14 @@ Manages the complete employee lifecycle including user visibility, hiring reques
 
 # Filters
 
-| Filter             | Type                | Required | Description                                |
-| ------------------ | ------------------- | -------- | ------------------------------------------ |
-| Branch             | Multi-select        | No       | Filter employees by assigned branch        |
-| Department         | Dropdown            | No       | Filter by department                       |
-| Designation        | Dropdown            | No       | Filter by designation                      |
-| Role               | Dropdown            | No       | Filter by system role                      |
-| Status             | Dropdown            | No       | Active / Inactive                          |
-| Created Date Range | Date Range          | No       | Filter employees created within date range |
+| Filter             | Type         | Required | Description                                |
+| ------------------ | ------------ | -------- | ------------------------------------------ |
+| Branch             | Multi-select | No       | Filter employees by assigned branch        |
+| Department         | Dropdown     | No       | Filter by department                       |
+| Designation        | Dropdown     | No       | Filter by designation                      |
+| Role               | Dropdown     | No       | Filter by system role                      |
+| Status             | Dropdown     | No       | Active / Inactive                          |
+| Created Date Range | Date Range   | No       | Filter employees created within date range |
 
 ---
 
@@ -3126,14 +3124,14 @@ Manages the complete employee lifecycle including user visibility, hiring reques
 
 # Filters
 
-| Filter                | Type       | Required | Description                              |
-| --------------------- | ---------- | -------- | ---------------------------------------- |
-| Status                | Dropdown   | No       | Pending / Approved / Rejected            |
-| Department            | Dropdown   | No       | Filter by department                     |
-| Proposed Role         | Dropdown   | No       | Filter by requested role                 |
-| Branch                | Dropdown   | No       | Filter by requested branch               |
-| Requested By          | Dropdown   | No       | Filter by employee who submitted request |
-| Submitted Date        | Date Range | No       | Filter by request submission date        |
+| Filter         | Type       | Required | Description                              |
+| -------------- | ---------- | -------- | ---------------------------------------- |
+| Status         | Dropdown   | No       | Pending / Approved / Rejected            |
+| Department     | Dropdown   | No       | Filter by department                     |
+| Proposed Role  | Dropdown   | No       | Filter by requested role                 |
+| Branch         | Dropdown   | No       | Filter by requested branch               |
+| Requested By   | Dropdown   | No       | Filter by employee who submitted request |
+| Submitted Date | Date Range | No       | Filter by request submission date        |
 
 ---
 
@@ -3862,12 +3860,12 @@ Below is the **refactored version of 9.1 Tax Types Master – Table View** using
 
 # Filters & Search
 
-| Filter             | Type       | Description                            |
-| ------------------ | ---------- | -------------------------------------- |
-| Search             | Text       | Search by Tax Name or Category         |
-| Status             | Dropdown   | Active / Inactive                      |
-| Applicability      | Dropdown   | Goods / Services / Both                |
-| Created Date Range | Date Range | Filter by created date                 |
+| Filter             | Type       | Description                    |
+| ------------------ | ---------- | ------------------------------ |
+| Search             | Text       | Search by Tax Name or Category |
+| Status             | Dropdown   | Active / Inactive              |
+| Applicability      | Dropdown   | Goods / Services / Both        |
+| Created Date Range | Date Range | Filter by created date         |
 
 ---
 
@@ -4058,6 +4056,7 @@ Below is the **refactored version of 9.1 Tax Types Master – Table View** using
 ```
 
 ---
+
 # 9.6 HSN Code Master – Table View
 
 ```id="b0smig"
@@ -4427,12 +4426,12 @@ Manages all items and services offered by the business. Helps organize products,
 
 # Filters
 
-| Filter          | Type               | Description                                                        |
-| --------------- | ------------------ | ------------------------------------------------------------------ |
-| Category        | Multi-select       | Chemical / Sprayer / Electric Pump / Machine / Trap / Tool / Other |
-| package-Type    | Cascading Dropdown | Changes based on Category                                          |
-| Status          | Multi-select       | Active / Inactive                                                  |
-| Created Date    | Date Range         | Filter by creation date                                            |
+| Filter       | Type               | Description                                                        |
+| ------------ | ------------------ | ------------------------------------------------------------------ |
+| Category     | Multi-select       | Chemical / Sprayer / Electric Pump / Machine / Trap / Tool / Other |
+| package-Type | Cascading Dropdown | Changes based on Category                                          |
+| Status       | Multi-select       | Active / Inactive                                                  |
+| Created Date | Date Range         | Filter by creation date                                            |
 
 ---
 
@@ -4450,6 +4449,21 @@ Global search supports:
 ---
 
 # 10.2 Add Product
+
+> **NOTE (Updated UI behavior — 2026)**  
+> This form is **fully dynamic** — users do **not** need to choose “Single product” vs “Variants”.
+>
+> - **Previously**: variants were treated as a “sub-section” and many teams assumed root packaging/pricing applies to all sizes.
+> - **Now** (recommended UI rule):
+>   - If user **adds 0 variants** → save as **one SKU** (single product behaves like a default variant).
+>   - If user **adds 1+ variants** → save as **multiple SKUs** (each variant row is a SKU).
+>   - **Media + common fields** inherit from root when variants are used.
+>   - **Pack size + pricing must be per-variant** when variants exist (100ml vs 250ml prices/sizes differ).
+
+### ✅ Company / Brand (Dynamic + “Add New Brand”)
+
+- Brand dropdown is **searchable** and supports **Add New Brand**.
+- UI should store the **selected brand id** (and show brand name for display).
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
@@ -4523,21 +4537,40 @@ Global search supports:
 │ ┌────────────────────────────────────────────────────────────┐ │
 │ │ [+ ADD VARIANT]                      [Delete]              │ │
 │ │                                                          │ │
+│ │ ⚠️ NOTE (Updated for Variant-wise SKU):                   │ │
+│ │ - Previously: teams assumed Section 6 pricing applies      │ │
+│ │   to all variants (incorrect for 100ml vs 250ml).          │ │
+│ │ - Now: each variant row is a SKU and must store its own    │ │
+│ │   pack-size + pricing. Root values are defaults only.      │ │
+│ │                                                          │ │
 │ │ Variant Name*         : [________________________]       │ │
 │ │ Example: 100 ml / 250 ml / 1 Ltr                         │ │
 │ │                                                          │ │
-│ │ Variant SKU           : [________________________]       │ │
-│ │ (Auto-generate or manual entry)                          │ │
+│ │ Variant Product Code* : [________________________]       │ │
+│ │ (SKU code per variant — e.g. PES-100ML)                  │ │
+│ │                                                          │ │
+│ │ (Use ONE code field only. Barcode is optional below.)     │ │
 │ │                                                          │ │
 │ │ Variant Package Type  : [▼ Bottle / Packet / Box / Pouch]│ │
 │ │                                                          │ │
 │ │ Variant Quantity*     : [________]                       │ │
 │ │ (Base unit conversion value)                             │ │
 │ │                                                          │ │
+│ │ Variant Pack Size (Per SKU)                              │ │
+│ │ Qty Per SKU Pack*     : [________] (e.g. 0.1 Ltr)         │ │
+│ │ Units Per Carton      : [________] (e.g. 12 bottles/box)  │ │
+│ │                                                          │ │
 │ │ Barcode / QR Code     : [________________________]       │ │
 │ │ (Scanner or manual entry)                                │ │
 │ │                                                          │ │
 │ │ Variant Status        : [☑ Active] Toggle                │ │
+│ │                                                          │ │
+│ │ Variant Pricing (Per SKU)                                 │ │
+│ │ Purchase Price*       : ₹ [________]                      │ │
+│ │ Selling Price         : ₹ [________]                      │ │
+│ │ Base Price            : ₹ [________] (Pre-tax price)      │ │
+│ │ Tax Amount            : ₹ [Auto Calculated]               │ │
+│ │ Total Cost            : ₹ [Auto Calculated]               │ │
 │ └────────────────────────────────────────────────────────────┘ │
 │                                                                │
 ├────────────────────────────────────────────────────────────────┤
@@ -4579,35 +4612,41 @@ Global search supports:
 
 # Add Product Field Summary
 
-| Section | Field                | Type               | Required | Notes                                                              |
-| ------- | -------------------- | ------------------ | -------- | ------------------------------------------------------------------ |
-| 1       | Product Name         | Text               | Yes      | Max 100 characters                                                 |
-| 1       | Product Code         | Text               | No       | Auto-generate or manual                                            |
-| 1       | Category             | Dropdown           | Yes      | Chemical / Sprayer / Electric Pump / Machine / Trap / Tool / Other |
-| 1       | Sub-Type             | Cascading Dropdown | No       | Based on category                                                  |
-| 1       | Company / Brand      | Search Dropdown    | Yes      | With Add New option                                                |
-| 1       | Description          | Text Area          | No       | Product information                                                |
-| 1       | Status               | Toggle             | No       | Active / Inactive                                                  |
-| 2       | Product Images       | Multi Upload       | No       | Max 5 images                                                       |
-| 2       | Primary Image        | Selection          | No       | Cover image                                                        |
-| 3       | Base UOM             | Dropdown           | Yes      | Nos / Ltr / Kg / Gram / ml / Set / Pkt                             |
-| 3       | Secondary UOM        | Dropdown           | No       | Same options                                                       |
-| 3       | Package Type         | Dropdown           | No       | Bottle / Packet / Pouch / Box / Bag / Can / Set                    |
-| 3       | Quantity Per Package | Number             | Yes      | Example: 1 Ltr per bottle                                          |
-| 3       | Units Per Package    | Number             | No       | Example: 12 bottles per box                                        |
-| 4       | Variant Name         | Text               | Yes      | Required when variant added                                        |
-| 4       | Variant SKU          | Text               | No       | Auto or manual                                                     |
-| 4       | Variant Package Type | Dropdown           | No       | Packaging type                                                     |
-| 4       | Variant Quantity     | Number             | Yes      | Base conversion                                                    |
-| 4       | Barcode / QR Code    | Text               | No       | Scanner input supported                                            |
-| 4       | Variant Status       | Toggle             | No       | Active / Inactive                                                  |
-| 5       | HSN Code             | Search Dropdown    | Yes      | From Tax Module                                                    |
-| 5       | Tax Rates            | Auto               | System   | Read-only                                                          |
-| 6       | Purchase Price       | Currency           | Yes      | Reference purchase price                                           |
-| 6       | Selling Price        | Currency           | No       | Optional                                                           |
-| 6       | Base Price           | Currency           | No       | Pre-tax                                                            |
-| 6       | Tax Amount           | Auto               | System   | Calculated                                                         |
-| 6       | Total Cost           | Auto               | System   | Calculated                                                         |
+> **NOTE (Important rule for variants)**  
+> If variants exist (100ml/250ml/500ml), then **pack-size + pricing must be saved per variant SKU**, otherwise different sizes will incorrectly share one price/size.  
+> Root fields can be used as **defaults**, but each variant row should be editable and saved with its own values.
+
+| Section | Field                           | Type               | Required | Notes                                                              |
+| ------- | ------------------------------- | ------------------ | -------- | ------------------------------------------------------------------ |
+| 1       | Product Name                    | Text               | Yes      | Max 100 characters                                                 |
+| 1       | Product Code                    | Text               | No       | Auto-generate or manual                                            |
+| 1       | Category                        | Dropdown           | Yes      | Chemical / Sprayer / Electric Pump / Machine / Trap / Tool / Other |
+| 1       | Sub-Type                        | Cascading Dropdown | No       | Based on category                                                  |
+| 1       | Company / Brand                 | Search Dropdown    | Yes      | **Dynamic**: selectable brand + **Add New Brand**                  |
+| 1       | Description                     | Text Area          | No       | Product information                                                |
+| 1       | Status                          | Toggle             | No       | Active / Inactive                                                  |
+| 2       | Product Images                  | Multi Upload       | No       | Max 5 images                                                       |
+| 2       | Primary Image                   | Selection          | No       | Cover image                                                        |
+| 3       | Base UOM                        | Dropdown           | Yes      | Nos / Ltr / Kg / Gram / ml / Set / Pkt                             |
+| 3       | Secondary UOM                   | Dropdown           | No       | Same options                                                       |
+| 3       | Package Type                    | Dropdown           | No       | Root/default packaging (used as default for variants)              |
+| 3       | Quantity Per Package            | Number             | Yes      | Root/default pack size (used as default for variants)              |
+| 3       | Units Per Package               | Number             | No       | Root/default carton size (used as default for variants)            |
+| 4       | Variant Name                    | Text               | Yes      | Required when variant added                                        |
+| 4       | Variant SKU                     | Text               | No       | Auto or manual                                                     |
+| 4       | Variant Package Type            | Dropdown           | No       | Packaging type                                                     |
+| 4       | Variant Quantity                | Number             | Yes      | Base conversion                                                    |
+| 4       | Variant Packaging (Per variant) | Optional           | Optional | Package Type / Qty per pack / Units per carton **per variant**     |
+| 4       | Barcode / QR Code               | Text               | No       | Scanner input supported                                            |
+| 4       | Variant Status                  | Toggle             | No       | Active / Inactive                                                  |
+| 5       | HSN Code                        | Search Dropdown    | Yes      | From Tax Module                                                    |
+| 5       | Tax Rates                       | Auto               | System   | Read-only                                                          |
+| 6       | Pricing (Root defaults)         | Currency           | Optional | Root values are defaults only (useful when no variants)            |
+| 6       | Purchase Price (Per variant)    | Currency           | Yes\*    | Required per variant when variants exist                           |
+| 6       | Selling Price (Per variant)     | Currency           | No       | Per variant                                                        |
+| 6       | Base Price (Per variant)        | Currency           | No       | Per variant                                                        |
+| 6       | Tax Amount (Per variant)        | Auto/System        | System   | Per variant                                                        |
+| 6       | Total Cost (Per variant)        | Auto/System        | System   | Per variant                                                        |
 
 ---
 
