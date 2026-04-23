@@ -1,4 +1,4 @@
-# 📊 Chart 6: Monthly Stock Comparison (Category-wise)
+# 📊 Chart 6: Monthly Stock Comparison (Assets vs Consumables vs Resell)
 
 ## Type
 
@@ -6,60 +6,75 @@
 
 ## Purpose
 
-- To compare monthly stock movement across categories, helping:
-```
-Identify which category is moving more each month
-Detect demand trends per category
-Support procurement and planning decisions
-```
+**Compare monthly movement of each stock type:**
+
+- Assets 📦
+- Consumables 🧪
+- Resell 🛒
 
 ## Tables Used
 - stock_movement_logs
-- stock_ledger
 
 ## Fields Used (Exact from DB)
-
-### From stock_movement_logs:
-
 - created_at
 - quantity_delta
-- product_id
+- stock_type
 
-### From stock_ledger:
 
-- product_id
-- category
+## Assumption (VERY IMPORTANT — based on your schema)
+
+**stock_type contains values like:**
+
+- 'ASSET'
+- 'CONSUMABLE'
+- 'RESELL'
+
+- (If naming differs, adjust CASE conditions accordingly)
 
 ## Logic
-### Group by:
-- Month (from created_at)
-- Category (from stock_ledger)
-### Aggregate:
-- Total movement using quantity_delta
-
-## Query
+```
+Group by month
+Split data using stock_type
+Aggregate movement separately
+```
+Query
 ```
 SELECT 
-    TO_CHAR(sml.created_at, 'YYYY-MM') AS month,
-    sl.category,
-    SUM(sml.quantity_delta) AS total_movement
+    TO_CHAR(created_at, 'YYYY-MM') AS month,
 
-FROM stock_movement_logs sml
-JOIN stock_ledger sl 
-ON sml.product_id = sl.product_id
+    SUM(CASE 
+        WHEN stock_type = 'ASSET' 
+        THEN quantity_delta 
+        ELSE 0 
+    END) AS assets,
+
+    SUM(CASE 
+        WHEN stock_type = 'CONSUMABLE' 
+        THEN quantity_delta 
+        ELSE 0 
+    END) AS consumables,
+
+    SUM(CASE 
+        WHEN stock_type = 'RESELL' 
+        THEN quantity_delta 
+        ELSE 0 
+    END) AS resell
+
+FROM stock_movement_logs
 
 GROUP BY 
-    TO_CHAR(sml.created_at, 'YYYY-MM'),
-    sl.category
+    TO_CHAR(created_at, 'YYYY-MM')
 
 ORDER BY 
-    month,
-    sl.category;
+    month;
 ```
 
 ## Chart Representation
 - X-Axis → Month (YYYY-MM)
-- Y-Axis → Quantity (total_movement)
+- Y-Axis → Quantity
 
-## Bars (Grouped by Month):
-- Each category = one bar in the group
+
+## Bars (per month):
+- Assets
+- Consumables
+- Resell
