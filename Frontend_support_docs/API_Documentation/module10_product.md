@@ -42,13 +42,21 @@ Accepted values (from `SubType` enum):
 
 Note: In the current backend, `subType` is **not truly cascading**; it’s the same enum list as `category`.
 
-### Company / Brand (`brand`)
+### Company / Brand (`brandId`)
 
-Accepted values (from `Brand` enum):
+This is now **dynamic** (not an enum). Products store `brandId` which is a FK to `inventory_brands.id`.
 
-- `PESTO`
+#### Brand dropdown API
 
-Note: right now brand is an enum, so the “Add New Brand” button in the UI is not supported by an API yet.
+- `GET /api/v1/inventory/brands` → returns `[{ id, name }]`
+
+#### Create brand API (Add New Brand)
+
+- `POST /api/v1/inventory/brands` with body `{ "name": "ABC Agro" }`
+
+#### What to store in product payload
+
+For product create/update, send `brandId` as the **brand primary key** (example: `"brandId": "br-..."`).
 
 ### Status (`status`, `variantStatus`)
 
@@ -128,7 +136,7 @@ Note: Product APIs currently store `hsnCode` as a string, but the auto-fill of t
 - **filters**
   - `categories=CHEMICAL&categories=SPRAYER` (multi)
   - `subTypes=CHEMICAL&subTypes=OTHER` (multi)
-  - `brands=PESTO` (multi)
+  - `brandIds=br-...&brandIds=br-...` (multi; brand ids)
   - `hsnCode=1234`
   - `statuses=ACTIVE&statuses=INACTIVE` (multi)
   - `packageType=BOTTLE`
@@ -151,26 +159,19 @@ Note: Product APIs currently store `hsnCode` as a string, but the auto-fill of t
 
 Your doc shows “Add Product” with variants. In backend, each variant is stored as its own SKU row.
 
-### A) Create a single product (no variants)
+### Recommended: ONE unified API (variants optional)
 
-Use when user adds product **without adding multiple variants**.
+Use this single endpoint for the UI. The backend will automatically decide:\n
 
-**API**: `POST /api/v1/inventory-products`
+- if `variants[]` is **present and non-empty** → creates multiple SKUs (variant-bulk behavior)\n
+- if `variants[]` is **missing or empty** → creates one SKU (single create behavior)\n
 
-**Body**: `InventoryProductRequest`
+**API**: `POST /api/v1/inventory-products/upsert`\n
 
-- Common fields + one variant section (because DB stores one variant per row).
+**Body**: `InventoryProductUnifiedUpsertRequest`\n
 
-### B) Create one product with multiple variants (recommended for your UI)
-
-Use when user adds **P1 with V1/V2/V3** in one save.
-
-**API**: `POST /api/v1/inventory-products/variant-bulk`
-
-**Body**: `InventoryProductVariantBulkCreateRequest`
-
-- Common fields once
-- `variants[]`: each entry becomes **one `inventory_products` row**, each with its own `productCode` (SKU code)
+- Root fields: common product fields, images, packaging\n
+- `variants[]` is optional\n
 
 Notes:
 
