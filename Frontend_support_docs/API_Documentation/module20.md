@@ -342,7 +342,7 @@ POST {{baseUrl}}/api/v1/sales-orders/service-summary
 | discountType         | string  | NONE, PERCENTAGE, FLAT                           |
 | discountValue        | number  | Discount value (percentage or flat amount)       |
 | executionNotes       | string  | Notes for execution team                         |
-| priority             | string  | NORMAL, HIGH, URGENT                             |
+| priority             | string  | NORMAL, CRITICAL, URGENT                         |
 | expectedDeliveryDate | date    | Expected delivery date                           |
 
 ### SERVICE_CONTRACT Specific Fields
