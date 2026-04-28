@@ -5435,6 +5435,48 @@ This module ensures transparent procurement, budget control, and seamless integr
 
 ---
 
+# 14.0 Purchase Order Lifecycle (Workflow)
+
+## **Screen-Wise Flow**
+
+| Screen / Phase | Role | Action | System Status | Integration / Note |
+| :--- | :--- | :--- | :--- | :--- |
+| **1. Add PO (14.2)** | Procurement Staff | Create & Save | `Draft` | User 1 (Procurement) drafts the PO. |
+| **2. PO Table (14.1)** | Procurement Staff | Submit for Approval | `Pending Approval` | PO is locked for User 1; Manager is notified. |
+| **3. PO View (14.4)** | Manager | Approve / Reject | `Approved` / `Cancelled` | User 2 (Manager) reviews and authorizes the PO. |
+| **4. PO Table (14.1)** | Procurement Staff | Mark as Ordered | `Ordered` | Staff marks PO as sent to Vendor. |
+| **5. Add Stock (11.1.1)** | Store Keeper | Receive Items | `Received` | **Integration**: Store Keeper enters the PO ID in the "Purchase Order Ref" field. System auto-updates status. |
+
+## **Visual Workflow**
+
+```mermaid
+graph TD
+    A[Draft] -->|Submit| B[Pending Approval]
+    B -->|Approve| C[Approved]
+    B -->|Reject| G[Cancelled]
+    C -->|Dispatch to Vendor| D[Ordered]
+    D -->|Receive in Module 11| E[Partially Received]
+    E -->|Final Receipt| F[Received]
+    D -->|Full Receipt| F
+```
+
+## **Dynamic Action Buttons**
+
+The system displays specific buttons based on the PO status. These buttons appear in both the **Table View (Actions column)** and the **View/Edit Form header**.
+
+| Current Status     | Visible Action Buttons         | Resulting Status     | Role Permission    |
+| ------------------ | ------------------------------ | -------------------- | ------------------ |
+| **Draft**          | `Edit`, `Delete`, `Submit`     | `Pending Approval`   | Procurement Staff  |
+| **Pending Approval**| `View`, `Approve`, `Reject`    | `Approved`/`Cancelled`| Manager / Admin    |
+| **Approved**       | `View`, `Mark as Ordered`      | `Ordered`            | Procurement Staff  |
+| **Ordered**        | `View`, `Download PDF`         | —                    | All authorized     |
+| **Received**       | `View`, `Download PDF`         | —                    | All authorized     |
+
+> [!TIP]
+> **Action vs. Edit**: Clicking a status button (like *Approve*) does not open the form for editing. It is a one-click state transition that triggers the workflow and audit trail.
+
+---
+
 # **14.1 Purchase Order – Table View**
 
 ## **Description**
@@ -5498,25 +5540,26 @@ Used to track procurement from creation → approval → ordering → receiving.
 
 ## **Actions**
 
-| Action | Available When           | Description               |
-| ------ | ------------------------ | ------------------------- |
-| View   | All statuses             | Open PO in read-only mode |
-| Edit   | Draft / Pending Approval | Modify PO details         |
-| Delete | Draft only               | Remove PO permanently     |
+| Action    | Available When     | Description                                           |
+| --------- | ------------------ | ----------------------------------------------------- |
+| View      | All statuses       | Open PO in read-only mode                             |
+| Edit      | Draft only         | Modify PO items, vendor, and quantities               |
+| Submit    | Draft only         | Move status to **Pending Approval** (Locks form)      |
+| Approve   | Pending Approval   | Manager authorization to move status to **Approved**  |
+| Ordered   | Approved only      | Move status to **Ordered** (PO sent to Vendor)        |
+| Delete    | Draft only         | Remove PO permanently                                 |
 
 ---
 
-## **Status Indicators**
-
-| Status             | Meaning              |
-| ------------------ | -------------------- |
-| Draft              | PO not finalized     |
-| Pending Approval   | Waiting for approval |
-| Approved           | Approved internally  |
-| Ordered            | Sent to vendor       |
-| Partially Received | Some items received  |
-| Received           | Fully received       |
-| Cancelled          | PO cancelled         |
+| Status             | Meaning / Trigger                                                                 |
+| ------------------ | --------------------------------------------------------------------------------- |
+| Draft              | Created but not submitted (Full Edit allowed)                                     |
+| Pending Approval   | Submitted for review (Locked for Staff)                                           |
+| Approved           | Internal authorization complete                                                   |
+| Ordered            | Sent to vendor; waiting for delivery                                              |
+| Partially Received | Triggered by **Module 11 (Stock)** when partial quantity is entered against PO ID |
+| Received           | Triggered by **Module 11 (Stock)** when full quantity is scanned into inventory   |
+| Cancelled          | Permanently stopped by user                                                       |
 
 ---
 
@@ -5905,15 +5948,19 @@ Editing is restricted to maintain data integrity after submission and approval.
 
 # **Status-Based Editing Rules**
 
-| Status             | Editing Allowed |
-| ------------------ | --------------- |
-| Draft              | Full Edit       |
-| Pending Approval   | ❌ No Edit      |
-| Approved           | ⚠️ Status only  |
-| Ordered            | ❌ Locked       |
-| Partially Received | ❌ Locked       |
-| Received           | ❌ Closed       |
-| Cancelled          | ❌ Closed       |
+> [!NOTE]
+> **Editability** refers to the ability to modify PO items, vendors, and quantities. 
+> **Status Updates** are performed via **Action Buttons** (e.g., [Submit], [Approve], [Mark Ordered]) and do not require the form fields to be unlocked.
+
+| Status             | Form Data Edit | Status Actions Available             | Notes                                     |
+| ------------------ | -------------- | ------------------------------------ | ----------------------------------------- |
+| Draft              | ✅ Full Edit    | [Submit for Approval]                | Creator can modify everything.            |
+| Pending Approval   | ❌ No Edit      | [Approve] / [Reject]                 | Fields locked; Manager performs action.   |
+| Approved           | ❌ No Edit      | [Mark as Ordered]                    | Fields locked; Staff marks dispatch.      |
+| Ordered            | ❌ Locked       | [Receive] (via Module 11)            | No manual status change allowed.          |
+| Partially Received | ❌ Locked       | [Receive] (via Module 11)            | System updates only.                      |
+| Received           | ❌ Closed       | None (Archive)                       | Read-only.                                |
+| Cancelled          | ❌ Closed       | None (Archive)                       | Read-only.                                |
 
 ---
 
