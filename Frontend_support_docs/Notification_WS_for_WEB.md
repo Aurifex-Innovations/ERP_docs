@@ -77,7 +77,7 @@ The following are the specific REST endpoints for downloading PDFs and exporting
 
 ### Module 11: Stock Management
 
-- **Download Supplier Invoice (File Attachment)**: `GET /v1/stock/entries/{id}/invoice-download`
+- **Download Supplier Invoice (File Attachment)**: `GET /api/v1/stock/central-entries/invoice-copy?entryId={id}`
 
 ### Module 14: Purchase Orders
 
