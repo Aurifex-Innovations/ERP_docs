@@ -1,6 +1,6 @@
 # Project DB Schema
 
-Generated: 2026-05-06T09:51:57.150Z
+Generated: 2026-05-06T10:02:40.833Z
 
 Source migrations: 102 SQL files
 
@@ -16,400 +16,400 @@ Note: schema big. ER diagram split into smaller parts so Mermaid renderer can lo
 erDiagram
   actions {
     BIGSERIAL id PK
-    VARCHAR(100) name
-    VARCHAR(255) label
-    VARCHAR(255) description
+    VARCHAR name
+    VARCHAR label
+    VARCHAR description
   }
   asset_units {
     BIGSERIAL id PK
-    VARCHAR(60) asset_id
-    VARCHAR(50) product_id FK
-    VARCHAR(50) product_code
-    VARCHAR(255) product_name
-    VARCHAR(30) branch_id
+    VARCHAR asset_id
+    VARCHAR product_id FK
+    VARCHAR product_code
+    VARCHAR product_name
+    VARCHAR branch_id
     BIGINT assigned_user_id
-    VARCHAR(160) assigned_to_name
-    VARCHAR(30) assignment_mode
-    VARCHAR(30) condition
-    VARCHAR(30) status
-    VARCHAR(80) created_by
+    VARCHAR assigned_to_name
+    VARCHAR assignment_mode
+    VARCHAR condition
+    VARCHAR status
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(80) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
   }
   bill_payment_allocations {
-    VARCHAR(50) id PK
-    VARCHAR(50) bill_id FK
-    VARCHAR(50) voucher_id FK
-    NUMERIC(14,2) allocated_amount
-    VARCHAR(30) allocation_type
-    NUMERIC(14,2) running_balance_after
+    VARCHAR id PK
+    VARCHAR bill_id FK
+    VARCHAR voucher_id FK
+    NUMERIC allocated_amount
+    VARCHAR allocation_type
+    NUMERIC running_balance_after
     TIMESTAMPTZ created_at
   }
   branches {
-    VARCHAR(30) id PK
-    VARCHAR(100) branch_name
-    VARCHAR(3) branch_code
-    VARCHAR(100) email
-    VARCHAR(10) phone_number
+    VARCHAR id PK
+    VARCHAR branch_name
+    VARCHAR branch_code
+    VARCHAR email
+    VARCHAR phone_number
     TEXT address_line1
-    VARCHAR(50) country
-    VARCHAR(50) state
-    VARCHAR(50) city
-    VARCHAR(10) pincode
-    VARCHAR(20) branch_type
-    VARCHAR(20) status
-    VARCHAR(30) created_by
-    VARCHAR(30) updated_by
-    VARCHAR(30) deleted_by
+    VARCHAR country
+    VARCHAR state
+    VARCHAR city
+    VARCHAR pincode
+    VARCHAR branch_type
+    VARCHAR status
+    VARCHAR created_by
+    VARCHAR updated_by
+    VARCHAR deleted_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
     TIMESTAMPTZ deleted_at
   }
   central_stock_entries {
     BIGSERIAL id PK
-    VARCHAR(40) entry_id
-    VARCHAR(50) product_id FK
-    VARCHAR(50) product_code
-    VARCHAR(255) product_name
-    VARCHAR(20) hsn_code
-    VARCHAR(30) base_uom
+    VARCHAR entry_id
+    VARCHAR product_id FK
+    VARCHAR product_code
+    VARCHAR product_name
+    VARCHAR hsn_code
+    VARCHAR base_uom
     INTEGER total_qty
     INTEGER assets_qty
     INTEGER consumable_qty
     INTEGER resell_qty
-    VARCHAR(15) asset_id_generation
-    VARCHAR(30) asset_id_prefix
+    VARCHAR asset_id_generation
+    VARCHAR asset_id_prefix
     INTEGER asset_sequence_start
-    VARCHAR(30) assignment_type
-    VARCHAR(50) default_assignment
-    VARCHAR(200) supplier_name
-    VARCHAR(80) purchase_order_ref
-    VARCHAR(80) invoice_number
+    VARCHAR assignment_type
+    VARCHAR default_assignment
+    VARCHAR supplier_name
+    VARCHAR purchase_order_ref
+    VARCHAR invoice_number
     DATE invoice_date
-    NUMERIC(14,2) invoice_amount
-    NUMERIC(14,2) tax_amount
-    NUMERIC(14,2) total_with_tax
+    NUMERIC invoice_amount
+    NUMERIC tax_amount
+    NUMERIC total_with_tax
     TEXT invoice_copy_url
-    VARCHAR(80) batch_number
+    VARCHAR batch_number
     DATE manufacturing_date
     DATE expiry_date
-    VARCHAR(30) status
-    VARCHAR(80) created_by
+    VARCHAR status
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(80) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
-    VARCHAR(80) deleted_by
+    VARCHAR deleted_by
     TIMESTAMPTZ deleted_at
   }
   central_stock_ledger {
     BIGSERIAL id PK
-    VARCHAR(50) product_id FK
-    VARCHAR(50) product_code
-    VARCHAR(255) product_name
-    VARCHAR(50) category
-    VARCHAR(120) brand
-    VARCHAR(20) hsn_code
-    VARCHAR(30) base_uom
+    VARCHAR product_id FK
+    VARCHAR product_code
+    VARCHAR product_name
+    VARCHAR category
+    VARCHAR brand
+    VARCHAR hsn_code
+    VARCHAR base_uom
     INTEGER assets_qty
     INTEGER consumable_qty
     INTEGER resell_qty
     INTEGER in_transit_qty
     INTEGER reserved_qty
-    VARCHAR(30) status
-    VARCHAR(80) created_by
+    VARCHAR status
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(80) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
-    VARCHAR(80) deleted_by
+    VARCHAR deleted_by
     TIMESTAMPTZ deleted_at
   }
   coa_account_heads {
-    VARCHAR(50) id PK
-    VARCHAR(30) code
-    VARCHAR(150) name
-    VARCHAR(20) primary_group
-    VARCHAR(50) parent_head_id FK
-    VARCHAR(2) nature
-    VARCHAR(10) branch_scope
-    VARCHAR(30) branch_id
+    VARCHAR id PK
+    VARCHAR code
+    VARCHAR name
+    VARCHAR primary_group
+    VARCHAR parent_head_id FK
+    VARCHAR nature
+    VARCHAR branch_scope
+    VARCHAR branch_id
     BOOLEAN is_postable
-    VARCHAR(20) status
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR status
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   company_profile_extension {
     UUID id PK
-    VARCHAR(50) company_id
+    VARCHAR company_id
     TEXT logo_url
-    VARCHAR(200) tagline
-    VARCHAR(255) website
+    VARCHAR tagline
+    VARCHAR website
     INT founding_year
     TIMESTAMP created_at
     TIMESTAMP updated_at
   }
   contract_amendment_logs {
-    VARCHAR(50) id PK
-    VARCHAR(50) contract_id FK
+    VARCHAR id PK
+    VARCHAR contract_id FK
     BIGINT amended_by_user_id
-    VARCHAR(200) amended_by_name
+    VARCHAR amended_by_name
     TIMESTAMPTZ amended_at
-    VARCHAR(40) amendment_reason
+    VARCHAR amendment_reason
     TEXT amendment_remarks
     BOOLEAN approval_required
     TEXT change_summary
   }
   contract_payment_lines {
-    VARCHAR(50) id PK
-    VARCHAR(50) contract_id FK
-    VARCHAR(50) period_label
-    VARCHAR(500) period_description
-    NUMERIC(14,2) amount
+    VARCHAR id PK
+    VARCHAR contract_id FK
+    VARCHAR period_label
+    VARCHAR period_description
+    NUMERIC amount
     DATE due_date
     BOOLEAN paid
     BOOLEAN locked
     INTEGER sort_order
   }
   contract_sales_order_links {
-    VARCHAR(50) id PK
-    VARCHAR(50) contract_id FK
-    VARCHAR(50) sales_order_number
+    VARCHAR id PK
+    VARCHAR contract_id FK
+    VARCHAR sales_order_number
     DATE sales_order_date
-    VARCHAR(100) period_label
-    NUMERIC(14,2) so_value
-    VARCHAR(30) so_status
-    VARCHAR(30) service_status
+    VARCHAR period_label
+    NUMERIC so_value
+    VARCHAR so_status
+    VARCHAR service_status
   }
   contract_site_services {
-    VARCHAR(50) id PK
-    VARCHAR(50) contract_site_id FK
-    VARCHAR(50) service_type_id
-    VARCHAR(200) service_type_name
-    VARCHAR(20) contract_mode
-    VARCHAR(20) frequency
+    VARCHAR id PK
+    VARCHAR contract_site_id FK
+    VARCHAR service_type_id
+    VARCHAR service_type_name
+    VARCHAR contract_mode
+    VARCHAR frequency
     INTEGER annual_frequency
-    VARCHAR(200) preferred_days
-    VARCHAR(30) preferred_time_slot
-    VARCHAR(50) technician_team_id
-    VARCHAR(200) technician_team_name
-    NUMERIC(14,2) service_sale_value
+    VARCHAR preferred_days
+    VARCHAR preferred_time_slot
+    VARCHAR technician_team_id
+    VARCHAR technician_team_name
+    NUMERIC service_sale_value
     INTEGER display_order
   }
   contract_sites {
-    VARCHAR(50) id PK
-    VARCHAR(50) contract_id FK
-    VARCHAR(50) gma_site_id
-    VARCHAR(200) site_name
+    VARCHAR id PK
+    VARCHAR contract_id FK
+    VARCHAR gma_site_id
+    VARCHAR site_name
     TEXT address
-    VARCHAR(100) city
-    VARCHAR(100) state
-    VARCHAR(100) country
+    VARCHAR city
+    VARCHAR state
+    VARCHAR country
     TEXT google_map_url
-    NUMERIC(12,2) area_sqft
-    VARCHAR(30) category
-    VARCHAR(20) sub_category
-    NUMERIC(14,2) site_total_cost_year
-    NUMERIC(14,2) site_proposed_price_year
-    NUMERIC(5,2) site_gross_margin
+    NUMERIC area_sqft
+    VARCHAR category
+    VARCHAR sub_category
+    NUMERIC site_total_cost_year
+    NUMERIC site_proposed_price_year
+    NUMERIC site_gross_margin
     INTEGER display_order
   }
   contract_termination_logs {
-    VARCHAR(50) id PK
-    VARCHAR(50) contract_id FK
+    VARCHAR id PK
+    VARCHAR contract_id FK
     BIGINT terminated_by_user_id
-    VARCHAR(200) terminated_by_name
+    VARCHAR terminated_by_name
     TIMESTAMPTZ terminated_at
     DATE effective_closure_date
-    VARCHAR(40) reason_code
-    VARCHAR(500) additional_remarks
+    VARCHAR reason_code
+    VARCHAR additional_remarks
     INT open_sales_orders_count
-    VARCHAR(40) open_sales_orders_resolution
+    VARCHAR open_sales_orders_resolution
   }
   contracts {
-    VARCHAR(50) id PK
-    VARCHAR(50) gma_sheet_id
-    VARCHAR(50) customer_id
-    VARCHAR(255) customer_name
-    VARCHAR(30) branch_id
-    VARCHAR(30) status
-    VARCHAR(30) duration_option
+    VARCHAR id PK
+    VARCHAR gma_sheet_id
+    VARCHAR customer_id
+    VARCHAR customer_name
+    VARCHAR branch_id
+    VARCHAR status
+    VARCHAR duration_option
     DATE start_date
     DATE end_date
-    NUMERIC(14,2) total_sale_value
-    NUMERIC(14,2) gma_original_total_sale
-    NUMERIC(14,2) total_annual_cost_snapshot
-    NUMERIC(5,2) overall_gm_percent_snapshot
-    VARCHAR(50) contract_reference
-    VARCHAR(30) renewal_type
+    NUMERIC total_sale_value
+    NUMERIC gma_original_total_sale
+    NUMERIC total_annual_cost_snapshot
+    NUMERIC overall_gm_percent_snapshot
+    VARCHAR contract_reference
+    VARCHAR renewal_type
     TEXT legal_notes
-    VARCHAR(40) payment_schedule_type
-    VARCHAR(40) invoicing_frequency
+    VARCHAR payment_schedule_type
+    VARCHAR invoicing_frequency
     TEXT custom_payment_description
     DATE advance_payment_due_date
     TEXT legal_sla_remarks
     BOOLEAN variance_requires_approval
     DATE termination_effective_date
-    VARCHAR(50) termination_reason
-    VARCHAR(500) termination_remarks
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR termination_reason
+    VARCHAR termination_remarks
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   credit_notes {
-    VARCHAR(50) id PK
-    VARCHAR(50) cn_number
-    VARCHAR(50) invoice_id FK
+    VARCHAR id PK
+    VARCHAR cn_number
+    VARCHAR invoice_id FK
     DATE cn_date
-    VARCHAR(40) reason
-    VARCHAR(500) other_reason
-    VARCHAR(500) remarks
-    NUMERIC(14,2) credit_amount
-    VARCHAR(30) source
-    VARCHAR(20) status
+    VARCHAR reason
+    VARCHAR other_reason
+    VARCHAR remarks
+    NUMERIC credit_amount
+    VARCHAR source
+    VARCHAR status
     TIMESTAMPTZ created_at
-    VARCHAR(120) created_by
+    VARCHAR created_by
   }
   customer_audit_log {
     BIGSERIAL id PK
-    VARCHAR(50) customer_id
-    VARCHAR(50) field_name
+    VARCHAR customer_id
+    VARCHAR field_name
     TEXT old_value
     TEXT new_value
-    VARCHAR(100) changed_by
+    VARCHAR changed_by
     TIMESTAMP_WITH_TIME_ZONE changed_at
   }
   customers {
-    VARCHAR(50) id PK
-    VARCHAR(20) entry_mode
-    VARCHAR(50) lead_id
-    VARCHAR(20) customer_type
-    VARCHAR(100) full_name
-    VARCHAR(50) industry_type
-    VARCHAR(10) pan_number
-    VARCHAR(15) gst_number
-    VARCHAR(100) contact_person
-    VARCHAR(100) designation
-    VARCHAR(15) phone
-    VARCHAR(15) alternate_phone
-    VARCHAR(100) email
-    VARCHAR(30) branch_id
+    VARCHAR id PK
+    VARCHAR entry_mode
+    VARCHAR lead_id
+    VARCHAR customer_type
+    VARCHAR full_name
+    VARCHAR industry_type
+    VARCHAR pan_number
+    VARCHAR gst_number
+    VARCHAR contact_person
+    VARCHAR designation
+    VARCHAR phone
+    VARCHAR alternate_phone
+    VARCHAR email
+    VARCHAR branch_id
     TEXT billing_address_line1
     TEXT billing_address_line2
-    VARCHAR(50) city
-    VARCHAR(50) state
-    VARCHAR(6) pincode
-    VARCHAR(50) country
+    VARCHAR city
+    VARCHAR state
+    VARCHAR pincode
+    VARCHAR country
     TEXT google_map_url
-    VARCHAR(100) finance_contact_name
-    VARCHAR(15) finance_contact_phone
-    VARCHAR(100) finance_contact_email
-    VARCHAR(20) status
+    VARCHAR finance_contact_name
+    VARCHAR finance_contact_phone
+    VARCHAR finance_contact_email
+    VARCHAR status
     TEXT reason_for_deactivation
     BOOLEAN is_deleted
     TIMESTAMP_WITH_TIME_ZONE created_at
     TIMESTAMP_WITH_TIME_ZONE updated_at
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
   }
   debit_notes {
-    VARCHAR(50) id PK
-    VARCHAR(50) dn_number
-    VARCHAR(50) bill_id FK
+    VARCHAR id PK
+    VARCHAR dn_number
+    VARCHAR bill_id FK
     DATE dn_date
-    VARCHAR(40) reason
-    VARCHAR(500) other_reason
-    VARCHAR(500) remarks
-    NUMERIC(14,2) debit_amount
-    VARCHAR(30) source
-    VARCHAR(20) status
+    VARCHAR reason
+    VARCHAR other_reason
+    VARCHAR remarks
+    NUMERIC debit_amount
+    VARCHAR source
+    VARCHAR status
     TIMESTAMPTZ created_at
-    VARCHAR(120) created_by
+    VARCHAR created_by
   }
   follow_ups {
-    VARCHAR(50) id PK
-    VARCHAR(50) lead_id FK
+    VARCHAR id PK
+    VARCHAR lead_id FK
     TEXT interaction_summary
-    VARCHAR(20) status_updated_to
-    VARCHAR(30) contact_mode
+    VARCHAR status_updated_to
+    VARCHAR contact_mode
     TEXT lost_reason
     BOOLEAN next_action_scheduled
     DATE next_follow_up_date
     TIME next_follow_up_time
     TEXT reason_agenda
-    VARCHAR(100) created_by
+    VARCHAR created_by
     TIMESTAMP created_at
   }
   gma_audit_logs {
-    VARCHAR(50) id PK
-    VARCHAR(50) gma_sheet_id FK
-    VARCHAR(50) action
-    VARCHAR(50) user_id
-    VARCHAR(100) user_name
+    VARCHAR id PK
+    VARCHAR gma_sheet_id FK
+    VARCHAR action
+    VARCHAR user_id
+    VARCHAR user_name
     TEXT remarks
     TIMESTAMPTZ action_at
   }
   gma_chemicals {
-    VARCHAR(50) id PK
-    VARCHAR(50) gma_service_id FK
-    VARCHAR(50) product_id FK
-    VARCHAR(100) product_code
-    VARCHAR(200) product_name
-    VARCHAR(50) uom
-    NUMERIC(10,2) coverage_sqft
-    NUMERIC(10,3) required_qty_per_visit
-    NUMERIC(14,4) price_per_uom
-    NUMERIC(14,2) cost_per_visit
-    NUMERIC(14,2) cost_per_month
-    NUMERIC(14,2) cost_per_year
+    VARCHAR id PK
+    VARCHAR gma_service_id FK
+    VARCHAR product_id FK
+    VARCHAR product_code
+    VARCHAR product_name
+    VARCHAR uom
+    NUMERIC coverage_sqft
+    NUMERIC required_qty_per_visit
+    NUMERIC price_per_uom
+    NUMERIC cost_per_visit
+    NUMERIC cost_per_month
+    NUMERIC cost_per_year
     INTEGER display_order
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   gma_prospects {
-    VARCHAR(50) id PK
-    VARCHAR(200) full_name
-    VARCHAR(15) phone
-    VARCHAR(255) email
-    VARCHAR(100) company_name
+    VARCHAR id PK
+    VARCHAR full_name
+    VARCHAR phone
+    VARCHAR email
+    VARCHAR company_name
     TEXT address
-    VARCHAR(100) city
-    VARCHAR(100) state
-    VARCHAR(10) pincode
-    VARCHAR(100) country
+    VARCHAR city
+    VARCHAR state
+    VARCHAR pincode
+    VARCHAR country
     TEXT google_map_url
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   gma_services {
-    VARCHAR(50) id PK
-    VARCHAR(50) gma_site_id FK
-    VARCHAR(50) service_type_id FK
-    VARCHAR(200) service_type_name
-    VARCHAR(20) service_mode
-    VARCHAR(20) frequency
+    VARCHAR id PK
+    VARCHAR gma_site_id FK
+    VARCHAR service_type_id FK
+    VARCHAR service_type_name
+    VARCHAR service_mode
+    VARCHAR frequency
     INTEGER annual_frequency
-    NUMERIC(5,2) visits_per_month
-    NUMERIC(14,2) rate_per_visit
-    NUMERIC(14,2) service_visit_cost_year
-    NUMERIC(14,2) service_visit_cost_month
-    NUMERIC(5,2) hours_per_visit
-    NUMERIC(14,2) rate_per_hour
-    NUMERIC(14,2) manpower_cost_year
-    NUMERIC(14,2) manpower_cost_month
-    NUMERIC(14,2) chemical_cost_year
-    NUMERIC(14,2) chemical_cost_month
-    NUMERIC(14,2) total_service_cost_year
+    NUMERIC visits_per_month
+    NUMERIC rate_per_visit
+    NUMERIC service_visit_cost_year
+    NUMERIC service_visit_cost_month
+    NUMERIC hours_per_visit
+    NUMERIC rate_per_hour
+    NUMERIC manpower_cost_year
+    NUMERIC manpower_cost_month
+    NUMERIC chemical_cost_year
+    NUMERIC chemical_cost_month
+    NUMERIC total_service_cost_year
     INTEGER display_order
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   gma_sheet_approver_roles {
-    VARCHAR(50) gma_sheet_id PK FK
+    VARCHAR gma_sheet_id PK FK
     BIGINT role_id PK FK
   }
   coa_account_heads }o--|| coa_account_heads : "fk_coa_parent"
@@ -427,23 +427,23 @@ erDiagram
 ```mermaid
 erDiagram
   gma_sheets {
-    VARCHAR(50) id PK
-    VARCHAR(20) source_type
-    VARCHAR(50) lead_id FK
-    VARCHAR(50) customer_id
-    VARCHAR(50) prospect_id FK
-    VARCHAR(20) contract_duration
+    VARCHAR id PK
+    VARCHAR source_type
+    VARCHAR lead_id FK
+    VARCHAR customer_id
+    VARCHAR prospect_id FK
+    VARCHAR contract_duration
     DATE proposed_start_date
-    VARCHAR(30) branch_id FK
+    VARCHAR branch_id FK
     TEXT remarks
-    NUMERIC(14,2) total_annual_cost
-    NUMERIC(14,2) total_annual_price
-    NUMERIC(5,2) overall_gross_margin
-    NUMERIC(5,2) gm_without_doc
-    NUMERIC(5,2) gm_with_doc
-    NUMERIC(14,2) total_surcharge_cost
-    NUMERIC(10,2) total_visits_per_month
-    VARCHAR(20) status
+    NUMERIC total_annual_cost
+    NUMERIC total_annual_price
+    NUMERIC overall_gross_margin
+    NUMERIC gm_without_doc
+    NUMERIC gm_with_doc
+    NUMERIC total_surcharge_cost
+    NUMERIC total_visits_per_month
+    VARCHAR status
     BIGINT approver_id
     TEXT approval_remarks
     TIMESTAMPTZ submitted_on
@@ -451,69 +451,69 @@ erDiagram
     TIMESTAMPTZ deadline
     BOOLEAN is_deleted
     TIMESTAMPTZ deleted_at
-    VARCHAR(100) deleted_by
+    VARCHAR deleted_by
     BIGINT prepared_by_id
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   gma_sites {
-    VARCHAR(50) id PK
-    VARCHAR(50) gma_sheet_id FK
-    VARCHAR(200) site_name
+    VARCHAR id PK
+    VARCHAR gma_sheet_id FK
+    VARCHAR site_name
     TEXT address
-    VARCHAR(100) city
-    VARCHAR(100) state
-    VARCHAR(100) country
+    VARCHAR city
+    VARCHAR state
+    VARCHAR country
     TEXT google_map_url
-    VARCHAR(30) category
-    VARCHAR(20) sub_category
-    NUMERIC(10,2) area_sqft
+    VARCHAR category
+    VARCHAR sub_category
+    NUMERIC area_sqft
     BOOLEAN weekend_night_surcharge_applicable
-    NUMERIC(14,2) surcharge_cost
+    NUMERIC surcharge_cost
     BOOLEAN documentation_cost_applicable
-    NUMERIC(10,2) cost_per_document
+    NUMERIC cost_per_document
     INTEGER docs_per_month
-    NUMERIC(14,2) documentation_cost_year
-    NUMERIC(14,2) site_total_cost_year
-    NUMERIC(14,2) site_proposed_price_year
-    NUMERIC(5,2) site_gross_margin
+    NUMERIC documentation_cost_year
+    NUMERIC site_total_cost_year
+    NUMERIC site_proposed_price_year
+    NUMERIC site_gross_margin
     INTEGER display_order
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   hiring_request_branches {
-    VARCHAR(30) hiring_request_id PK FK
-    VARCHAR(30) branch_id PK
+    VARCHAR hiring_request_id PK FK
+    VARCHAR branch_id PK
   }
   hiring_request_recipients {
-    VARCHAR(30) hiring_request_id PK FK
+    VARCHAR hiring_request_id PK FK
     BIGINT recipient_user_id PK FK
   }
   hiring_requests {
-    VARCHAR(30) id PK
+    VARCHAR id PK
     BIGINT requested_by_user_id FK
-    VARCHAR(150) department
-    VARCHAR(150) designation
+    VARCHAR department
+    VARCHAR designation
     BIGINT proposed_role_id FK
-    VARCHAR(20) employment_type
+    VARCHAR employment_type
     DATE expected_date_of_joining
     INT number_of_positions
     TEXT hiring_reason
     TEXT job_description
-    VARCHAR(500) additional_remarks
-    DECIMAL(15,2) proposed_salary
-    VARCHAR(500) supporting_document_path
-    VARCHAR(20) status
+    VARCHAR additional_remarks
+    DECIMAL proposed_salary
+    VARCHAR supporting_document_path
+    VARCHAR status
     BIGINT reviewed_by_user_id FK
     DATE review_date
     TEXT rejection_reason
     BIGINT converted_user_id FK
     TIMESTAMPTZ submitted_at
-    VARCHAR(100) created_by
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(100) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
   }
   hrm_attendance_day {
@@ -523,41 +523,41 @@ erDiagram
     TIMESTAMPTZ punch_in_at
     TIMESTAMPTZ punch_out_at
     INT total_minutes
-    VARCHAR(20) status
-    VARCHAR(20) source
-    VARCHAR(1000) notes
+    VARCHAR status
+    VARCHAR source
+    VARCHAR notes
     INT tasks_assigned
     INT tasks_completed
     INT tasks_pending
-    VARCHAR(100) created_by
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(100) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
   }
   hrm_holidays {
     BIGSERIAL id PK
     DATE holiday_date
-    VARCHAR(200) name
-    VARCHAR(30) branch_id
-    VARCHAR(100) created_by
+    VARCHAR name
+    VARCHAR branch_id
+    VARCHAR created_by
     TIMESTAMPTZ created_at
   }
   hrm_leave_request {
     BIGSERIAL id PK
-    VARCHAR(30) leave_code
+    VARCHAR leave_code
     BIGINT user_id FK
-    VARCHAR(10) leave_type
+    VARCHAR leave_type
     DATE from_date
     DATE to_date
     INT working_days
     TEXT description
-    VARCHAR(20) status
+    VARCHAR status
     TEXT rejection_reason
     BIGINT reviewed_by_user_id FK
     TIMESTAMPTZ reviewed_at
-    VARCHAR(100) created_by
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(100) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
   }
   hrm_salary_month {
@@ -565,37 +565,37 @@ erDiagram
     BIGINT user_id FK
     INT salary_year
     INT salary_month
-    NUMERIC(12,2) basic_salary
-    NUMERIC(12,2) hra
-    NUMERIC(12,2) other_allowance
-    NUMERIC(12,2) incentive
-    NUMERIC(12,2) deductions
-    NUMERIC(12,2) other_deductions
-    NUMERIC(12,2) pf
-    NUMERIC(12,2) esi
-    NUMERIC(12,2) tds
-    NUMERIC(8,2) ot_hours
+    NUMERIC basic_salary
+    NUMERIC hra
+    NUMERIC other_allowance
+    NUMERIC incentive
+    NUMERIC deductions
+    NUMERIC other_deductions
+    NUMERIC pf
+    NUMERIC esi
+    NUMERIC tds
+    NUMERIC ot_hours
     INT holiday_days_worked
-    NUMERIC(12,2) ot_amount
-    NUMERIC(12,2) holiday_incentive_amt
-    NUMERIC(12,2) gross_salary
-    NUMERIC(12,2) total_deductions
-    NUMERIC(12,2) net_salary
-    VARCHAR(20) payment_status
+    NUMERIC ot_amount
+    NUMERIC holiday_incentive_amt
+    NUMERIC gross_salary
+    NUMERIC total_deductions
+    NUMERIC net_salary
+    VARCHAR payment_status
     TEXT reason
     DATE payment_date
     BIGINT paid_by_user_id FK
     TIMESTAMPTZ paid_at
-    VARCHAR(100) created_by
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(100) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
   }
   hrm_salary_slip {
     BIGSERIAL id PK
     BIGINT salary_month_id FK
-    VARCHAR(500) file_path
-    VARCHAR(100) generated_by
+    VARCHAR file_path
+    VARCHAR generated_by
     TIMESTAMPTZ generated_at
   }
   hsn_code_tax_types {
@@ -604,130 +604,130 @@ erDiagram
   }
   hsn_codes {
     BIGINT id PK
-    VARCHAR(8) hsn_code
+    VARCHAR hsn_code
     TEXT description
-    VARCHAR(20) chapter
-    VARCHAR(20) product_category
-    VARCHAR(20) product_subcategory
+    VARCHAR chapter
+    VARCHAR product_category
+    VARCHAR product_subcategory
     DATE effective_from
-    VARCHAR(20) status
-    VARCHAR(50) created_by
+    VARCHAR status
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(50) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
-    VARCHAR(50) deleted_by
+    VARCHAR deleted_by
     TIMESTAMPTZ deleted_at
   }
   incentive_overtime_details {
-    VARCHAR(50) config_id PK FK
+    VARCHAR config_id PK FK
     BOOLEAN holiday_work_applicable
-    VARCHAR(20) holiday_work_type
-    NUMERIC(12,2) holiday_work_amount
+    VARCHAR holiday_work_type
+    NUMERIC holiday_work_amount
     BOOLEAN overtime_applicable
-    VARCHAR(20) overtime_type
-    VARCHAR(50) overtime_shift_type
+    VARCHAR overtime_type
+    VARCHAR overtime_shift_type
     TIME custom_shift_from
     TIME custom_shift_to
-    NUMERIC(12,2) overtime_shift_incentive
-    NUMERIC(12,2) per_hour_incentive_pay
+    NUMERIC overtime_shift_incentive
+    NUMERIC per_hour_incentive_pay
     INT max_ot_hours_per_month
   }
   inventory_brands {
-    VARCHAR(50) id PK
-    VARCHAR(200) name
+    VARCHAR id PK
+    VARCHAR name
     BOOLEAN is_active
-    VARCHAR(100) created_by
+    VARCHAR created_by
     TIMESTAMPTZ created_at
   }
   inventory_product_media {
-    VARCHAR(50) id PK
-    VARCHAR(100) product_id
-    VARCHAR(100) file_name
-    VARCHAR(100) content_type
+    VARCHAR id PK
+    VARCHAR product_id
+    VARCHAR file_name
+    VARCHAR content_type
     TEXT file_url
     TEXT file_data
     BOOLEAN is_primary
-    VARCHAR(255) created_by
+    VARCHAR created_by
     TIMESTAMP created_at
   }
   inventory_products {
-    VARCHAR(50) id PK
-    VARCHAR(100) product_name
-    VARCHAR(100) product_code
-    VARCHAR(100) category
-    VARCHAR(100) sub_type
-    VARCHAR(100) brand
+    VARCHAR id PK
+    VARCHAR product_name
+    VARCHAR product_code
+    VARCHAR category
+    VARCHAR sub_type
+    VARCHAR brand
     TEXT description
-    VARCHAR(100) status
-    VARCHAR(100) hsn_code
-    VARCHAR(100) base_uom
-    VARCHAR(100) unit_packaging_brand
-    VARCHAR(100) secondary_uom
-    VARCHAR(100) package_type
+    VARCHAR status
+    VARCHAR hsn_code
+    VARCHAR base_uom
+    VARCHAR unit_packaging_brand
+    VARCHAR secondary_uom
+    VARCHAR package_type
     DOUBLE_PRECISION quantity_per_package
     DOUBLE_PRECISION units_per_package
-    VARCHAR(100) variant_name
-    VARCHAR(100) variant_sku
-    VARCHAR(100) variant_package_type
+    VARCHAR variant_name
+    VARCHAR variant_sku
+    VARCHAR variant_package_type
     DOUBLE_PRECISION variant_quantity
-    VARCHAR(100) barcode
-    VARCHAR(100) variant_status
+    VARCHAR barcode
+    VARCHAR variant_status
     DOUBLE_PRECISION purchase_price
     DOUBLE_PRECISION selling_price
     DOUBLE_PRECISION base_price
     DOUBLE_PRECISION tax_amount
     DOUBLE_PRECISION total_cost
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
-    VARCHAR(100) deleted_by
+    VARCHAR created_by
+    VARCHAR updated_by
+    VARCHAR deleted_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
     TIMESTAMPTZ deleted_at
   }
   invoice_payment_allocations {
-    VARCHAR(50) id PK
-    VARCHAR(50) invoice_id FK
-    VARCHAR(50) voucher_id FK
-    NUMERIC(14,2) allocated_amount
-    VARCHAR(30) allocation_type
-    NUMERIC(14,2) running_balance_after
+    VARCHAR id PK
+    VARCHAR invoice_id FK
+    VARCHAR voucher_id FK
+    NUMERIC allocated_amount
+    VARCHAR allocation_type
+    NUMERIC running_balance_after
     TIMESTAMPTZ created_at
   }
   lead_audit_logs {
-    VARCHAR(50) id PK
-    VARCHAR(50) lead_id FK
-    VARCHAR(100) field_changed
+    VARCHAR id PK
+    VARCHAR lead_id FK
+    VARCHAR field_changed
     TEXT old_value
     TEXT new_value
-    VARCHAR(100) changed_by
+    VARCHAR changed_by
     TIMESTAMP changed_at
   }
   leads {
-    VARCHAR(50) id PK
+    VARCHAR id PK
     DATE lead_date
-    VARCHAR(50) source
-    VARCHAR(30) branch_id
-    VARCHAR(20) priority
+    VARCHAR source
+    VARCHAR branch_id
+    VARCHAR priority
     BIGINT assigned_to_id
-    VARCHAR(200) lead_name
-    VARCHAR(15) mobile_number
-    VARCHAR(15) alternate_number
-    VARCHAR(255) email_id
-    VARCHAR(20) lead_type
-    VARCHAR(50) service_type
-    VARCHAR(50) budget_range
+    VARCHAR lead_name
+    VARCHAR mobile_number
+    VARCHAR alternate_number
+    VARCHAR email_id
+    VARCHAR lead_type
+    VARCHAR service_type
+    VARCHAR budget_range
     TEXT lead_description
-    VARCHAR(20) status
-    VARCHAR(20) gma_status
+    VARCHAR status
+    VARCHAR gma_status
     TEXT lost_reason
     DATE next_follow_up_date
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMP created_at
     TIMESTAMP updated_at
   }
   leave_configuration {
-    VARCHAR(50) config_id PK FK
+    VARCHAR config_id PK FK
     INT casual_leave
     INT sick_leave
     INT paid_leave
@@ -735,52 +735,52 @@ erDiagram
     BOOLEAN carry_forward_allowed
     INT max_carry_forward_days
     BIGINT leave_approval_role_id FK
-    VARCHAR(20) leave_reset_cycle
+    VARCHAR leave_reset_cycle
     DATE leave_reset_from
     DATE leave_reset_to
   }
   ledger_entries {
-    VARCHAR(50) id PK
-    VARCHAR(50) voucher_no
+    VARCHAR id PK
+    VARCHAR voucher_no
     DATE entry_date
-    VARCHAR(30) branch_id
-    VARCHAR(50) ledger_id FK
-    NUMERIC(14,2) dr_amount
-    NUMERIC(14,2) cr_amount
-    VARCHAR(30) ref_type
-    VARCHAR(50) ref_id
-    VARCHAR(500) narration
-    VARCHAR(20) posting_status
+    VARCHAR branch_id
+    VARCHAR ledger_id FK
+    NUMERIC dr_amount
+    NUMERIC cr_amount
+    VARCHAR ref_type
+    VARCHAR ref_id
+    VARCHAR narration
+    VARCHAR posting_status
     TIMESTAMPTZ created_at
-    VARCHAR(120) created_by
+    VARCHAR created_by
   }
   ledgers {
-    VARCHAR(50) id PK
-    VARCHAR(50) ledger_code
-    VARCHAR(255) ledger_name
-    VARCHAR(50) account_head_id FK
-    VARCHAR(20) ledger_type
-    VARCHAR(50) linked_customer_id
-    VARCHAR(50) linked_vendor_id
-    VARCHAR(30) branch_id
-    NUMERIC(14,2) opening_balance
-    VARCHAR(2) opening_balance_type
+    VARCHAR id PK
+    VARCHAR ledger_code
+    VARCHAR ledger_name
+    VARCHAR account_head_id FK
+    VARCHAR ledger_type
+    VARCHAR linked_customer_id
+    VARCHAR linked_vendor_id
+    VARCHAR branch_id
+    NUMERIC opening_balance
+    VARCHAR opening_balance_type
     DATE opening_as_on
-    NUMERIC(14,2) credit_limit
+    NUMERIC credit_limit
     INTEGER credit_period_days
     BOOLEAN tds_applicable
-    VARCHAR(20) tds_section
-    VARCHAR(20) status
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR tds_section
+    VARCHAR status
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   modules {
     BIGSERIAL id PK
-    VARCHAR(100) name
-    VARCHAR(255) label
-    VARCHAR(255) description
+    VARCHAR name
+    VARCHAR label
+    VARCHAR description
   }
   notification_recipients {
     BIGSERIAL id PK
@@ -792,13 +792,13 @@ erDiagram
   notifications {
     BIGSERIAL id PK
     INTEGER module_no
-    VARCHAR(80) event_type
-    VARCHAR(80) entity_id
-    VARCHAR(200) title
+    VARCHAR event_type
+    VARCHAR entity_id
+    VARCHAR title
     TEXT message
-    VARCHAR(20) priority
-    VARCHAR(500) action_url
-    VARCHAR(120) created_by
+    VARCHAR priority
+    VARCHAR action_url
+    VARCHAR created_by
     TIMESTAMPTZ created_at
   }
   gma_sheets }o--|| leads : "fk_gma_lead"
@@ -818,122 +818,122 @@ erDiagram
 ```mermaid
 erDiagram
   observation_options_hygiene {
-    VARCHAR(50) id PK
-    VARCHAR(255) label
+    VARCHAR id PK
+    VARCHAR label
     INTEGER display_order
     BOOLEAN is_active
     TIMESTAMPTZ created_at
   }
   observation_options_pest_sighting {
-    VARCHAR(50) id PK
-    VARCHAR(255) label
+    VARCHAR id PK
+    VARCHAR label
     INTEGER display_order
     BOOLEAN is_active
     TIMESTAMPTZ created_at
   }
   observation_options_structural {
-    VARCHAR(50) id PK
-    VARCHAR(255) label
+    VARCHAR id PK
+    VARCHAR label
     INTEGER display_order
     BOOLEAN is_active
     TIMESTAMPTZ created_at
   }
   petty_cash_attachments {
-    VARCHAR(50) id PK
-    VARCHAR(50) request_id FK
-    VARCHAR(30) attachment_type
-    VARCHAR(600) file_key
-    VARCHAR(255) file_name
-    VARCHAR(100) content_type
+    VARCHAR id PK
+    VARCHAR request_id FK
+    VARCHAR attachment_type
+    VARCHAR file_key
+    VARCHAR file_name
+    VARCHAR content_type
     BIGINT file_size_bytes
-    VARCHAR(500) notes
-    VARCHAR(120) uploaded_by
+    VARCHAR notes
+    VARCHAR uploaded_by
     TIMESTAMPTZ uploaded_at
   }
   petty_cash_audit_logs {
-    VARCHAR(50) id PK
-    VARCHAR(50) request_id FK
-    VARCHAR(50) action
+    VARCHAR id PK
+    VARCHAR request_id FK
+    VARCHAR action
     BIGINT actor_user_id FK
-    VARCHAR(150) actor_name
-    VARCHAR(500) remarks
+    VARCHAR actor_name
+    VARCHAR remarks
     TIMESTAMPTZ action_at
   }
   petty_cash_request_recipient_roles {
-    VARCHAR(50) request_id PK FK
+    VARCHAR request_id PK FK
     BIGINT recipient_role_id PK FK
   }
   petty_cash_request_recipients {
-    VARCHAR(50) id PK
-    VARCHAR(50) request_id FK
+    VARCHAR id PK
+    VARCHAR request_id FK
     BIGINT recipient_user_id FK
     BIGINT recipient_role_id FK
     TIMESTAMPTZ created_at
   }
   petty_cash_requests {
-    VARCHAR(50) id PK
+    VARCHAR id PK
     BIGINT requester_user_id FK
-    VARCHAR(30) requester_branch_id FK
-    VARCHAR(80) category
+    VARCHAR requester_branch_id FK
+    VARCHAR category
     DATE expense_date_from
     DATE expense_date_to
-    NUMERIC(14,2) amount_requested
-    VARCHAR(500) description
-    VARCHAR(60) related_task_ref
-    VARCHAR(60) related_so_ref
-    VARCHAR(500) justification_note
-    VARCHAR(20) payment_mode_requested
-    VARCHAR(150) bank_account_holder
-    VARCHAR(150) bank_name
-    VARCHAR(50) bank_account_number
-    VARCHAR(20) bank_ifsc
-    VARCHAR(120) upi_id
+    NUMERIC amount_requested
+    VARCHAR description
+    VARCHAR related_task_ref
+    VARCHAR related_so_ref
+    VARCHAR justification_note
+    VARCHAR payment_mode_requested
+    VARCHAR bank_account_holder
+    VARCHAR bank_name
+    VARCHAR bank_account_number
+    VARCHAR bank_ifsc
+    VARCHAR upi_id
     BOOLEAN is_pre_approved
     BIGINT pre_approved_by_user_id FK
-    VARCHAR(200) approval_reference
-    VARCHAR(20) status
+    VARCHAR approval_reference
+    VARCHAR status
     TIMESTAMPTZ submitted_at
-    VARCHAR(200) submitted_to_label
+    VARCHAR submitted_to_label
     BIGINT reviewed_by_user_id FK
     TIMESTAMPTZ reviewed_at
-    NUMERIC(14,2) approved_amount
-    VARCHAR(500) reviewer_remarks
-    VARCHAR(120) rejection_reason
-    VARCHAR(500) correction_notes
-    VARCHAR(20) payment_mode_processed
-    VARCHAR(120) transaction_ref
+    NUMERIC approved_amount
+    VARCHAR reviewer_remarks
+    VARCHAR rejection_reason
+    VARCHAR correction_notes
+    VARCHAR payment_mode_processed
+    VARCHAR transaction_ref
     DATE payment_date
-    VARCHAR(500) finance_remarks
+    VARCHAR finance_remarks
     BIGINT paid_by_user_id FK
     TIMESTAMPTZ paid_at
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   public_actions {
     BIGSERIAL id PK
-    VARCHAR(100) name
-    VARCHAR(255) label
-    VARCHAR(255) description
+    VARCHAR name
+    VARCHAR label
+    VARCHAR description
   }
   public_company_details {
     BIGSERIAL id PK
-    VARCHAR(30) company_code
-    VARCHAR(150) company_name
-    VARCHAR(100) industry_type
-    VARCHAR(120) contact_person_name
-    VARCHAR(150) contact_person_email
-    VARCHAR(10) contact_person_phone
-    VARCHAR(15) gst_number
-    VARCHAR(10) pan_number
-    VARCHAR(255) address_line_1
-    VARCHAR(255) address_line_2
-    VARCHAR(100) city
-    VARCHAR(100) state
-    VARCHAR(6) pincode
-    VARCHAR(100) license_number
-    VARCHAR(30) onboarding_status
+    VARCHAR company_code
+    VARCHAR company_name
+    VARCHAR industry_type
+    VARCHAR contact_person_name
+    VARCHAR contact_person_email
+    VARCHAR contact_person_phone
+    VARCHAR gst_number
+    VARCHAR pan_number
+    VARCHAR address_line_1
+    VARCHAR address_line_2
+    VARCHAR city
+    VARCHAR state
+    VARCHAR pincode
+    VARCHAR license_number
+    VARCHAR onboarding_status
     TEXT rejection_reason
     BOOLEAN is_active
     TIMESTAMPTZ submitted_at
@@ -947,10 +947,10 @@ erDiagram
   public_company_documents {
     BIGSERIAL id PK
     BIGINT company_id FK
-    VARCHAR(50) document_type
-    VARCHAR(255) document_name
-    VARCHAR(500) document_url
-    VARCHAR(50) file_content_type
+    VARCHAR document_type
+    VARCHAR document_name
+    VARCHAR document_url
+    VARCHAR file_content_type
     BIGINT file_size_bytes
     BOOLEAN verified
     TIMESTAMPTZ reviewed_at
@@ -960,50 +960,50 @@ erDiagram
   }
   public_company_subscription {
     BIGSERIAL id PK
-    VARCHAR(30) subscription_id
+    VARCHAR subscription_id
     BIGINT company_id FK
-    VARCHAR(30) subscription_plan_id FK
-    VARCHAR(100) plan_type
-    VARCHAR(20) duration_type
+    VARCHAR subscription_plan_id FK
+    VARCHAR plan_type
+    VARCHAR duration_type
     INTEGER branch_count
     INTEGER technician_count
-    NUMERIC(12,2) price_per_branch
-    NUMERIC(12,2) price_per_technician
-    NUMERIC(12,2) branch_cost
-    NUMERIC(12,2) technician_cost
-    NUMERIC(12,2) subtotal
-    NUMERIC(5,2) gst_percentage
-    NUMERIC(12,2) gst_amount
-    NUMERIC(12,2) final_total
+    NUMERIC price_per_branch
+    NUMERIC price_per_technician
+    NUMERIC branch_cost
+    NUMERIC technician_cost
+    NUMERIC subtotal
+    NUMERIC gst_percentage
+    NUMERIC gst_amount
+    NUMERIC final_total
     DATE start_date
     DATE end_date
     DATE purchase_date
-    VARCHAR(20) status
-    VARCHAR(255) razorpay_order_id
-    VARCHAR(255) razorpay_payment_id
-    VARCHAR(512) razorpay_signature
-    VARCHAR(50) payment_method
+    VARCHAR status
+    VARCHAR razorpay_order_id
+    VARCHAR razorpay_payment_id
+    VARCHAR razorpay_signature
+    VARCHAR payment_method
     BOOLEAN auto_renew
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   public_email_verification_tokens {
     BIGSERIAL id PK
-    VARCHAR(255) token
+    VARCHAR token
     BIGINT global_user_id FK
     TIMESTAMP_WITH_TIME_ZONE expiration_date
   }
   public_global_users {
     BIGSERIAL id PK
-    VARCHAR(255) email
-    VARCHAR(255) username
-    VARCHAR(512) password_hash
-    VARCHAR(100) full_name
-    VARCHAR(50) phone_number
-    VARCHAR(63) company_name
-    VARCHAR(63) target_schema
+    VARCHAR email
+    VARCHAR username
+    VARCHAR password_hash
+    VARCHAR full_name
+    VARCHAR phone_number
+    VARCHAR company_name
+    VARCHAR target_schema
     BOOLEAN has_schema
-    VARCHAR(50) system_role
+    VARCHAR system_role
     BOOLEAN is_active
     TIMESTAMPTZ last_login_at
     TIMESTAMPTZ created_at
@@ -1011,9 +1011,9 @@ erDiagram
   }
   public_modules {
     BIGSERIAL id PK
-    VARCHAR(100) name
-    VARCHAR(255) label
-    VARCHAR(255) description
+    VARCHAR name
+    VARCHAR label
+    VARCHAR description
   }
   public_role_permissions {
     BIGSERIAL id PK
@@ -1021,148 +1021,148 @@ erDiagram
     BIGINT module_id FK
     BIGINT action_id FK
     BOOLEAN allowed
-    BIGINT[] receiver_role_ids
+    BIGINT receiver_role_ids
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   public_roles {
     BIGSERIAL id PK
-    VARCHAR(100) name
-    VARCHAR(255) description
+    VARCHAR name
+    VARCHAR description
     BOOLEAN is_app_user
-    VARCHAR(20) status
-    VARCHAR(20) created_by
+    VARCHAR status
+    VARCHAR created_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   public_root_user {
     BIGSERIAL id PK
-    VARCHAR(150) username
-    VARCHAR(255) email
-    VARCHAR(255) password
-    VARCHAR(255) role
+    VARCHAR username
+    VARCHAR email
+    VARCHAR password
+    VARCHAR role
     BOOLEAN is_active
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   public_tenant_registry {
     BIGSERIAL id PK
-    VARCHAR(100) tenant_name
-    VARCHAR(100) schema_name
-    VARCHAR(255) display_name
-    VARCHAR(20) status
+    VARCHAR tenant_name
+    VARCHAR schema_name
+    VARCHAR display_name
+    VARCHAR status
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   public_token_blacklist {
     BIGINT id PK
-    VARCHAR(1000) token
+    VARCHAR token
     TIMESTAMP_WITH_TIME_ZONE expires_at
     TIMESTAMP_WITH_TIME_ZONE created_at
   }
   purchase_bill_attachments {
-    VARCHAR(50) id PK
-    VARCHAR(50) bill_id FK
-    VARCHAR(30) attachment_type
-    VARCHAR(600) file_key
-    VARCHAR(255) file_name
-    VARCHAR(100) content_type
+    VARCHAR id PK
+    VARCHAR bill_id FK
+    VARCHAR attachment_type
+    VARCHAR file_key
+    VARCHAR file_name
+    VARCHAR content_type
     BIGINT file_size_bytes
     TIMESTAMPTZ uploaded_at
-    VARCHAR(120) uploaded_by
+    VARCHAR uploaded_by
   }
   purchase_bill_audit_logs {
-    VARCHAR(50) id PK
-    VARCHAR(50) bill_id FK
-    VARCHAR(80) action
-    VARCHAR(500) remarks
-    VARCHAR(150) performed_by
+    VARCHAR id PK
+    VARCHAR bill_id FK
+    VARCHAR action
+    VARCHAR remarks
+    VARCHAR performed_by
     TIMESTAMPTZ performed_at
   }
   purchase_bill_lines {
-    VARCHAR(50) id PK
-    VARCHAR(50) bill_id FK
+    VARCHAR id PK
+    VARCHAR bill_id FK
     INTEGER line_no
-    VARCHAR(20) item_type
-    VARCHAR(50) item_id
-    VARCHAR(500) description
-    VARCHAR(20) hsn_sac
-    NUMERIC(14,3) qty
-    VARCHAR(30) uom
-    NUMERIC(14,2) rate
-    NUMERIC(6,3) discount_pct
-    NUMERIC(6,3) tax_pct
-    NUMERIC(14,2) taxable_amount
-    NUMERIC(14,2) tax_amount
-    NUMERIC(14,2) line_total
+    VARCHAR item_type
+    VARCHAR item_id
+    VARCHAR description
+    VARCHAR hsn_sac
+    NUMERIC qty
+    VARCHAR uom
+    NUMERIC rate
+    NUMERIC discount_pct
+    NUMERIC tax_pct
+    NUMERIC taxable_amount
+    NUMERIC tax_amount
+    NUMERIC line_total
   }
   purchase_bills {
-    VARCHAR(50) id PK
-    VARCHAR(50) bill_number
-    VARCHAR(120) vendor_bill_number
-    VARCHAR(20) bill_type
-    VARCHAR(20) status
+    VARCHAR id PK
+    VARCHAR bill_number
+    VARCHAR vendor_bill_number
+    VARCHAR bill_type
+    VARCHAR status
     DATE bill_date
     INTEGER credit_period_days
     DATE due_date
-    VARCHAR(30) branch_id
-    VARCHAR(50) vendor_id
-    VARCHAR(50) purchase_order_id
-    VARCHAR(80) grn_reference
-    VARCHAR(255) vendor_name_snapshot
-    VARCHAR(20) vendor_gstin_snapshot
-    VARCHAR(100) vendor_state_snapshot
-    VARCHAR(20) tds_section_snapshot
-    NUMERIC(6,3) tds_rate_snapshot
-    NUMERIC(14,2) sub_total
-    NUMERIC(14,2) discount_total
-    NUMERIC(14,2) taxable_amount
-    NUMERIC(14,2) cgst_amount
-    NUMERIC(14,2) sgst_amount
-    NUMERIC(14,2) igst_amount
-    NUMERIC(14,2) tds_amount
-    NUMERIC(14,2) net_payable
-    NUMERIC(14,2) paid_amount
-    NUMERIC(14,2) pending_amount
-    VARCHAR(120) expense_category
-    VARCHAR(50) coa_expense_ledger_id
+    VARCHAR branch_id
+    VARCHAR vendor_id
+    VARCHAR purchase_order_id
+    VARCHAR grn_reference
+    VARCHAR vendor_name_snapshot
+    VARCHAR vendor_gstin_snapshot
+    VARCHAR vendor_state_snapshot
+    VARCHAR tds_section_snapshot
+    NUMERIC tds_rate_snapshot
+    NUMERIC sub_total
+    NUMERIC discount_total
+    NUMERIC taxable_amount
+    NUMERIC cgst_amount
+    NUMERIC sgst_amount
+    NUMERIC igst_amount
+    NUMERIC tds_amount
+    NUMERIC net_payable
+    NUMERIC paid_amount
+    NUMERIC pending_amount
+    VARCHAR expense_category
+    VARCHAR coa_expense_ledger_id
     TEXT internal_remarks
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   purchase_order {
-    VARCHAR(50) id PK
-    VARCHAR(50) po_number
+    VARCHAR id PK
+    VARCHAR po_number
     DATE po_date
-    VARCHAR(30) status
-    VARCHAR(20) gst_number
-    VARCHAR(50) vendor_id FK
-    VARCHAR(255) vendor_name
+    VARCHAR status
+    VARCHAR gst_number
+    VARCHAR vendor_id FK
+    VARCHAR vendor_name
     TEXT vendor_address
-    VARCHAR(20) vendor_gst
+    VARCHAR vendor_gst
     TEXT delivery_address
-    VARCHAR(100) contact_person
-    VARCHAR(15) contact_number
-    VARCHAR(100) authorized_person
-    VARCHAR(100) designation
+    VARCHAR contact_person
+    VARCHAR contact_number
+    VARCHAR authorized_person
+    VARCHAR designation
     TEXT note
     DATE delivery_date
     INT items_count
-    NUMERIC(15,2) subtotal
-    NUMERIC(15,2) total_tax
-    NUMERIC(15,2) grand_total
-    VARCHAR(50) branch_name
+    NUMERIC subtotal
+    NUMERIC total_tax
+    NUMERIC grand_total
+    VARCHAR branch_name
     BOOLEAN is_deleted
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
-    VARCHAR(100) deleted_by
+    VARCHAR created_by
+    VARCHAR updated_by
+    VARCHAR deleted_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
     TIMESTAMPTZ deleted_at
-    VARCHAR(15) company_gst_number
-    VARCHAR(30) branch_id FK
+    VARCHAR company_gst_number
+    VARCHAR branch_id FK
   }
   petty_cash_attachments }o--|| petty_cash_requests : "fk_pc_att_request"
   petty_cash_audit_logs }o--|| petty_cash_requests : "fk_pc_aud_request"
@@ -1184,19 +1184,19 @@ erDiagram
 ```mermaid
 erDiagram
   purchase_order_item {
-    VARCHAR(50) id PK
-    VARCHAR(50) purchase_order_id FK
-    VARCHAR(50) product_id FK
-    VARCHAR(255) product_name
-    NUMERIC(10,2) quantity
-    VARCHAR(100) uom
-    NUMERIC(15,2) price
-    NUMERIC(5,2) gst_percent
-    NUMERIC(15,2) tax_amount
-    NUMERIC(15,2) total_amount
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
-    VARCHAR(100) deleted_by
+    VARCHAR id PK
+    VARCHAR purchase_order_id FK
+    VARCHAR product_id FK
+    VARCHAR product_name
+    NUMERIC quantity
+    VARCHAR uom
+    NUMERIC price
+    NUMERIC gst_percent
+    NUMERIC tax_amount
+    NUMERIC total_amount
+    VARCHAR created_by
+    VARCHAR updated_by
+    VARCHAR deleted_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
     TIMESTAMPTZ deleted_at
@@ -1204,133 +1204,133 @@ erDiagram
     BOOLEAN is_deleted
   }
   quotation_attachments {
-    VARCHAR(50) id PK
-    VARCHAR(50) quotation_id FK
+    VARCHAR id PK
+    VARCHAR quotation_id FK
     TEXT file_key
-    VARCHAR(255) file_name
-    VARCHAR(100) content_type
+    VARCHAR file_name
+    VARCHAR content_type
     BIGINT file_size_bytes
     TEXT notes
-    VARCHAR(100) uploaded_by
+    VARCHAR uploaded_by
     TIMESTAMPTZ uploaded_at
   }
   quotation_audit_logs {
-    VARCHAR(50) id PK
-    VARCHAR(50) quotation_id FK
-    VARCHAR(50) event_type
-    VARCHAR(100) field_changed
+    VARCHAR id PK
+    VARCHAR quotation_id FK
+    VARCHAR event_type
+    VARCHAR field_changed
     TEXT old_value
     TEXT new_value
     TEXT notes
-    VARCHAR(100) changed_by
+    VARCHAR changed_by
     TIMESTAMPTZ changed_at
   }
   quotation_locations {
-    VARCHAR(50) id PK
-    VARCHAR(50) quotation_id FK
+    VARCHAR id PK
+    VARCHAR quotation_id FK
     INTEGER display_order
     TEXT address
-    VARCHAR(100) city
-    VARCHAR(100) state
-    VARCHAR(100) country
-    VARCHAR(10) pincode
+    VARCHAR city
+    VARCHAR state
+    VARCHAR country
+    VARCHAR pincode
     TEXT google_map_url
-    VARCHAR(30) location_category
-    VARCHAR(20) location_sub_category
-    NUMERIC(10,2) area_sqft
-    VARCHAR(30) branch_id FK
-    NUMERIC(14,2) location_service_subtotal
+    VARCHAR location_category
+    VARCHAR location_sub_category
+    NUMERIC area_sqft
+    VARCHAR branch_id FK
+    NUMERIC location_service_subtotal
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   quotation_product_lines {
-    VARCHAR(50) id PK
-    VARCHAR(50) quotation_id FK
-    VARCHAR(50) product_id FK
-    VARCHAR(100) product_code
-    VARCHAR(200) product_name
-    VARCHAR(50) uom
-    VARCHAR(20) hsn_code
-    NUMERIC(14,2) unit_price
-    NUMERIC(10,3) quantity
-    NUMERIC(14,2) line_subtotal
-    VARCHAR(10) tax_type
-    NUMERIC(5,2) cgst_rate
-    NUMERIC(5,2) sgst_rate
-    NUMERIC(5,2) igst_rate
-    NUMERIC(14,2) cgst_amount
-    NUMERIC(14,2) sgst_amount
-    NUMERIC(14,2) igst_amount
-    NUMERIC(14,2) tax_amount
-    NUMERIC(14,2) line_total
+    VARCHAR id PK
+    VARCHAR quotation_id FK
+    VARCHAR product_id FK
+    VARCHAR product_code
+    VARCHAR product_name
+    VARCHAR uom
+    VARCHAR hsn_code
+    NUMERIC unit_price
+    NUMERIC quantity
+    NUMERIC line_subtotal
+    VARCHAR tax_type
+    NUMERIC cgst_rate
+    NUMERIC sgst_rate
+    NUMERIC igst_rate
+    NUMERIC cgst_amount
+    NUMERIC sgst_amount
+    NUMERIC igst_amount
+    NUMERIC tax_amount
+    NUMERIC line_total
     INTEGER display_order
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   quotation_prospects {
-    VARCHAR(50) id PK
-    VARCHAR(200) full_name
-    VARCHAR(15) phone
-    VARCHAR(255) email
-    VARCHAR(100) company_name
+    VARCHAR id PK
+    VARCHAR full_name
+    VARCHAR phone
+    VARCHAR email
+    VARCHAR company_name
     TEXT address
-    VARCHAR(100) city
-    VARCHAR(100) state
-    VARCHAR(10) pincode
-    VARCHAR(100) country
+    VARCHAR city
+    VARCHAR state
+    VARCHAR pincode
+    VARCHAR country
     TEXT google_map_url
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   quotation_service_lines {
-    VARCHAR(50) id PK
-    VARCHAR(50) quotation_id FK
-    VARCHAR(50) quotation_location_id FK
-    VARCHAR(50) service_id FK
-    VARCHAR(50) service_code
-    VARCHAR(200) service_name
-    VARCHAR(20) price_type
-    VARCHAR(150) fixed_tier_name
-    NUMERIC(14,2) base_price
-    NUMERIC(10,4) price_per_sqft
-    NUMERIC(10,2) area_sqft_used
-    NUMERIC(14,2) rate_per_visit
-    VARCHAR(20) visit_frequency
+    VARCHAR id PK
+    VARCHAR quotation_id FK
+    VARCHAR quotation_location_id FK
+    VARCHAR service_id FK
+    VARCHAR service_code
+    VARCHAR service_name
+    VARCHAR price_type
+    VARCHAR fixed_tier_name
+    NUMERIC base_price
+    NUMERIC price_per_sqft
+    NUMERIC area_sqft_used
+    NUMERIC rate_per_visit
+    VARCHAR visit_frequency
     INTEGER total_visits
-    NUMERIC(14,2) line_total
+    NUMERIC line_total
     INTEGER display_order
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   quotations {
-    VARCHAR(50) id PK
-    VARCHAR(30) quotation_number
-    VARCHAR(20) source_type
-    VARCHAR(50) lead_id FK
-    VARCHAR(50) customer_id
-    VARCHAR(50) prospect_id FK
-    VARCHAR(20) quotation_type
-    VARCHAR(20) service_mode
-    VARCHAR(20) contract_frequency
-    VARCHAR(20) contract_duration
+    VARCHAR id PK
+    VARCHAR quotation_number
+    VARCHAR source_type
+    VARCHAR lead_id FK
+    VARCHAR customer_id
+    VARCHAR prospect_id FK
+    VARCHAR quotation_type
+    VARCHAR service_mode
+    VARCHAR contract_frequency
+    VARCHAR contract_duration
     DATE contract_proposed_start
-    NUMERIC(14,2) services_subtotal
-    NUMERIC(14,2) products_subtotal
-    NUMERIC(14,2) subtotal_before_tax
-    NUMERIC(14,2) tax_total
-    NUMERIC(14,2) total_before_discount
-    VARCHAR(20) discount_type
-    NUMERIC(10,2) discount_value
-    NUMERIC(14,2) discount_amount
-    NUMERIC(14,2) grand_total
+    NUMERIC services_subtotal
+    NUMERIC products_subtotal
+    NUMERIC subtotal_before_tax
+    NUMERIC tax_total
+    NUMERIC total_before_discount
+    VARCHAR discount_type
+    NUMERIC discount_value
+    NUMERIC discount_amount
+    NUMERIC grand_total
     DATE valid_till
-    VARCHAR(50) payment_terms
+    VARCHAR payment_terms
     TEXT custom_payment_terms
     TEXT special_terms
     TEXT internal_notes
-    VARCHAR(20) status
+    VARCHAR status
     TIMESTAMPTZ sent_at
     TIMESTAMPTZ viewed_at
     TIMESTAMPTZ accepted_at
@@ -1338,25 +1338,25 @@ erDiagram
     TIMESTAMPTZ expired_at
     BOOLEAN is_deleted
     TIMESTAMPTZ deleted_at
-    VARCHAR(100) deleted_by
-    VARCHAR(100) deletion_reason
+    VARCHAR deleted_by
+    VARCHAR deletion_reason
     TEXT deletion_reason_detail
-    VARCHAR(50) revised_from_id FK
-    VARCHAR(50) contract_id
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR revised_from_id FK
+    VARCHAR contract_id
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   role_compensation_configuration {
-    VARCHAR(50) config_id PK
+    VARCHAR config_id PK
     BIGINT role_id FK
     DATE effective_from
     DATE effective_to
-    VARCHAR(20) status
-    VARCHAR(20) created_by
+    VARCHAR status
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(20) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
   }
   role_permissions {
@@ -1365,28 +1365,28 @@ erDiagram
     BIGINT module_id FK
     BIGINT action_id FK
     BOOLEAN allowed
-    BIGINT[] receiver_role_ids
+    BIGINT receiver_role_ids
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   roles {
     BIGSERIAL id PK
-    VARCHAR(100) name
-    VARCHAR(255) description
+    VARCHAR name
+    VARCHAR description
     BOOLEAN is_app_user
-    VARCHAR(20) status
-    VARCHAR(20) created_by
+    VARCHAR status
+    VARCHAR created_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   salary_details {
-    VARCHAR(50) config_id PK FK
-    VARCHAR(20) salary_type
-    NUMERIC(12,2) basic_salary
-    NUMERIC(12,2) hra
-    NUMERIC(12,2) other_allowance
-    NUMERIC(12,2) incentive
-    NUMERIC(12,2) deductions
+    VARCHAR config_id PK FK
+    VARCHAR salary_type
+    NUMERIC basic_salary
+    NUMERIC hra
+    NUMERIC other_allowance
+    NUMERIC incentive
+    NUMERIC deductions
     BOOLEAN pf_applicable
     BOOLEAN esi_applicable
     BOOLEAN tds_applicable
@@ -1394,224 +1394,224 @@ erDiagram
     DATE salary_effective_to
   }
   sales_invoice_attachments {
-    VARCHAR(50) id PK
-    VARCHAR(50) invoice_id FK
-    VARCHAR(600) file_key
-    VARCHAR(255) file_name
-    VARCHAR(100) content_type
+    VARCHAR id PK
+    VARCHAR invoice_id FK
+    VARCHAR file_key
+    VARCHAR file_name
+    VARCHAR content_type
     BIGINT file_size_bytes
     TIMESTAMPTZ uploaded_at
-    VARCHAR(120) uploaded_by
+    VARCHAR uploaded_by
   }
   sales_invoice_audit_logs {
-    VARCHAR(50) id PK
-    VARCHAR(50) invoice_id FK
-    VARCHAR(80) action
-    VARCHAR(500) remarks
-    VARCHAR(150) performed_by
+    VARCHAR id PK
+    VARCHAR invoice_id FK
+    VARCHAR action
+    VARCHAR remarks
+    VARCHAR performed_by
     TIMESTAMPTZ performed_at
   }
   sales_invoice_lines {
-    VARCHAR(50) id PK
-    VARCHAR(50) invoice_id FK
+    VARCHAR id PK
+    VARCHAR invoice_id FK
     INTEGER line_no
-    VARCHAR(20) item_type
-    VARCHAR(50) item_id
-    VARCHAR(500) description
-    VARCHAR(20) hsn_sac
-    NUMERIC(14,3) qty
-    VARCHAR(30) uom
-    NUMERIC(14,2) rate
-    NUMERIC(6,3) discount_pct
-    NUMERIC(6,3) tax_pct
-    NUMERIC(14,2) taxable_amount
-    NUMERIC(14,2) tax_amount
-    NUMERIC(14,2) line_total
-    VARCHAR(30) price_type
-    NUMERIC(12,2) area_sqft
+    VARCHAR item_type
+    VARCHAR item_id
+    VARCHAR description
+    VARCHAR hsn_sac
+    NUMERIC qty
+    VARCHAR uom
+    NUMERIC rate
+    NUMERIC discount_pct
+    NUMERIC tax_pct
+    NUMERIC taxable_amount
+    NUMERIC tax_amount
+    NUMERIC line_total
+    VARCHAR price_type
+    NUMERIC area_sqft
     TEXT pricing_config_json
   }
   sales_invoices {
-    VARCHAR(50) id PK
-    VARCHAR(50) invoice_number
-    VARCHAR(20) invoice_type
-    VARCHAR(20) creation_mode
-    VARCHAR(20) status
+    VARCHAR id PK
+    VARCHAR invoice_number
+    VARCHAR invoice_type
+    VARCHAR creation_mode
+    VARCHAR status
     DATE invoice_date
     INTEGER credit_period_days
     DATE due_date
-    VARCHAR(30) branch_id
-    VARCHAR(50) customer_id
-    VARCHAR(50) sales_order_id
-    VARCHAR(50) contract_id
-    VARCHAR(255) customer_name_snapshot
-    VARCHAR(20) customer_gstin_snapshot
+    VARCHAR branch_id
+    VARCHAR customer_id
+    VARCHAR sales_order_id
+    VARCHAR contract_id
+    VARCHAR customer_name_snapshot
+    VARCHAR customer_gstin_snapshot
     TEXT billing_address_snapshot
-    VARCHAR(100) customer_state_snapshot
-    VARCHAR(200) contact_person_snapshot
-    NUMERIC(14,2) sub_total
-    NUMERIC(14,2) discount_total
-    NUMERIC(14,2) taxable_amount
-    NUMERIC(14,2) cgst_amount
-    NUMERIC(14,2) sgst_amount
-    NUMERIC(14,2) igst_amount
-    NUMERIC(14,2) round_off_amount
-    NUMERIC(14,2) grand_total
-    NUMERIC(14,2) received_amount
-    NUMERIC(14,2) pending_amount
+    VARCHAR customer_state_snapshot
+    VARCHAR contact_person_snapshot
+    NUMERIC sub_total
+    NUMERIC discount_total
+    NUMERIC taxable_amount
+    NUMERIC cgst_amount
+    NUMERIC sgst_amount
+    NUMERIC igst_amount
+    NUMERIC round_off_amount
+    NUMERIC grand_total
+    NUMERIC received_amount
+    NUMERIC pending_amount
     BOOLEAN einvoice_required
-    VARCHAR(100) irn_number
-    VARCHAR(20) irn_status
+    VARCHAR irn_number
+    VARCHAR irn_status
     TEXT irn_payload_json
     TEXT notes
     TEXT internal_remarks
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   sales_order_cancellation_logs {
-    VARCHAR(50) id PK
-    VARCHAR(50) sales_order_id FK
-    VARCHAR(50) so_number
-    VARCHAR(50) cancel_reason
-    VARCHAR(500) remarks
-    VARCHAR(100) cancelled_by
+    VARCHAR id PK
+    VARCHAR sales_order_id FK
+    VARCHAR so_number
+    VARCHAR cancel_reason
+    VARCHAR remarks
+    VARCHAR cancelled_by
     TIMESTAMPTZ cancelled_at
   }
   sales_order_product_lines {
-    VARCHAR(50) id PK
-    VARCHAR(50) sales_order_id FK
-    VARCHAR(50) product_id
-    VARCHAR(200) product_name
-    VARCHAR(50) product_code
-    VARCHAR(30) uom
-    NUMERIC(14,3) quantity
-    NUMERIC(14,2) unit_price
-    VARCHAR(20) hsn_code
-    NUMERIC(6,3) tax_percent
-    NUMERIC(14,2) tax_amount
-    NUMERIC(14,2) line_total
+    VARCHAR id PK
+    VARCHAR sales_order_id FK
+    VARCHAR product_id
+    VARCHAR product_name
+    VARCHAR product_code
+    VARCHAR uom
+    NUMERIC quantity
+    NUMERIC unit_price
+    VARCHAR hsn_code
+    NUMERIC tax_percent
+    NUMERIC tax_amount
+    NUMERIC line_total
     INTEGER display_order
   }
   sales_order_site_chemicals {
-    VARCHAR(50) id PK
-    VARCHAR(50) sales_order_site_id FK
-    VARCHAR(50) product_id
-    VARCHAR(200) product_name
-    VARCHAR(50) product_code
-    VARCHAR(30) uom
-    NUMERIC(12,2) coverage_sqft
-    VARCHAR(50) required_qty
-    NUMERIC(14,2) unit_price
-    NUMERIC(14,2) line_cost
-    VARCHAR(20) hsn_code
+    VARCHAR id PK
+    VARCHAR sales_order_site_id FK
+    VARCHAR product_id
+    VARCHAR product_name
+    VARCHAR product_code
+    VARCHAR uom
+    NUMERIC coverage_sqft
+    VARCHAR required_qty
+    NUMERIC unit_price
+    NUMERIC line_cost
+    VARCHAR hsn_code
     INTEGER display_order
   }
   sales_order_site_services {
-    VARCHAR(50) id PK
-    VARCHAR(50) sales_order_site_id FK
-    VARCHAR(50) service_type_id
-    VARCHAR(200) service_type_name
-    NUMERIC(12,2) visits
-    NUMERIC(14,2) unit_price
-    NUMERIC(12,2) sqft
-    VARCHAR(20) hsn_code
-    NUMERIC(6,3) tax_percent
-    NUMERIC(14,2) tax_amount
-    NUMERIC(14,2) line_total
+    VARCHAR id PK
+    VARCHAR sales_order_site_id FK
+    VARCHAR service_type_id
+    VARCHAR service_type_name
+    NUMERIC visits
+    NUMERIC unit_price
+    NUMERIC sqft
+    VARCHAR hsn_code
+    NUMERIC tax_percent
+    NUMERIC tax_amount
+    NUMERIC line_total
     INTEGER display_order
   }
   sales_order_sites {
-    VARCHAR(50) id PK
-    VARCHAR(50) sales_order_id FK
-    VARCHAR(50) contract_site_id
-    VARCHAR(200) site_name
+    VARCHAR id PK
+    VARCHAR sales_order_id FK
+    VARCHAR contract_site_id
+    VARCHAR site_name
     TEXT address
-    VARCHAR(100) city
-    VARCHAR(100) state
-    VARCHAR(100) country
+    VARCHAR city
+    VARCHAR state
+    VARCHAR country
     TEXT google_map_url
-    VARCHAR(30) category
-    VARCHAR(20) sub_category
-    NUMERIC(12,2) area_sqft
-    VARCHAR(200) contact_person
-    VARCHAR(20) contact_mobile
+    VARCHAR category
+    VARCHAR sub_category
+    NUMERIC area_sqft
+    VARCHAR contact_person
+    VARCHAR contact_mobile
     INTEGER display_order
   }
   sales_orders {
-    VARCHAR(50) id PK
-    VARCHAR(50) so_number
-    VARCHAR(30) order_type
-    VARCHAR(30) status
-    VARCHAR(50) customer_id
-    VARCHAR(255) customer_name
-    VARCHAR(30) branch_id
-    VARCHAR(50) contract_id
-    VARCHAR(50) contract_payment_line_id
-    VARCHAR(100) billing_period_label
-    VARCHAR(50) gma_sheet_id
-    VARCHAR(50) quotation_id
-    VARCHAR(30) one_time_source
+    VARCHAR id PK
+    VARCHAR so_number
+    VARCHAR order_type
+    VARCHAR status
+    VARCHAR customer_id
+    VARCHAR customer_name
+    VARCHAR branch_id
+    VARCHAR contract_id
+    VARCHAR contract_payment_line_id
+    VARCHAR billing_period_label
+    VARCHAR gma_sheet_id
+    VARCHAR quotation_id
+    VARCHAR one_time_source
     DATE so_date
-    NUMERIC(14,2) sub_total
-    VARCHAR(20) discount_type
-    NUMERIC(14,2) discount_value
-    NUMERIC(14,2) discount_amount
-    NUMERIC(14,2) tax_total
-    NUMERIC(14,2) grand_total
+    NUMERIC sub_total
+    VARCHAR discount_type
+    NUMERIC discount_value
+    NUMERIC discount_amount
+    NUMERIC tax_total
+    NUMERIC grand_total
     TEXT execution_notes
-    VARCHAR(30) delivery_address_type
-    VARCHAR(50) delivery_site_id
-    VARCHAR(500) delivery_address_line1
-    VARCHAR(500) delivery_address_line2
-    VARCHAR(100) delivery_city
-    VARCHAR(100) delivery_state
-    VARCHAR(10) delivery_pincode
-    VARCHAR(100) delivery_country
+    VARCHAR delivery_address_type
+    VARCHAR delivery_site_id
+    VARCHAR delivery_address_line1
+    VARCHAR delivery_address_line2
+    VARCHAR delivery_city
+    VARCHAR delivery_state
+    VARCHAR delivery_pincode
+    VARCHAR delivery_country
     TEXT delivery_google_map_url
-    VARCHAR(20) priority
+    VARCHAR priority
     DATE expected_delivery_date
     BOOLEAN invoice_linked
     INTEGER job_cards_count
     INTEGER challans_count
-    VARCHAR(50) cancel_reason
-    VARCHAR(500) cancel_remarks
+    VARCHAR cancel_reason
+    VARCHAR cancel_remarks
     TIMESTAMPTZ cancelled_at
-    VARCHAR(100) cancelled_by
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR cancelled_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   service_audit_logs {
-    VARCHAR(50) id PK
-    VARCHAR(50) service_id FK
-    VARCHAR(50) change_type
+    VARCHAR id PK
+    VARCHAR service_id FK
+    VARCHAR change_type
     TEXT notes
-    VARCHAR(100) changed_by
+    VARCHAR changed_by
     TIMESTAMPTZ created_at
   }
   service_categories {
-    VARCHAR(50) id PK
-    VARCHAR(150) name
+    VARCHAR id PK
+    VARCHAR name
     BOOLEAN is_active
     INTEGER display_order
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   service_category_area {
-    VARCHAR(50) id PK
-    VARCHAR(50) service_category_id FK
-    VARCHAR(50) service_sub_category_id FK
+    VARCHAR id PK
+    VARCHAR service_category_id FK
+    VARCHAR service_sub_category_id FK
     DOUBLE_PRECISION base_price
     DOUBLE_PRECISION price_per_sqft
     DOUBLE_PRECISION sqft_increment
     BOOLEAN is_active
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
@@ -1642,97 +1642,97 @@ erDiagram
 ```mermaid
 erDiagram
   service_category_fixed {
-    VARCHAR(50) id PK
-    VARCHAR(50) service_category_id FK
-    VARCHAR(50) service_sub_category_id FK
-    VARCHAR(150) tier_name
+    VARCHAR id PK
+    VARCHAR service_category_id FK
+    VARCHAR service_sub_category_id FK
+    VARCHAR tier_name
     DOUBLE_PRECISION price_amount
     INTEGER display_order
     BOOLEAN is_active
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   service_category_inspection {
-    VARCHAR(50) id PK
-    VARCHAR(50) service_category_id FK
+    VARCHAR id PK
+    VARCHAR service_category_id FK
     DOUBLE_PRECISION inspection_fee
     BOOLEAN is_active
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   service_custom_pricing_blocks {
-    VARCHAR(50) id PK
-    VARCHAR(50) service_category_id FK
-    VARCHAR(50) service_sub_category_id FK
-    VARCHAR(200) label
+    VARCHAR id PK
+    VARCHAR service_category_id FK
+    VARCHAR service_sub_category_id FK
+    VARCHAR label
     BOOLEAN is_active
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   service_custom_pricing_fields {
-    VARCHAR(50) id PK
-    VARCHAR(50) block_id FK
-    VARCHAR(200) field_name
+    VARCHAR id PK
+    VARCHAR block_id FK
+    VARCHAR field_name
     DOUBLE_PRECISION price_amount
     INTEGER display_order
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   service_execution_chemical_usages {
-    VARCHAR(50) id PK
-    VARCHAR(50) service_execution_id FK
-    VARCHAR(50) inventory_product_id FK
-    VARCHAR(50) service_product_id
-    NUMERIC(14,_3) required_dilution_snapshot
-    NUMERIC(14,_3) used_dilution
-    NUMERIC(14,_3) required_qty
-    NUMERIC(14,_3) used_qty
-    VARCHAR(255) product_name_snapshot
-    VARCHAR(50) hsn_snapshot
-    VARCHAR(50) uom_snapshot
+    VARCHAR id PK
+    VARCHAR service_execution_id FK
+    VARCHAR inventory_product_id FK
+    VARCHAR service_product_id
+    NUMERIC required_dilution_snapshot
+    NUMERIC used_dilution
+    NUMERIC required_qty
+    NUMERIC used_qty
+    VARCHAR product_name_snapshot
+    VARCHAR hsn_snapshot
+    VARCHAR uom_snapshot
     INTEGER sort_order
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   service_execution_treatments {
-    VARCHAR(50) service_execution_id PK FK
-    VARCHAR(50) service_treatment_id PK FK
+    VARCHAR service_execution_id PK FK
+    VARCHAR service_treatment_id PK FK
   }
   service_executions {
-    VARCHAR(50) id PK
-    VARCHAR(50) task_id FK
-    VARCHAR(50) service_id FK
-    VARCHAR(200) service_name_snapshot
-    VARCHAR(20) infestation_level
+    VARCHAR id PK
+    VARCHAR task_id FK
+    VARCHAR service_id FK
+    VARCHAR service_name_snapshot
+    VARCHAR infestation_level
     TEXT location_area
     TEXT trap_codes
     INTEGER sort_order
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   service_pest_types {
-    VARCHAR(50) id PK
-    VARCHAR(150) name
+    VARCHAR id PK
+    VARCHAR name
     BOOLEAN is_active
     INTEGER display_order
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   service_products {
-    VARCHAR(50) id PK
-    VARCHAR(50) service_id FK
-    VARCHAR(50) inventory_product_id FK
-    VARCHAR(100) dilution
+    VARCHAR id PK
+    VARCHAR service_id FK
+    VARCHAR inventory_product_id FK
+    VARCHAR dilution
     DOUBLE_PRECISION coverage_sqft
     DOUBLE_PRECISION required_qty
     DOUBLE_PRECISION price_per_uom
@@ -1744,42 +1744,42 @@ erDiagram
     TIMESTAMPTZ updated_at
   }
   service_species {
-    VARCHAR(50) id PK
-    VARCHAR(50) service_id FK
-    VARCHAR(200) species_name
-    VARCHAR(300) scientific_name
+    VARCHAR id PK
+    VARCHAR service_id FK
+    VARCHAR species_name
+    VARCHAR scientific_name
     INTEGER display_order
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   service_sub_categories {
-    VARCHAR(50) id PK
-    VARCHAR(50) code
-    VARCHAR(100) name
+    VARCHAR id PK
+    VARCHAR code
+    VARCHAR name
     BOOLEAN is_active
     INTEGER display_order
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   service_treatments {
-    VARCHAR(50) id PK
-    VARCHAR(200) name
+    VARCHAR id PK
+    VARCHAR name
     BOOLEAN is_active
     INTEGER display_order
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   services {
-    VARCHAR(50) id PK
-    VARCHAR(50) service_code
-    VARCHAR(200) service_name
+    VARCHAR id PK
+    VARCHAR service_code
+    VARCHAR service_name
     TEXT description
-    VARCHAR(50) price_type
+    VARCHAR price_type
     DOUBLE_PRECISION duration_value
-    VARCHAR(20) duration_uom
-    VARCHAR(20) status
+    VARCHAR duration_uom
+    VARCHAR status
     BOOLEAN is_draft
     DOUBLE_PRECISION visits_per_month
     INTEGER warranty_months
@@ -1787,108 +1787,108 @@ erDiagram
     INTEGER free_revisit_quantity
     TEXT inactive_reason
     TIMESTAMPTZ inactive_at
-    VARCHAR(100) inactivated_by
+    VARCHAR inactivated_by
     INTEGER display_order
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   services_service_categories {
-    VARCHAR(50) service_id PK FK
-    VARCHAR(50) service_category_id PK FK
+    VARCHAR service_id PK FK
+    VARCHAR service_category_id PK FK
   }
   services_service_category_area {
-    VARCHAR(50) service_id PK FK
-    VARCHAR(50) service_category_area_id PK FK
+    VARCHAR service_id PK FK
+    VARCHAR service_category_area_id PK FK
   }
   services_service_category_fixed {
-    VARCHAR(50) service_id PK FK
-    VARCHAR(50) service_category_fixed_id PK FK
+    VARCHAR service_id PK FK
+    VARCHAR service_category_fixed_id PK FK
   }
   services_service_category_inspection {
-    VARCHAR(50) service_id PK FK
-    VARCHAR(50) service_category_inspection_id PK FK
+    VARCHAR service_id PK FK
+    VARCHAR service_category_inspection_id PK FK
   }
   services_service_custom_pricing_blocks {
-    VARCHAR(50) service_id PK FK
-    VARCHAR(50) service_custom_pricing_block_id PK FK
+    VARCHAR service_id PK FK
+    VARCHAR service_custom_pricing_block_id PK FK
   }
   services_service_pest_types {
-    VARCHAR(50) service_id PK FK
-    VARCHAR(50) service_pest_type_id PK FK
+    VARCHAR service_id PK FK
+    VARCHAR service_pest_type_id PK FK
   }
   services_service_sub_categories {
-    VARCHAR(50) service_id PK FK
-    VARCHAR(50) service_sub_category_id PK FK
+    VARCHAR service_id PK FK
+    VARCHAR service_sub_category_id PK FK
   }
   services_service_treatments {
-    VARCHAR(50) service_id PK FK
-    VARCHAR(50) service_treatment_id PK FK
+    VARCHAR service_id PK FK
+    VARCHAR service_treatment_id PK FK
   }
   stock_approval_logs {
     BIGSERIAL id PK
     BIGINT request_id FK
-    VARCHAR(40) action
-    VARCHAR(40) previous_status
-    VARCHAR(40) new_status
+    VARCHAR action
+    VARCHAR previous_status
+    VARCHAR new_status
     TEXT remarks
-    VARCHAR(80) created_by
+    VARCHAR created_by
     TIMESTAMPTZ created_at
   }
   stock_ledger {
     BIGINT_AUTO_INCREMENT id PK
-    VARCHAR(30) branch_id
-    VARCHAR(50) product_id FK
-    VARCHAR(50) product_code
-    VARCHAR(255) product_name
-    VARCHAR(50) category
-    VARCHAR(120) brand
-    VARCHAR(20) hsn_code
-    VARCHAR(30) base_uom
+    VARCHAR branch_id
+    VARCHAR product_id FK
+    VARCHAR product_code
+    VARCHAR product_name
+    VARCHAR category
+    VARCHAR brand
+    VARCHAR hsn_code
+    VARCHAR base_uom
     INT assets_qty
     INT consumable_qty
     INT resell_qty
     INT in_transit_qty
     INT reserved_qty
-    VARCHAR(30) status
-    VARCHAR(80) created_by
+    VARCHAR status
+    VARCHAR created_by
     DATETIME created_at
-    VARCHAR(80) updated_by
+    VARCHAR updated_by
     DATETIME updated_at
-    VARCHAR(80) deleted_by
+    VARCHAR deleted_by
     DATETIME deleted_at
   }
   stock_movement_logs {
     BIGSERIAL id PK
-    VARCHAR(30) reference_type
-    VARCHAR(40) reference_id
-    VARCHAR(30) branch_id
-    VARCHAR(50) product_id
-    VARCHAR(20) stock_type
+    VARCHAR reference_type
+    VARCHAR reference_id
+    VARCHAR branch_id
+    VARCHAR product_id
+    VARCHAR stock_type
     INTEGER quantity_delta
-    VARCHAR(50) action
+    VARCHAR action
     TEXT remarks
-    VARCHAR(80) created_by
+    VARCHAR created_by
     TIMESTAMPTZ created_at
   }
   stock_request_items {
     BIGSERIAL id PK
     BIGINT request_id FK
-    VARCHAR(50) product_id FK
-    VARCHAR(50) product_code
-    VARCHAR(255) product_name
-    VARCHAR(30) base_uom
+    VARCHAR product_id FK
+    VARCHAR product_code
+    VARCHAR product_name
+    VARCHAR base_uom
     INTEGER assets_req_qty
     INTEGER consumable_req_qty
     INTEGER resell_req_qty
     INTEGER assets_appr_qty
     INTEGER consumable_appr_qty
     INTEGER resell_appr_qty
-    NUMERIC(14,2) estimated_cost
-    NUMERIC(14,2) tax_amount
-    VARCHAR(250) item_purpose
-    VARCHAR(30) alternative_source
+    NUMERIC estimated_cost
+    NUMERIC tax_amount
+    VARCHAR item_purpose
+    VARCHAR alternative_source
   }
   service_category_fixed }o--|| service_sub_categories : "fk_scf_sub_category"
   service_custom_pricing_blocks }o--|| service_sub_categories : "fk_scpb_sub_category"
@@ -1923,98 +1923,98 @@ erDiagram
     BIGSERIAL id
     BIGINT request_id FK
     BIGINT recipient_user_id PK FK
-    VARCHAR(255) recipient_email
+    VARCHAR recipient_email
     TIMESTAMPTZ created_at
-    VARCHAR(40) stock_request_id PK FK
+    VARCHAR stock_request_id PK FK
   }
   stock_requests {
     BIGSERIAL id PK
-    VARCHAR(40) request_id
-    VARCHAR(30) request_type
-    VARCHAR(15) direction
-    VARCHAR(30) from_branch_id
-    VARCHAR(30) to_branch_id
+    VARCHAR request_id
+    VARCHAR request_type
+    VARCHAR direction
+    VARCHAR from_branch_id
+    VARCHAR to_branch_id
     BIGINT requested_by_user_id
-    VARCHAR(160) requested_by_name
-    VARCHAR(15) priority
+    VARCHAR requested_by_name
+    VARCHAR priority
     DATE required_by_date
     TEXT purpose
     TEXT notes_for_approver
     TEXT sent_to
-    VARCHAR(40) status
-    VARCHAR(30) approval_type
-    VARCHAR(30) alternative_source
+    VARCHAR status
+    VARCHAR approval_type
+    VARCHAR alternative_source
     DATE dispatch_date
     DATE expected_delivery_date
-    VARCHAR(120) carrier
-    VARCHAR(80) lr_number
+    VARCHAR carrier
+    VARCHAR lr_number
     TEXT remarks
-    VARCHAR(40) issue_type
+    VARCHAR issue_type
     TEXT issue_description
-    VARCHAR(40) issue_resolution_status
-    VARCHAR(80) created_by
+    VARCHAR issue_resolution_status
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(80) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
-    VARCHAR(80) deleted_by
+    VARCHAR deleted_by
     TIMESTAMPTZ deleted_at
   }
   stock_transfer_assets {
     BIGSERIAL id PK
     BIGINT transfer_id FK
-    VARCHAR(60) asset_id
-    VARCHAR(30) condition_at_dispatch
-    VARCHAR(40) transfer_with
+    VARCHAR asset_id
+    VARCHAR condition_at_dispatch
+    VARCHAR transfer_with
     BIGINT destination_user_id
-    VARCHAR(160) destination_user_name
-    VARCHAR(30) condition_at_receipt
-    VARCHAR(30) receipt_status
+    VARCHAR destination_user_name
+    VARCHAR condition_at_receipt
+    VARCHAR receipt_status
   }
   stock_transfer_items {
     BIGSERIAL id PK
     BIGINT transfer_id FK
-    VARCHAR(50) product_id FK
-    VARCHAR(50) product_code
-    VARCHAR(255) product_name
+    VARCHAR product_id FK
+    VARCHAR product_code
+    VARCHAR product_name
     INTEGER assets_qty
     INTEGER consumable_qty
     INTEGER resell_qty
-    VARCHAR(30) source_branch_id
+    VARCHAR source_branch_id
   }
   stock_transfers {
     BIGSERIAL id PK
-    VARCHAR(40) transfer_id
-    VARCHAR(40) reference_request_id
-    VARCHAR(30) from_branch_id
-    VARCHAR(30) to_branch_id
-    VARCHAR(20) transfer_type
-    VARCHAR(30) strategy
-    VARCHAR(40) status
+    VARCHAR transfer_id
+    VARCHAR reference_request_id
+    VARCHAR from_branch_id
+    VARCHAR to_branch_id
+    VARCHAR transfer_type
+    VARCHAR strategy
+    VARCHAR status
     DATE dispatch_date
     DATE expected_delivery_date
-    VARCHAR(120) carrier
-    VARCHAR(80) lr_number
+    VARCHAR carrier
+    VARCHAR lr_number
     TEXT remarks
-    VARCHAR(80) created_by
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(80) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
   }
   subscription_plans {
-    VARCHAR(30) id PK
-    VARCHAR(100) plan_name
+    VARCHAR id PK
+    VARCHAR plan_name
     TEXT description
     INTEGER branch_count
     INTEGER technician_count
-    NUMERIC(12,2) price_per_branch
-    NUMERIC(12,2) price_per_technician
-    VARCHAR(20) duration_type
+    NUMERIC price_per_branch
+    NUMERIC price_per_technician
+    VARCHAR duration_type
     DATE valid_from
     DATE valid_to
-    VARCHAR(20) status
-    VARCHAR(30) created_by
-    VARCHAR(30) updated_by
-    VARCHAR(30) deleted_by
+    VARCHAR status
+    VARCHAR created_by
+    VARCHAR updated_by
+    VARCHAR deleted_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
     TIMESTAMPTZ deleted_at
@@ -2024,74 +2024,74 @@ erDiagram
     INTEGER response_sla_hours
     INTEGER resolution_risk_threshold_pct
     TIMESTAMPTZ updated_at
-    VARCHAR(100) updated_by
+    VARCHAR updated_by
   }
   support_ticket_activities {
     BIGSERIAL id PK
-    VARCHAR(50) ticket_id FK
-    VARCHAR(50) activity_type
+    VARCHAR ticket_id FK
+    VARCHAR activity_type
     TEXT summary
     TEXT detail
     BOOLEAN is_internal
     BIGINT performed_by_user_id FK
-    VARCHAR(200) performed_by_label
+    VARCHAR performed_by_label
     TIMESTAMPTZ performed_at
     JSONB metadata_json
   }
   support_ticket_assignment_history {
     BIGSERIAL id PK
-    VARCHAR(50) ticket_id FK
+    VARCHAR ticket_id FK
     BIGINT from_user_id FK
     BIGINT to_user_id FK
-    VARCHAR(50) to_role_code
+    VARCHAR to_role_code
     TEXT assignment_note
     TIMESTAMPTZ assigned_at
-    VARCHAR(100) assigned_by
+    VARCHAR assigned_by
   }
   support_ticket_attachments {
-    VARCHAR(50) id PK
-    VARCHAR(50) ticket_id FK
-    VARCHAR(20) phase
-    VARCHAR(500) file_path
-    VARCHAR(255) original_name
-    VARCHAR(100) mime_type
+    VARCHAR id PK
+    VARCHAR ticket_id FK
+    VARCHAR phase
+    VARCHAR file_path
+    VARCHAR original_name
+    VARCHAR mime_type
     BIGINT size_bytes
     TIMESTAMPTZ uploaded_at
-    VARCHAR(100) uploaded_by
+    VARCHAR uploaded_by
   }
   support_ticket_tasks {
-    VARCHAR(50) id PK
-    VARCHAR(50) ticket_id FK
-    VARCHAR(50) task_id FK
+    VARCHAR id PK
+    VARCHAR ticket_id FK
+    VARCHAR task_id FK
     TIMESTAMPTZ linked_at
-    VARCHAR(100) linked_by
+    VARCHAR linked_by
   }
   support_ticket_types {
-    VARCHAR(50) id PK
-    VARCHAR(80) code
-    VARCHAR(200) label
+    VARCHAR id PK
+    VARCHAR code
+    VARCHAR label
     INTEGER display_order
     BOOLEAN active
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   support_tickets {
-    VARCHAR(50) id PK
-    VARCHAR(50) ticket_number
-    VARCHAR(50) customer_id FK
-    VARCHAR(30) branch_id FK
-    VARCHAR(50) sales_order_id FK
-    VARCHAR(50) related_task_id FK
-    VARCHAR(50) ticket_type_id FK
-    VARCHAR(20) priority
-    VARCHAR(100) subject
+    VARCHAR id PK
+    VARCHAR ticket_number
+    VARCHAR customer_id FK
+    VARCHAR branch_id FK
+    VARCHAR sales_order_id FK
+    VARCHAR related_task_id FK
+    VARCHAR ticket_type_id FK
+    VARCHAR priority
+    VARCHAR subject
     TEXT description
-    VARCHAR(200) reported_by_name
-    VARCHAR(20) reported_by_phone
+    VARCHAR reported_by_name
+    VARCHAR reported_by_phone
     DATE expected_resolution_date
     TIME expected_resolution_time
-    VARCHAR(30) status
-    VARCHAR(50) assignee_role_code
+    VARCHAR status
+    VARCHAR assignee_role_code
     BIGINT assigned_user_id FK
     TIMESTAMPTZ response_sla_deadline_at
     TIMESTAMPTZ first_response_at
@@ -2099,157 +2099,157 @@ erDiagram
     BOOLEAN response_sla_met
     BOOLEAN response_sla_breached
     BOOLEAN resolution_sla_breached
-    VARCHAR(20) escalation_level
+    VARCHAR escalation_level
     TIMESTAMPTZ pause_started_at
     INTEGER total_paused_seconds
-    VARCHAR(50) resolution_code
+    VARCHAR resolution_code
     TEXT resolution_notes
     INTEGER resolve_customer_rating
     TEXT resolve_customer_feedback
     TIMESTAMPTZ resolved_at
-    VARCHAR(100) resolved_by
-    VARCHAR(80) close_reason
+    VARCHAR resolved_by
+    VARCHAR close_reason
     TEXT closure_remarks
     TIMESTAMPTZ closed_at
-    VARCHAR(100) closed_by
+    VARCHAR closed_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
   }
   task_audit_logs {
     BIGSERIAL id PK
-    VARCHAR(50) task_id
-    VARCHAR(100) action
+    VARCHAR task_id
+    VARCHAR action
     TEXT details
-    VARCHAR(100) performed_by
+    VARCHAR performed_by
     TIMESTAMPTZ performed_at
   }
   task_customer_feedback {
-    VARCHAR(50) id PK
-    VARCHAR(50) task_id FK
+    VARCHAR id PK
+    VARCHAR task_id FK
     BIGINT technician_id FK
-    VARCHAR(255) customer_name
-    VARCHAR(30) customer_phone
+    VARCHAR customer_name
+    VARCHAR customer_phone
     TEXT customer_feedback
     INTEGER ratings
-    VARCHAR(100) created_by
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(100) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
   }
   task_materials {
-    VARCHAR(50) id PK
-    VARCHAR(50) task_id FK
-    VARCHAR(50) product_id
-    VARCHAR(255) product_name
-    VARCHAR(30) uom
-    VARCHAR(20) hsn_code
-    NUMERIC(14,3) std_qty
-    NUMERIC(14,3) required_qty
-    NUMERIC(14,3) used_qty
+    VARCHAR id PK
+    VARCHAR task_id FK
+    VARCHAR product_id
+    VARCHAR product_name
+    VARCHAR uom
+    VARCHAR hsn_code
+    NUMERIC std_qty
+    NUMERIC required_qty
+    NUMERIC used_qty
   }
   task_photos {
-    VARCHAR(50) id PK
-    VARCHAR(50) task_id FK
-    VARCHAR(30) photo_type
-    VARCHAR(500) file_path
+    VARCHAR id PK
+    VARCHAR task_id FK
+    VARCHAR photo_type
+    VARCHAR file_path
     TIMESTAMPTZ uploaded_at
   }
   task_technicians {
-    VARCHAR(50) id PK
-    VARCHAR(50) task_id FK
+    VARCHAR id PK
+    VARCHAR task_id FK
     BIGINT user_id FK
-    VARCHAR(200) employee_name
-    VARCHAR(100) role_name
+    VARCHAR employee_name
+    VARCHAR role_name
     BOOLEAN is_primary
   }
   tasks {
-    VARCHAR(50) id PK
-    VARCHAR(30) branch_id
-    VARCHAR(50) task_number
-    VARCHAR(20) task_type
-    VARCHAR(30) source_type
-    VARCHAR(50) sales_order_id
-    VARCHAR(50) so_site_service_id
-    VARCHAR(50) ticket_id FK
-    VARCHAR(50) customer_id
-    VARCHAR(255) customer_name
-    VARCHAR(50) site_id
-    VARCHAR(255) site_name
+    VARCHAR id PK
+    VARCHAR branch_id
+    VARCHAR task_number
+    VARCHAR task_type
+    VARCHAR source_type
+    VARCHAR sales_order_id
+    VARCHAR so_site_service_id
+    VARCHAR ticket_id FK
+    VARCHAR customer_id
+    VARCHAR customer_name
+    VARCHAR site_id
+    VARCHAR site_name
     TEXT site_address
-    VARCHAR(200) site_contact_name
-    VARCHAR(20) site_contact_mobile
-    VARCHAR(100) service_category
-    VARCHAR(100) service_subcategory
-    VARCHAR(200) service_type_name
-    NUMERIC(12,2) area_sqft
+    VARCHAR site_contact_name
+    VARCHAR site_contact_mobile
+    VARCHAR service_category
+    VARCHAR service_subcategory
+    VARCHAR service_type_name
+    NUMERIC area_sqft
     DATE scheduled_date
     TIME start_time
     TIME end_time
     INTEGER estimated_duration_mins
-    VARCHAR(30) status
-    VARCHAR(20) priority
+    VARCHAR status
+    VARCHAR priority
     TIMESTAMPTZ actual_start_at
     TIMESTAMPTZ actual_end_at
     TEXT completion_notes
     INTEGER customer_rating
     TEXT customer_feedback
     TIMESTAMPTZ feedback_at
-    VARCHAR(100) created_by
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(100) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
   }
   tax_types {
     BIGINT id PK
-    VARCHAR(30) tax_type_code
-    VARCHAR(100) tax_name
-    VARCHAR(20) tax_category
-    NUMERIC(5,2) default_rate
-    VARCHAR(20) applicability
-    VARCHAR(500) description
+    VARCHAR tax_type_code
+    VARCHAR tax_name
+    VARCHAR tax_category
+    NUMERIC default_rate
+    VARCHAR applicability
+    VARCHAR description
     DATE effective_from
-    VARCHAR(20) status
-    VARCHAR(255) change_reason
-    VARCHAR(50) created_by
+    VARCHAR status
+    VARCHAR change_reason
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(50) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
-    VARCHAR(50) deleted_by
+    VARCHAR deleted_by
     TIMESTAMPTZ deleted_at
   }
   technician_observation_hygiene_picks {
-    VARCHAR(50) section_id PK FK
-    VARCHAR(50) hygiene_option_id PK FK
+    VARCHAR section_id PK FK
+    VARCHAR hygiene_option_id PK FK
   }
   technician_observation_pest_picks {
-    VARCHAR(50) section_id PK FK
-    VARCHAR(50) pest_option_id PK FK
+    VARCHAR section_id PK FK
+    VARCHAR pest_option_id PK FK
   }
   technician_observation_sections {
-    VARCHAR(50) id PK
-    VARCHAR(50) task_id FK
-    VARCHAR(40) category
+    VARCHAR id PK
+    VARCHAR task_id FK
+    VARCHAR category
     BOOLEAN found
     TEXT other_notes
     TEXT location_area
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   technician_observation_structural_picks {
-    VARCHAR(50) section_id PK FK
-    VARCHAR(50) structural_option_id PK FK
+    VARCHAR section_id PK FK
+    VARCHAR structural_option_id PK FK
   }
   technician_tracking {
     BIGSERIAL id PK
     BIGINT user_id FK
-    VARCHAR(50) task_id FK
-    VARCHAR(50) technician_status
-    NUMERIC(10,_7) latitude
-    NUMERIC(10,_7) longitude
+    VARCHAR task_id FK
+    VARCHAR technician_status
+    NUMERIC latitude
+    NUMERIC longitude
     DATE local_date
     TIMESTAMPTZ recorded_at
   }
@@ -2283,34 +2283,34 @@ erDiagram
   user_additional_data {
     BIGSERIAL id PK
     BIGINT user_id FK
-    VARCHAR(12) aadhar_number
-    VARCHAR(10) pan_number
-    VARCHAR(12) uan_number
-    VARCHAR(50) id_card_number
-    VARCHAR(50) grade_level
-    VARCHAR(50) shift_type
-    VARCHAR(50) weekly_off
-    NUMERIC(14,2) target_amount
-    NUMERIC(5,2) commission_percentage
-    VARCHAR(500) photo_url
-    VARCHAR(100) created_by
+    VARCHAR aadhar_number
+    VARCHAR pan_number
+    VARCHAR uan_number
+    VARCHAR id_card_number
+    VARCHAR grade_level
+    VARCHAR shift_type
+    VARCHAR weekly_off
+    NUMERIC target_amount
+    NUMERIC commission_percentage
+    VARCHAR photo_url
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(100) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
   }
   user_branches {
     BIGINT user_id PK FK
-    VARCHAR(30) branch_id PK
+    VARCHAR branch_id PK
   }
   user_documents {
     BIGSERIAL id PK
     BIGINT user_id FK
-    VARCHAR(60) document_type
-    VARCHAR(500) file_path
-    VARCHAR(255) original_file_name
+    VARCHAR document_type
+    VARCHAR file_path
+    VARCHAR original_file_name
     BIGINT file_size_bytes
-    VARCHAR(100) mime_type
-    VARCHAR(100) uploaded_by
+    VARCHAR mime_type
+    VARCHAR uploaded_by
     TIMESTAMPTZ uploaded_at
   }
   user_leave_details {
@@ -2323,10 +2323,10 @@ erDiagram
     BOOLEAN carry_forward_allowed
     INT max_carry_forward_days
     BIGINT leave_approval_role_id FK
-    VARCHAR(20) leave_reset_cycle
-    VARCHAR(100) created_by
+    VARCHAR leave_reset_cycle
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(100) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
   }
   user_permissions {
@@ -2340,7 +2340,7 @@ erDiagram
   }
   user_profile_extension {
     UUID id PK
-    VARCHAR(50) employee_id
+    VARCHAR employee_id
     TEXT profile_photo_url
     TIMESTAMP created_at
     TIMESTAMP updated_at
@@ -2348,193 +2348,193 @@ erDiagram
   user_salary_details {
     BIGSERIAL id PK
     BIGINT user_id FK
-    VARCHAR(20) salary_type
-    NUMERIC(12,2) basic_salary
-    NUMERIC(12,2) hra
-    NUMERIC(12,2) other_allowance
-    NUMERIC(12,2) incentive
-    NUMERIC(12,2) deductions
+    VARCHAR salary_type
+    NUMERIC basic_salary
+    NUMERIC hra
+    NUMERIC other_allowance
+    NUMERIC incentive
+    NUMERIC deductions
     BOOLEAN pf_applicable
     BOOLEAN esi_applicable
     BOOLEAN tds_applicable
-    VARCHAR(150) bank_name
-    VARCHAR(20) account_number
-    VARCHAR(11) ifsc_code
+    VARCHAR bank_name
+    VARCHAR account_number
+    VARCHAR ifsc_code
     DATE salary_effective_from
     DATE salary_effective_to
     BOOLEAN holiday_work_applicable
-    VARCHAR(20) holiday_work_type
-    NUMERIC(12,2) holiday_work_amount
+    VARCHAR holiday_work_type
+    NUMERIC holiday_work_amount
     BOOLEAN overtime_applicable
-    VARCHAR(20) overtime_type
-    NUMERIC(12,2) per_hour_incentive_pay
+    VARCHAR overtime_type
+    NUMERIC per_hour_incentive_pay
     INT max_ot_hours_per_month
-    VARCHAR(100) created_by
+    VARCHAR created_by
     TIMESTAMPTZ created_at
-    VARCHAR(100) updated_by
+    VARCHAR updated_by
     TIMESTAMPTZ updated_at
   }
   users {
     BIGSERIAL id PK
-    VARCHAR(50) emp_id
-    VARCHAR(100) first_name
-    VARCHAR(100) last_name
-    VARCHAR(255) email
-    VARCHAR(255) username
-    VARCHAR(512) password_hash
-    VARCHAR(15) contact_number
-    VARCHAR(15) alternate_number
-    VARCHAR(150) department
-    VARCHAR(150) designation
+    VARCHAR emp_id
+    VARCHAR first_name
+    VARCHAR last_name
+    VARCHAR email
+    VARCHAR username
+    VARCHAR password_hash
+    VARCHAR contact_number
+    VARCHAR alternate_number
+    VARCHAR department
+    VARCHAR designation
     BIGINT role_id FK
     BIGINT reporting_manager_id FK
-    VARCHAR(50) employment_type
+    VARCHAR employment_type
     DATE date_of_joining
-    VARCHAR(20) status
+    VARCHAR status
     BOOLEAN is_active
-    VARCHAR(255) current_address_line1
-    VARCHAR(255) current_address_line2
-    VARCHAR(100) current_city
-    VARCHAR(100) current_state
-    VARCHAR(100) current_country
-    VARCHAR(20) current_pincode
-    VARCHAR(255) permanent_address_line1
-    VARCHAR(255) permanent_address_line2
-    VARCHAR(100) permanent_city
-    VARCHAR(100) permanent_state
-    VARCHAR(100) permanent_country
-    VARCHAR(20) permanent_pincode
+    VARCHAR current_address_line1
+    VARCHAR current_address_line2
+    VARCHAR current_city
+    VARCHAR current_state
+    VARCHAR current_country
+    VARCHAR current_pincode
+    VARCHAR permanent_address_line1
+    VARCHAR permanent_address_line2
+    VARCHAR permanent_city
+    VARCHAR permanent_state
+    VARCHAR permanent_country
+    VARCHAR permanent_pincode
     TIMESTAMPTZ last_login_at
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
   vendor_product_supplies {
-    VARCHAR(50) id PK
-    VARCHAR(50) vendor_id
-    VARCHAR(50) product_id
-    VARCHAR(100) product_category
+    VARCHAR id PK
+    VARCHAR vendor_id
+    VARCHAR product_id
+    VARCHAR product_category
     DOUBLE_PRECISION supply_quantity
-    VARCHAR(50) uom
+    VARCHAR uom
     DOUBLE_PRECISION unit_supply_rate
     DOUBLE_PRECISION minimum_order_quantity
-    VARCHAR(50) delivery_frequency
+    VARCHAR delivery_frequency
     INTEGER delivery_lead_time_days
     BOOLEAN tax_applicable
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
-    VARCHAR(100) deleted_by
+    VARCHAR created_by
+    VARCHAR updated_by
+    VARCHAR deleted_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
     TIMESTAMPTZ deleted_at
   }
   vendors {
-    VARCHAR(50) id PK
-    VARCHAR(100) vendor_name
-    VARCHAR(50) vendor_type
-    VARCHAR(100) vendor_category
-    VARCHAR(255) product_supplied
-    VARCHAR(100) contact_person
-    VARCHAR(20) phone_number
-    VARCHAR(100) email_id
-    VARCHAR(50) vendor_status
+    VARCHAR id PK
+    VARCHAR vendor_name
+    VARCHAR vendor_type
+    VARCHAR vendor_category
+    VARCHAR product_supplied
+    VARCHAR contact_person
+    VARCHAR phone_number
+    VARCHAR email_id
+    VARCHAR vendor_status
     BOOLEAN has_contract
     TEXT address
-    VARCHAR(100) city
-    VARCHAR(100) state
-    VARCHAR(20) pincode
-    VARCHAR(100) country
-    VARCHAR(50) vendor_registration_type
-    VARCHAR(50) gst_number
-    VARCHAR(50) pan_number
-    VARCHAR(100) bank_name
-    VARCHAR(100) account_holder_name
-    VARCHAR(50) account_number
-    VARCHAR(20) ifsc_code
-    VARCHAR(50) contract_type
+    VARCHAR city
+    VARCHAR state
+    VARCHAR pincode
+    VARCHAR country
+    VARCHAR vendor_registration_type
+    VARCHAR gst_number
+    VARCHAR pan_number
+    VARCHAR bank_name
+    VARCHAR account_holder_name
+    VARCHAR account_number
+    VARCHAR ifsc_code
+    VARCHAR contract_type
     DATE contract_start_date
     DATE contract_end_date
     BOOLEAN sla_agreement
     TEXT contract_document_url
-    VARCHAR(50) billing_type
-    VARCHAR(50) billing_cycle
+    VARCHAR billing_type
+    VARCHAR billing_cycle
     DATE custom_billing_start_date
     DATE custom_billing_end_date
-    VARCHAR(50) invoice_submission_method
-    VARCHAR(50) payment_terms
+    VARCHAR invoice_submission_method
+    VARCHAR payment_terms
     DOUBLE_PRECISION advance_payment_percentage
     TEXT late_payment_penalty
     INTEGER vendor_rating
     TEXT remarks
     TEXT vendor_document_url
-    VARCHAR(255) vendor_document_name
-    VARCHAR(100) vendor_document_type
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
-    VARCHAR(100) deleted_by
+    VARCHAR vendor_document_name
+    VARCHAR vendor_document_type
+    VARCHAR created_by
+    VARCHAR updated_by
+    VARCHAR deleted_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
     TIMESTAMPTZ deleted_at
   }
   voucher_allocations {
-    VARCHAR(50) id PK
-    VARCHAR(50) voucher_id FK
-    VARCHAR(20) document_type
-    VARCHAR(50) document_id
-    NUMERIC(14,2) pending_before
-    NUMERIC(14,2) allocated_amount
-    NUMERIC(14,2) shortfall_amount
-    VARCHAR(20) settlement_action
-    VARCHAR(20) status_after
+    VARCHAR id PK
+    VARCHAR voucher_id FK
+    VARCHAR document_type
+    VARCHAR document_id
+    NUMERIC pending_before
+    NUMERIC allocated_amount
+    NUMERIC shortfall_amount
+    VARCHAR settlement_action
+    VARCHAR status_after
     TIMESTAMPTZ created_at
   }
   voucher_audit_logs {
-    VARCHAR(50) id PK
-    VARCHAR(50) voucher_id FK
-    VARCHAR(80) action
-    VARCHAR(500) remarks
-    VARCHAR(150) performed_by
+    VARCHAR id PK
+    VARCHAR voucher_id FK
+    VARCHAR action
+    VARCHAR remarks
+    VARCHAR performed_by
     TIMESTAMPTZ performed_at
   }
   voucher_journal_lines {
-    VARCHAR(50) id PK
-    VARCHAR(50) voucher_id FK
+    VARCHAR id PK
+    VARCHAR voucher_id FK
     INTEGER line_no
-    VARCHAR(50) ledger_id
-    NUMERIC(14,2) dr_amount
-    NUMERIC(14,2) cr_amount
-    VARCHAR(500) line_narration
+    VARCHAR ledger_id
+    NUMERIC dr_amount
+    NUMERIC cr_amount
+    VARCHAR line_narration
   }
   voucher_settlement_links {
-    VARCHAR(50) id PK
-    VARCHAR(50) voucher_id FK
-    VARCHAR(20) settlement_type
-    VARCHAR(50) settlement_id
-    VARCHAR(50) settlement_number
-    NUMERIC(14,2) settlement_amount
+    VARCHAR id PK
+    VARCHAR voucher_id FK
+    VARCHAR settlement_type
+    VARCHAR settlement_id
+    VARCHAR settlement_number
+    NUMERIC settlement_amount
   }
   vouchers {
-    VARCHAR(50) id PK
-    VARCHAR(50) voucher_number
-    VARCHAR(20) voucher_type
+    VARCHAR id PK
+    VARCHAR voucher_number
+    VARCHAR voucher_type
     DATE voucher_date
-    VARCHAR(30) branch_id
-    VARCHAR(20) party_type
-    VARCHAR(50) party_id
-    VARCHAR(20) payment_mode
-    VARCHAR(50) bank_ledger_id
-    VARCHAR(50) from_ledger_id
-    VARCHAR(50) to_ledger_id
-    VARCHAR(120) reference_no
+    VARCHAR branch_id
+    VARCHAR party_type
+    VARCHAR party_id
+    VARCHAR payment_mode
+    VARCHAR bank_ledger_id
+    VARCHAR from_ledger_id
+    VARCHAR to_ledger_id
+    VARCHAR reference_no
     DATE cheque_date
-    NUMERIC(14,2) gross_amount
-    NUMERIC(14,2) tds_amount
-    NUMERIC(14,2) advance_applied
-    NUMERIC(14,2) allocated_amount
-    NUMERIC(14,2) unallocated_amount
+    NUMERIC gross_amount
+    NUMERIC tds_amount
+    NUMERIC advance_applied
+    NUMERIC allocated_amount
+    NUMERIC unallocated_amount
     TEXT notes
-    VARCHAR(20) status
-    VARCHAR(100) created_by
-    VARCHAR(100) updated_by
+    VARCHAR status
+    VARCHAR created_by
+    VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
@@ -2714,205 +2714,205 @@ flowchart LR
   voucher_journal_lines["voucher_journal_lines"]
   voucher_settlement_links["voucher_settlement_links"]
   vouchers["vouchers"]
-  asset_units -->|fk_asset_units_product product_id→id| inventory_products
-  bill_payment_allocations -->|fk_bpa_bill bill_id→id| purchase_bills
-  bill_payment_allocations -->|fk_bpa_voucher voucher_id→id| vouchers
-  central_stock_entries -->|fk_central_stock_entries_assignee_user assignee_user_id→id| users
-  central_stock_entries -->|fk_central_stock_entries_product product_id→id| inventory_products
-  central_stock_entries -->|fk_central_stock_entries_supplier supplier_id→id| vendors
-  central_stock_ledger -->|fk_central_stock_ledger_product product_id→id| inventory_products
-  coa_account_heads -->|fk_coa_parent parent_head_id→id| coa_account_heads
-  contract_amendment_logs -->|fk_cal_contract contract_id→id| contracts
-  contract_payment_lines -->|fk_cpl_contract contract_id→id| contracts
-  contract_sales_order_links -->|fk_csol_contract contract_id→id| contracts
-  contract_sales_order_links -->|fk_csol_sales_order sales_order_id→id| sales_orders
-  contract_site_services -->|fk_css_site contract_site_id→id| contract_sites
-  contract_sites -->|fk_cs_contract contract_id→id| contracts
-  contract_termination_logs -->|fk_ctl_contract contract_id→id| contracts
-  credit_notes -->|fk_cn_invoice invoice_id→id| sales_invoices
-  debit_notes -->|fk_dn_bill bill_id→id| purchase_bills
-  follow_ups -->|fk_follow_ups_lead lead_id→id| leads
-  gma_audit_logs -->|fk_gmaaud_sheet gma_sheet_id→id| gma_sheets
-  gma_chemicals -->|fk_gmachem_product product_id→id| inventory_products
-  gma_chemicals -->|fk_gmachem_service gma_service_id→id| gma_services
-  gma_services -->|fk_gmasvc_site gma_site_id→id| gma_sites
-  gma_services -->|fk_gmasvc_type service_type_id→id| services
-  gma_sheet_approver_roles -->|fk_gsar_role role_id→id| roles
-  gma_sheet_approver_roles -->|fk_gsar_sheet gma_sheet_id→id| gma_sheets
-  gma_sheets -->|fk_gma_branch branch_id→id| branches
-  gma_sheets -->|fk_gma_lead lead_id→id| leads
-  gma_sheets -->|fk_gma_prospect prospect_id→id| gma_prospects
-  gma_sites -->|fk_gmasite_sheet gma_sheet_id→id| gma_sheets
-  hiring_request_branches -->|fk_hrb_hiring_request hiring_request_id→id| hiring_requests
-  hiring_request_recipients -->|fk_hrr_hiring_request hiring_request_id→id| hiring_requests
-  hiring_request_recipients -->|fk_hrr_user recipient_user_id→id| users
-  hiring_requests -->|fk_hiring_converted_user converted_user_id→id| users
-  hiring_requests -->|fk_hiring_proposed_role proposed_role_id→id| roles
-  hiring_requests -->|fk_hiring_requested_by requested_by_user_id→id| users
-  hiring_requests -->|fk_hiring_reviewed_by reviewed_by_user_id→id| users
-  hrm_attendance_day -->|fk_hrm_attendance_user user_id→id| users
-  hrm_leave_request -->|fk_hrm_leave_reviewed_by reviewed_by_user_id→id| users
-  hrm_leave_request -->|fk_hrm_leave_user user_id→id| users
-  hrm_salary_month -->|fk_hrm_salary_paid_by paid_by_user_id→id| users
-  hrm_salary_month -->|fk_hrm_salary_user user_id→id| users
-  hrm_salary_slip -->|fk_hrm_salary_slip_month salary_month_id→id| hrm_salary_month
-  hsn_code_tax_types -->|fk_hsn_code hsn_code_id→id| hsn_codes
-  hsn_code_tax_types -->|fk_tax_type tax_type_id→id| tax_types
-  incentive_overtime_details -->|fk_iod_config config_id→config_id| role_compensation_configuration
-  inventory_products -->|fk_inventory_products_brand brand_id→id| inventory_brands
-  invoice_payment_allocations -->|fk_ipa_invoice invoice_id→id| sales_invoices
-  invoice_payment_allocations -->|fk_ipa_voucher voucher_id→id| vouchers
-  lead_audit_logs -->|fk_audit_lead lead_id→id| leads
-  leave_configuration -->|fk_lc_config config_id→config_id| role_compensation_configuration
-  leave_configuration -->|fk_lc_role leave_approval_role_id→id| roles
-  ledger_entries -->|fk_le_ledger ledger_id→id| ledgers
-  ledgers -->|fk_ledgers_account_head account_head_id→id| coa_account_heads
-  notification_recipients -->|fk_nr_notification notification_id→id| notifications
-  notification_recipients -->|fk_nr_user user_id→id| users
-  petty_cash_attachments -->|fk_pc_att_request request_id→id| petty_cash_requests
-  petty_cash_audit_logs -->|fk_pc_aud_actor actor_user_id→id| users
-  petty_cash_audit_logs -->|fk_pc_aud_request request_id→id| petty_cash_requests
-  petty_cash_request_recipient_roles -->|fk_pc_rr_request request_id→id| petty_cash_requests
-  petty_cash_request_recipient_roles -->|fk_pc_rr_role recipient_role_id→id| roles
-  petty_cash_request_recipients -->|fk_pc_rec_request request_id→id| petty_cash_requests
-  petty_cash_request_recipients -->|fk_pc_rec_role recipient_role_id→id| roles
-  petty_cash_request_recipients -->|fk_pc_rec_user recipient_user_id→id| users
-  petty_cash_requests -->|fk_pc_branch requester_branch_id→id| branches
-  petty_cash_requests -->|fk_pc_paid_by paid_by_user_id→id| users
-  petty_cash_requests -->|fk_pc_pre_approved_by pre_approved_by_user_id→id| users
-  petty_cash_requests -->|fk_pc_requester_user requester_user_id→id| users
-  petty_cash_requests -->|fk_pc_reviewed_by reviewed_by_user_id→id| users
-  public_company_details -->|fk_company_details_subscription_plan subscription_plan_id→id| public.subscription_plans
-  public_company_documents -->|fk_company_documents_company company_id→id| company_details
-  public_company_subscription -->|fk_company_subscription_company company_id→id| public_company_details
-  public_company_subscription -->|fk_company_subscription_plan subscription_plan_id→id| public.subscription_plans
-  public_email_verification_tokens -->|fk_evt_global_user global_user_id→id| public_global_users
-  public_role_permissions -->|fk_rp_action action_id→id| public_actions
-  public_role_permissions -->|fk_rp_module module_id→id| public_modules
-  public_role_permissions -->|fk_rp_role role_id→id| public_roles
-  public_tenant_registry -->|fk_tenant_registry_company company_id→id| public_company_details
-  purchase_bill_attachments -->|fk_pba_bill bill_id→id| purchase_bills
-  purchase_bill_audit_logs -->|fk_pbal_bill bill_id→id| purchase_bills
-  purchase_bill_lines -->|fk_pbl_bill bill_id→id| purchase_bills
-  purchase_order_item -->|fk_poi_product product_id→id| inventory_products
-  purchase_order_item -->|fk_poi_purchase_order purchase_order_id→id| purchase_order
-  purchase_order -->|fk_po_branch branch_id→id| branches
-  purchase_order -->|fk_po_vendor vendor_id→id| vendors
-  quotation_attachments -->|fk_qa_quotation quotation_id→id| quotations
-  quotation_audit_logs -->|fk_qal_quotation quotation_id→id| quotations
-  quotation_locations -->|fk_ql_branch branch_id→id| branches
-  quotation_locations -->|fk_ql_quotation quotation_id→id| quotations
-  quotation_product_lines -->|fk_qpl_product product_id→id| inventory_products
-  quotation_product_lines -->|fk_qpl_quotation quotation_id→id| quotations
-  quotation_service_lines -->|fk_qsl_location quotation_location_id→id| quotation_locations
-  quotation_service_lines -->|fk_qsl_quotation quotation_id→id| quotations
-  quotation_service_lines -->|fk_qsl_service service_id→id| services
-  quotations -->|fk_quot_lead lead_id→id| leads
-  quotations -->|fk_quot_prospect prospect_id→id| quotation_prospects
-  quotations -->|fk_quot_revised_from revised_from_id→id| quotations
-  role_compensation_configuration -->|fk_rcc_role role_id→id| roles
-  role_permissions -->|fk_rp_action action_id→id| actions
-  role_permissions -->|fk_rp_module module_id→id| modules
-  role_permissions -->|fk_rp_role role_id→id| roles
-  salary_details -->|fk_sd_config config_id→config_id| role_compensation_configuration
-  sales_invoice_attachments -->|fk_sia_invoice invoice_id→id| sales_invoices
-  sales_invoice_audit_logs -->|fk_sial_invoice invoice_id→id| sales_invoices
-  sales_invoice_lines -->|fk_sil_invoice invoice_id→id| sales_invoices
-  sales_order_cancellation_logs -->|fk_socl_sales_order sales_order_id→id| sales_orders
-  sales_order_product_lines -->|fk_sopl_so sales_order_id→id| sales_orders
-  sales_order_site_chemicals -->|fk_sosc_site sales_order_site_id→id| sales_order_sites
-  sales_order_site_services -->|fk_soss_site sales_order_site_id→id| sales_order_sites
-  sales_order_sites -->|fk_sos_so sales_order_id→id| sales_orders
-  service_audit_logs -->|fk_sal_service service_id→id| services
-  service_category_area -->|fk_sca_category service_category_id→id| service_categories
-  service_category_area -->|fk_sca_sub_category service_sub_category_id→id| service_sub_categories
-  service_category_fixed -->|fk_scf_category service_category_id→id| service_categories
-  service_category_fixed -->|fk_scf_sub_category service_sub_category_id→id| service_sub_categories
-  service_category_inspection -->|fk_sci_category service_category_id→id| service_categories
-  service_custom_pricing_blocks -->|fk_scpb_category service_category_id→id| service_categories
-  service_custom_pricing_blocks -->|fk_scpb_sub_category service_sub_category_id→id| service_sub_categories
-  service_custom_pricing_fields -->|fk_scpf_block block_id→id| service_custom_pricing_blocks
-  service_execution_chemical_usages -->|fk_sec_execution service_execution_id→id| service_executions
-  service_execution_chemical_usages -->|fk_sec_product inventory_product_id→id| inventory_products
-  service_execution_treatments -->|fk_set_execution service_execution_id→id| service_executions
-  service_execution_treatments -->|fk_set_treatment service_treatment_id→id| service_treatments
-  service_executions -->|fk_se_service service_id→id| services
-  service_executions -->|fk_se_task task_id→id| tasks
-  service_products -->|fk_sp_product inventory_product_id→id| inventory_products
-  service_products -->|fk_sp_service service_id→id| services
-  service_species -->|fk_service_species_service service_id→id| services
-  services_service_categories -->|fk_ssc_category service_category_id→id| service_categories
-  services_service_categories -->|fk_ssc_service service_id→id| services
-  services_service_category_area -->|fk_ssca_area service_category_area_id→id| service_category_area
-  services_service_category_area -->|fk_ssca_service service_id→id| services
-  services_service_category_fixed -->|fk_sscf_fixed service_category_fixed_id→id| service_category_fixed
-  services_service_category_fixed -->|fk_sscf_service service_id→id| services
-  services_service_category_inspection -->|fk_ssci_inspection service_category_inspection_id→id| service_category_inspection
-  services_service_category_inspection -->|fk_ssci_service service_id→id| services
-  services_service_custom_pricing_blocks -->|fk_sscpb_block service_custom_pricing_block_id→id| service_custom_pricing_blocks
-  services_service_custom_pricing_blocks -->|fk_sscpb_service service_id→id| services
-  services_service_pest_types -->|fk_sspt_pest service_pest_type_id→id| service_pest_types
-  services_service_pest_types -->|fk_sspt_service service_id→id| services
-  services_service_sub_categories -->|fk_sssc_service service_id→id| services
-  services_service_sub_categories -->|fk_sssc_sub service_sub_category_id→id| service_sub_categories
-  services_service_treatments -->|fk_sst_service service_id→id| services
-  services_service_treatments -->|fk_sst_treatment service_treatment_id→id| service_treatments
-  stock_approval_logs -->|fk_stock_approval_log_request request_id→id| stock_requests
-  stock_ledger -->|fk_stock_ledger_product product_id→id| inventory_products
-  stock_ledger -->|fk_stock_ledger_product product_id→id| inventory_products
-  stock_request_items -->|fk_stock_request_item_product product_id→id| inventory_products
-  stock_request_items -->|fk_stock_request_item_request request_id→id| stock_requests
-  stock_request_recipients -->|fk_srr_stock_request stock_request_id→request_id| stock_requests
-  stock_request_recipients -->|fk_srr_user recipient_user_id→id| users
-  stock_request_recipients -->|fk_stock_request_recipients_request request_id→id| stock_requests
-  stock_transfer_assets -->|fk_stock_transfer_asset_transfer transfer_id→id| stock_transfers
-  stock_transfer_items -->|fk_stock_transfer_item_product product_id→id| inventory_products
-  stock_transfer_items -->|fk_stock_transfer_item_transfer transfer_id→id| stock_transfers
-  support_ticket_activities -->|fk_sta_ticket ticket_id→id| support_tickets
-  support_ticket_activities -->|fk_sta_user performed_by_user_id→id| users
-  support_ticket_assignment_history -->|fk_stah_from from_user_id→id| users
-  support_ticket_assignment_history -->|fk_stah_ticket ticket_id→id| support_tickets
-  support_ticket_assignment_history -->|fk_stah_to to_user_id→id| users
-  support_ticket_attachments -->|fk_attach_ticket ticket_id→id| support_tickets
-  support_ticket_tasks -->|fk_stt_task task_id→id| tasks
-  support_ticket_tasks -->|fk_stt_ticket ticket_id→id| support_tickets
-  support_tickets -->|fk_st_assignee_user assigned_user_id→id| users
-  support_tickets -->|fk_st_branch branch_id→id| branches
-  support_tickets -->|fk_st_customer customer_id→id| customers
-  support_tickets -->|fk_st_related_task related_task_id→id| tasks
-  support_tickets -->|fk_st_so sales_order_id→id| sales_orders
-  support_tickets -->|fk_st_ticket_type ticket_type_id→id| support_ticket_types
-  task_customer_feedback -->|fk_tcf_task task_id→id| tasks
-  task_customer_feedback -->|fk_tcf_technician technician_id→id| users
-  task_materials -->|fk_tm_task task_id→id| tasks
-  task_photos -->|fk_tp_task task_id→id| tasks
-  task_technicians -->|fk_tt_task task_id→id| tasks
-  task_technicians -->|fk_tt_user user_id→id| users
-  tasks -->|fk_tasks_support_ticket ticket_id→id| support_tickets
-  technician_observation_hygiene_picks -->|fk_tohp_option hygiene_option_id→id| observation_options_hygiene
-  technician_observation_hygiene_picks -->|fk_tohp_section section_id→id| technician_observation_sections
-  technician_observation_pest_picks -->|fk_topp_option pest_option_id→id| observation_options_pest_sighting
-  technician_observation_pest_picks -->|fk_topp_section section_id→id| technician_observation_sections
-  technician_observation_sections -->|fk_tos_task task_id→id| tasks
-  technician_observation_structural_picks -->|fk_tosp_option structural_option_id→id| observation_options_structural
-  technician_observation_structural_picks -->|fk_tosp_section section_id→id| technician_observation_sections
-  technician_tracking -->|fk_technician_tracking_task task_id→id| tasks
-  technician_tracking -->|fk_technician_tracking_user user_id→id| users
-  user_additional_data -->|fk_user_additional_user user_id→id| users
-  user_branches -->|fk_ub_user user_id→id| users
-  user_documents -->|fk_user_doc_user user_id→id| users
-  user_leave_details -->|fk_user_leave_approval_role leave_approval_role_id→id| roles
-  user_leave_details -->|fk_user_leave_user user_id→id| users
-  user_permissions -->|fk_up_action action_id→id| actions
-  user_permissions -->|fk_up_module module_id→id| modules
-  user_permissions -->|fk_up_user user_id→id| users
-  user_salary_details -->|fk_user_salary_user user_id→id| users
-  users -->|fk_users_reporting_manager reporting_manager_id→id| users
-  users -->|fk_users_role role_id→id| roles
-  voucher_allocations -->|fk_va_voucher voucher_id→id| vouchers
-  voucher_audit_logs -->|fk_val_voucher voucher_id→id| vouchers
-  voucher_journal_lines -->|fk_vjl_voucher voucher_id→id| vouchers
-  voucher_settlement_links -->|fk_vsl_voucher voucher_id→id| vouchers
+  asset_units --> inventory_products
+  bill_payment_allocations --> purchase_bills
+  bill_payment_allocations --> vouchers
+  central_stock_entries --> users
+  central_stock_entries --> inventory_products
+  central_stock_entries --> vendors
+  central_stock_ledger --> inventory_products
+  coa_account_heads --> coa_account_heads
+  contract_amendment_logs --> contracts
+  contract_payment_lines --> contracts
+  contract_sales_order_links --> contracts
+  contract_sales_order_links --> sales_orders
+  contract_site_services --> contract_sites
+  contract_sites --> contracts
+  contract_termination_logs --> contracts
+  credit_notes --> sales_invoices
+  debit_notes --> purchase_bills
+  follow_ups --> leads
+  gma_audit_logs --> gma_sheets
+  gma_chemicals --> inventory_products
+  gma_chemicals --> gma_services
+  gma_services --> gma_sites
+  gma_services --> services
+  gma_sheet_approver_roles --> roles
+  gma_sheet_approver_roles --> gma_sheets
+  gma_sheets --> branches
+  gma_sheets --> leads
+  gma_sheets --> gma_prospects
+  gma_sites --> gma_sheets
+  hiring_request_branches --> hiring_requests
+  hiring_request_recipients --> hiring_requests
+  hiring_request_recipients --> users
+  hiring_requests --> users
+  hiring_requests --> roles
+  hiring_requests --> users
+  hiring_requests --> users
+  hrm_attendance_day --> users
+  hrm_leave_request --> users
+  hrm_leave_request --> users
+  hrm_salary_month --> users
+  hrm_salary_month --> users
+  hrm_salary_slip --> hrm_salary_month
+  hsn_code_tax_types --> hsn_codes
+  hsn_code_tax_types --> tax_types
+  incentive_overtime_details --> role_compensation_configuration
+  inventory_products --> inventory_brands
+  invoice_payment_allocations --> sales_invoices
+  invoice_payment_allocations --> vouchers
+  lead_audit_logs --> leads
+  leave_configuration --> role_compensation_configuration
+  leave_configuration --> roles
+  ledger_entries --> ledgers
+  ledgers --> coa_account_heads
+  notification_recipients --> notifications
+  notification_recipients --> users
+  petty_cash_attachments --> petty_cash_requests
+  petty_cash_audit_logs --> users
+  petty_cash_audit_logs --> petty_cash_requests
+  petty_cash_request_recipient_roles --> petty_cash_requests
+  petty_cash_request_recipient_roles --> roles
+  petty_cash_request_recipients --> petty_cash_requests
+  petty_cash_request_recipients --> roles
+  petty_cash_request_recipients --> users
+  petty_cash_requests --> branches
+  petty_cash_requests --> users
+  petty_cash_requests --> users
+  petty_cash_requests --> users
+  petty_cash_requests --> users
+  public_company_details --> public.subscription_plans
+  public_company_documents --> company_details
+  public_company_subscription --> public_company_details
+  public_company_subscription --> public.subscription_plans
+  public_email_verification_tokens --> public_global_users
+  public_role_permissions --> public_actions
+  public_role_permissions --> public_modules
+  public_role_permissions --> public_roles
+  public_tenant_registry --> public_company_details
+  purchase_bill_attachments --> purchase_bills
+  purchase_bill_audit_logs --> purchase_bills
+  purchase_bill_lines --> purchase_bills
+  purchase_order_item --> inventory_products
+  purchase_order_item --> purchase_order
+  purchase_order --> branches
+  purchase_order --> vendors
+  quotation_attachments --> quotations
+  quotation_audit_logs --> quotations
+  quotation_locations --> branches
+  quotation_locations --> quotations
+  quotation_product_lines --> inventory_products
+  quotation_product_lines --> quotations
+  quotation_service_lines --> quotation_locations
+  quotation_service_lines --> quotations
+  quotation_service_lines --> services
+  quotations --> leads
+  quotations --> quotation_prospects
+  quotations --> quotations
+  role_compensation_configuration --> roles
+  role_permissions --> actions
+  role_permissions --> modules
+  role_permissions --> roles
+  salary_details --> role_compensation_configuration
+  sales_invoice_attachments --> sales_invoices
+  sales_invoice_audit_logs --> sales_invoices
+  sales_invoice_lines --> sales_invoices
+  sales_order_cancellation_logs --> sales_orders
+  sales_order_product_lines --> sales_orders
+  sales_order_site_chemicals --> sales_order_sites
+  sales_order_site_services --> sales_order_sites
+  sales_order_sites --> sales_orders
+  service_audit_logs --> services
+  service_category_area --> service_categories
+  service_category_area --> service_sub_categories
+  service_category_fixed --> service_categories
+  service_category_fixed --> service_sub_categories
+  service_category_inspection --> service_categories
+  service_custom_pricing_blocks --> service_categories
+  service_custom_pricing_blocks --> service_sub_categories
+  service_custom_pricing_fields --> service_custom_pricing_blocks
+  service_execution_chemical_usages --> service_executions
+  service_execution_chemical_usages --> inventory_products
+  service_execution_treatments --> service_executions
+  service_execution_treatments --> service_treatments
+  service_executions --> services
+  service_executions --> tasks
+  service_products --> inventory_products
+  service_products --> services
+  service_species --> services
+  services_service_categories --> service_categories
+  services_service_categories --> services
+  services_service_category_area --> service_category_area
+  services_service_category_area --> services
+  services_service_category_fixed --> service_category_fixed
+  services_service_category_fixed --> services
+  services_service_category_inspection --> service_category_inspection
+  services_service_category_inspection --> services
+  services_service_custom_pricing_blocks --> service_custom_pricing_blocks
+  services_service_custom_pricing_blocks --> services
+  services_service_pest_types --> service_pest_types
+  services_service_pest_types --> services
+  services_service_sub_categories --> services
+  services_service_sub_categories --> service_sub_categories
+  services_service_treatments --> services
+  services_service_treatments --> service_treatments
+  stock_approval_logs --> stock_requests
+  stock_ledger --> inventory_products
+  stock_ledger --> inventory_products
+  stock_request_items --> inventory_products
+  stock_request_items --> stock_requests
+  stock_request_recipients --> stock_requests
+  stock_request_recipients --> users
+  stock_request_recipients --> stock_requests
+  stock_transfer_assets --> stock_transfers
+  stock_transfer_items --> inventory_products
+  stock_transfer_items --> stock_transfers
+  support_ticket_activities --> support_tickets
+  support_ticket_activities --> users
+  support_ticket_assignment_history --> users
+  support_ticket_assignment_history --> support_tickets
+  support_ticket_assignment_history --> users
+  support_ticket_attachments --> support_tickets
+  support_ticket_tasks --> tasks
+  support_ticket_tasks --> support_tickets
+  support_tickets --> users
+  support_tickets --> branches
+  support_tickets --> customers
+  support_tickets --> tasks
+  support_tickets --> sales_orders
+  support_tickets --> support_ticket_types
+  task_customer_feedback --> tasks
+  task_customer_feedback --> users
+  task_materials --> tasks
+  task_photos --> tasks
+  task_technicians --> tasks
+  task_technicians --> users
+  tasks --> support_tickets
+  technician_observation_hygiene_picks --> observation_options_hygiene
+  technician_observation_hygiene_picks --> technician_observation_sections
+  technician_observation_pest_picks --> observation_options_pest_sighting
+  technician_observation_pest_picks --> technician_observation_sections
+  technician_observation_sections --> tasks
+  technician_observation_structural_picks --> observation_options_structural
+  technician_observation_structural_picks --> technician_observation_sections
+  technician_tracking --> tasks
+  technician_tracking --> users
+  user_additional_data --> users
+  user_branches --> users
+  user_documents --> users
+  user_leave_details --> roles
+  user_leave_details --> users
+  user_permissions --> actions
+  user_permissions --> modules
+  user_permissions --> users
+  user_salary_details --> users
+  users --> users
+  users --> roles
+  voucher_allocations --> vouchers
+  voucher_audit_logs --> vouchers
+  voucher_journal_lines --> vouchers
+  voucher_settlement_links --> vouchers
 ```
 
 ## Relationships (FKs)
