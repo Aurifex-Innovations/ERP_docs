@@ -1,6 +1,6 @@
 # Project DB Schema
-``` Aa File ne Download kari antigravity ma open karva par Preview nu option avshe tya view karva thi graph proper avshe```
-
+_**``` Aa File ne Download kari antigravity ma open karva par Preview nu option avshe tya view karva thi graph proper avshe```
+**_
 Generated: 2026-05-06T10:17:32.685Z
 
 Source migrations: 102 SQL files
