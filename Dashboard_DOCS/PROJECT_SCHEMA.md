@@ -1,6 +1,7 @@
 # Project DB Schema
 ``` Aa File ne Download kari antigravity ma open karva par Preview nu option avshe tya view karva thi graph proper avshe```
-Generated: 2026-05-06T10:07:07.020Z
+
+Generated: 2026-05-06T10:17:32.685Z
 
 Source migrations: 102 SQL files
 
@@ -2555,173 +2556,178 @@ erDiagram
 
 Note: schema big. Graph split into smaller parts so Mermaid renderer can load.
 
-### flowchart_part_1_of_1
+### group_overview
 
 ```mermaid
 flowchart LR
-  actions["actions"]
-  asset_units["asset_units"]
-  bill_payment_allocations["bill_payment_allocations"]
-  branches["branches"]
-  central_stock_entries["central_stock_entries"]
-  central_stock_ledger["central_stock_ledger"]
-  coa_account_heads["coa_account_heads"]
-  company_details["company_details"]
-  contract_amendment_logs["contract_amendment_logs"]
-  contract_payment_lines["contract_payment_lines"]
-  contract_sales_order_links["contract_sales_order_links"]
-  contract_site_services["contract_site_services"]
-  contract_sites["contract_sites"]
-  contract_termination_logs["contract_termination_logs"]
-  contracts["contracts"]
-  credit_notes["credit_notes"]
-  customers["customers"]
-  debit_notes["debit_notes"]
-  follow_ups["follow_ups"]
-  gma_audit_logs["gma_audit_logs"]
-  gma_chemicals["gma_chemicals"]
-  gma_prospects["gma_prospects"]
-  gma_services["gma_services"]
-  gma_sheet_approver_roles["gma_sheet_approver_roles"]
-  gma_sheets["gma_sheets"]
-  gma_sites["gma_sites"]
-  hiring_request_branches["hiring_request_branches"]
-  hiring_request_recipients["hiring_request_recipients"]
-  hiring_requests["hiring_requests"]
-  hrm_attendance_day["hrm_attendance_day"]
-  hrm_leave_request["hrm_leave_request"]
-  hrm_salary_month["hrm_salary_month"]
-  hrm_salary_slip["hrm_salary_slip"]
-  hsn_code_tax_types["hsn_code_tax_types"]
-  hsn_codes["hsn_codes"]
-  incentive_overtime_details["incentive_overtime_details"]
-  inventory_brands["inventory_brands"]
-  inventory_products["inventory_products"]
-  invoice_payment_allocations["invoice_payment_allocations"]
-  lead_audit_logs["lead_audit_logs"]
-  leads["leads"]
-  leave_configuration["leave_configuration"]
-  ledger_entries["ledger_entries"]
-  ledgers["ledgers"]
-  modules["modules"]
-  notification_recipients["notification_recipients"]
-  notifications["notifications"]
-  observation_options_hygiene["observation_options_hygiene"]
-  observation_options_pest_sighting["observation_options_pest_sighting"]
-  observation_options_structural["observation_options_structural"]
-  petty_cash_attachments["petty_cash_attachments"]
-  petty_cash_audit_logs["petty_cash_audit_logs"]
-  petty_cash_request_recipient_roles["petty_cash_request_recipient_roles"]
-  petty_cash_request_recipients["petty_cash_request_recipients"]
-  petty_cash_requests["petty_cash_requests"]
-  public_actions["public.actions"]
-  public_company_details["public.company_details"]
-  public_company_documents["public.company_documents"]
-  public_company_subscription["public.company_subscription"]
-  public_email_verification_tokens["public.email_verification_tokens"]
-  public_global_users["public.global_users"]
-  public_modules["public.modules"]
-  public_role_permissions["public.role_permissions"]
-  public_roles["public.roles"]
-  public.subscription_plans["public.subscription_plans"]
-  public_tenant_registry["public.tenant_registry"]
-  purchase_bill_attachments["purchase_bill_attachments"]
-  purchase_bill_audit_logs["purchase_bill_audit_logs"]
-  purchase_bill_lines["purchase_bill_lines"]
-  purchase_bills["purchase_bills"]
-  purchase_order["purchase_order"]
-  purchase_order_item["purchase_order_item"]
-  quotation_attachments["quotation_attachments"]
-  quotation_audit_logs["quotation_audit_logs"]
-  quotation_locations["quotation_locations"]
-  quotation_product_lines["quotation_product_lines"]
-  quotation_prospects["quotation_prospects"]
-  quotation_service_lines["quotation_service_lines"]
-  quotations["quotations"]
-  role_compensation_configuration["role_compensation_configuration"]
-  role_permissions["role_permissions"]
-  roles["roles"]
-  salary_details["salary_details"]
-  sales_invoice_attachments["sales_invoice_attachments"]
-  sales_invoice_audit_logs["sales_invoice_audit_logs"]
-  sales_invoice_lines["sales_invoice_lines"]
-  sales_invoices["sales_invoices"]
-  sales_order_cancellation_logs["sales_order_cancellation_logs"]
-  sales_order_product_lines["sales_order_product_lines"]
-  sales_order_site_chemicals["sales_order_site_chemicals"]
-  sales_order_site_services["sales_order_site_services"]
-  sales_order_sites["sales_order_sites"]
-  sales_orders["sales_orders"]
-  service_audit_logs["service_audit_logs"]
-  service_categories["service_categories"]
-  service_category_area["service_category_area"]
-  service_category_fixed["service_category_fixed"]
-  service_category_inspection["service_category_inspection"]
-  service_custom_pricing_blocks["service_custom_pricing_blocks"]
-  service_custom_pricing_fields["service_custom_pricing_fields"]
-  service_execution_chemical_usages["service_execution_chemical_usages"]
-  service_execution_treatments["service_execution_treatments"]
-  service_executions["service_executions"]
-  service_pest_types["service_pest_types"]
-  service_products["service_products"]
-  service_species["service_species"]
-  service_sub_categories["service_sub_categories"]
-  service_treatments["service_treatments"]
-  services["services"]
-  services_service_categories["services_service_categories"]
-  services_service_category_area["services_service_category_area"]
-  services_service_category_fixed["services_service_category_fixed"]
-  services_service_category_inspection["services_service_category_inspection"]
-  services_service_custom_pricing_blocks["services_service_custom_pricing_blocks"]
-  services_service_pest_types["services_service_pest_types"]
-  services_service_sub_categories["services_service_sub_categories"]
-  services_service_treatments["services_service_treatments"]
-  stock_approval_logs["stock_approval_logs"]
-  stock_ledger["stock_ledger"]
-  stock_request_items["stock_request_items"]
-  stock_request_recipients["stock_request_recipients"]
-  stock_requests["stock_requests"]
-  stock_transfer_assets["stock_transfer_assets"]
-  stock_transfer_items["stock_transfer_items"]
-  stock_transfers["stock_transfers"]
-  support_ticket_activities["support_ticket_activities"]
-  support_ticket_assignment_history["support_ticket_assignment_history"]
-  support_ticket_attachments["support_ticket_attachments"]
-  support_ticket_tasks["support_ticket_tasks"]
-  support_ticket_types["support_ticket_types"]
-  support_tickets["support_tickets"]
-  task_customer_feedback["task_customer_feedback"]
-  task_materials["task_materials"]
-  task_photos["task_photos"]
-  task_technicians["task_technicians"]
-  tasks["tasks"]
-  tax_types["tax_types"]
-  technician_observation_hygiene_picks["technician_observation_hygiene_picks"]
-  technician_observation_pest_picks["technician_observation_pest_picks"]
-  technician_observation_sections["technician_observation_sections"]
-  technician_observation_structural_picks["technician_observation_structural_picks"]
-  technician_tracking["technician_tracking"]
-  user_additional_data["user_additional_data"]
-  user_branches["user_branches"]
-  user_documents["user_documents"]
-  user_leave_details["user_leave_details"]
-  user_permissions["user_permissions"]
-  user_salary_details["user_salary_details"]
-  users["users"]
-  vendors["vendors"]
-  voucher_allocations["voucher_allocations"]
-  voucher_audit_logs["voucher_audit_logs"]
-  voucher_journal_lines["voucher_journal_lines"]
-  voucher_settlement_links["voucher_settlement_links"]
-  vouchers["vouchers"]
+  g_asset["asset"]
+  g_bill["bill"]
+  g_central["central"]
+  g_coa["coa"]
+  g_company["company"]
+  g_contract["contract"]
+  g_credit["credit"]
+  g_debit["debit"]
+  g_follow["follow"]
+  g_gma["gma"]
+  g_hiring["hiring"]
+  g_hrm["hrm"]
+  g_hsn["hsn"]
+  g_incentive["incentive"]
+  g_inventory["inventory"]
+  g_invoice["invoice"]
+  g_lead["lead"]
+  g_leave["leave"]
+  g_ledger["ledger"]
+  g_misc["misc"]
+  g_notification["notification"]
+  g_observation["observation"]
+  g_petty["petty"]
+  g_public["public"]
+  g_purchase["purchase"]
+  g_quotation["quotation"]
+  g_role["role"]
+  g_salary["salary"]
+  g_sales["sales"]
+  g_service["service"]
+  g_services["services"]
+  g_stock["stock"]
+  g_support["support"]
+  g_task["task"]
+  g_tax["tax"]
+  g_technician["technician"]
+  g_user["user"]
+  g_voucher["voucher"]
+  g_asset ---|1| g_inventory
+  g_bill ---|1| g_misc
+  g_bill ---|1| g_purchase
+  g_central ---|2| g_inventory
+  g_central ---|2| g_misc
+  g_coa ---|1| g_misc
+  g_company ---|1| g_public
+  g_contract ---|5| g_misc
+  g_contract ---|1| g_sales
+  g_credit ---|1| g_sales
+  g_debit ---|1| g_purchase
+  g_follow ---|1| g_misc
+  g_gma ---|1| g_inventory
+  g_gma ---|4| g_misc
+  g_hiring ---|5| g_misc
+  g_hrm ---|5| g_misc
+  g_hsn ---|1| g_tax
+  g_incentive ---|1| g_role
+  g_inventory ---|1| g_purchase
+  g_inventory ---|1| g_quotation
+  g_inventory ---|2| g_service
+  g_inventory ---|3| g_stock
+  g_invoice ---|1| g_misc
+  g_invoice ---|1| g_sales
+  g_lead ---|1| g_misc
+  g_leave ---|1| g_misc
+  g_leave ---|1| g_role
+  g_ledger ---|1| g_misc
+  g_misc ---|2| g_notification
+  g_misc ---|9| g_petty
+  g_misc ---|2| g_purchase
+  g_misc ---|8| g_quotation
+  g_misc ---|4| g_role
+  g_misc ---|5| g_service
+  g_misc ---|8| g_services
+  g_misc ---|1| g_stock
+  g_misc ---|9| g_support
+  g_misc ---|6| g_task
+  g_misc ---|3| g_technician
+  g_misc ---|9| g_user
+  g_misc ---|4| g_voucher
+  g_observation ---|3| g_technician
+  g_role ---|1| g_salary
+  g_sales ---|1| g_support
+  g_service ---|8| g_services
+```
+
+### group_asset
+
+```mermaid
+flowchart LR
+  subgraph grp_asset["asset"]
+    asset_units["asset_units"]
+  end
+  subgraph grp_asset_nbr_inventory["inventory"]
+    inventory_products["inventory_products"]
+  end
   asset_units --> inventory_products
+```
+
+### group_bill
+
+```mermaid
+flowchart LR
+  subgraph grp_bill["bill"]
+    bill_payment_allocations["bill_payment_allocations"]
+  end
+  subgraph grp_bill_nbr_misc["misc"]
+    vouchers["vouchers"]
+  end
+  subgraph grp_bill_nbr_purchase["purchase"]
+    purchase_bills["purchase_bills"]
+  end
   bill_payment_allocations --> purchase_bills
   bill_payment_allocations --> vouchers
+```
+
+### group_central
+
+```mermaid
+flowchart LR
+  subgraph grp_central["central"]
+    central_stock_entries["central_stock_entries"]
+    central_stock_ledger["central_stock_ledger"]
+  end
+  subgraph grp_central_nbr_inventory["inventory"]
+    inventory_products["inventory_products"]
+  end
+  subgraph grp_central_nbr_misc["misc"]
+    users["users"]
+    vendors["vendors"]
+  end
   central_stock_entries --> users
   central_stock_entries --> inventory_products
   central_stock_entries --> vendors
   central_stock_ledger --> inventory_products
+```
+
+### group_coa
+
+```mermaid
+flowchart LR
+  subgraph grp_coa["coa"]
+    coa_account_heads["coa_account_heads"]
+  end
+  subgraph grp_coa_nbr_misc["misc"]
+    ledgers["ledgers"]
+  end
   coa_account_heads --> coa_account_heads
+  ledgers --> coa_account_heads
+```
+
+### group_contract
+
+```mermaid
+flowchart LR
+  subgraph grp_contract["contract"]
+    contract_amendment_logs["contract_amendment_logs"]
+    contract_payment_lines["contract_payment_lines"]
+    contract_sales_order_links["contract_sales_order_links"]
+    contract_site_services["contract_site_services"]
+    contract_sites["contract_sites"]
+    contract_termination_logs["contract_termination_logs"]
+  end
+  subgraph grp_contract_nbr_misc["misc"]
+    contracts["contracts"]
+  end
+  subgraph grp_contract_nbr_sales["sales"]
+    sales_orders["sales_orders"]
+  end
   contract_amendment_logs --> contracts
   contract_payment_lines --> contracts
   contract_sales_order_links --> contracts
@@ -2729,9 +2735,69 @@ flowchart LR
   contract_site_services --> contract_sites
   contract_sites --> contracts
   contract_termination_logs --> contracts
+```
+
+### group_credit
+
+```mermaid
+flowchart LR
+  subgraph grp_credit["credit"]
+    credit_notes["credit_notes"]
+  end
+  subgraph grp_credit_nbr_sales["sales"]
+    sales_invoices["sales_invoices"]
+  end
   credit_notes --> sales_invoices
+```
+
+### group_debit
+
+```mermaid
+flowchart LR
+  subgraph grp_debit["debit"]
+    debit_notes["debit_notes"]
+  end
+  subgraph grp_debit_nbr_purchase["purchase"]
+    purchase_bills["purchase_bills"]
+  end
   debit_notes --> purchase_bills
+```
+
+### group_follow
+
+```mermaid
+flowchart LR
+  subgraph grp_follow["follow"]
+    follow_ups["follow_ups"]
+  end
+  subgraph grp_follow_nbr_misc["misc"]
+    leads["leads"]
+  end
   follow_ups --> leads
+```
+
+### group_gma
+
+```mermaid
+flowchart LR
+  subgraph grp_gma["gma"]
+    gma_audit_logs["gma_audit_logs"]
+    gma_chemicals["gma_chemicals"]
+    gma_prospects["gma_prospects"]
+    gma_services["gma_services"]
+    gma_sheet_approver_roles["gma_sheet_approver_roles"]
+    gma_sheets["gma_sheets"]
+    gma_sites["gma_sites"]
+  end
+  subgraph grp_gma_nbr_inventory["inventory"]
+    inventory_products["inventory_products"]
+  end
+  subgraph grp_gma_nbr_misc["misc"]
+    branches["branches"]
+    leads["leads"]
+    roles["roles"]
+    services["services"]
+  end
   gma_audit_logs --> gma_sheets
   gma_chemicals --> inventory_products
   gma_chemicals --> gma_services
@@ -2743,32 +2809,467 @@ flowchart LR
   gma_sheets --> leads
   gma_sheets --> gma_prospects
   gma_sites --> gma_sheets
+```
+
+### group_hiring
+
+```mermaid
+flowchart LR
+  subgraph grp_hiring["hiring"]
+    hiring_request_branches["hiring_request_branches"]
+    hiring_request_recipients["hiring_request_recipients"]
+    hiring_requests["hiring_requests"]
+  end
+  subgraph grp_hiring_nbr_misc["misc"]
+    roles["roles"]
+    users["users"]
+  end
   hiring_request_branches --> hiring_requests
   hiring_request_recipients --> hiring_requests
   hiring_request_recipients --> users
   hiring_requests --> users
   hiring_requests --> roles
-  hiring_requests --> users
-  hiring_requests --> users
+```
+
+### group_hrm
+
+```mermaid
+flowchart LR
+  subgraph grp_hrm["hrm"]
+    hrm_attendance_day["hrm_attendance_day"]
+    hrm_leave_request["hrm_leave_request"]
+    hrm_salary_month["hrm_salary_month"]
+    hrm_salary_slip["hrm_salary_slip"]
+  end
+  subgraph grp_hrm_nbr_misc["misc"]
+    users["users"]
+  end
   hrm_attendance_day --> users
   hrm_leave_request --> users
-  hrm_leave_request --> users
-  hrm_salary_month --> users
   hrm_salary_month --> users
   hrm_salary_slip --> hrm_salary_month
+```
+
+### group_hsn
+
+```mermaid
+flowchart LR
+  subgraph grp_hsn["hsn"]
+    hsn_code_tax_types["hsn_code_tax_types"]
+    hsn_codes["hsn_codes"]
+  end
+  subgraph grp_hsn_nbr_tax["tax"]
+    tax_types["tax_types"]
+  end
   hsn_code_tax_types --> hsn_codes
   hsn_code_tax_types --> tax_types
+```
+
+### group_incentive
+
+```mermaid
+flowchart LR
+  subgraph grp_incentive["incentive"]
+    incentive_overtime_details["incentive_overtime_details"]
+  end
+  subgraph grp_incentive_nbr_role["role"]
+    role_compensation_configuration["role_compensation_configuration"]
+  end
   incentive_overtime_details --> role_compensation_configuration
+```
+
+### group_inventory
+
+```mermaid
+flowchart LR
+  subgraph grp_inventory["inventory"]
+    inventory_brands["inventory_brands"]
+    inventory_products["inventory_products"]
+  end
+  subgraph grp_inventory_nbr_asset["asset"]
+    asset_units["asset_units"]
+  end
+  subgraph grp_inventory_nbr_central["central"]
+    central_stock_entries["central_stock_entries"]
+    central_stock_ledger["central_stock_ledger"]
+  end
+  subgraph grp_inventory_nbr_gma["gma"]
+    gma_chemicals["gma_chemicals"]
+  end
+  subgraph grp_inventory_nbr_purchase["purchase"]
+    purchase_order_item["purchase_order_item"]
+  end
+  subgraph grp_inventory_nbr_quotation["quotation"]
+    quotation_product_lines["quotation_product_lines"]
+  end
+  subgraph grp_inventory_nbr_service["service"]
+    service_execution_chemical_usages["service_execution_chemical_usages"]
+    service_products["service_products"]
+  end
+  subgraph grp_inventory_nbr_stock["stock"]
+    stock_ledger["stock_ledger"]
+    stock_request_items["stock_request_items"]
+    stock_transfer_items["stock_transfer_items"]
+  end
+  asset_units --> inventory_products
+  central_stock_entries --> inventory_products
+  central_stock_ledger --> inventory_products
+  gma_chemicals --> inventory_products
   inventory_products --> inventory_brands
+  purchase_order_item --> inventory_products
+  quotation_product_lines --> inventory_products
+  service_execution_chemical_usages --> inventory_products
+  service_products --> inventory_products
+  stock_ledger --> inventory_products
+  stock_request_items --> inventory_products
+  stock_transfer_items --> inventory_products
+```
+
+### group_invoice
+
+```mermaid
+flowchart LR
+  subgraph grp_invoice["invoice"]
+    invoice_payment_allocations["invoice_payment_allocations"]
+  end
+  subgraph grp_invoice_nbr_misc["misc"]
+    vouchers["vouchers"]
+  end
+  subgraph grp_invoice_nbr_sales["sales"]
+    sales_invoices["sales_invoices"]
+  end
   invoice_payment_allocations --> sales_invoices
   invoice_payment_allocations --> vouchers
+```
+
+### group_lead
+
+```mermaid
+flowchart LR
+  subgraph grp_lead["lead"]
+    lead_audit_logs["lead_audit_logs"]
+  end
+  subgraph grp_lead_nbr_misc["misc"]
+    leads["leads"]
+  end
   lead_audit_logs --> leads
+```
+
+### group_leave
+
+```mermaid
+flowchart LR
+  subgraph grp_leave["leave"]
+    leave_configuration["leave_configuration"]
+  end
+  subgraph grp_leave_nbr_misc["misc"]
+    roles["roles"]
+  end
+  subgraph grp_leave_nbr_role["role"]
+    role_compensation_configuration["role_compensation_configuration"]
+  end
   leave_configuration --> role_compensation_configuration
+  leave_configuration --> roles
+```
+
+### group_ledger
+
+```mermaid
+flowchart LR
+  subgraph grp_ledger["ledger"]
+    ledger_entries["ledger_entries"]
+  end
+  subgraph grp_ledger_nbr_misc["misc"]
+    ledgers["ledgers"]
+  end
+  ledger_entries --> ledgers
+```
+
+### group_misc
+
+```mermaid
+flowchart LR
+  subgraph grp_misc["misc"]
+    actions["actions"]
+    branches["branches"]
+    contracts["contracts"]
+    customers["customers"]
+    leads["leads"]
+    ledgers["ledgers"]
+    modules["modules"]
+    notifications["notifications"]
+    quotations["quotations"]
+    roles["roles"]
+    services["services"]
+    tasks["tasks"]
+    users["users"]
+    vendors["vendors"]
+    vouchers["vouchers"]
+  end
+  subgraph grp_misc_nbr_bill["bill"]
+    bill_payment_allocations["bill_payment_allocations"]
+  end
+  subgraph grp_misc_nbr_central["central"]
+    central_stock_entries["central_stock_entries"]
+  end
+  subgraph grp_misc_nbr_coa["coa"]
+    coa_account_heads["coa_account_heads"]
+  end
+  subgraph grp_misc_nbr_contract["contract"]
+    contract_amendment_logs["contract_amendment_logs"]
+    contract_payment_lines["contract_payment_lines"]
+    contract_sales_order_links["contract_sales_order_links"]
+    contract_sites["contract_sites"]
+    contract_termination_logs["contract_termination_logs"]
+  end
+  subgraph grp_misc_nbr_follow["follow"]
+    follow_ups["follow_ups"]
+  end
+  subgraph grp_misc_nbr_gma["gma"]
+    gma_services["gma_services"]
+    gma_sheet_approver_roles["gma_sheet_approver_roles"]
+    gma_sheets["gma_sheets"]
+  end
+  subgraph grp_misc_nbr_hiring["hiring"]
+    hiring_request_recipients["hiring_request_recipients"]
+    hiring_requests["hiring_requests"]
+  end
+  subgraph grp_misc_nbr_hrm["hrm"]
+    hrm_attendance_day["hrm_attendance_day"]
+    hrm_leave_request["hrm_leave_request"]
+    hrm_salary_month["hrm_salary_month"]
+  end
+  subgraph grp_misc_nbr_invoice["invoice"]
+    invoice_payment_allocations["invoice_payment_allocations"]
+  end
+  subgraph grp_misc_nbr_lead["lead"]
+    lead_audit_logs["lead_audit_logs"]
+  end
+  subgraph grp_misc_nbr_leave["leave"]
+    leave_configuration["leave_configuration"]
+  end
+  subgraph grp_misc_nbr_ledger["ledger"]
+    ledger_entries["ledger_entries"]
+  end
+  subgraph grp_misc_nbr_notification["notification"]
+    notification_recipients["notification_recipients"]
+  end
+  subgraph grp_misc_nbr_petty["petty"]
+    petty_cash_audit_logs["petty_cash_audit_logs"]
+    petty_cash_request_recipient_roles["petty_cash_request_recipient_roles"]
+    petty_cash_request_recipients["petty_cash_request_recipients"]
+    petty_cash_requests["petty_cash_requests"]
+  end
+  subgraph grp_misc_nbr_purchase["purchase"]
+    purchase_order["purchase_order"]
+  end
+  subgraph grp_misc_nbr_quotation["quotation"]
+    quotation_attachments["quotation_attachments"]
+    quotation_audit_logs["quotation_audit_logs"]
+    quotation_locations["quotation_locations"]
+    quotation_product_lines["quotation_product_lines"]
+    quotation_prospects["quotation_prospects"]
+    quotation_service_lines["quotation_service_lines"]
+  end
+  subgraph grp_misc_nbr_role["role"]
+    role_compensation_configuration["role_compensation_configuration"]
+    role_permissions["role_permissions"]
+  end
+  subgraph grp_misc_nbr_service["service"]
+    service_audit_logs["service_audit_logs"]
+    service_executions["service_executions"]
+    service_products["service_products"]
+    service_species["service_species"]
+  end
+  subgraph grp_misc_nbr_services["services"]
+    services_service_categories["services_service_categories"]
+    services_service_category_area["services_service_category_area"]
+    services_service_category_fixed["services_service_category_fixed"]
+    services_service_category_inspection["services_service_category_inspection"]
+    services_service_custom_pricing_blocks["services_service_custom_pricing_blocks"]
+    services_service_pest_types["services_service_pest_types"]
+    services_service_sub_categories["services_service_sub_categories"]
+    services_service_treatments["services_service_treatments"]
+  end
+  subgraph grp_misc_nbr_stock["stock"]
+    stock_request_recipients["stock_request_recipients"]
+  end
+  subgraph grp_misc_nbr_support["support"]
+    support_ticket_activities["support_ticket_activities"]
+    support_ticket_assignment_history["support_ticket_assignment_history"]
+    support_ticket_tasks["support_ticket_tasks"]
+    support_tickets["support_tickets"]
+  end
+  subgraph grp_misc_nbr_task["task"]
+    task_customer_feedback["task_customer_feedback"]
+    task_materials["task_materials"]
+    task_photos["task_photos"]
+    task_technicians["task_technicians"]
+  end
+  subgraph grp_misc_nbr_technician["technician"]
+    technician_observation_sections["technician_observation_sections"]
+    technician_tracking["technician_tracking"]
+  end
+  subgraph grp_misc_nbr_user["user"]
+    user_additional_data["user_additional_data"]
+    user_branches["user_branches"]
+    user_documents["user_documents"]
+    user_leave_details["user_leave_details"]
+    user_permissions["user_permissions"]
+    user_salary_details["user_salary_details"]
+  end
+  subgraph grp_misc_nbr_voucher["voucher"]
+    voucher_allocations["voucher_allocations"]
+    voucher_audit_logs["voucher_audit_logs"]
+    voucher_journal_lines["voucher_journal_lines"]
+    voucher_settlement_links["voucher_settlement_links"]
+  end
+  bill_payment_allocations --> vouchers
+  central_stock_entries --> users
+  central_stock_entries --> vendors
+  contract_amendment_logs --> contracts
+  contract_payment_lines --> contracts
+  contract_sales_order_links --> contracts
+  contract_sites --> contracts
+  contract_termination_logs --> contracts
+  follow_ups --> leads
+  gma_services --> services
+  gma_sheet_approver_roles --> roles
+  gma_sheets --> branches
+  gma_sheets --> leads
+  hiring_request_recipients --> users
+  hiring_requests --> users
+  hiring_requests --> roles
+  hrm_attendance_day --> users
+  hrm_leave_request --> users
+  hrm_salary_month --> users
+  invoice_payment_allocations --> vouchers
+  lead_audit_logs --> leads
   leave_configuration --> roles
   ledger_entries --> ledgers
   ledgers --> coa_account_heads
   notification_recipients --> notifications
   notification_recipients --> users
+  petty_cash_audit_logs --> users
+  petty_cash_request_recipient_roles --> roles
+  petty_cash_request_recipients --> roles
+  petty_cash_request_recipients --> users
+  petty_cash_requests --> branches
+  petty_cash_requests --> users
+  purchase_order --> branches
+  purchase_order --> vendors
+  quotation_attachments --> quotations
+  quotation_audit_logs --> quotations
+  quotation_locations --> branches
+  quotation_locations --> quotations
+  quotation_product_lines --> quotations
+  quotation_service_lines --> quotations
+  quotation_service_lines --> services
+  quotations --> leads
+  quotations --> quotation_prospects
+  quotations --> quotations
+  role_compensation_configuration --> roles
+  role_permissions --> actions
+  role_permissions --> modules
+  role_permissions --> roles
+  service_audit_logs --> services
+  service_executions --> services
+  service_executions --> tasks
+  service_products --> services
+  service_species --> services
+  services_service_categories --> services
+  services_service_category_area --> services
+  services_service_category_fixed --> services
+  services_service_category_inspection --> services
+  services_service_custom_pricing_blocks --> services
+  services_service_pest_types --> services
+  services_service_sub_categories --> services
+  services_service_treatments --> services
+  stock_request_recipients --> users
+  support_ticket_activities --> users
+  support_ticket_assignment_history --> users
+  support_ticket_tasks --> tasks
+  support_tickets --> users
+  support_tickets --> branches
+  support_tickets --> customers
+  support_tickets --> tasks
+  task_customer_feedback --> tasks
+  task_customer_feedback --> users
+  task_materials --> tasks
+  task_photos --> tasks
+  task_technicians --> tasks
+  task_technicians --> users
+  tasks --> support_tickets
+  technician_observation_sections --> tasks
+  technician_tracking --> tasks
+  technician_tracking --> users
+  user_additional_data --> users
+  user_branches --> users
+  user_documents --> users
+  user_leave_details --> roles
+  user_leave_details --> users
+  user_permissions --> actions
+  user_permissions --> modules
+  user_permissions --> users
+  user_salary_details --> users
+  users --> users
+  users --> roles
+  voucher_allocations --> vouchers
+  voucher_audit_logs --> vouchers
+  voucher_journal_lines --> vouchers
+  voucher_settlement_links --> vouchers
+```
+
+### group_notification
+
+```mermaid
+flowchart LR
+  subgraph grp_notification["notification"]
+    notification_recipients["notification_recipients"]
+  end
+  subgraph grp_notification_nbr_misc["misc"]
+    notifications["notifications"]
+    users["users"]
+  end
+  notification_recipients --> notifications
+  notification_recipients --> users
+```
+
+### group_observation
+
+```mermaid
+flowchart LR
+  subgraph grp_observation["observation"]
+    observation_options_hygiene["observation_options_hygiene"]
+    observation_options_pest_sighting["observation_options_pest_sighting"]
+    observation_options_structural["observation_options_structural"]
+  end
+  subgraph grp_observation_nbr_technician["technician"]
+    technician_observation_hygiene_picks["technician_observation_hygiene_picks"]
+    technician_observation_pest_picks["technician_observation_pest_picks"]
+    technician_observation_structural_picks["technician_observation_structural_picks"]
+  end
+  technician_observation_hygiene_picks --> observation_options_hygiene
+  technician_observation_pest_picks --> observation_options_pest_sighting
+  technician_observation_structural_picks --> observation_options_structural
+```
+
+### group_petty
+
+```mermaid
+flowchart LR
+  subgraph grp_petty["petty"]
+    petty_cash_attachments["petty_cash_attachments"]
+    petty_cash_audit_logs["petty_cash_audit_logs"]
+    petty_cash_request_recipient_roles["petty_cash_request_recipient_roles"]
+    petty_cash_request_recipients["petty_cash_request_recipients"]
+    petty_cash_requests["petty_cash_requests"]
+  end
+  subgraph grp_petty_nbr_misc["misc"]
+    branches["branches"]
+    roles["roles"]
+    users["users"]
+  end
   petty_cash_attachments --> petty_cash_requests
   petty_cash_audit_logs --> users
   petty_cash_audit_logs --> petty_cash_requests
@@ -2779,9 +3280,28 @@ flowchart LR
   petty_cash_request_recipients --> users
   petty_cash_requests --> branches
   petty_cash_requests --> users
-  petty_cash_requests --> users
-  petty_cash_requests --> users
-  petty_cash_requests --> users
+```
+
+### group_public
+
+```mermaid
+flowchart LR
+  subgraph grp_public["public"]
+    public_actions["public.actions"]
+    public_company_details["public.company_details"]
+    public_company_documents["public.company_documents"]
+    public_company_subscription["public.company_subscription"]
+    public_email_verification_tokens["public.email_verification_tokens"]
+    public_global_users["public.global_users"]
+    public_modules["public.modules"]
+    public_role_permissions["public.role_permissions"]
+    public_roles["public.roles"]
+    public.subscription_plans["public.subscription_plans"]
+    public_tenant_registry["public.tenant_registry"]
+  end
+  subgraph grp_public_nbr_company["company"]
+    company_details["company_details"]
+  end
   public_company_details --> public.subscription_plans
   public_company_documents --> company_details
   public_company_subscription --> public_company_details
@@ -2791,6 +3311,35 @@ flowchart LR
   public_role_permissions --> public_modules
   public_role_permissions --> public_roles
   public_tenant_registry --> public_company_details
+```
+
+### group_purchase
+
+```mermaid
+flowchart LR
+  subgraph grp_purchase["purchase"]
+    purchase_bill_attachments["purchase_bill_attachments"]
+    purchase_bill_audit_logs["purchase_bill_audit_logs"]
+    purchase_bill_lines["purchase_bill_lines"]
+    purchase_bills["purchase_bills"]
+    purchase_order["purchase_order"]
+    purchase_order_item["purchase_order_item"]
+  end
+  subgraph grp_purchase_nbr_bill["bill"]
+    bill_payment_allocations["bill_payment_allocations"]
+  end
+  subgraph grp_purchase_nbr_debit["debit"]
+    debit_notes["debit_notes"]
+  end
+  subgraph grp_purchase_nbr_inventory["inventory"]
+    inventory_products["inventory_products"]
+  end
+  subgraph grp_purchase_nbr_misc["misc"]
+    branches["branches"]
+    vendors["vendors"]
+  end
+  bill_payment_allocations --> purchase_bills
+  debit_notes --> purchase_bills
   purchase_bill_attachments --> purchase_bills
   purchase_bill_audit_logs --> purchase_bills
   purchase_bill_lines --> purchase_bills
@@ -2798,6 +3347,28 @@ flowchart LR
   purchase_order_item --> purchase_order
   purchase_order --> branches
   purchase_order --> vendors
+```
+
+### group_quotation
+
+```mermaid
+flowchart LR
+  subgraph grp_quotation["quotation"]
+    quotation_attachments["quotation_attachments"]
+    quotation_audit_logs["quotation_audit_logs"]
+    quotation_locations["quotation_locations"]
+    quotation_product_lines["quotation_product_lines"]
+    quotation_prospects["quotation_prospects"]
+    quotation_service_lines["quotation_service_lines"]
+  end
+  subgraph grp_quotation_nbr_inventory["inventory"]
+    inventory_products["inventory_products"]
+  end
+  subgraph grp_quotation_nbr_misc["misc"]
+    branches["branches"]
+    quotations["quotations"]
+    services["services"]
+  end
   quotation_attachments --> quotations
   quotation_audit_logs --> quotations
   quotation_locations --> branches
@@ -2807,14 +3378,84 @@ flowchart LR
   quotation_service_lines --> quotation_locations
   quotation_service_lines --> quotations
   quotation_service_lines --> services
-  quotations --> leads
   quotations --> quotation_prospects
-  quotations --> quotations
+```
+
+### group_role
+
+```mermaid
+flowchart LR
+  subgraph grp_role["role"]
+    role_compensation_configuration["role_compensation_configuration"]
+    role_permissions["role_permissions"]
+  end
+  subgraph grp_role_nbr_incentive["incentive"]
+    incentive_overtime_details["incentive_overtime_details"]
+  end
+  subgraph grp_role_nbr_leave["leave"]
+    leave_configuration["leave_configuration"]
+  end
+  subgraph grp_role_nbr_misc["misc"]
+    actions["actions"]
+    modules["modules"]
+    roles["roles"]
+  end
+  subgraph grp_role_nbr_salary["salary"]
+    salary_details["salary_details"]
+  end
+  incentive_overtime_details --> role_compensation_configuration
+  leave_configuration --> role_compensation_configuration
   role_compensation_configuration --> roles
   role_permissions --> actions
   role_permissions --> modules
   role_permissions --> roles
   salary_details --> role_compensation_configuration
+```
+
+### group_salary
+
+```mermaid
+flowchart LR
+  subgraph grp_salary["salary"]
+    salary_details["salary_details"]
+  end
+  subgraph grp_salary_nbr_role["role"]
+    role_compensation_configuration["role_compensation_configuration"]
+  end
+  salary_details --> role_compensation_configuration
+```
+
+### group_sales
+
+```mermaid
+flowchart LR
+  subgraph grp_sales["sales"]
+    sales_invoice_attachments["sales_invoice_attachments"]
+    sales_invoice_audit_logs["sales_invoice_audit_logs"]
+    sales_invoice_lines["sales_invoice_lines"]
+    sales_invoices["sales_invoices"]
+    sales_order_cancellation_logs["sales_order_cancellation_logs"]
+    sales_order_product_lines["sales_order_product_lines"]
+    sales_order_site_chemicals["sales_order_site_chemicals"]
+    sales_order_site_services["sales_order_site_services"]
+    sales_order_sites["sales_order_sites"]
+    sales_orders["sales_orders"]
+  end
+  subgraph grp_sales_nbr_contract["contract"]
+    contract_sales_order_links["contract_sales_order_links"]
+  end
+  subgraph grp_sales_nbr_credit["credit"]
+    credit_notes["credit_notes"]
+  end
+  subgraph grp_sales_nbr_invoice["invoice"]
+    invoice_payment_allocations["invoice_payment_allocations"]
+  end
+  subgraph grp_sales_nbr_support["support"]
+    support_tickets["support_tickets"]
+  end
+  contract_sales_order_links --> sales_orders
+  credit_notes --> sales_invoices
+  invoice_payment_allocations --> sales_invoices
   sales_invoice_attachments --> sales_invoices
   sales_invoice_audit_logs --> sales_invoices
   sales_invoice_lines --> sales_invoices
@@ -2823,6 +3464,47 @@ flowchart LR
   sales_order_site_chemicals --> sales_order_sites
   sales_order_site_services --> sales_order_sites
   sales_order_sites --> sales_orders
+  support_tickets --> sales_orders
+```
+
+### group_service
+
+```mermaid
+flowchart LR
+  subgraph grp_service["service"]
+    service_audit_logs["service_audit_logs"]
+    service_categories["service_categories"]
+    service_category_area["service_category_area"]
+    service_category_fixed["service_category_fixed"]
+    service_category_inspection["service_category_inspection"]
+    service_custom_pricing_blocks["service_custom_pricing_blocks"]
+    service_custom_pricing_fields["service_custom_pricing_fields"]
+    service_execution_chemical_usages["service_execution_chemical_usages"]
+    service_execution_treatments["service_execution_treatments"]
+    service_executions["service_executions"]
+    service_pest_types["service_pest_types"]
+    service_products["service_products"]
+    service_species["service_species"]
+    service_sub_categories["service_sub_categories"]
+    service_treatments["service_treatments"]
+  end
+  subgraph grp_service_nbr_inventory["inventory"]
+    inventory_products["inventory_products"]
+  end
+  subgraph grp_service_nbr_misc["misc"]
+    services["services"]
+    tasks["tasks"]
+  end
+  subgraph grp_service_nbr_services["services"]
+    services_service_categories["services_service_categories"]
+    services_service_category_area["services_service_category_area"]
+    services_service_category_fixed["services_service_category_fixed"]
+    services_service_category_inspection["services_service_category_inspection"]
+    services_service_custom_pricing_blocks["services_service_custom_pricing_blocks"]
+    services_service_pest_types["services_service_pest_types"]
+    services_service_sub_categories["services_service_sub_categories"]
+    services_service_treatments["services_service_treatments"]
+  end
   service_audit_logs --> services
   service_category_area --> service_categories
   service_category_area --> service_sub_categories
@@ -2842,6 +3524,43 @@ flowchart LR
   service_products --> services
   service_species --> services
   services_service_categories --> service_categories
+  services_service_category_area --> service_category_area
+  services_service_category_fixed --> service_category_fixed
+  services_service_category_inspection --> service_category_inspection
+  services_service_custom_pricing_blocks --> service_custom_pricing_blocks
+  services_service_pest_types --> service_pest_types
+  services_service_sub_categories --> service_sub_categories
+  services_service_treatments --> service_treatments
+```
+
+### group_services
+
+```mermaid
+flowchart LR
+  subgraph grp_services["services"]
+    services_service_categories["services_service_categories"]
+    services_service_category_area["services_service_category_area"]
+    services_service_category_fixed["services_service_category_fixed"]
+    services_service_category_inspection["services_service_category_inspection"]
+    services_service_custom_pricing_blocks["services_service_custom_pricing_blocks"]
+    services_service_pest_types["services_service_pest_types"]
+    services_service_sub_categories["services_service_sub_categories"]
+    services_service_treatments["services_service_treatments"]
+  end
+  subgraph grp_services_nbr_misc["misc"]
+    services["services"]
+  end
+  subgraph grp_services_nbr_service["service"]
+    service_categories["service_categories"]
+    service_category_area["service_category_area"]
+    service_category_fixed["service_category_fixed"]
+    service_category_inspection["service_category_inspection"]
+    service_custom_pricing_blocks["service_custom_pricing_blocks"]
+    service_pest_types["service_pest_types"]
+    service_sub_categories["service_sub_categories"]
+    service_treatments["service_treatments"]
+  end
+  services_service_categories --> service_categories
   services_service_categories --> services
   services_service_category_area --> service_category_area
   services_service_category_area --> services
@@ -2857,22 +3576,64 @@ flowchart LR
   services_service_sub_categories --> service_sub_categories
   services_service_treatments --> services
   services_service_treatments --> service_treatments
+```
+
+### group_stock
+
+```mermaid
+flowchart LR
+  subgraph grp_stock["stock"]
+    stock_approval_logs["stock_approval_logs"]
+    stock_ledger["stock_ledger"]
+    stock_request_items["stock_request_items"]
+    stock_request_recipients["stock_request_recipients"]
+    stock_requests["stock_requests"]
+    stock_transfer_assets["stock_transfer_assets"]
+    stock_transfer_items["stock_transfer_items"]
+    stock_transfers["stock_transfers"]
+  end
+  subgraph grp_stock_nbr_inventory["inventory"]
+    inventory_products["inventory_products"]
+  end
+  subgraph grp_stock_nbr_misc["misc"]
+    users["users"]
+  end
   stock_approval_logs --> stock_requests
-  stock_ledger --> inventory_products
   stock_ledger --> inventory_products
   stock_request_items --> inventory_products
   stock_request_items --> stock_requests
   stock_request_recipients --> stock_requests
   stock_request_recipients --> users
-  stock_request_recipients --> stock_requests
   stock_transfer_assets --> stock_transfers
   stock_transfer_items --> inventory_products
   stock_transfer_items --> stock_transfers
+```
+
+### group_support
+
+```mermaid
+flowchart LR
+  subgraph grp_support["support"]
+    support_ticket_activities["support_ticket_activities"]
+    support_ticket_assignment_history["support_ticket_assignment_history"]
+    support_ticket_attachments["support_ticket_attachments"]
+    support_ticket_tasks["support_ticket_tasks"]
+    support_ticket_types["support_ticket_types"]
+    support_tickets["support_tickets"]
+  end
+  subgraph grp_support_nbr_misc["misc"]
+    branches["branches"]
+    customers["customers"]
+    tasks["tasks"]
+    users["users"]
+  end
+  subgraph grp_support_nbr_sales["sales"]
+    sales_orders["sales_orders"]
+  end
   support_ticket_activities --> support_tickets
   support_ticket_activities --> users
   support_ticket_assignment_history --> users
   support_ticket_assignment_history --> support_tickets
-  support_ticket_assignment_history --> users
   support_ticket_attachments --> support_tickets
   support_ticket_tasks --> tasks
   support_ticket_tasks --> support_tickets
@@ -2882,13 +3643,64 @@ flowchart LR
   support_tickets --> tasks
   support_tickets --> sales_orders
   support_tickets --> support_ticket_types
+  tasks --> support_tickets
+```
+
+### group_task
+
+```mermaid
+flowchart LR
+  subgraph grp_task["task"]
+    task_customer_feedback["task_customer_feedback"]
+    task_materials["task_materials"]
+    task_photos["task_photos"]
+    task_technicians["task_technicians"]
+  end
+  subgraph grp_task_nbr_misc["misc"]
+    tasks["tasks"]
+    users["users"]
+  end
   task_customer_feedback --> tasks
   task_customer_feedback --> users
   task_materials --> tasks
   task_photos --> tasks
   task_technicians --> tasks
   task_technicians --> users
-  tasks --> support_tickets
+```
+
+### group_tax
+
+```mermaid
+flowchart LR
+  subgraph grp_tax["tax"]
+    tax_types["tax_types"]
+  end
+  subgraph grp_tax_nbr_hsn["hsn"]
+    hsn_code_tax_types["hsn_code_tax_types"]
+  end
+  hsn_code_tax_types --> tax_types
+```
+
+### group_technician
+
+```mermaid
+flowchart LR
+  subgraph grp_technician["technician"]
+    technician_observation_hygiene_picks["technician_observation_hygiene_picks"]
+    technician_observation_pest_picks["technician_observation_pest_picks"]
+    technician_observation_sections["technician_observation_sections"]
+    technician_observation_structural_picks["technician_observation_structural_picks"]
+    technician_tracking["technician_tracking"]
+  end
+  subgraph grp_technician_nbr_misc["misc"]
+    tasks["tasks"]
+    users["users"]
+  end
+  subgraph grp_technician_nbr_observation["observation"]
+    observation_options_hygiene["observation_options_hygiene"]
+    observation_options_pest_sighting["observation_options_pest_sighting"]
+    observation_options_structural["observation_options_structural"]
+  end
   technician_observation_hygiene_picks --> observation_options_hygiene
   technician_observation_hygiene_picks --> technician_observation_sections
   technician_observation_pest_picks --> observation_options_pest_sighting
@@ -2898,6 +3710,26 @@ flowchart LR
   technician_observation_structural_picks --> technician_observation_sections
   technician_tracking --> tasks
   technician_tracking --> users
+```
+
+### group_user
+
+```mermaid
+flowchart LR
+  subgraph grp_user["user"]
+    user_additional_data["user_additional_data"]
+    user_branches["user_branches"]
+    user_documents["user_documents"]
+    user_leave_details["user_leave_details"]
+    user_permissions["user_permissions"]
+    user_salary_details["user_salary_details"]
+  end
+  subgraph grp_user_nbr_misc["misc"]
+    actions["actions"]
+    modules["modules"]
+    roles["roles"]
+    users["users"]
+  end
   user_additional_data --> users
   user_branches --> users
   user_documents --> users
@@ -2907,8 +3739,21 @@ flowchart LR
   user_permissions --> modules
   user_permissions --> users
   user_salary_details --> users
-  users --> users
-  users --> roles
+```
+
+### group_voucher
+
+```mermaid
+flowchart LR
+  subgraph grp_voucher["voucher"]
+    voucher_allocations["voucher_allocations"]
+    voucher_audit_logs["voucher_audit_logs"]
+    voucher_journal_lines["voucher_journal_lines"]
+    voucher_settlement_links["voucher_settlement_links"]
+  end
+  subgraph grp_voucher_nbr_misc["misc"]
+    vouchers["vouchers"]
+  end
   voucher_allocations --> vouchers
   voucher_audit_logs --> vouchers
   voucher_journal_lines --> vouchers
