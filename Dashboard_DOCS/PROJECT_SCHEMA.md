@@ -1,6 +1,6 @@
 # Project DB Schema
-
-Generated: 2026-05-06T10:02:40.833Z
+``` Aa File ne Download kari antigravity ma open karva par Preview nu option avshe tya view karva thi graph proper avshe```
+Generated: 2026-05-06T10:07:07.020Z
 
 Source migrations: 102 SQL files
 
@@ -409,17 +409,17 @@ erDiagram
     TIMESTAMPTZ updated_at
   }
   gma_sheet_approver_roles {
-    VARCHAR gma_sheet_id PK FK
-    BIGINT role_id PK FK
+    VARCHAR gma_sheet_id PK
+    BIGINT role_id PK
   }
-  coa_account_heads }o--|| coa_account_heads : "fk_coa_parent"
-  contract_amendment_logs }o--|| contracts : "fk_cal_contract"
-  contract_payment_lines }o--|| contracts : "fk_cpl_contract"
-  contract_sales_order_links }o--|| contracts : "fk_csol_contract"
-  contract_site_services }o--|| contract_sites : "fk_css_site"
-  contract_sites }o--|| contracts : "fk_cs_contract"
-  contract_termination_logs }o--|| contracts : "fk_ctl_contract"
-  gma_chemicals }o--|| gma_services : "fk_gmachem_service"
+  coa_account_heads ||--o{ coa_account_heads : "fk_coa_parent"
+  contracts ||--o{ contract_amendment_logs : "fk_cal_contract"
+  contracts ||--o{ contract_payment_lines : "fk_cpl_contract"
+  contracts ||--o{ contract_sales_order_links : "fk_csol_contract"
+  contract_sites ||--o{ contract_site_services : "fk_css_site"
+  contracts ||--o{ contract_sites : "fk_cs_contract"
+  contracts ||--o{ contract_termination_logs : "fk_ctl_contract"
+  gma_services ||--o{ gma_chemicals : "fk_gmachem_service"
 ```
 
 ### er_part_2_of_7
@@ -484,12 +484,12 @@ erDiagram
     TIMESTAMPTZ updated_at
   }
   hiring_request_branches {
-    VARCHAR hiring_request_id PK FK
+    VARCHAR hiring_request_id PK
     VARCHAR branch_id PK
   }
   hiring_request_recipients {
-    VARCHAR hiring_request_id PK FK
-    BIGINT recipient_user_id PK FK
+    VARCHAR hiring_request_id PK
+    BIGINT recipient_user_id PK
   }
   hiring_requests {
     VARCHAR id PK
@@ -619,7 +619,7 @@ erDiagram
     TIMESTAMPTZ deleted_at
   }
   incentive_overtime_details {
-    VARCHAR config_id PK FK
+    VARCHAR config_id PK
     BOOLEAN holiday_work_applicable
     VARCHAR holiday_work_type
     NUMERIC holiday_work_amount
@@ -727,7 +727,7 @@ erDiagram
     TIMESTAMP updated_at
   }
   leave_configuration {
-    VARCHAR config_id PK FK
+    VARCHAR config_id PK
     INT casual_leave
     INT sick_leave
     INT paid_leave
@@ -801,16 +801,16 @@ erDiagram
     VARCHAR created_by
     TIMESTAMPTZ created_at
   }
-  gma_sheets }o--|| leads : "fk_gma_lead"
-  gma_sites }o--|| gma_sheets : "fk_gmasite_sheet"
-  hiring_request_branches }o--|| hiring_requests : "fk_hrb_hiring_request"
-  hiring_request_recipients }o--|| hiring_requests : "fk_hrr_hiring_request"
-  hrm_salary_slip }o--|| hrm_salary_month : "fk_hrm_salary_slip_month"
-  hsn_code_tax_types }o--|| hsn_codes : "fk_hsn_code"
-  inventory_products }o--|| inventory_brands : "fk_inventory_products_brand"
-  lead_audit_logs }o--|| leads : "fk_audit_lead"
-  ledger_entries }o--|| ledgers : "fk_le_ledger"
-  notification_recipients }o--|| notifications : "fk_nr_notification"
+  leads ||--o{ gma_sheets : "fk_gma_lead"
+  gma_sheets ||--o{ gma_sites : "fk_gmasite_sheet"
+  hiring_requests ||--o{ hiring_request_branches : "fk_hrb_hiring_request"
+  hiring_requests ||--o{ hiring_request_recipients : "fk_hrr_hiring_request"
+  hrm_salary_month ||--o{ hrm_salary_slip : "fk_hrm_salary_slip_month"
+  hsn_codes ||--o{ hsn_code_tax_types : "fk_hsn_code"
+  inventory_brands ||--o{ inventory_products : "fk_inventory_products_brand"
+  leads ||--o{ lead_audit_logs : "fk_audit_lead"
+  ledgers ||--o{ ledger_entries : "fk_le_ledger"
+  notifications ||--o{ notification_recipients : "fk_nr_notification"
 ```
 
 ### er_part_3_of_7
@@ -860,8 +860,8 @@ erDiagram
     TIMESTAMPTZ action_at
   }
   petty_cash_request_recipient_roles {
-    VARCHAR request_id PK FK
-    BIGINT recipient_role_id PK FK
+    VARCHAR request_id PK
+    BIGINT recipient_role_id PK
   }
   petty_cash_request_recipients {
     VARCHAR id PK
@@ -1164,19 +1164,19 @@ erDiagram
     VARCHAR company_gst_number
     VARCHAR branch_id FK
   }
-  petty_cash_attachments }o--|| petty_cash_requests : "fk_pc_att_request"
-  petty_cash_audit_logs }o--|| petty_cash_requests : "fk_pc_aud_request"
-  petty_cash_request_recipient_roles }o--|| petty_cash_requests : "fk_pc_rr_request"
-  petty_cash_request_recipients }o--|| petty_cash_requests : "fk_pc_rec_request"
-  public_company_subscription }o--|| public_company_details : "fk_company_subscription_company"
-  public_email_verification_tokens }o--|| public_global_users : "fk_evt_global_user"
-  public_role_permissions }o--|| public_roles : "fk_rp_role"
-  public_role_permissions }o--|| public_modules : "fk_rp_module"
-  public_role_permissions }o--|| public_actions : "fk_rp_action"
-  public_tenant_registry }o--|| public_company_details : "fk_tenant_registry_company"
-  purchase_bill_attachments }o--|| purchase_bills : "fk_pba_bill"
-  purchase_bill_audit_logs }o--|| purchase_bills : "fk_pbal_bill"
-  purchase_bill_lines }o--|| purchase_bills : "fk_pbl_bill"
+  petty_cash_requests ||--o{ petty_cash_attachments : "fk_pc_att_request"
+  petty_cash_requests ||--o{ petty_cash_audit_logs : "fk_pc_aud_request"
+  petty_cash_requests ||--o{ petty_cash_request_recipient_roles : "fk_pc_rr_request"
+  petty_cash_requests ||--o{ petty_cash_request_recipients : "fk_pc_rec_request"
+  public_company_details ||--o{ public_company_subscription : "fk_company_subscription_company"
+  public_global_users ||--o{ public_email_verification_tokens : "fk_evt_global_user"
+  public_roles ||--o{ public_role_permissions : "fk_rp_role"
+  public_modules ||--o{ public_role_permissions : "fk_rp_module"
+  public_actions ||--o{ public_role_permissions : "fk_rp_action"
+  public_company_details ||--o{ public_tenant_registry : "fk_tenant_registry_company"
+  purchase_bills ||--o{ purchase_bill_attachments : "fk_pba_bill"
+  purchase_bills ||--o{ purchase_bill_audit_logs : "fk_pbal_bill"
+  purchase_bills ||--o{ purchase_bill_lines : "fk_pbl_bill"
 ```
 
 ### er_part_4_of_7
@@ -1380,7 +1380,7 @@ erDiagram
     TIMESTAMPTZ updated_at
   }
   salary_details {
-    VARCHAR config_id PK FK
+    VARCHAR config_id PK
     VARCHAR salary_type
     NUMERIC basic_salary
     NUMERIC hra
@@ -1615,26 +1615,26 @@ erDiagram
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
-  quotation_attachments }o--|| quotations : "fk_qa_quotation"
-  quotation_audit_logs }o--|| quotations : "fk_qal_quotation"
-  quotation_locations }o--|| quotations : "fk_ql_quotation"
-  quotation_product_lines }o--|| quotations : "fk_qpl_quotation"
-  quotation_service_lines }o--|| quotations : "fk_qsl_quotation"
-  quotation_service_lines }o--|| quotation_locations : "fk_qsl_location"
-  quotations }o--|| quotation_prospects : "fk_quot_prospect"
-  quotations }o--|| quotations : "fk_quot_revised_from"
-  role_compensation_configuration }o--|| roles : "fk_rcc_role"
-  role_permissions }o--|| roles : "fk_rp_role"
-  salary_details }o--|| role_compensation_configuration : "fk_sd_config"
-  sales_invoice_attachments }o--|| sales_invoices : "fk_sia_invoice"
-  sales_invoice_audit_logs }o--|| sales_invoices : "fk_sial_invoice"
-  sales_invoice_lines }o--|| sales_invoices : "fk_sil_invoice"
-  sales_order_cancellation_logs }o--|| sales_orders : "fk_socl_sales_order"
-  sales_order_product_lines }o--|| sales_orders : "fk_sopl_so"
-  sales_order_site_chemicals }o--|| sales_order_sites : "fk_sosc_site"
-  sales_order_site_services }o--|| sales_order_sites : "fk_soss_site"
-  sales_order_sites }o--|| sales_orders : "fk_sos_so"
-  service_category_area }o--|| service_categories : "fk_sca_category"
+  quotations ||--o{ quotation_attachments : "fk_qa_quotation"
+  quotations ||--o{ quotation_audit_logs : "fk_qal_quotation"
+  quotations ||--o{ quotation_locations : "fk_ql_quotation"
+  quotations ||--o{ quotation_product_lines : "fk_qpl_quotation"
+  quotations ||--o{ quotation_service_lines : "fk_qsl_quotation"
+  quotation_locations ||--o{ quotation_service_lines : "fk_qsl_location"
+  quotation_prospects ||--o{ quotations : "fk_quot_prospect"
+  quotations ||--o{ quotations : "fk_quot_revised_from"
+  roles ||--o{ role_compensation_configuration : "fk_rcc_role"
+  roles ||--o{ role_permissions : "fk_rp_role"
+  role_compensation_configuration ||--o{ salary_details : "fk_sd_config"
+  sales_invoices ||--o{ sales_invoice_attachments : "fk_sia_invoice"
+  sales_invoices ||--o{ sales_invoice_audit_logs : "fk_sial_invoice"
+  sales_invoices ||--o{ sales_invoice_lines : "fk_sil_invoice"
+  sales_orders ||--o{ sales_order_cancellation_logs : "fk_socl_sales_order"
+  sales_orders ||--o{ sales_order_product_lines : "fk_sopl_so"
+  sales_order_sites ||--o{ sales_order_site_chemicals : "fk_sosc_site"
+  sales_order_sites ||--o{ sales_order_site_services : "fk_soss_site"
+  sales_orders ||--o{ sales_order_sites : "fk_sos_so"
+  service_categories ||--o{ service_category_area : "fk_sca_category"
 ```
 
 ### er_part_5_of_7
@@ -1701,8 +1701,8 @@ erDiagram
     TIMESTAMPTZ updated_at
   }
   service_execution_treatments {
-    VARCHAR service_execution_id PK FK
-    VARCHAR service_treatment_id PK FK
+    VARCHAR service_execution_id PK
+    VARCHAR service_treatment_id PK
   }
   service_executions {
     VARCHAR id PK
@@ -1795,36 +1795,36 @@ erDiagram
     TIMESTAMPTZ updated_at
   }
   services_service_categories {
-    VARCHAR service_id PK FK
-    VARCHAR service_category_id PK FK
+    VARCHAR service_id PK
+    VARCHAR service_category_id PK
   }
   services_service_category_area {
-    VARCHAR service_id PK FK
-    VARCHAR service_category_area_id PK FK
+    VARCHAR service_id PK
+    VARCHAR service_category_area_id PK
   }
   services_service_category_fixed {
-    VARCHAR service_id PK FK
-    VARCHAR service_category_fixed_id PK FK
+    VARCHAR service_id PK
+    VARCHAR service_category_fixed_id PK
   }
   services_service_category_inspection {
-    VARCHAR service_id PK FK
-    VARCHAR service_category_inspection_id PK FK
+    VARCHAR service_id PK
+    VARCHAR service_category_inspection_id PK
   }
   services_service_custom_pricing_blocks {
-    VARCHAR service_id PK FK
-    VARCHAR service_custom_pricing_block_id PK FK
+    VARCHAR service_id PK
+    VARCHAR service_custom_pricing_block_id PK
   }
   services_service_pest_types {
-    VARCHAR service_id PK FK
-    VARCHAR service_pest_type_id PK FK
+    VARCHAR service_id PK
+    VARCHAR service_pest_type_id PK
   }
   services_service_sub_categories {
-    VARCHAR service_id PK FK
-    VARCHAR service_sub_category_id PK FK
+    VARCHAR service_id PK
+    VARCHAR service_sub_category_id PK
   }
   services_service_treatments {
-    VARCHAR service_id PK FK
-    VARCHAR service_treatment_id PK FK
+    VARCHAR service_id PK
+    VARCHAR service_treatment_id PK
   }
   stock_approval_logs {
     BIGSERIAL id PK
@@ -1890,29 +1890,29 @@ erDiagram
     VARCHAR item_purpose
     VARCHAR alternative_source
   }
-  service_category_fixed }o--|| service_sub_categories : "fk_scf_sub_category"
-  service_custom_pricing_blocks }o--|| service_sub_categories : "fk_scpb_sub_category"
-  service_custom_pricing_fields }o--|| service_custom_pricing_blocks : "fk_scpf_block"
-  service_execution_chemical_usages }o--|| service_executions : "fk_sec_execution"
-  service_execution_treatments }o--|| service_executions : "fk_set_execution"
-  service_execution_treatments }o--|| service_treatments : "fk_set_treatment"
-  service_executions }o--|| services : "fk_se_service"
-  service_products }o--|| services : "fk_sp_service"
-  service_species }o--|| services : "fk_service_species_service"
-  services_service_categories }o--|| services : "fk_ssc_service"
-  services_service_category_area }o--|| services : "fk_ssca_service"
-  services_service_category_fixed }o--|| services : "fk_sscf_service"
-  services_service_category_fixed }o--|| service_category_fixed : "fk_sscf_fixed"
-  services_service_category_inspection }o--|| services : "fk_ssci_service"
-  services_service_category_inspection }o--|| service_category_inspection : "fk_ssci_inspection"
-  services_service_custom_pricing_blocks }o--|| services : "fk_sscpb_service"
-  services_service_custom_pricing_blocks }o--|| service_custom_pricing_blocks : "fk_sscpb_block"
-  services_service_pest_types }o--|| services : "fk_sspt_service"
-  services_service_pest_types }o--|| service_pest_types : "fk_sspt_pest"
-  services_service_sub_categories }o--|| services : "fk_sssc_service"
-  services_service_sub_categories }o--|| service_sub_categories : "fk_sssc_sub"
-  services_service_treatments }o--|| services : "fk_sst_service"
-  services_service_treatments }o--|| service_treatments : "fk_sst_treatment"
+  service_sub_categories ||--o{ service_category_fixed : "fk_scf_sub_category"
+  service_sub_categories ||--o{ service_custom_pricing_blocks : "fk_scpb_sub_category"
+  service_custom_pricing_blocks ||--o{ service_custom_pricing_fields : "fk_scpf_block"
+  service_executions ||--o{ service_execution_chemical_usages : "fk_sec_execution"
+  service_executions ||--o{ service_execution_treatments : "fk_set_execution"
+  service_treatments ||--o{ service_execution_treatments : "fk_set_treatment"
+  services ||--o{ service_executions : "fk_se_service"
+  services ||--o{ service_products : "fk_sp_service"
+  services ||--o{ service_species : "fk_service_species_service"
+  services ||--o{ services_service_categories : "fk_ssc_service"
+  services ||--o{ services_service_category_area : "fk_ssca_service"
+  services ||--o{ services_service_category_fixed : "fk_sscf_service"
+  service_category_fixed ||--o{ services_service_category_fixed : "fk_sscf_fixed"
+  services ||--o{ services_service_category_inspection : "fk_ssci_service"
+  service_category_inspection ||--o{ services_service_category_inspection : "fk_ssci_inspection"
+  services ||--o{ services_service_custom_pricing_blocks : "fk_sscpb_service"
+  service_custom_pricing_blocks ||--o{ services_service_custom_pricing_blocks : "fk_sscpb_block"
+  services ||--o{ services_service_pest_types : "fk_sspt_service"
+  service_pest_types ||--o{ services_service_pest_types : "fk_sspt_pest"
+  services ||--o{ services_service_sub_categories : "fk_sssc_service"
+  service_sub_categories ||--o{ services_service_sub_categories : "fk_sssc_sub"
+  services ||--o{ services_service_treatments : "fk_sst_service"
+  service_treatments ||--o{ services_service_treatments : "fk_sst_treatment"
 ```
 
 ### er_part_6_of_7
@@ -1922,10 +1922,10 @@ erDiagram
   stock_request_recipients {
     BIGSERIAL id
     BIGINT request_id FK
-    BIGINT recipient_user_id PK FK
+    BIGINT recipient_user_id PK
     VARCHAR recipient_email
     TIMESTAMPTZ created_at
-    VARCHAR stock_request_id PK FK
+    VARCHAR stock_request_id PK
   }
   stock_requests {
     BIGSERIAL id PK
@@ -2220,12 +2220,12 @@ erDiagram
     TIMESTAMPTZ deleted_at
   }
   technician_observation_hygiene_picks {
-    VARCHAR section_id PK FK
-    VARCHAR hygiene_option_id PK FK
+    VARCHAR section_id PK
+    VARCHAR hygiene_option_id PK
   }
   technician_observation_pest_picks {
-    VARCHAR section_id PK FK
-    VARCHAR pest_option_id PK FK
+    VARCHAR section_id PK
+    VARCHAR pest_option_id PK
   }
   technician_observation_sections {
     VARCHAR id PK
@@ -2240,8 +2240,8 @@ erDiagram
     TIMESTAMPTZ updated_at
   }
   technician_observation_structural_picks {
-    VARCHAR section_id PK FK
-    VARCHAR structural_option_id PK FK
+    VARCHAR section_id PK
+    VARCHAR structural_option_id PK
   }
   technician_tracking {
     BIGSERIAL id PK
@@ -2253,27 +2253,27 @@ erDiagram
     DATE local_date
     TIMESTAMPTZ recorded_at
   }
-  stock_request_recipients }o--|| stock_requests : "fk_stock_request_recipients_request"
-  stock_request_recipients }o--|| stock_requests : "fk_srr_stock_request"
-  stock_transfer_assets }o--|| stock_transfers : "fk_stock_transfer_asset_transfer"
-  stock_transfer_items }o--|| stock_transfers : "fk_stock_transfer_item_transfer"
-  support_ticket_activities }o--|| support_tickets : "fk_sta_ticket"
-  support_ticket_assignment_history }o--|| support_tickets : "fk_stah_ticket"
-  support_ticket_attachments }o--|| support_tickets : "fk_attach_ticket"
-  support_ticket_tasks }o--|| support_tickets : "fk_stt_ticket"
-  support_ticket_tasks }o--|| tasks : "fk_stt_task"
-  support_tickets }o--|| tasks : "fk_st_related_task"
-  support_tickets }o--|| support_ticket_types : "fk_st_ticket_type"
-  task_customer_feedback }o--|| tasks : "fk_tcf_task"
-  task_materials }o--|| tasks : "fk_tm_task"
-  task_photos }o--|| tasks : "fk_tp_task"
-  task_technicians }o--|| tasks : "fk_tt_task"
-  tasks }o--|| support_tickets : "fk_tasks_support_ticket"
-  technician_observation_hygiene_picks }o--|| technician_observation_sections : "fk_tohp_section"
-  technician_observation_pest_picks }o--|| technician_observation_sections : "fk_topp_section"
-  technician_observation_sections }o--|| tasks : "fk_tos_task"
-  technician_observation_structural_picks }o--|| technician_observation_sections : "fk_tosp_section"
-  technician_tracking }o--|| tasks : "fk_technician_tracking_task"
+  stock_requests ||--o{ stock_request_recipients : "fk_stock_request_recipients_request"
+  stock_requests ||--o{ stock_request_recipients : "fk_srr_stock_request"
+  stock_transfers ||--o{ stock_transfer_assets : "fk_stock_transfer_asset_transfer"
+  stock_transfers ||--o{ stock_transfer_items : "fk_stock_transfer_item_transfer"
+  support_tickets ||--o{ support_ticket_activities : "fk_sta_ticket"
+  support_tickets ||--o{ support_ticket_assignment_history : "fk_stah_ticket"
+  support_tickets ||--o{ support_ticket_attachments : "fk_attach_ticket"
+  support_tickets ||--o{ support_ticket_tasks : "fk_stt_ticket"
+  tasks ||--o{ support_ticket_tasks : "fk_stt_task"
+  tasks ||--o{ support_tickets : "fk_st_related_task"
+  support_ticket_types ||--o{ support_tickets : "fk_st_ticket_type"
+  tasks ||--o{ task_customer_feedback : "fk_tcf_task"
+  tasks ||--o{ task_materials : "fk_tm_task"
+  tasks ||--o{ task_photos : "fk_tp_task"
+  tasks ||--o{ task_technicians : "fk_tt_task"
+  support_tickets ||--o{ tasks : "fk_tasks_support_ticket"
+  technician_observation_sections ||--o{ technician_observation_hygiene_picks : "fk_tohp_section"
+  technician_observation_sections ||--o{ technician_observation_pest_picks : "fk_topp_section"
+  tasks ||--o{ technician_observation_sections : "fk_tos_task"
+  technician_observation_sections ||--o{ technician_observation_structural_picks : "fk_tosp_section"
+  tasks ||--o{ technician_tracking : "fk_technician_tracking_task"
 ```
 
 ### er_part_7_of_7
@@ -2299,7 +2299,7 @@ erDiagram
     TIMESTAMPTZ updated_at
   }
   user_branches {
-    BIGINT user_id PK FK
+    BIGINT user_id PK
     VARCHAR branch_id PK
   }
   user_documents {
@@ -2538,17 +2538,17 @@ erDiagram
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
-  user_additional_data }o--|| users : "fk_user_additional_user"
-  user_branches }o--|| users : "fk_ub_user"
-  user_documents }o--|| users : "fk_user_doc_user"
-  user_leave_details }o--|| users : "fk_user_leave_user"
-  user_permissions }o--|| users : "fk_up_user"
-  user_salary_details }o--|| users : "fk_user_salary_user"
-  users }o--|| users : "fk_users_reporting_manager"
-  voucher_allocations }o--|| vouchers : "fk_va_voucher"
-  voucher_audit_logs }o--|| vouchers : "fk_val_voucher"
-  voucher_journal_lines }o--|| vouchers : "fk_vjl_voucher"
-  voucher_settlement_links }o--|| vouchers : "fk_vsl_voucher"
+  users ||--o{ user_additional_data : "fk_user_additional_user"
+  users ||--o{ user_branches : "fk_ub_user"
+  users ||--o{ user_documents : "fk_user_doc_user"
+  users ||--o{ user_leave_details : "fk_user_leave_user"
+  users ||--o{ user_permissions : "fk_up_user"
+  users ||--o{ user_salary_details : "fk_user_salary_user"
+  users ||--o{ users : "fk_users_reporting_manager"
+  vouchers ||--o{ voucher_allocations : "fk_va_voucher"
+  vouchers ||--o{ voucher_audit_logs : "fk_val_voucher"
+  vouchers ||--o{ voucher_journal_lines : "fk_vjl_voucher"
+  vouchers ||--o{ voucher_settlement_links : "fk_vsl_voucher"
 ```
 
 ## Mermaid FK Flowcharts (split)
