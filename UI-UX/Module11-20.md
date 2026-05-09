@@ -10474,7 +10474,7 @@ This section breaks down the contract deliverables on a per-site basis. Each sit
 | Frequency              | Dropdown        | Yes      | Weekly / Fortnightly / Monthly / Quarterly / Custom | Inherits GMA frequency by default            |
 | Preferred Days         | Multi-checkbox  | Yes      | Mon – Sun                                           | Sets the recurring schedule pattern          |
 | Preferred Time         | Dropdown        | Yes      | Morning (8–12) / Afternoon (12–5) / Evening (5–8)   | Time window for visits                       |
-~~| Assigned Team          | Search Dropdown | Yes      | Active technician teams from Module 8               | Team responsible for this specific treatment |~~
+| ~~Assigned Team~~          | ~~Search Dropdown~~ | ~~Yes~~      | ~~Active technician teams from Module 8~~               | Team responsible for this specific treatment |
 | Service Sale Value (₹) | Currency        | Yes      | Inherited from GMA proposed price for this service  | Validated against Total Contract Value       |
 
 ---
@@ -10689,7 +10689,7 @@ Displays the complete contract configuration — commercial terms, payment sched
 | Contract Mode     | Display  | Contract Base / One-Time                                |
 | Service Sale Val  | Currency | Assigned revenue value for this specific service line   |
 | Frequency         | Display  | Service visit frequency (e.g. Weekly)                   |
-~~| Technician Group  | Display  | Assigned team from Module 8                             |~~
+| ~~Technician Group~~  | ~~Display~~ | ~~Assigned team from Module 8~~                             |
 | Schedule Details  | Display  | Preferred days and time slot for this recurring service |
 
 > **Note:** All data in this tab is derived from the **GMA sheet (Module 17)** and the **contract creation form (19.2)**. Modifications can only be made via the **Edit / Amend** form (19.4).
