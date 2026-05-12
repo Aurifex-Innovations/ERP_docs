@@ -1,17 +1,17 @@
 # Project DB Schema
 _**``` Aa File ne Download kari antigravity ma open karva par Preview nu option avshe tya view karva thi graph proper avshe```
 **_
-Generated: 2026-05-06T10:17:32.685Z
+Generated: 2026-05-12T08:14:35.363Z
 
-Source migrations: 102 SQL files
+Source migrations: 112 SQL files
 
-Tables: 165
+Tables: 170
 
 ## Mermaid ER Diagrams (split)
 
-Note: schema big. ER diagram split into smaller parts so Mermaid renderer can load.
+Note: schema is large. ER diagrams are split into ~15 tables per block so Mermaid renders reliably.
 
-### er_part_1_of_7
+### er_part_1_of_12
 
 ```mermaid
 erDiagram
@@ -91,7 +91,6 @@ erDiagram
     NUMERIC invoice_amount
     NUMERIC tax_amount
     NUMERIC total_with_tax
-    TEXT invoice_copy_url
     VARCHAR batch_number
     DATE manufacturing_date
     DATE expiry_date
@@ -102,6 +101,13 @@ erDiagram
     TIMESTAMPTZ updated_at
     VARCHAR deleted_by
     TIMESTAMPTZ deleted_at
+    VARCHAR supplier_id FK
+    VARCHAR assignee_branch_id
+    VARCHAR assignee_role
+    BIGINT assignee_user_id FK
+    BYTEA invoice_copy_data
+    VARCHAR invoice_copy_file_name
+    VARCHAR invoice_copy_content_type
   }
   central_stock_ledger {
     BIGSERIAL id PK
@@ -140,6 +146,7 @@ erDiagram
     VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
+    BOOLEAN affects_gp
   }
   company_profile_extension {
     UUID id PK
@@ -172,6 +179,8 @@ erDiagram
     BOOLEAN paid
     BOOLEAN locked
     INTEGER sort_order
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
   }
   contract_sales_order_links {
     VARCHAR id PK
@@ -182,6 +191,9 @@ erDiagram
     NUMERIC so_value
     VARCHAR so_status
     VARCHAR service_status
+    VARCHAR sales_order_id FK
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
   }
   contract_site_services {
     VARCHAR id PK
@@ -193,10 +205,10 @@ erDiagram
     INTEGER annual_frequency
     VARCHAR preferred_days
     VARCHAR preferred_time_slot
-    VARCHAR technician_team_id
-    VARCHAR technician_team_name
     NUMERIC service_sale_value
     INTEGER display_order
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
   }
   contract_sites {
     VARCHAR id PK
@@ -215,7 +227,17 @@ erDiagram
     NUMERIC site_proposed_price_year
     NUMERIC site_gross_margin
     INTEGER display_order
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
   }
+  coa_account_heads ||--o{ coa_account_heads : "fk_coa_parent"
+  contract_sites ||--o{ contract_site_services : "fk_css_site"
+```
+
+### er_part_2_of_12
+
+```mermaid
+erDiagram
   contract_termination_logs {
     VARCHAR id PK
     VARCHAR contract_id FK
@@ -314,6 +336,8 @@ erDiagram
     TIMESTAMP_WITH_TIME_ZONE updated_at
     VARCHAR created_by
     VARCHAR updated_by
+    TIMESTAMPTZ deleted_at
+    VARCHAR deleted_by
   }
   debit_notes {
     VARCHAR id PK
@@ -413,20 +437,6 @@ erDiagram
     VARCHAR gma_sheet_id PK
     BIGINT role_id PK
   }
-  coa_account_heads ||--o{ coa_account_heads : "fk_coa_parent"
-  contracts ||--o{ contract_amendment_logs : "fk_cal_contract"
-  contracts ||--o{ contract_payment_lines : "fk_cpl_contract"
-  contracts ||--o{ contract_sales_order_links : "fk_csol_contract"
-  contract_sites ||--o{ contract_site_services : "fk_css_site"
-  contracts ||--o{ contract_sites : "fk_cs_contract"
-  contracts ||--o{ contract_termination_logs : "fk_ctl_contract"
-  gma_services ||--o{ gma_chemicals : "fk_gmachem_service"
-```
-
-### er_part_2_of_7
-
-```mermaid
-erDiagram
   gma_sheets {
     VARCHAR id PK
     VARCHAR source_type
@@ -458,6 +468,9 @@ erDiagram
     VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
+    BOOLEAN contract_consumed
+    VARCHAR consumed_by_contract_id
+    BOOLEAN sales_order_consumed
   }
   gma_sites {
     VARCHAR id PK
@@ -488,6 +501,19 @@ erDiagram
     VARCHAR hiring_request_id PK
     VARCHAR branch_id PK
   }
+  contracts ||--o{ contract_termination_logs : "fk_ctl_contract"
+  gma_sheets ||--o{ gma_audit_logs : "fk_gmaaud_sheet"
+  gma_services ||--o{ gma_chemicals : "fk_gmachem_service"
+  gma_sites ||--o{ gma_services : "fk_gmasvc_site"
+  gma_sheets ||--o{ gma_sheet_approver_roles : "fk_gsar_sheet"
+  gma_prospects ||--o{ gma_sheets : "fk_gma_prospect"
+  gma_sheets ||--o{ gma_sites : "fk_gmasite_sheet"
+```
+
+### er_part_3_of_12
+
+```mermaid
+erDiagram
   hiring_request_recipients {
     VARCHAR hiring_request_id PK
     BIGINT recipient_user_id PK
@@ -534,6 +560,10 @@ erDiagram
     TIMESTAMPTZ created_at
     VARCHAR updated_by
     TIMESTAMPTZ updated_at
+    NUMERIC punch_in_lat
+    NUMERIC punch_in_lng
+    NUMERIC punch_out_lat
+    NUMERIC punch_out_lng
   }
   hrm_holidays {
     BIGSERIAL id PK
@@ -684,6 +714,8 @@ erDiagram
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
     TIMESTAMPTZ deleted_at
+    VARCHAR group_key
+    VARCHAR brand_id FK
   }
   invoice_payment_allocations {
     VARCHAR id PK
@@ -703,6 +735,16 @@ erDiagram
     VARCHAR changed_by
     TIMESTAMP changed_at
   }
+  hiring_requests ||--o{ hiring_request_recipients : "fk_hrr_hiring_request"
+  hrm_salary_month ||--o{ hrm_salary_slip : "fk_hrm_salary_slip_month"
+  hsn_codes ||--o{ hsn_code_tax_types : "fk_hsn_code"
+  inventory_brands ||--o{ inventory_products : "fk_inventory_products_brand"
+```
+
+### er_part_4_of_12
+
+```mermaid
+erDiagram
   leads {
     VARCHAR id PK
     DATE lead_date
@@ -776,6 +818,17 @@ erDiagram
     VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
+    VARCHAR party_gstin
+    VARCHAR party_pan
+    VARCHAR contact_person
+    VARCHAR contact_phone
+    VARCHAR contact_email
+    TEXT contact_address
+    VARCHAR bank_name
+    VARCHAR bank_account_number
+    VARCHAR bank_ifsc_code
+    VARCHAR bank_account_type
+    VARCHAR bank_branch_name
   }
   modules {
     BIGSERIAL id PK
@@ -802,22 +855,6 @@ erDiagram
     VARCHAR created_by
     TIMESTAMPTZ created_at
   }
-  leads ||--o{ gma_sheets : "fk_gma_lead"
-  gma_sheets ||--o{ gma_sites : "fk_gmasite_sheet"
-  hiring_requests ||--o{ hiring_request_branches : "fk_hrb_hiring_request"
-  hiring_requests ||--o{ hiring_request_recipients : "fk_hrr_hiring_request"
-  hrm_salary_month ||--o{ hrm_salary_slip : "fk_hrm_salary_slip_month"
-  hsn_codes ||--o{ hsn_code_tax_types : "fk_hsn_code"
-  inventory_brands ||--o{ inventory_products : "fk_inventory_products_brand"
-  leads ||--o{ lead_audit_logs : "fk_audit_lead"
-  ledgers ||--o{ ledger_entries : "fk_le_ledger"
-  notifications ||--o{ notification_recipients : "fk_nr_notification"
-```
-
-### er_part_3_of_7
-
-```mermaid
-erDiagram
   observation_options_hygiene {
     VARCHAR id PK
     VARCHAR label
@@ -912,6 +949,18 @@ erDiagram
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
+  ledgers ||--o{ ledger_entries : "fk_le_ledger"
+  notifications ||--o{ notification_recipients : "fk_nr_notification"
+  petty_cash_requests ||--o{ petty_cash_attachments : "fk_pc_att_request"
+  petty_cash_requests ||--o{ petty_cash_audit_logs : "fk_pc_aud_request"
+  petty_cash_requests ||--o{ petty_cash_request_recipient_roles : "fk_pc_rr_request"
+  petty_cash_requests ||--o{ petty_cash_request_recipients : "fk_pc_rec_request"
+```
+
+### er_part_5_of_12
+
+```mermaid
+erDiagram
   public_actions {
     BIGSERIAL id PK
     VARCHAR name
@@ -944,6 +993,12 @@ erDiagram
     BIGINT created_by
     BIGINT updated_by
     BIGINT verified_by
+    VARCHAR office_shop_number
+    BOOLEAN enable_trial
+    DATE trial_from_date
+    DATE trial_to_date
+    TEXT admin_comment
+    VARCHAR subscription_plan_id FK
   }
   public_company_documents {
     BIGSERIAL id PK
@@ -1016,6 +1071,23 @@ erDiagram
     VARCHAR label
     VARCHAR description
   }
+  public_password_reset_challenge {
+    UUID id PK
+    VARCHAR subject_kind
+    VARCHAR channel
+    VARCHAR identifier_normalized
+    VARCHAR tenant_schema
+    BIGINT target_user_id
+    VARCHAR otp_hash
+    VARCHAR verification_id
+    VARCHAR mobile_digits
+    VARCHAR country_code
+    TIMESTAMPTZ expires_at
+    INTEGER attempt_count
+    TIMESTAMPTZ verified_at
+    TIMESTAMPTZ consumed_at
+    TIMESTAMPTZ created_at
+  }
   public_role_permissions {
     BIGSERIAL id PK
     BIGINT role_id FK
@@ -1042,9 +1114,14 @@ erDiagram
     VARCHAR email
     VARCHAR password
     VARCHAR role
-    BOOLEAN is_active
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
+    VARCHAR name
+    BOOLEAN active
+  }
+  public_subscription_plans {
+    NUMERIC extra_price_per_branch
+    NUMERIC extra_price_per_technician
   }
   public_tenant_registry {
     BIGSERIAL id PK
@@ -1054,6 +1131,7 @@ erDiagram
     VARCHAR status
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
+    BIGINT company_id FK
   }
   public_token_blacklist {
     BIGINT id PK
@@ -1072,6 +1150,20 @@ erDiagram
     TIMESTAMPTZ uploaded_at
     VARCHAR uploaded_by
   }
+  public_subscription_plans ||--o{ public_company_details : "fk_company_details_subscription_plan"
+  public_company_details ||--o{ public_company_subscription : "fk_company_subscription_company"
+  public_subscription_plans ||--o{ public_company_subscription : "fk_company_subscription_plan"
+  public_global_users ||--o{ public_email_verification_tokens : "fk_evt_global_user"
+  public_roles ||--o{ public_role_permissions : "fk_rp_role"
+  public_modules ||--o{ public_role_permissions : "fk_rp_module"
+  public_actions ||--o{ public_role_permissions : "fk_rp_action"
+  public_company_details ||--o{ public_tenant_registry : "fk_tenant_registry_company"
+```
+
+### er_part_6_of_12
+
+```mermaid
+erDiagram
   purchase_bill_audit_logs {
     VARCHAR id PK
     VARCHAR bill_id FK
@@ -1132,6 +1224,11 @@ erDiagram
     VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
+    VARCHAR vendor_payment_terms_snapshot
+    BOOLEAN tds_applicable
+    VARCHAR tds_section
+    NUMERIC tds_rate
+    TEXT attachment_url
   }
   purchase_order {
     VARCHAR id PK
@@ -1165,25 +1262,6 @@ erDiagram
     VARCHAR company_gst_number
     VARCHAR branch_id FK
   }
-  petty_cash_requests ||--o{ petty_cash_attachments : "fk_pc_att_request"
-  petty_cash_requests ||--o{ petty_cash_audit_logs : "fk_pc_aud_request"
-  petty_cash_requests ||--o{ petty_cash_request_recipient_roles : "fk_pc_rr_request"
-  petty_cash_requests ||--o{ petty_cash_request_recipients : "fk_pc_rec_request"
-  public_company_details ||--o{ public_company_subscription : "fk_company_subscription_company"
-  public_global_users ||--o{ public_email_verification_tokens : "fk_evt_global_user"
-  public_roles ||--o{ public_role_permissions : "fk_rp_role"
-  public_modules ||--o{ public_role_permissions : "fk_rp_module"
-  public_actions ||--o{ public_role_permissions : "fk_rp_action"
-  public_company_details ||--o{ public_tenant_registry : "fk_tenant_registry_company"
-  purchase_bills ||--o{ purchase_bill_attachments : "fk_pba_bill"
-  purchase_bills ||--o{ purchase_bill_audit_logs : "fk_pbal_bill"
-  purchase_bills ||--o{ purchase_bill_lines : "fk_pbl_bill"
-```
-
-### er_part_4_of_7
-
-```mermaid
-erDiagram
   purchase_order_item {
     VARCHAR id PK
     VARCHAR purchase_order_id FK
@@ -1304,6 +1382,10 @@ erDiagram
     INTEGER display_order
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
+    VARCHAR category_fixed_id
+    VARCHAR category_area_pricing_id
+    VARCHAR area_type_label
+    NUMERIC sqft_increment
   }
   quotations {
     VARCHAR id PK
@@ -1348,6 +1430,8 @@ erDiagram
     VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
+    BOOLEAN sales_order_consumed
+    VARCHAR public_token
   }
   role_compensation_configuration {
     VARCHAR config_id PK
@@ -1380,6 +1464,25 @@ erDiagram
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
+  purchase_bills ||--o{ purchase_bill_audit_logs : "fk_pbal_bill"
+  purchase_bills ||--o{ purchase_bill_lines : "fk_pbl_bill"
+  purchase_order ||--o{ purchase_order_item : "fk_poi_purchase_order"
+  quotations ||--o{ quotation_attachments : "fk_qa_quotation"
+  quotations ||--o{ quotation_audit_logs : "fk_qal_quotation"
+  quotations ||--o{ quotation_locations : "fk_ql_quotation"
+  quotations ||--o{ quotation_product_lines : "fk_qpl_quotation"
+  quotations ||--o{ quotation_service_lines : "fk_qsl_quotation"
+  quotation_locations ||--o{ quotation_service_lines : "fk_qsl_location"
+  quotation_prospects ||--o{ quotations : "fk_quot_prospect"
+  quotations ||--o{ quotations : "fk_quot_revised_from"
+  roles ||--o{ role_compensation_configuration : "fk_rcc_role"
+  roles ||--o{ role_permissions : "fk_rp_role"
+```
+
+### er_part_7_of_12
+
+```mermaid
+erDiagram
   salary_details {
     VARCHAR config_id PK
     VARCHAR salary_type
@@ -1470,6 +1573,12 @@ erDiagram
     VARCHAR updated_by
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
+    VARCHAR attachment_file_name
+    VARCHAR attachment_content_type
+    BIGINT attachment_size_bytes
+    BYTEA attachment_file_data
+    VARCHAR branch_state_snapshot
+    VARCHAR attachment_file_key
   }
   sales_order_cancellation_logs {
     VARCHAR id PK
@@ -1494,6 +1603,8 @@ erDiagram
     NUMERIC tax_amount
     NUMERIC line_total
     INTEGER display_order
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
   }
   sales_order_site_chemicals {
     VARCHAR id PK
@@ -1508,6 +1619,8 @@ erDiagram
     NUMERIC line_cost
     VARCHAR hsn_code
     INTEGER display_order
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
   }
   sales_order_site_services {
     VARCHAR id PK
@@ -1522,6 +1635,9 @@ erDiagram
     NUMERIC tax_amount
     NUMERIC line_total
     INTEGER display_order
+    NUMERIC executed_visits
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
   }
   sales_order_sites {
     VARCHAR id PK
@@ -1539,6 +1655,8 @@ erDiagram
     VARCHAR contact_person
     VARCHAR contact_mobile
     INTEGER display_order
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
   }
   sales_orders {
     VARCHAR id PK
@@ -1616,17 +1734,18 @@ erDiagram
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
-  quotations ||--o{ quotation_attachments : "fk_qa_quotation"
-  quotations ||--o{ quotation_audit_logs : "fk_qal_quotation"
-  quotations ||--o{ quotation_locations : "fk_ql_quotation"
-  quotations ||--o{ quotation_product_lines : "fk_qpl_quotation"
-  quotations ||--o{ quotation_service_lines : "fk_qsl_quotation"
-  quotation_locations ||--o{ quotation_service_lines : "fk_qsl_location"
-  quotation_prospects ||--o{ quotations : "fk_quot_prospect"
-  quotations ||--o{ quotations : "fk_quot_revised_from"
-  roles ||--o{ role_compensation_configuration : "fk_rcc_role"
-  roles ||--o{ role_permissions : "fk_rp_role"
-  role_compensation_configuration ||--o{ salary_details : "fk_sd_config"
+  service_category_fixed {
+    VARCHAR id PK
+    VARCHAR service_category_id FK
+    VARCHAR service_sub_category_id FK
+    VARCHAR tier_name
+    INTEGER display_order
+    BOOLEAN is_active
+    VARCHAR created_by
+    VARCHAR updated_by
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
+  }
   sales_invoices ||--o{ sales_invoice_attachments : "fk_sia_invoice"
   sales_invoices ||--o{ sales_invoice_audit_logs : "fk_sial_invoice"
   sales_invoices ||--o{ sales_invoice_lines : "fk_sil_invoice"
@@ -1636,25 +1755,13 @@ erDiagram
   sales_order_sites ||--o{ sales_order_site_services : "fk_soss_site"
   sales_orders ||--o{ sales_order_sites : "fk_sos_so"
   service_categories ||--o{ service_category_area : "fk_sca_category"
+  service_categories ||--o{ service_category_fixed : "fk_scf_category"
 ```
 
-### er_part_5_of_7
+### er_part_8_of_12
 
 ```mermaid
 erDiagram
-  service_category_fixed {
-    VARCHAR id PK
-    VARCHAR service_category_id FK
-    VARCHAR service_sub_category_id FK
-    VARCHAR tier_name
-    DOUBLE_PRECISION price_amount
-    INTEGER display_order
-    BOOLEAN is_active
-    VARCHAR created_by
-    VARCHAR updated_by
-    TIMESTAMPTZ created_at
-    TIMESTAMPTZ updated_at
-  }
   service_category_inspection {
     VARCHAR id PK
     VARCHAR service_category_id FK
@@ -1806,7 +1913,25 @@ erDiagram
   services_service_category_fixed {
     VARCHAR service_id PK
     VARCHAR service_category_fixed_id PK
+    DOUBLE_PRECISION price_amount
   }
+  service_sub_categories ||--o{ service_custom_pricing_blocks : "fk_scpb_sub_category"
+  service_custom_pricing_blocks ||--o{ service_custom_pricing_fields : "fk_scpf_block"
+  service_executions ||--o{ service_execution_chemical_usages : "fk_sec_execution"
+  service_executions ||--o{ service_execution_treatments : "fk_set_execution"
+  service_treatments ||--o{ service_execution_treatments : "fk_set_treatment"
+  services ||--o{ service_executions : "fk_se_service"
+  services ||--o{ service_products : "fk_sp_service"
+  services ||--o{ service_species : "fk_service_species_service"
+  services ||--o{ services_service_categories : "fk_ssc_service"
+  services ||--o{ services_service_category_area : "fk_ssca_service"
+  services ||--o{ services_service_category_fixed : "fk_sscf_service"
+```
+
+### er_part_9_of_12
+
+```mermaid
+erDiagram
   services_service_category_inspection {
     VARCHAR service_id PK
     VARCHAR service_category_inspection_id PK
@@ -1891,35 +2016,6 @@ erDiagram
     VARCHAR item_purpose
     VARCHAR alternative_source
   }
-  service_sub_categories ||--o{ service_category_fixed : "fk_scf_sub_category"
-  service_sub_categories ||--o{ service_custom_pricing_blocks : "fk_scpb_sub_category"
-  service_custom_pricing_blocks ||--o{ service_custom_pricing_fields : "fk_scpf_block"
-  service_executions ||--o{ service_execution_chemical_usages : "fk_sec_execution"
-  service_executions ||--o{ service_execution_treatments : "fk_set_execution"
-  service_treatments ||--o{ service_execution_treatments : "fk_set_treatment"
-  services ||--o{ service_executions : "fk_se_service"
-  services ||--o{ service_products : "fk_sp_service"
-  services ||--o{ service_species : "fk_service_species_service"
-  services ||--o{ services_service_categories : "fk_ssc_service"
-  services ||--o{ services_service_category_area : "fk_ssca_service"
-  services ||--o{ services_service_category_fixed : "fk_sscf_service"
-  service_category_fixed ||--o{ services_service_category_fixed : "fk_sscf_fixed"
-  services ||--o{ services_service_category_inspection : "fk_ssci_service"
-  service_category_inspection ||--o{ services_service_category_inspection : "fk_ssci_inspection"
-  services ||--o{ services_service_custom_pricing_blocks : "fk_sscpb_service"
-  service_custom_pricing_blocks ||--o{ services_service_custom_pricing_blocks : "fk_sscpb_block"
-  services ||--o{ services_service_pest_types : "fk_sspt_service"
-  service_pest_types ||--o{ services_service_pest_types : "fk_sspt_pest"
-  services ||--o{ services_service_sub_categories : "fk_sssc_service"
-  service_sub_categories ||--o{ services_service_sub_categories : "fk_sssc_sub"
-  services ||--o{ services_service_treatments : "fk_sst_service"
-  service_treatments ||--o{ services_service_treatments : "fk_sst_treatment"
-```
-
-### er_part_6_of_7
-
-```mermaid
-erDiagram
   stock_request_recipients {
     BIGSERIAL id
     BIGINT request_id FK
@@ -1959,6 +2055,11 @@ erDiagram
     TIMESTAMPTZ updated_at
     VARCHAR deleted_by
     TIMESTAMPTZ deleted_at
+    DATE received_date
+    BOOLEAN confirm_receipt
+    VARCHAR receipt_package_condition
+    VARCHAR asset_id_assignment_mode
+    VARCHAR split_from_request_id
   }
   stock_transfer_assets {
     BIGSERIAL id PK
@@ -2000,6 +2101,13 @@ erDiagram
     TIMESTAMPTZ created_at
     VARCHAR updated_by
     TIMESTAMPTZ updated_at
+    DATE received_date
+    BOOLEAN confirm_receipt
+    VARCHAR receipt_package_condition
+    VARCHAR received_by
+    BYTEA receipt_photo_data
+    VARCHAR receipt_photo_file_name
+    VARCHAR receipt_photo_content_type
   }
   subscription_plans {
     VARCHAR id PK
@@ -2020,6 +2128,18 @@ erDiagram
     TIMESTAMPTZ updated_at
     TIMESTAMPTZ deleted_at
   }
+  stock_requests ||--o{ stock_approval_logs : "fk_stock_approval_log_request"
+  stock_requests ||--o{ stock_request_items : "fk_stock_request_item_request"
+  stock_requests ||--o{ stock_request_recipients : "fk_stock_request_recipients_request"
+  stock_requests ||--o{ stock_request_recipients : "fk_srr_stock_request"
+  stock_transfers ||--o{ stock_transfer_assets : "fk_stock_transfer_asset_transfer"
+  stock_transfers ||--o{ stock_transfer_items : "fk_stock_transfer_item_transfer"
+```
+
+### er_part_10_of_12
+
+```mermaid
+erDiagram
   support_sla_settings {
     SMALLINT id PK
     INTEGER response_sla_hours
@@ -2117,6 +2237,7 @@ erDiagram
     TIMESTAMPTZ updated_at
     VARCHAR created_by
     VARCHAR updated_by
+    TIMESTAMPTZ sla_risk_at
   }
   task_audit_logs {
     BIGSERIAL id PK
@@ -2156,6 +2277,12 @@ erDiagram
     VARCHAR photo_type
     VARCHAR file_path
     TIMESTAMPTZ uploaded_at
+    BIGINT uploaded_by
+    VARCHAR mime_type
+    INTEGER sort_order
+    NUMERIC latitude
+    NUMERIC longitude
+    TIMESTAMPTZ deleted_at
   }
   task_technicians {
     VARCHAR id PK
@@ -2201,6 +2328,8 @@ erDiagram
     TIMESTAMPTZ created_at
     VARCHAR updated_by
     TIMESTAMPTZ updated_at
+    NUMERIC site_latitude
+    NUMERIC site_longitude
   }
   tax_types {
     BIGINT id PK
@@ -2224,6 +2353,24 @@ erDiagram
     VARCHAR section_id PK
     VARCHAR hygiene_option_id PK
   }
+  support_tickets ||--o{ support_ticket_activities : "fk_sta_ticket"
+  support_tickets ||--o{ support_ticket_assignment_history : "fk_stah_ticket"
+  support_tickets ||--o{ support_ticket_attachments : "fk_attach_ticket"
+  support_tickets ||--o{ support_ticket_tasks : "fk_stt_ticket"
+  tasks ||--o{ support_ticket_tasks : "fk_stt_task"
+  tasks ||--o{ support_tickets : "fk_st_related_task"
+  support_ticket_types ||--o{ support_tickets : "fk_st_ticket_type"
+  tasks ||--o{ task_customer_feedback : "fk_tcf_task"
+  tasks ||--o{ task_materials : "fk_tm_task"
+  tasks ||--o{ task_photos : "fk_tp_task"
+  tasks ||--o{ task_technicians : "fk_tt_task"
+  support_tickets ||--o{ tasks : "fk_tasks_support_ticket"
+```
+
+### er_part_11_of_12
+
+```mermaid
+erDiagram
   technician_observation_pest_picks {
     VARCHAR section_id PK
     VARCHAR pest_option_id PK
@@ -2254,33 +2401,6 @@ erDiagram
     DATE local_date
     TIMESTAMPTZ recorded_at
   }
-  stock_requests ||--o{ stock_request_recipients : "fk_stock_request_recipients_request"
-  stock_requests ||--o{ stock_request_recipients : "fk_srr_stock_request"
-  stock_transfers ||--o{ stock_transfer_assets : "fk_stock_transfer_asset_transfer"
-  stock_transfers ||--o{ stock_transfer_items : "fk_stock_transfer_item_transfer"
-  support_tickets ||--o{ support_ticket_activities : "fk_sta_ticket"
-  support_tickets ||--o{ support_ticket_assignment_history : "fk_stah_ticket"
-  support_tickets ||--o{ support_ticket_attachments : "fk_attach_ticket"
-  support_tickets ||--o{ support_ticket_tasks : "fk_stt_ticket"
-  tasks ||--o{ support_ticket_tasks : "fk_stt_task"
-  tasks ||--o{ support_tickets : "fk_st_related_task"
-  support_ticket_types ||--o{ support_tickets : "fk_st_ticket_type"
-  tasks ||--o{ task_customer_feedback : "fk_tcf_task"
-  tasks ||--o{ task_materials : "fk_tm_task"
-  tasks ||--o{ task_photos : "fk_tp_task"
-  tasks ||--o{ task_technicians : "fk_tt_task"
-  support_tickets ||--o{ tasks : "fk_tasks_support_ticket"
-  technician_observation_sections ||--o{ technician_observation_hygiene_picks : "fk_tohp_section"
-  technician_observation_sections ||--o{ technician_observation_pest_picks : "fk_topp_section"
-  tasks ||--o{ technician_observation_sections : "fk_tos_task"
-  technician_observation_sections ||--o{ technician_observation_structural_picks : "fk_tosp_section"
-  tasks ||--o{ technician_tracking : "fk_technician_tracking_task"
-```
-
-### er_part_7_of_7
-
-```mermaid
-erDiagram
   user_additional_data {
     BIGSERIAL id PK
     BIGINT user_id FK
@@ -2303,6 +2423,15 @@ erDiagram
     BIGINT user_id PK
     VARCHAR branch_id PK
   }
+  user_devices {
+    BIGSERIAL id PK
+    BIGINT user_id FK
+    VARCHAR fcmToken
+    VARCHAR deviceType
+    VARCHAR deviceModel
+    TIMESTAMPTZ lastRegisteredAt
+    BOOLEAN active
+  }
   user_documents {
     BIGSERIAL id PK
     BIGINT user_id FK
@@ -2315,6 +2444,8 @@ erDiagram
     TIMESTAMPTZ uploaded_at
   }
   user_leave_details {
+    DATE leave_reset_from
+    DATE leave_reset_to
     BIGSERIAL id PK
     BIGINT user_id FK
     INT casual_leave
@@ -2338,6 +2469,7 @@ erDiagram
     BOOLEAN allowed
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
+    BIGINT receiver_role_ids
   }
   user_profile_extension {
     UUID id PK
@@ -2347,6 +2479,10 @@ erDiagram
     TIMESTAMP updated_at
   }
   user_salary_details {
+    VARCHAR overtime_shift_type
+    TIME custom_shift_from
+    TIME custom_shift_to
+    NUMERIC overtime_shift_incentive
     BIGSERIAL id PK
     BIGINT user_id FK
     VARCHAR salary_type
@@ -2376,6 +2512,8 @@ erDiagram
     TIMESTAMPTZ updated_at
   }
   users {
+    VARCHAR profile_image_url
+    VARCHAR upi_id
     BIGSERIAL id PK
     VARCHAR emp_id
     VARCHAR first_name
@@ -2408,6 +2546,9 @@ erDiagram
     TIMESTAMPTZ last_login_at
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
+    BOOLEAN is_application_user
+    VARCHAR created_by
+    VARCHAR updated_by
   }
   vendor_product_supplies {
     VARCHAR id PK
@@ -2476,6 +2617,23 @@ erDiagram
     TIMESTAMPTZ updated_at
     TIMESTAMPTZ deleted_at
   }
+  technician_observation_sections ||--o{ technician_observation_pest_picks : "fk_topp_section"
+  technician_observation_sections ||--o{ technician_observation_structural_picks : "fk_tosp_section"
+  users ||--o{ technician_tracking : "fk_technician_tracking_user"
+  users ||--o{ user_additional_data : "fk_user_additional_user"
+  users ||--o{ user_branches : "fk_ub_user"
+  users ||--o{ user_devices : "fk_user_devices_user"
+  users ||--o{ user_documents : "fk_user_doc_user"
+  users ||--o{ user_leave_details : "fk_user_leave_user"
+  users ||--o{ user_permissions : "fk_up_user"
+  users ||--o{ user_salary_details : "fk_user_salary_user"
+  users ||--o{ users : "fk_users_reporting_manager"
+```
+
+### er_part_12_of_12
+
+```mermaid
+erDiagram
   voucher_allocations {
     VARCHAR id PK
     VARCHAR voucher_id FK
@@ -2539,13 +2697,6 @@ erDiagram
     TIMESTAMPTZ created_at
     TIMESTAMPTZ updated_at
   }
-  users ||--o{ user_additional_data : "fk_user_additional_user"
-  users ||--o{ user_branches : "fk_ub_user"
-  users ||--o{ user_documents : "fk_user_doc_user"
-  users ||--o{ user_leave_details : "fk_user_leave_user"
-  users ||--o{ user_permissions : "fk_up_user"
-  users ||--o{ user_salary_details : "fk_user_salary_user"
-  users ||--o{ users : "fk_users_reporting_manager"
   vouchers ||--o{ voucher_allocations : "fk_va_voucher"
   vouchers ||--o{ voucher_audit_logs : "fk_val_voucher"
   vouchers ||--o{ voucher_journal_lines : "fk_vjl_voucher"
@@ -2554,7 +2705,7 @@ erDiagram
 
 ## Mermaid FK Flowcharts (split)
 
-Note: schema big. Graph split into smaller parts so Mermaid renderer can load.
+Note: overview by table-name prefix, then per-group FK subgraphs. Dense groups use multiple parts (~45 edges each).
 
 ### group_overview
 
@@ -2637,7 +2788,7 @@ flowchart LR
   g_misc ---|9| g_support
   g_misc ---|6| g_task
   g_misc ---|3| g_technician
-  g_misc ---|9| g_user
+  g_misc ---|10| g_user
   g_misc ---|4| g_voucher
   g_observation ---|3| g_technician
   g_role ---|1| g_salary
@@ -2708,6 +2859,19 @@ flowchart LR
   end
   coa_account_heads --> coa_account_heads
   ledgers --> coa_account_heads
+```
+
+### group_company
+
+```mermaid
+flowchart LR
+  subgraph grp_company["company"]
+    company_details["company_details"]
+  end
+  subgraph grp_company_nbr_public["public"]
+    public_company_documents["public.company_documents"]
+  end
+  public_company_documents --> company_details
 ```
 
 ### group_contract
@@ -2985,23 +3149,19 @@ flowchart LR
   ledger_entries --> ledgers
 ```
 
-### group_misc
+### group_misc_part_1_of_3
 
 ```mermaid
 flowchart LR
   subgraph grp_misc["misc"]
-    actions["actions"]
     branches["branches"]
     contracts["contracts"]
-    customers["customers"]
     leads["leads"]
     ledgers["ledgers"]
-    modules["modules"]
     notifications["notifications"]
     quotations["quotations"]
     roles["roles"]
     services["services"]
-    tasks["tasks"]
     users["users"]
     vendors["vendors"]
     vouchers["vouchers"]
@@ -3067,6 +3227,64 @@ flowchart LR
     quotation_attachments["quotation_attachments"]
     quotation_audit_logs["quotation_audit_logs"]
     quotation_locations["quotation_locations"]
+  end
+  bill_payment_allocations --> vouchers
+  central_stock_entries --> users
+  central_stock_entries --> vendors
+  contract_amendment_logs --> contracts
+  contract_payment_lines --> contracts
+  contract_sales_order_links --> contracts
+  contract_sites --> contracts
+  contract_termination_logs --> contracts
+  follow_ups --> leads
+  gma_services --> services
+  gma_sheet_approver_roles --> roles
+  gma_sheets --> branches
+  gma_sheets --> leads
+  hiring_request_recipients --> users
+  hiring_requests --> users
+  hiring_requests --> roles
+  hrm_attendance_day --> users
+  hrm_leave_request --> users
+  hrm_salary_month --> users
+  invoice_payment_allocations --> vouchers
+  lead_audit_logs --> leads
+  leave_configuration --> roles
+  ledger_entries --> ledgers
+  ledgers --> coa_account_heads
+  notification_recipients --> notifications
+  notification_recipients --> users
+  petty_cash_audit_logs --> users
+  petty_cash_request_recipient_roles --> roles
+  petty_cash_request_recipients --> roles
+  petty_cash_request_recipients --> users
+  petty_cash_requests --> branches
+  petty_cash_requests --> users
+  purchase_order --> branches
+  purchase_order --> vendors
+  quotation_attachments --> quotations
+  quotation_audit_logs --> quotations
+  quotation_locations --> branches
+  quotation_locations --> quotations
+```
+
+### group_misc_part_2_of_3
+
+```mermaid
+flowchart LR
+  subgraph grp_misc["misc"]
+    actions["actions"]
+    branches["branches"]
+    customers["customers"]
+    leads["leads"]
+    modules["modules"]
+    quotations["quotations"]
+    roles["roles"]
+    services["services"]
+    tasks["tasks"]
+    users["users"]
+  end
+  subgraph grp_misc_nbr_quotation["quotation"]
     quotation_product_lines["quotation_product_lines"]
     quotation_prospects["quotation_prospects"]
     quotation_service_lines["quotation_service_lines"]
@@ -3113,55 +3331,8 @@ flowchart LR
   subgraph grp_misc_nbr_user["user"]
     user_additional_data["user_additional_data"]
     user_branches["user_branches"]
-    user_documents["user_documents"]
-    user_leave_details["user_leave_details"]
-    user_permissions["user_permissions"]
-    user_salary_details["user_salary_details"]
+    user_devices["user_devices"]
   end
-  subgraph grp_misc_nbr_voucher["voucher"]
-    voucher_allocations["voucher_allocations"]
-    voucher_audit_logs["voucher_audit_logs"]
-    voucher_journal_lines["voucher_journal_lines"]
-    voucher_settlement_links["voucher_settlement_links"]
-  end
-  bill_payment_allocations --> vouchers
-  central_stock_entries --> users
-  central_stock_entries --> vendors
-  contract_amendment_logs --> contracts
-  contract_payment_lines --> contracts
-  contract_sales_order_links --> contracts
-  contract_sites --> contracts
-  contract_termination_logs --> contracts
-  follow_ups --> leads
-  gma_services --> services
-  gma_sheet_approver_roles --> roles
-  gma_sheets --> branches
-  gma_sheets --> leads
-  hiring_request_recipients --> users
-  hiring_requests --> users
-  hiring_requests --> roles
-  hrm_attendance_day --> users
-  hrm_leave_request --> users
-  hrm_salary_month --> users
-  invoice_payment_allocations --> vouchers
-  lead_audit_logs --> leads
-  leave_configuration --> roles
-  ledger_entries --> ledgers
-  ledgers --> coa_account_heads
-  notification_recipients --> notifications
-  notification_recipients --> users
-  petty_cash_audit_logs --> users
-  petty_cash_request_recipient_roles --> roles
-  petty_cash_request_recipients --> roles
-  petty_cash_request_recipients --> users
-  petty_cash_requests --> branches
-  petty_cash_requests --> users
-  purchase_order --> branches
-  purchase_order --> vendors
-  quotation_attachments --> quotations
-  quotation_audit_logs --> quotations
-  quotation_locations --> branches
-  quotation_locations --> quotations
   quotation_product_lines --> quotations
   quotation_service_lines --> quotations
   quotation_service_lines --> services
@@ -3205,6 +3376,32 @@ flowchart LR
   technician_tracking --> users
   user_additional_data --> users
   user_branches --> users
+  user_devices --> users
+```
+
+### group_misc_part_3_of_3
+
+```mermaid
+flowchart LR
+  subgraph grp_misc["misc"]
+    actions["actions"]
+    modules["modules"]
+    roles["roles"]
+    users["users"]
+    vouchers["vouchers"]
+  end
+  subgraph grp_misc_nbr_user["user"]
+    user_documents["user_documents"]
+    user_leave_details["user_leave_details"]
+    user_permissions["user_permissions"]
+    user_salary_details["user_salary_details"]
+  end
+  subgraph grp_misc_nbr_voucher["voucher"]
+    voucher_allocations["voucher_allocations"]
+    voucher_audit_logs["voucher_audit_logs"]
+    voucher_journal_lines["voucher_journal_lines"]
+    voucher_settlement_links["voucher_settlement_links"]
+  end
   user_documents --> users
   user_leave_details --> roles
   user_leave_details --> users
@@ -3296,16 +3493,16 @@ flowchart LR
     public_modules["public.modules"]
     public_role_permissions["public.role_permissions"]
     public_roles["public.roles"]
-    public.subscription_plans["public.subscription_plans"]
+    public_subscription_plans["public.subscription_plans"]
     public_tenant_registry["public.tenant_registry"]
   end
   subgraph grp_public_nbr_company["company"]
     company_details["company_details"]
   end
-  public_company_details --> public.subscription_plans
+  public_company_details --> public_subscription_plans
   public_company_documents --> company_details
   public_company_subscription --> public_company_details
-  public_company_subscription --> public.subscription_plans
+  public_company_subscription --> public_subscription_plans
   public_email_verification_tokens --> public_global_users
   public_role_permissions --> public_actions
   public_role_permissions --> public_modules
@@ -3719,6 +3916,7 @@ flowchart LR
   subgraph grp_user["user"]
     user_additional_data["user_additional_data"]
     user_branches["user_branches"]
+    user_devices["user_devices"]
     user_documents["user_documents"]
     user_leave_details["user_leave_details"]
     user_permissions["user_permissions"]
@@ -3732,6 +3930,7 @@ flowchart LR
   end
   user_additional_data --> users
   user_branches --> users
+  user_devices --> users
   user_documents --> users
   user_leave_details --> roles
   user_leave_details --> users
@@ -3762,7 +3961,7 @@ flowchart LR
 
 ## Relationships (FKs)
 
-- Total: 199
+- Total: 200
 
 ```text
 asset_units(product_id) -> inventory_products(id) [fk_asset_units_product] ON DELETE RESTRICT
@@ -3951,6 +4150,7 @@ technician_tracking(task_id) -> tasks(id) [fk_technician_tracking_task] ON DELET
 technician_tracking(user_id) -> users(id) [fk_technician_tracking_user]
 user_additional_data(user_id) -> users(id) [fk_user_additional_user] ON DELETE CASCADE
 user_branches(user_id) -> users(id) [fk_ub_user] ON DELETE CASCADE
+user_devices(user_id) -> users(id) [fk_user_devices_user] ON DELETE CASCADE
 user_documents(user_id) -> users(id) [fk_user_doc_user] ON DELETE CASCADE
 user_leave_details(leave_approval_role_id) -> roles(id) [fk_user_leave_approval_role] ON DELETE SET NULL
 user_leave_details(user_id) -> users(id) [fk_user_leave_user] ON DELETE CASCADE
@@ -4066,6 +4266,13 @@ chk_asset_status: status IN ('AVAILABLE', 'ISSUED', 'IN_TRANSIT', 'MAINTENANCE',
 allocation_type IN ('PAYMENT','ADVANCE_ADJUSTMENT','DEBIT_NOTE')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_bpa_bill | NO | NO | bill_id |
+| idx_bpa_voucher | NO | NO | voucher_id |
+
 ---
 
 ### branches
@@ -4112,17 +4319,17 @@ chk_branch_status: status IN ('ACTIVE','INACTIVE')
 
 #### Indexes
 
-| Name | Unique | Columns |
-|---|---:|---|
-| idx_branch_status | NO | status |
-| idx_branch_city | NO | city |
-| idx_branch_state | NO | state |
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_branch_status | NO | NO | status |
+| idx_branch_city | NO | NO | city |
+| idx_branch_state | NO | NO | state |
 
 ---
 
 ### central_stock_entries
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V12__stock_management_core.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V55__central_stock_entry_supplier_assignee.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V12__stock_management_core.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V55__central_stock_entry_supplier_assignee.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V56__central_stock_invoice_copy_blob.sql
 - Primary key: id
 
 #### Columns
@@ -4133,6 +4340,9 @@ chk_branch_status: status IN ('ACTIVE','INACTIVE')
 | asset_id_prefix | VARCHAR(30) | YES | — |
 | asset_sequence_start | INTEGER | YES | — |
 | assets_qty | INTEGER | NO | 0 CHECK (assets_qty >= 0) |
+| assignee_branch_id | VARCHAR(30) | YES | — |
+| assignee_role | VARCHAR(80) | YES | — |
+| assignee_user_id | BIGINT | YES | — |
 | assignment_type | VARCHAR(30) | YES | — |
 | base_uom | VARCHAR(30) | YES | — |
 | batch_number | VARCHAR(80) | YES | — |
@@ -4147,7 +4357,9 @@ chk_branch_status: status IN ('ACTIVE','INACTIVE')
 | hsn_code | VARCHAR(20) | YES | — |
 | id | BIGSERIAL | NO | — |
 | invoice_amount | NUMERIC(14,2) | YES | — |
-| invoice_copy_url | TEXT | YES | — |
+| invoice_copy_content_type | VARCHAR(100) | YES | — |
+| invoice_copy_data | BYTEA | YES | — |
+| invoice_copy_file_name | VARCHAR(255) | YES | — |
 | invoice_date | DATE | YES | — |
 | invoice_number | VARCHAR(80) | YES | — |
 | manufacturing_date | DATE | YES | — |
@@ -4157,6 +4369,7 @@ chk_branch_status: status IN ('ACTIVE','INACTIVE')
 | purchase_order_ref | VARCHAR(80) | YES | — |
 | resell_qty | INTEGER | NO | 0 CHECK (resell_qty >= 0) |
 | status | VARCHAR(30) | NO | 'ACTIVE' |
+| supplier_id | VARCHAR(50) | YES | — |
 | supplier_name | VARCHAR(200) | YES | — |
 | tax_amount | NUMERIC(14,2) | YES | — |
 | total_qty | INTEGER | NO | — |
@@ -4191,10 +4404,10 @@ chk_central_stock_entry_qty_split: assets_qty + consumable_qty + resell_qty = to
 
 #### Indexes
 
-| Name | Unique | Columns |
-|---|---:|---|
-| idx_central_stock_entries_supplier_id | NO | supplier_id |
-| idx_central_stock_entries_assignee_user_id | NO | assignee_user_id |
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_central_stock_entries_supplier_id | NO | NO | supplier_id |
+| idx_central_stock_entries_assignee_user_id | NO | NO | assignee_user_id |
 
 ---
 
@@ -4250,17 +4463,24 @@ in_transit_qty >= 0
 reserved_qty >= 0
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_central_stock_ledger_product | NO | NO | product_id |
+
 ---
 
 ### coa_account_heads
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V40__chart_of_accounts_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V40__chart_of_accounts_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V49__finance_gap_closure_fields_tenant.sql
 - Primary key: id
 
 #### Columns
 
 | Column | Type | Nullable | Default |
 |---|---|---:|---|
+| affects_gp | BOOLEAN | NO | FALSE |
 | branch_id | VARCHAR(30) | YES | — |
 | branch_scope | VARCHAR(10) | NO | 'ALL' CHECK (branch_scope IN ('ALL' |
 | code | VARCHAR(30) | NO | — |
@@ -4296,6 +4516,51 @@ nature IN ('DR','CR')
 branch_scope IN ('ALL','BRANCH')
 status IN ('ACTIVE','INACTIVE')
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_coa_group_status | NO | NO | primary_group, status |
+| idx_coa_parent | NO | NO | parent_head_id |
+| idx_coa_postable | NO | NO | is_postable, status |
+
+---
+
+### company_details
+
+- Sources: seravion-connect-backend/src/main/resources/db/migration/public/V8__company_details.sql
+- Primary key: —
+
+#### Columns
+
+| Column | Type | Nullable | Default |
+|---|---|---:|---|
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_company_details_status | NO | NO | onboarding_status |
+
+---
+
+### company_documents
+
+- Sources: seravion-connect-backend/src/main/resources/db/migration/public/V8__company_details.sql
+- Primary key: —
+
+#### Columns
+
+| Column | Type | Nullable | Default |
+|---|---|---:|---|
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| uq_company_document_type | YES | NO | company_id, document_type |
+| idx_company_documents_company | NO | NO | company_id |
 
 ---
 
@@ -4350,11 +4615,18 @@ status IN ('ACTIVE','INACTIVE')
 |---|---|---|---|
 | fk_cal_contract | contract_id | contracts(id) | ON DELETE CASCADE |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_contract_amendment_logs_contract | NO | NO | contract_id |
+| idx_contract_amendment_logs_amended_at | NO | NO | amended_at DESC |
+
 ---
 
 ### contract_payment_lines
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V19__contract_management_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V19__contract_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V44__contract_payment_lines_audit_columns.sql
 - Primary key: id
 
 #### Columns
@@ -4363,6 +4635,7 @@ status IN ('ACTIVE','INACTIVE')
 |---|---|---:|---|
 | amount | NUMERIC(14,2) | NO | — |
 | contract_id | VARCHAR(50) | NO | — |
+| created_at | TIMESTAMPTZ | NO | now() |
 | due_date | DATE | YES | — |
 | id | VARCHAR(50) | NO | — |
 | locked | BOOLEAN | NO | FALSE |
@@ -4370,6 +4643,7 @@ status IN ('ACTIVE','INACTIVE')
 | period_description | VARCHAR(500) | YES | — |
 | period_label | VARCHAR(50) | YES | — |
 | sort_order | INTEGER | NO | 1 |
+| updated_at | TIMESTAMPTZ | YES | — |
 
 #### Foreign Keys
 
@@ -4377,11 +4651,17 @@ status IN ('ACTIVE','INACTIVE')
 |---|---|---|---|
 | fk_cpl_contract | contract_id | contracts(id) | ON DELETE CASCADE |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_cpl_contract | NO | NO | contract_id |
+
 ---
 
 ### contract_sales_order_links
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V19__contract_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V20__sales_order_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V19__contract_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V20__sales_order_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V48__contract_sales_order_links_audit_columns.sql
 - Primary key: id
 
 #### Columns
@@ -4389,13 +4669,16 @@ status IN ('ACTIVE','INACTIVE')
 | Column | Type | Nullable | Default |
 |---|---|---:|---|
 | contract_id | VARCHAR(50) | NO | — |
+| created_at | TIMESTAMPTZ | NO | now() |
 | id | VARCHAR(50) | NO | — |
 | period_label | VARCHAR(100) | YES | — |
 | sales_order_date | DATE | YES | — |
+| sales_order_id | VARCHAR(50) | YES | — |
 | sales_order_number | VARCHAR(50) | NO | — |
 | service_status | VARCHAR(30) | NO | 'PENDING' |
 | so_status | VARCHAR(30) | NO | 'DRAFT' |
 | so_value | NUMERIC(14,2) | NO | 0 |
+| updated_at | TIMESTAMPTZ | YES | — |
 
 #### Foreign Keys
 
@@ -4404,11 +4687,18 @@ status IN ('ACTIVE','INACTIVE')
 | fk_csol_contract | contract_id | contracts(id) | ON DELETE CASCADE |
 | fk_csol_sales_order | sales_order_id | sales_orders(id) | ON DELETE SET NULL |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_csol_contract | NO | NO | contract_id |
+| uk_csol_sales_order_id | YES | YES | sales_order_id |
+
 ---
 
 ### contract_site_services
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V19__contract_management_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V19__contract_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V45__contract_sites_and_services_audit_columns.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V88__contract_site_services_drop_technician_team_fields.sql
 - Primary key: id
 
 #### Columns
@@ -4418,6 +4708,7 @@ status IN ('ACTIVE','INACTIVE')
 | annual_frequency | INTEGER | NO | 0 |
 | contract_mode | VARCHAR(20) | NO | — |
 | contract_site_id | VARCHAR(50) | NO | — |
+| created_at | TIMESTAMPTZ | NO | now() |
 | display_order | INTEGER | NO | 1 |
 | frequency | VARCHAR(20) | YES | — |
 | id | VARCHAR(50) | NO | — |
@@ -4426,8 +4717,7 @@ status IN ('ACTIVE','INACTIVE')
 | service_sale_value | NUMERIC(14,2) | NO | 0 |
 | service_type_id | VARCHAR(50) | NO | — |
 | service_type_name | VARCHAR(200) | NO | — |
-| technician_team_id | VARCHAR(50) | NO | — |
-| technician_team_name | VARCHAR(200) | NO | — |
+| updated_at | TIMESTAMPTZ | YES | — |
 
 #### Foreign Keys
 
@@ -4442,11 +4732,17 @@ contract_mode IN ('CONTRACT', 'ONE_TIME')
 frequency IS NULL OR frequency IN ('WEEKLY', 'FORTNIGHTLY', 'MONTHLY', 'QUARTERLY', 'CUSTOM')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_css_site | NO | NO | contract_site_id |
+
 ---
 
 ### contract_sites
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V19__contract_management_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V19__contract_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V45__contract_sites_and_services_audit_columns.sql
 - Primary key: id
 
 #### Columns
@@ -4459,6 +4755,7 @@ frequency IS NULL OR frequency IN ('WEEKLY', 'FORTNIGHTLY', 'MONTHLY', 'QUARTERL
 | city | VARCHAR(100) | NO | — |
 | contract_id | VARCHAR(50) | NO | — |
 | country | VARCHAR(100) | NO | 'India' |
+| created_at | TIMESTAMPTZ | NO | now() |
 | display_order | INTEGER | NO | 1 |
 | gma_site_id | VARCHAR(50) | YES | — |
 | google_map_url | TEXT | YES | — |
@@ -4469,12 +4766,19 @@ frequency IS NULL OR frequency IN ('WEEKLY', 'FORTNIGHTLY', 'MONTHLY', 'QUARTERL
 | site_total_cost_year | NUMERIC(14,2) | NO | 0 |
 | state | VARCHAR(100) | NO | — |
 | sub_category | VARCHAR(20) | NO | — |
+| updated_at | TIMESTAMPTZ | YES | — |
 
 #### Foreign Keys
 
 | Name | Columns | References | Actions |
 |---|---|---|---|
 | fk_cs_contract | contract_id | contracts(id) | ON DELETE CASCADE |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_contract_sites_contract | NO | NO | contract_id |
 
 ---
 
@@ -4503,6 +4807,13 @@ frequency IS NULL OR frequency IN ('WEEKLY', 'FORTNIGHTLY', 'MONTHLY', 'QUARTERL
 | Name | Columns | References | Actions |
 |---|---|---|---|
 | fk_ctl_contract | contract_id | contracts(id) | ON DELETE CASCADE |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_contract_termination_logs_contract | NO | NO | contract_id |
+| idx_contract_termination_logs_terminated_at | NO | NO | terminated_at DESC |
 
 ---
 
@@ -4553,6 +4864,16 @@ duration_option IN ('SIX_MONTHS', 'ONE_YEAR', 'TWO_YEARS', 'THREE_YEARS', 'CUSTO
 renewal_type IS NULL OR renewal_type IN ('AUTO_RENEW', 'MANUAL', 'NON_RENEWABLE')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_contracts_customer | NO | NO | customer_id |
+| idx_contracts_gma | NO | NO | gma_sheet_id |
+| idx_contracts_branch | NO | NO | branch_id |
+| idx_contracts_status_dates | NO | NO | status, start_date, end_date |
+| uk_contracts_gma_open | YES | YES | gma_sheet_id |
+
 ---
 
 ### credit_notes
@@ -4598,6 +4919,13 @@ source IN ('MANUAL','AUTO_FROM_PAYMENT')
 status IN ('ISSUED','CANCELLED')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_cn_invoice | NO | NO | invoice_id |
+| idx_cn_date | NO | NO | cn_date |
+
 ---
 
 ### customer_audit_log
@@ -4621,7 +4949,7 @@ status IN ('ISSUED','CANCELLED')
 
 ### customers
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V18__customer_management.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V18__customer_management.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V43__customer_pending_field.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V87__customer_allow_partial_drafts.sql
 - Primary key: id
 
 #### Columns
@@ -4629,22 +4957,24 @@ status IN ('ISSUED','CANCELLED')
 | Column | Type | Nullable | Default |
 |---|---|---:|---|
 | alternate_phone | VARCHAR(15) | YES | — |
-| billing_address_line1 | TEXT | NO | — |
+| billing_address_line1 | TEXT | YES | — |
 | billing_address_line2 | TEXT | YES | — |
-| branch_id | VARCHAR(30) | NO | — |
-| city | VARCHAR(50) | NO | — |
-| contact_person | VARCHAR(100) | NO | — |
+| branch_id | VARCHAR(30) | YES | — |
+| city | VARCHAR(50) | YES | — |
+| contact_person | VARCHAR(100) | YES | — |
 | country | VARCHAR(50) | YES | 'India' |
 | created_at | TIMESTAMP WITH TIME ZONE | YES | CURRENT_TIMESTAMP |
 | created_by | VARCHAR(100) | YES | — |
-| customer_type | VARCHAR(20) | NO | — |
+| customer_type | VARCHAR(20) | YES | — |
+| deleted_at | TIMESTAMPTZ | YES | — |
+| deleted_by | VARCHAR(100) | YES | — |
 | designation | VARCHAR(100) | YES | — |
-| email | VARCHAR(100) | NO | — |
-| entry_mode | VARCHAR(20) | NO | — |
+| email | VARCHAR(100) | YES | — |
+| entry_mode | VARCHAR(20) | YES | — |
 | finance_contact_email | VARCHAR(100) | YES | — |
-| finance_contact_name | VARCHAR(100) | NO | — |
-| finance_contact_phone | VARCHAR(15) | NO | — |
-| full_name | VARCHAR(100) | NO | — |
+| finance_contact_name | VARCHAR(100) | YES | — |
+| finance_contact_phone | VARCHAR(15) | YES | — |
+| full_name | VARCHAR(100) | YES | — |
 | google_map_url | TEXT | YES | — |
 | gst_number | VARCHAR(15) | YES | — |
 | id | VARCHAR(50) | NO | — |
@@ -4652,10 +4982,10 @@ status IN ('ISSUED','CANCELLED')
 | is_deleted | BOOLEAN | YES | FALSE |
 | lead_id | VARCHAR(50) | YES | — |
 | pan_number | VARCHAR(10) | YES | — |
-| phone | VARCHAR(15) | NO | — |
-| pincode | VARCHAR(6) | NO | — |
+| phone | VARCHAR(15) | YES | — |
+| pincode | VARCHAR(6) | YES | — |
 | reason_for_deactivation | TEXT | YES | — |
-| state | VARCHAR(50) | NO | — |
+| state | VARCHAR(50) | YES | — |
 | status | VARCHAR(20) | YES | 'DRAFT' |
 | updated_at | TIMESTAMP WITH TIME ZONE | YES | CURRENT_TIMESTAMP |
 | updated_by | VARCHAR(100) | YES | — |
@@ -4666,6 +4996,13 @@ status IN ('ISSUED','CANCELLED')
 |---|---|
 | — | gst_number |
 | — | phone |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| uq_customers_phone_active | YES | YES | phone |
+| uq_customers_gst_active | YES | YES | gst_number |
 
 ---
 
@@ -4712,6 +5049,13 @@ source IN ('MANUAL','AUTO_FROM_PAYMENT')
 status IN ('ISSUED','CANCELLED')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_dn_bill | NO | NO | bill_id |
+| idx_dn_date | NO | NO | dn_date |
+
 ---
 
 ### follow_ups
@@ -4741,6 +5085,13 @@ status IN ('ISSUED','CANCELLED')
 | Name | Columns | References | Actions |
 |---|---|---|---|
 | fk_follow_ups_lead | lead_id | leads(id) | — |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_follow_ups_lead | NO | NO | lead_id |
+| idx_follow_ups_created_at | NO | NO | created_at DESC |
 
 ---
 
@@ -4772,6 +5123,13 @@ status IN ('ISSUED','CANCELLED')
 ```text
 action IN ( 'DRAFT_CREATED', 'SUBMITTED', 'APPROVED_AUTO', 'APPROVED_MANUAL', 'REJECTED', 'REVOKED' )
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_gmaaud_sheet | NO | NO | gma_sheet_id |
+| idx_gmaaud_action_at | NO | NO | action_at DESC |
 
 ---
 
@@ -4814,6 +5172,13 @@ coverage_sqft > 0
 required_qty_per_visit > 0
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_gmachem_service | NO | NO | gma_service_id |
+| idx_gmachem_product | NO | NO | product_id |
+
 ---
 
 ### gma_prospects
@@ -4840,6 +5205,14 @@ required_qty_per_visit > 0
 | state | VARCHAR(100) | NO | — |
 | updated_at | TIMESTAMPTZ | YES | — |
 | updated_by | VARCHAR(100) | YES | — |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_gmap_phone | NO | NO | phone |
+| idx_gmap_email | NO | NO | email |
+| idx_gmap_name | NO | NO | lower(full_name |
 
 ---
 
@@ -4889,6 +5262,13 @@ frequency IN ('WEEKLY', 'FORTNIGHTLY', 'MONTHLY', 'QUARTERLY', 'CUSTOM')
 annual_frequency > 0
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_gmasvc_site | NO | NO | gma_site_id |
+| idx_gmasvc_type | NO | NO | service_type_id |
+
 ---
 
 ### gma_sheet_approver_roles
@@ -4911,11 +5291,17 @@ annual_frequency > 0
 | fk_gsar_sheet | gma_sheet_id | gma_sheets(id) | ON DELETE CASCADE |
 | fk_gsar_role | role_id | roles(id) | ON DELETE CASCADE |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_gsar_role | NO | NO | role_id |
+
 ---
 
 ### gma_sheets
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V17__gma_management_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V17__gma_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V19__contract_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V20__sales_order_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V86__gma_draft_relax_required_fields.sql
 - Primary key: id
 
 #### Columns
@@ -4925,7 +5311,9 @@ annual_frequency > 0
 | approval_remarks | TEXT | YES | — |
 | approved_on | TIMESTAMPTZ | YES | — |
 | approver_id | BIGINT | YES | — |
-| branch_id | VARCHAR(30) | NO | — |
+| branch_id | VARCHAR(30) | YES | — |
+| consumed_by_contract_id | VARCHAR(50) | YES | — |
+| contract_consumed | BOOLEAN | NO | FALSE |
 | contract_duration | VARCHAR(20) | YES | — |
 | created_at | TIMESTAMPTZ | NO | now() |
 | created_by | VARCHAR(100) | YES | — |
@@ -4940,10 +5328,11 @@ annual_frequency > 0
 | lead_id | VARCHAR(50) | YES | — |
 | overall_gross_margin | NUMERIC(5,2) | NO | 0 |
 | prepared_by_id | BIGINT | NO | — |
-| proposed_start_date | DATE | NO | — |
+| proposed_start_date | DATE | YES | — |
 | prospect_id | VARCHAR(50) | YES | — |
 | remarks | TEXT | YES | — |
-| source_type | VARCHAR(20) | NO | — |
+| sales_order_consumed | BOOLEAN | NO | FALSE |
+| source_type | VARCHAR(20) | YES | — |
 | status | VARCHAR(20) | NO | 'DRAFT' CHECK (status IN ('DRAFT' |
 | submitted_on | TIMESTAMPTZ | YES | — |
 | total_annual_cost | NUMERIC(14,2) | NO | 0 |
@@ -4969,6 +5358,23 @@ contract_duration IN ('SIX_MONTHS', 'ONE_YEAR', 'TWO_YEARS', 'THREE_YEARS', 'CUS
 status IN ('DRAFT', 'PENDING', 'APPROVED', 'REJECTED')
 chk_gma_source_xor: ( (CASE WHEN lead_id IS NOT NULL THEN 1 ELSE 0 END) + (CASE WHEN customer_id IS NOT NULL THEN 1 ELSE 0 END) + (CASE WHEN prospect_id IS NOT NULL THEN 1 ELSE 0 END) ) = 1
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_gma_status | NO | YES | status |
+| idx_gma_source_type | NO | YES | source_type |
+| idx_gma_lead | NO | NO | lead_id |
+| idx_gma_customer | NO | NO | customer_id |
+| idx_gma_prospect | NO | NO | prospect_id |
+| idx_gma_branch | NO | NO | branch_id |
+| idx_gma_prepared_by | NO | NO | prepared_by_id |
+| idx_gma_approver | NO | NO | approver_id |
+| idx_gma_created_at | NO | YES | created_at DESC |
+| idx_gma_status_created | NO | YES | status, created_at DESC |
+| idx_gma_approver_status | NO | YES | approver_id, status |
+| idx_gma_contract_consumed | NO | YES | status, contract_consumed |
 
 ---
 
@@ -5019,6 +5425,12 @@ sub_category IN ('INTERNAL', 'EXTERNAL')
 area_sqft > 0
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_gmasite_sheet | NO | NO | gma_sheet_id |
+
 ---
 
 ### hiring_request_branches
@@ -5038,6 +5450,12 @@ area_sqft > 0
 | Name | Columns | References | Actions |
 |---|---|---|---|
 | fk_hrb_hiring_request | hiring_request_id | hiring_requests(id) | ON DELETE CASCADE |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_hrb_hiring_request_id | NO | NO | hiring_request_id |
 
 ---
 
@@ -5060,6 +5478,13 @@ area_sqft > 0
 |---|---|---|---|
 | fk_hrr_hiring_request | hiring_request_id | hiring_requests(id) | ON DELETE CASCADE |
 | fk_hrr_user | recipient_user_id | users(id) | ON DELETE CASCADE |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_hrr_hiring_request_id | NO | NO | hiring_request_id |
+| idx_hrr_recipient_user_id | NO | NO | recipient_user_id |
 
 ---
 
@@ -5113,11 +5538,19 @@ number_of_positions BETWEEN 1 AND 100
 status IN ('PENDING', 'APPROVED', 'REJECTED', 'CONVERTED')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_hiring_requests_requested_by | NO | NO | requested_by_user_id |
+| idx_hiring_requests_status | NO | NO | status |
+| idx_hiring_requests_proposed_role | NO | NO | proposed_role_id |
+
 ---
 
 ### hrm_attendance_day
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V28__hrm_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V28__hrm_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V29__mobile_field_operations.sql
 - Primary key: id
 
 #### Columns
@@ -5130,7 +5563,11 @@ status IN ('PENDING', 'APPROVED', 'REJECTED', 'CONVERTED')
 | id | BIGSERIAL | NO | — |
 | notes | VARCHAR(1000) | YES | — |
 | punch_in_at | TIMESTAMPTZ | YES | — |
+| punch_in_lat | NUMERIC(10, 7) | YES | — |
+| punch_in_lng | NUMERIC(10, 7) | YES | — |
 | punch_out_at | TIMESTAMPTZ | YES | — |
+| punch_out_lat | NUMERIC(10, 7) | YES | — |
+| punch_out_lng | NUMERIC(10, 7) | YES | — |
 | source | VARCHAR(20) | NO | 'MANUAL' CHECK (source IN ('TASK' |
 | status | VARCHAR(20) | NO | — |
 | tasks_assigned | INT | NO | 0 |
@@ -5160,6 +5597,13 @@ status IN ('PRESENT', 'ABSENT', 'LEAVE', 'WEEK_OFF', 'HOLIDAY', 'HALF_DAY')
 source IN ('TASK', 'AUTO', 'MANUAL', 'UPLOAD')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_hrm_attendance_user | NO | NO | user_id |
+| idx_hrm_attendance_date | NO | NO | attendance_date |
+
 ---
 
 ### hrm_holidays
@@ -5183,6 +5627,12 @@ source IN ('TASK', 'AUTO', 'MANUAL', 'UPLOAD')
 | Name | Columns |
 |---|---|
 | uk_hrm_holiday | holiday_date, branch_id |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_hrm_holidays_date | NO | NO | holiday_date |
 
 ---
 
@@ -5232,6 +5682,14 @@ leave_type IN ('CL', 'SL', 'PL')
 status IN ('PENDING', 'APPROVED', 'REJECTED')
 chk_hrm_leave_dates: from_date <= to_date
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_hrm_leave_user | NO | NO | user_id |
+| idx_hrm_leave_status | NO | NO | status |
+| idx_hrm_leave_dates | NO | NO | from_date, to_date |
 
 ---
 
@@ -5294,6 +5752,13 @@ salary_month BETWEEN 1 AND 12
 payment_status IN ('PAID', 'UNPAID', 'DUE')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_hrm_salary_user | NO | NO | user_id |
+| idx_hrm_salary_year_month | NO | NO | salary_year, salary_month |
+
 ---
 
 ### hrm_salary_slip
@@ -5350,6 +5815,13 @@ payment_status IN ('PAID', 'UNPAID', 'DUE')
 |---|---|
 | uq_hsn_tax | hsn_code_id, tax_type_id |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_hsn_code_tax_types_hsn_id | NO | NO | hsn_code_id |
+| idx_hsn_code_tax_types_tax_id | NO | NO | tax_type_id |
+
 ---
 
 ### hsn_codes
@@ -5390,6 +5862,15 @@ chk_hsn_status: status IN ('ACTIVE', 'INACTIVE')
 chk_product_category: product_category IN ('ASSET', 'CONSUMABLES', 'RESALE')
 chk_product_subcategory: product_subcategory IN ('CHEMICALS', 'MACHINE', 'SPRAYER', 'POWDER')
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_hsn_codes_status | NO | NO | status |
+| idx_hsn_codes_category | NO | NO | product_category |
+| idx_hsn_codes_created_at | NO | NO | created_at |
+| idx_hsn_codes_composite_filter | NO | NO | status, product_category, created_at |
 
 ---
 
@@ -5452,6 +5933,12 @@ overtime_shift_type IN ('NIGHT', 'NORMAL', 'CUSTOM')
 |---|---|
 | — | name |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_inventory_brands_active | NO | NO | is_active |
+
 ---
 
 ### inventory_product_media
@@ -5477,7 +5964,7 @@ overtime_shift_type IN ('NIGHT', 'NORMAL', 'CUSTOM')
 
 ### inventory_products
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V11__inventory_product.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V72__inventory_products_brand_fk.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V11__inventory_product.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V70__inventory_products_group_key.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V72__inventory_products_brand_fk.sql
 - Primary key: id
 
 #### Columns
@@ -5488,12 +5975,14 @@ overtime_shift_type IN ('NIGHT', 'NORMAL', 'CUSTOM')
 | base_price | DOUBLE PRECISION | YES | — |
 | base_uom | VARCHAR(100) | YES | — |
 | brand | VARCHAR(100) | YES | — |
+| brand_id | VARCHAR(50) | YES | — |
 | category | VARCHAR(100) | YES | — |
 | created_at | TIMESTAMPTZ | YES | now() |
 | created_by | VARCHAR(100) | YES | — |
 | deleted_at | TIMESTAMPTZ | YES | — |
 | deleted_by | VARCHAR(100) | YES | — |
 | description | TEXT | YES | — |
+| group_key | VARCHAR(60) | YES | — |
 | hsn_code | VARCHAR(100) | YES | — |
 | id | VARCHAR(50) | NO | — |
 | package_type | VARCHAR(100) | YES | — |
@@ -5530,6 +6019,13 @@ overtime_shift_type IN ('NIGHT', 'NORMAL', 'CUSTOM')
 | — | product_code |
 | — | variant_sku |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_inventory_products_group_key | NO | NO | group_key |
+| idx_inventory_products_brand_id | NO | NO | brand_id |
+
 ---
 
 ### invoice_payment_allocations
@@ -5562,6 +6058,13 @@ overtime_shift_type IN ('NIGHT', 'NORMAL', 'CUSTOM')
 allocation_type IN ('PAYMENT','ADVANCE_ADJUSTMENT','CREDIT_NOTE')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_ipa_invoice | NO | NO | invoice_id |
+| idx_ipa_voucher | NO | NO | voucher_id |
+
 ---
 
 ### lead_audit_logs
@@ -5587,11 +6090,17 @@ allocation_type IN ('PAYMENT','ADVANCE_ADJUSTMENT','CREDIT_NOTE')
 |---|---|---|---|
 | fk_audit_lead | lead_id | leads(id) | — |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_lead_audit_lead | NO | NO | lead_id |
+
 ---
 
 ### leads
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V10__lead_followup_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V10__lead_followup_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V83__lead_draft_support.sql
 - Primary key: id
 
 #### Columns
@@ -5600,7 +6109,7 @@ allocation_type IN ('PAYMENT','ADVANCE_ADJUSTMENT','CREDIT_NOTE')
 |---|---|---:|---|
 | alternate_number | VARCHAR(15) | YES | — |
 | assigned_to_id | BIGINT | YES | — |
-| branch_id | VARCHAR(30) | NO | — |
+| branch_id | VARCHAR(30) | YES | — |
 | budget_range | VARCHAR(50) | YES | — |
 | created_at | TIMESTAMP | NO | — |
 | created_by | VARCHAR(100) | YES | — |
@@ -5608,15 +6117,15 @@ allocation_type IN ('PAYMENT','ADVANCE_ADJUSTMENT','CREDIT_NOTE')
 | gma_status | VARCHAR(20) | NO | — |
 | id | VARCHAR(50) | NO | — |
 | lead_date | DATE | NO | — |
-| lead_description | TEXT | NO | — |
-| lead_name | VARCHAR(200) | NO | — |
-| lead_type | VARCHAR(20) | NO | — |
+| lead_description | TEXT | YES | — |
+| lead_name | VARCHAR(200) | YES | — |
+| lead_type | VARCHAR(20) | YES | — |
 | lost_reason | TEXT | YES | — |
-| mobile_number | VARCHAR(15) | NO | — |
+| mobile_number | VARCHAR(15) | YES | — |
 | next_follow_up_date | DATE | YES | — |
-| priority | VARCHAR(20) | NO | — |
+| priority | VARCHAR(20) | YES | — |
 | service_type | VARCHAR(50) | YES | — |
-| source | VARCHAR(50) | NO | — |
+| source | VARCHAR(50) | YES | — |
 | status | VARCHAR(20) | NO | — |
 | updated_at | TIMESTAMP | NO | — |
 | updated_by | VARCHAR(100) | YES | — |
@@ -5627,6 +6136,21 @@ allocation_type IN ('PAYMENT','ADVANCE_ADJUSTMENT','CREDIT_NOTE')
 |---|---|
 | uk_leads_mobile | mobile_number |
 | uk_leads_email | email_id |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_leads_status | NO | NO | status |
+| idx_leads_source | NO | NO | source |
+| idx_leads_priority | NO | NO | priority |
+| idx_leads_branch | NO | NO | branch_id |
+| idx_leads_type | NO | NO | lead_type |
+| idx_leads_date | NO | NO | lead_date |
+| idx_leads_created_at | NO | NO | created_at DESC |
+| idx_leads_name | NO | NO | lead_name |
+| idx_leads_mobile | NO | NO | mobile_number |
+| idx_leads_email | NO | NO | email_id |
 
 ---
 
@@ -5703,11 +6227,20 @@ posting_status IN ('POSTED','REVERSED')
 chk_le_one_side: (CASE WHEN dr_amount > 0 THEN 1 ELSE 0 END) + (CASE WHEN cr_amount > 0 THEN 1 ELSE 0 END) = 1
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_le_ledger_date | NO | NO | ledger_id, entry_date |
+| idx_le_ref | NO | NO | ref_type, ref_id |
+| idx_le_voucher | NO | NO | voucher_no |
+| idx_le_branch_date | NO | NO | branch_id, entry_date |
+
 ---
 
 ### ledgers
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V39__ledger_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V40__chart_of_accounts_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V39__ledger_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V40__chart_of_accounts_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V49__finance_gap_closure_fields_tenant.sql
 - Primary key: id
 
 #### Columns
@@ -5715,7 +6248,16 @@ chk_le_one_side: (CASE WHEN dr_amount > 0 THEN 1 ELSE 0 END) + (CASE WHEN cr_amo
 | Column | Type | Nullable | Default |
 |---|---|---:|---|
 | account_head_id | VARCHAR(50) | NO | — |
+| bank_account_number | VARCHAR(50) | YES | — |
+| bank_account_type | VARCHAR(30) | YES | — |
+| bank_branch_name | VARCHAR(150) | YES | — |
+| bank_ifsc_code | VARCHAR(20) | YES | — |
+| bank_name | VARCHAR(150) | YES | — |
 | branch_id | VARCHAR(30) | YES | — |
+| contact_address | TEXT | YES | — |
+| contact_email | VARCHAR(150) | YES | — |
+| contact_person | VARCHAR(150) | YES | — |
+| contact_phone | VARCHAR(20) | YES | — |
 | created_at | TIMESTAMPTZ | NO | now() |
 | created_by | VARCHAR(100) | YES | — |
 | credit_limit | NUMERIC(14,2) | NO | 0 |
@@ -5729,6 +6271,8 @@ chk_le_one_side: (CASE WHEN dr_amount > 0 THEN 1 ELSE 0 END) + (CASE WHEN cr_amo
 | opening_as_on | DATE | NO | — |
 | opening_balance | NUMERIC(14,2) | NO | 0 |
 | opening_balance_type | VARCHAR(2) | NO | — |
+| party_gstin | VARCHAR(20) | YES | — |
+| party_pan | VARCHAR(15) | YES | — |
 | status | VARCHAR(20) | NO | 'ACTIVE' CHECK (status IN ('ACTIVE' |
 | tds_applicable | BOOLEAN | NO | FALSE |
 | tds_section | VARCHAR(20) | YES | — |
@@ -5754,6 +6298,16 @@ ledger_type IN ('CUSTOMER','VENDOR','BANK','CASH','INTERNAL','TAX')
 opening_balance_type IN ('DR','CR')
 status IN ('ACTIVE','INACTIVE')
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_ledgers_head | NO | NO | account_head_id |
+| idx_ledgers_type | NO | NO | ledger_type |
+| idx_ledgers_branch_status | NO | NO | branch_id, status |
+| idx_ledgers_customer | NO | NO | linked_customer_id |
+| idx_ledgers_vendor | NO | NO | linked_vendor_id |
 
 ---
 
@@ -5807,6 +6361,13 @@ status IN ('ACTIVE','INACTIVE')
 |---|---|
 | uk_nr_notification_user | notification_id, user_id |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_nr_user_unread | NO | YES | user_id, read_at |
+| idx_nr_user_delivered_at | NO | NO | user_id, delivered_at DESC |
+
 ---
 
 ### notifications
@@ -5835,6 +6396,13 @@ status IN ('ACTIVE','INACTIVE')
 priority IN ('LOW', 'NORMAL', 'HIGH', 'CRITICAL')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_notifications_created_at | NO | NO | created_at DESC |
+| idx_notifications_module_event | NO | NO | module_no, event_type |
+
 ---
 
 ### observation_options_hygiene
@@ -5851,6 +6419,12 @@ priority IN ('LOW', 'NORMAL', 'HIGH', 'CRITICAL')
 | id | VARCHAR(50) | NO | — |
 | is_active | BOOLEAN | NO | TRUE |
 | label | VARCHAR(255) | NO | — |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_obs_hygiene_active | NO | NO | is_active, display_order |
 
 ---
 
@@ -5869,6 +6443,12 @@ priority IN ('LOW', 'NORMAL', 'HIGH', 'CRITICAL')
 | is_active | BOOLEAN | NO | TRUE |
 | label | VARCHAR(255) | NO | — |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_obs_pest_active | NO | NO | is_active, display_order |
+
 ---
 
 ### observation_options_structural
@@ -5885,6 +6465,12 @@ priority IN ('LOW', 'NORMAL', 'HIGH', 'CRITICAL')
 | id | VARCHAR(50) | NO | — |
 | is_active | BOOLEAN | NO | TRUE |
 | label | VARCHAR(255) | NO | — |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_obs_structural_active | NO | NO | is_active, display_order |
 
 ---
 
@@ -5920,6 +6506,13 @@ priority IN ('LOW', 'NORMAL', 'HIGH', 'CRITICAL')
 attachment_type IN ('RECEIPT','PAYMENT_PROOF')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_pc_att_request | NO | NO | request_id |
+| idx_pc_att_type | NO | NO | attachment_type |
+
 ---
 
 ### petty_cash_audit_logs
@@ -5952,6 +6545,13 @@ attachment_type IN ('RECEIPT','PAYMENT_PROOF')
 action IN ( 'DRAFT_SAVED', 'SUBMITTED', 'RECIPIENTS_SELECTED', 'REVOKED', 'APPROVED', 'REJECTED', 'RETURNED', 'PAID' )
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_pc_aud_request | NO | NO | request_id |
+| idx_pc_aud_time | NO | NO | action_at DESC |
+
 ---
 
 ### petty_cash_request_recipient_roles
@@ -5973,6 +6573,13 @@ action IN ( 'DRAFT_SAVED', 'SUBMITTED', 'RECIPIENTS_SELECTED', 'REVOKED', 'APPRO
 |---|---|---|---|
 | fk_pc_rr_request | request_id | petty_cash_requests(id) | ON DELETE CASCADE |
 | fk_pc_rr_role | recipient_role_id | roles(id) | ON DELETE CASCADE |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_pc_rr_request_id | NO | NO | request_id |
+| idx_pc_rr_recipient_role_id | NO | NO | recipient_role_id |
 
 ---
 
@@ -6004,6 +6611,14 @@ action IN ( 'DRAFT_SAVED', 'SUBMITTED', 'RECIPIENTS_SELECTED', 'REVOKED', 'APPRO
 ```text
 chk_pc_rec_one_target: ( (CASE WHEN recipient_user_id IS NOT NULL THEN 1 ELSE 0 END) + (CASE WHEN recipient_role_id IS NOT NULL THEN 1 ELSE 0 END) ) = 1
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_pc_rec_request | NO | NO | request_id |
+| idx_pc_rec_user | NO | NO | recipient_user_id |
+| idx_pc_rec_role | NO | NO | recipient_role_id |
 
 ---
 
@@ -6077,6 +6692,19 @@ payment_mode_processed IN ('BANK_TRANSFER','UPI','CASH','CHEQUE')
 chk_pc_expense_date_range: expense_date_to >= expense_date_from
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_pc_status | NO | NO | status |
+| idx_pc_branch | NO | NO | requester_branch_id |
+| idx_pc_requester | NO | NO | requester_user_id |
+| idx_pc_created_at | NO | NO | created_at DESC |
+| idx_pc_submitted_at | NO | NO | submitted_at DESC |
+| idx_pc_category | NO | NO | category |
+| idx_pc_payment_date | NO | NO | payment_date DESC |
+| uq_petty_cash_transaction_ref | YES | YES | lower(trim(transaction_ref |
+
 ---
 
 ### public.actions
@@ -6112,6 +6740,7 @@ chk_pc_expense_date_range: expense_date_to >= expense_date_from
 |---|---|---:|---|
 | address_line_1 | VARCHAR(255) | NO | — |
 | address_line_2 | VARCHAR(255) | YES | — |
+| admin_comment | TEXT | YES | — |
 | city | VARCHAR(100) | NO | — |
 | company_code | VARCHAR(30) | NO | — |
 | company_name | VARCHAR(150) | NO | — |
@@ -6120,17 +6749,22 @@ chk_pc_expense_date_range: expense_date_to >= expense_date_from
 | contact_person_phone | VARCHAR(10) | NO | — |
 | created_at | TIMESTAMPTZ | NO | NOW() |
 | created_by | BIGINT | YES | — |
+| enable_trial | BOOLEAN | NO | FALSE |
 | gst_number | VARCHAR(15) | NO | — |
 | id | BIGSERIAL | NO | — |
 | industry_type | VARCHAR(100) | NO | — |
 | is_active | BOOLEAN | NO | TRUE |
 | license_number | VARCHAR(100) | YES | — |
+| office_shop_number | VARCHAR(100) | YES | — |
 | onboarding_status | VARCHAR(30) | NO | 'PENDING_COMPANY_DETAILS' |
 | pan_number | VARCHAR(10) | NO | — |
 | pincode | VARCHAR(6) | NO | — |
 | rejection_reason | TEXT | YES | — |
 | state | VARCHAR(100) | NO | — |
 | submitted_at | TIMESTAMPTZ | YES | — |
+| subscription_plan_id | VARCHAR(30) | YES | — |
+| trial_from_date | DATE | YES | — |
+| trial_to_date | DATE | YES | — |
 | updated_at | TIMESTAMPTZ | YES | — |
 | updated_by | BIGINT | YES | — |
 | verified_at | TIMESTAMPTZ | YES | — |
@@ -6149,6 +6783,12 @@ chk_pc_expense_date_range: expense_date_to >= expense_date_from
 | — | company_code |
 | — | gst_number |
 | — | pan_number |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_company_details_subscription_plan | NO | NO | subscription_plan_id |
 
 ---
 
@@ -6241,6 +6881,15 @@ chk_company_subscription_duration: duration_type IN ('MONTHLY', 'QUARTERLY', 'AN
 chk_company_subscription_status: status IN ('PENDING_PAYMENT', 'ACTIVE', 'EXPIRED', 'CANCELLED')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_company_subscription_company | NO | NO | company_id |
+| idx_company_subscription_status | NO | NO | status |
+| idx_company_subscription_plan | NO | NO | subscription_plan_id |
+| idx_company_subscription_dates | NO | NO | start_date, end_date |
+
 ---
 
 ### public.email_verification_tokens
@@ -6268,6 +6917,12 @@ chk_company_subscription_status: status IN ('PENDING_PAYMENT', 'ACTIVE', 'EXPIRE
 | Name | Columns |
 |---|---|
 | — | token |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_evt_token | NO | NO | token |
 
 ---
 
@@ -6302,6 +6957,13 @@ chk_company_subscription_status: status IN ('PENDING_PAYMENT', 'ACTIVE', 'EXPIRE
 | — | email |
 | — | username |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_global_users_email | NO | NO | email |
+| idx_global_users_username | NO | NO | username |
+
 ---
 
 ### public.modules
@@ -6323,6 +6985,47 @@ chk_company_subscription_status: status IN ('PENDING_PAYMENT', 'ACTIVE', 'EXPIRE
 | Name | Columns |
 |---|---|
 | — | name |
+
+---
+
+### public.password_reset_challenge
+
+- Sources: seravion-connect-backend/src/main/resources/db/migration/public/V22__password_reset_challenge.sql
+- Primary key: id
+
+#### Columns
+
+| Column | Type | Nullable | Default |
+|---|---|---:|---|
+| attempt_count | INTEGER | NO | 0 |
+| channel | VARCHAR(20) | NO | — |
+| consumed_at | TIMESTAMPTZ | YES | — |
+| country_code | VARCHAR(4) | YES | — |
+| created_at | TIMESTAMPTZ | NO | NOW() |
+| expires_at | TIMESTAMPTZ | NO | — |
+| id | UUID | NO | — |
+| identifier_normalized | VARCHAR(255) | NO | — |
+| mobile_digits | VARCHAR(15) | YES | — |
+| otp_hash | VARCHAR(255) | YES | — |
+| subject_kind | VARCHAR(20) | NO | — |
+| target_user_id | BIGINT | NO | — |
+| tenant_schema | VARCHAR(63) | YES | — |
+| verification_id | VARCHAR(255) | YES | — |
+| verified_at | TIMESTAMPTZ | YES | — |
+
+#### Check Constraints
+
+```text
+chk_password_reset_subject_kind: subject_kind IN ('CEO', 'TENANT')
+chk_password_reset_channel: channel IN ('EMAIL', 'SMS')
+```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_password_reset_challenge_lookup | NO | NO | subject_kind, identifier_normalized, created_at DESC |
+| idx_password_reset_challenge_target | NO | NO | subject_kind, tenant_schema, target_user_id |
 
 ---
 
@@ -6358,11 +7061,18 @@ chk_company_subscription_status: status IN ('PENDING_PAYMENT', 'ACTIVE', 'EXPIRE
 |---|---|
 | uk_rp_role_module_action | role_id, module_id, action_id |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_rp_lookup | NO | NO | role_id, module_id, action_id |
+| idx_rp_lookup_allowed | NO | YES | role_id, module_id, action_id |
+
 ---
 
 ### public.roles
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/public/V1__init_public.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/public/V12__remove_constraint.sql, seravion-connect-backend/src/main/resources/db/migration/public/V1__init_public.sql
 - Primary key: id
 
 #### Columns
@@ -6395,17 +7105,18 @@ created_by IN ('SERAVION')
 
 ### public.root_user
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/public/V1__init_public.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/public/V1__init_public.sql, seravion-connect-backend/src/main/resources/db/migration/public/V2__update_root_user.sql
 - Primary key: id
 
 #### Columns
 
 | Column | Type | Nullable | Default |
 |---|---|---:|---|
+| active | BOOLEAN | NO | TRUE |
 | created_at | TIMESTAMPTZ | NO | now() |
 | email | VARCHAR(255) | NO | — |
 | id | BIGSERIAL | NO | — |
-| is_active | BOOLEAN | NO | TRUE |
+| name | VARCHAR(150) | YES | — |
 | password | VARCHAR(255) | NO | — |
 | role | VARCHAR(255) | NO | — |
 | updated_at | TIMESTAMPTZ | NO | now() |
@@ -6420,6 +7131,20 @@ created_by IN ('SERAVION')
 
 ---
 
+### public.subscription_plans
+
+- Sources: seravion-connect-backend/src/main/resources/db/migration/public/V9__company_subscription.sql
+- Primary key: —
+
+#### Columns
+
+| Column | Type | Nullable | Default |
+|---|---|---:|---|
+| extra_price_per_branch | NUMERIC(12,2) | NO | 0 |
+| extra_price_per_technician | NUMERIC(12,2) | NO | 0 |
+
+---
+
 ### public.tenant_registry
 
 - Sources: seravion-connect-backend/src/main/resources/db/migration/public/V1__init_public.sql, seravion-connect-backend/src/main/resources/db/migration/public/V21__add_company_id_to_tenant_registry.sql
@@ -6429,6 +7154,7 @@ created_by IN ('SERAVION')
 
 | Column | Type | Nullable | Default |
 |---|---|---:|---|
+| company_id | BIGINT | YES | — |
 | created_at | TIMESTAMPTZ | NO | now() |
 | display_name | VARCHAR(255) | YES | — |
 | id | BIGSERIAL | NO | — |
@@ -6448,6 +7174,12 @@ created_by IN ('SERAVION')
 | Name | Columns |
 |---|---|
 | — | schema_name |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_tenant_registry_schema_name | NO | NO | schema_name |
 
 ---
 
@@ -6470,6 +7202,13 @@ created_by IN ('SERAVION')
 | Name | Columns |
 |---|---|
 | — | token |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_token_blacklist_expires_at | NO | NO | expires_at |
+| idx_token_blacklist_token | NO | NO | token |
 
 ---
 
@@ -6504,6 +7243,12 @@ created_by IN ('SERAVION')
 attachment_type IN ('VENDOR_BILL','GRN','SUPPORTING_DOC')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_pba_bill | NO | NO | bill_id |
+
 ---
 
 ### purchase_bill_audit_logs
@@ -6527,6 +7272,12 @@ attachment_type IN ('VENDOR_BILL','GRN','SUPPORTING_DOC')
 | Name | Columns | References | Actions |
 |---|---|---|---|
 | fk_pbal_bill | bill_id | purchase_bills(id) | ON DELETE CASCADE |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_pbal_bill | NO | NO | bill_id |
 
 ---
 
@@ -6567,17 +7318,24 @@ attachment_type IN ('VENDOR_BILL','GRN','SUPPORTING_DOC')
 item_type IN ('PRODUCT','SERVICE','EXPENSE')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_pbl_bill | NO | NO | bill_id |
+
 ---
 
 ### purchase_bills
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V37__bills_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V37__bills_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V49__finance_gap_closure_fields_tenant.sql
 - Primary key: id
 
 #### Columns
 
 | Column | Type | Nullable | Default |
 |---|---|---:|---|
+| attachment_url | TEXT | YES | — |
 | bill_date | DATE | NO | — |
 | bill_number | VARCHAR(50) | NO | — |
 | bill_type | VARCHAR(20) | NO | — |
@@ -6603,7 +7361,10 @@ item_type IN ('PRODUCT','SERVICE','EXPENSE')
 | sub_total | NUMERIC(14,2) | NO | 0 |
 | taxable_amount | NUMERIC(14,2) | NO | 0 |
 | tds_amount | NUMERIC(14,2) | NO | 0 |
+| tds_applicable | BOOLEAN | NO | FALSE |
+| tds_rate | NUMERIC(8,4) | YES | — |
 | tds_rate_snapshot | NUMERIC(6,3) | YES | — |
+| tds_section | VARCHAR(20) | YES | — |
 | tds_section_snapshot | VARCHAR(20) | YES | — |
 | updated_at | TIMESTAMPTZ | YES | — |
 | updated_by | VARCHAR(100) | YES | — |
@@ -6611,6 +7372,7 @@ item_type IN ('PRODUCT','SERVICE','EXPENSE')
 | vendor_gstin_snapshot | VARCHAR(20) | YES | — |
 | vendor_id | VARCHAR(50) | NO | — |
 | vendor_name_snapshot | VARCHAR(255) | NO | — |
+| vendor_payment_terms_snapshot | VARCHAR(120) | YES | — |
 | vendor_state_snapshot | VARCHAR(100) | YES | — |
 
 #### Unique Constraints
@@ -6626,6 +7388,15 @@ bill_type IN ('PURCHASE','EXPENSE')
 status IN ('DRAFT','PENDING','PARTIAL','PAID','OVERDUE','CANCELLED')
 credit_period_days BETWEEN 1 AND 365
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_pb_branch_status | NO | NO | branch_id, status |
+| idx_pb_vendor | NO | NO | vendor_id |
+| idx_pb_dates | NO | NO | bill_date, due_date |
+| idx_pb_po | NO | NO | purchase_order_id |
 
 ---
 
@@ -6682,6 +7453,21 @@ credit_period_days BETWEEN 1 AND 365
 |---|---|
 | — | po_number |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_po_po_date | NO | NO | po_date |
+| idx_po_status | NO | NO | status |
+| idx_po_vendor_name | NO | NO | vendor_name |
+| idx_po_branch_name | NO | NO | branch_name |
+| idx_po_is_deleted | NO | NO | is_deleted |
+| idx_po_po_date | NO | NO | po_date |
+| idx_po_status | NO | NO | status |
+| idx_po_vendor_id | NO | NO | vendor_id |
+| idx_po_branch_id | NO | NO | branch_id |
+| idx_po_is_deleted | NO | NO | is_deleted |
+
 ---
 
 ### purchase_order_item
@@ -6725,6 +7511,13 @@ credit_period_days BETWEEN 1 AND 365
 |---|---|
 | uq_poi_po_line | purchase_order_id, line_number |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_poi_purchase_order_id | NO | NO | purchase_order_id |
+| idx_poi_product_id | NO | NO | product_id |
+
 ---
 
 ### quotation_attachments
@@ -6751,6 +7544,12 @@ credit_period_days BETWEEN 1 AND 365
 | Name | Columns | References | Actions |
 |---|---|---|---|
 | fk_qa_quotation | quotation_id | quotations(id) | ON DELETE CASCADE |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_qa_quotation | NO | NO | quotation_id |
 
 ---
 
@@ -6784,6 +7583,14 @@ credit_period_days BETWEEN 1 AND 365
 ```text
 event_type IN ( 'CREATED', 'UPDATED', 'SENT', 'VIEWED', 'ACCEPTED', 'REJECTED', 'EXPIRED', 'REVISED', 'DELETED', 'CONVERTED_TO_CONTRACT', 'RESENT' )
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_qal_quotation | NO | NO | quotation_id |
+| idx_qal_event | NO | NO | event_type |
+| idx_qal_changed_at | NO | NO | changed_at DESC |
 
 ---
 
@@ -6827,6 +7634,13 @@ location_category IN ('RESIDENTIAL', 'COMMERCIAL', 'INDUSTRIAL', 'WAREHOUSE')
 location_sub_category IN ('INTERNAL', 'EXTERNAL')
 area_sqft > 0
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_ql_quotation | NO | NO | quotation_id |
+| idx_ql_branch | NO | NO | branch_id |
 
 ---
 
@@ -6876,6 +7690,13 @@ quantity > 0
 tax_type IN ('INTRA', 'INTER')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_qpl_quotation | NO | NO | quotation_id |
+| idx_qpl_product | NO | NO | product_id |
+
 ---
 
 ### quotation_prospects
@@ -6903,11 +7724,19 @@ tax_type IN ('INTRA', 'INTER')
 | updated_at | TIMESTAMPTZ | YES | — |
 | updated_by | VARCHAR(100) | YES | — |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_qp_phone | NO | NO | phone |
+| idx_qp_email | NO | NO | email |
+| idx_qp_name | NO | NO | lower(full_name |
+
 ---
 
 ### quotation_service_lines
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V16__quotation_management_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V16__quotation_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V89__quotation_locations_area_sqft_allow_zero.sql
 - Primary key: id
 
 #### Columns
@@ -6915,7 +7744,10 @@ tax_type IN ('INTRA', 'INTER')
 | Column | Type | Nullable | Default |
 |---|---|---:|---|
 | area_sqft_used | NUMERIC(10,2) | YES | — |
+| area_type_label | VARCHAR(200) | YES | — |
 | base_price | NUMERIC(14,2) | YES | — |
+| category_area_pricing_id | VARCHAR(50) | YES | — |
+| category_fixed_id | VARCHAR(50) | YES | — |
 | created_at | TIMESTAMPTZ | NO | now() |
 | display_order | INTEGER | NO | 1 |
 | fixed_tier_name | VARCHAR(150) | YES | — |
@@ -6929,6 +7761,7 @@ tax_type IN ('INTRA', 'INTER')
 | service_code | VARCHAR(50) | NO | — |
 | service_id | VARCHAR(50) | NO | — |
 | service_name | VARCHAR(200) | NO | — |
+| sqft_increment | NUMERIC(10, 2) | YES | — |
 | total_visits | INTEGER | NO | 1 |
 | updated_at | TIMESTAMPTZ | YES | — |
 | visit_frequency | VARCHAR(20) | NO | — |
@@ -6948,11 +7781,19 @@ price_type IN ('FIXED', 'AREA_BASED', 'INSPECTION')
 visit_frequency IN ('ONE_TIME', 'MONTHLY', 'QUARTERLY', 'HALF_YEARLY', 'YEARLY')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_qsl_quotation | NO | NO | quotation_id |
+| idx_qsl_location | NO | NO | quotation_location_id |
+| idx_qsl_service | NO | NO | service_id |
+
 ---
 
 ### quotations
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V16__quotation_management_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V16__quotation_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V20__sales_order_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V81__quotation_public_token.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V84__quotation_draft_support.sql
 - Primary key: id
 
 #### Columns
@@ -6981,17 +7822,19 @@ visit_frequency IN ('ONE_TIME', 'MONTHLY', 'QUARTERLY', 'HALF_YEARLY', 'YEARLY')
 | internal_notes | TEXT | YES | — |
 | is_deleted | BOOLEAN | NO | FALSE |
 | lead_id | VARCHAR(50) | YES | — |
-| payment_terms | VARCHAR(50) | NO | — |
+| payment_terms | VARCHAR(50) | YES | — |
 | products_subtotal | NUMERIC(14,2) | NO | 0 |
 | prospect_id | VARCHAR(50) | YES | — |
+| public_token | VARCHAR(128) | YES | — |
 | quotation_number | VARCHAR(30) | NO | — |
-| quotation_type | VARCHAR(20) | NO | — |
+| quotation_type | VARCHAR(20) | YES | — |
 | rejected_at | TIMESTAMPTZ | YES | — |
 | revised_from_id | VARCHAR(50) | YES | — |
+| sales_order_consumed | BOOLEAN | NO | FALSE |
 | sent_at | TIMESTAMPTZ | YES | — |
 | service_mode | VARCHAR(20) | YES | — |
 | services_subtotal | NUMERIC(14,2) | NO | 0 |
-| source_type | VARCHAR(20) | NO | — |
+| source_type | VARCHAR(20) | YES | — |
 | special_terms | TEXT | YES | — |
 | status | VARCHAR(20) | NO | 'DRAFT' CHECK (status IN ('DRAFT' |
 | subtotal_before_tax | NUMERIC(14,2) | NO | 0 |
@@ -6999,7 +7842,7 @@ visit_frequency IN ('ONE_TIME', 'MONTHLY', 'QUARTERLY', 'HALF_YEARLY', 'YEARLY')
 | total_before_discount | NUMERIC(14,2) | NO | 0 |
 | updated_at | TIMESTAMPTZ | YES | — |
 | updated_by | VARCHAR(100) | YES | — |
-| valid_till | DATE | NO | — |
+| valid_till | DATE | YES | — |
 | viewed_at | TIMESTAMPTZ | YES | — |
 
 #### Foreign Keys
@@ -7027,6 +7870,26 @@ chk_quot_contract_fields: service_mode IS NULL OR service_mode = 'ONE_TIME' OR (
 chk_quot_custom_payment: payment_terms <> 'CUSTOM' OR custom_payment_terms IS NOT NULL
 chk_quot_deletion_detail: deletion_reason IS NULL OR deletion_reason <> 'OTHER' OR deletion_reason_detail IS NOT NULL
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_quot_status | NO | YES | status |
+| idx_quot_type | NO | YES | quotation_type |
+| idx_quot_source_type | NO | YES | source_type |
+| idx_quot_lead | NO | NO | lead_id |
+| idx_quot_prospect | NO | NO | prospect_id |
+| idx_quot_customer | NO | NO | customer_id |
+| idx_quot_valid_till | NO | NO | valid_till |
+| idx_quot_created_at | NO | NO | created_at DESC |
+| idx_quot_grand_total | NO | NO | grand_total |
+| idx_quot_number | NO | NO | lower(quotation_number |
+| idx_quot_revised_from | NO | NO | revised_from_id |
+| idx_quot_status_created | NO | YES | status, created_at DESC |
+| idx_quot_type_status | NO | YES | quotation_type, status |
+| idx_quot_source_status | NO | YES | source_type, status |
+| uq_quotations_public_token | YES | YES | public_token |
 
 ---
 
@@ -7095,11 +7958,18 @@ status IN ('INACTIVE', 'ACTIVE')
 |---|---|
 | uk_rp_role_module_action | role_id, module_id, action_id |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_rp_lookup | NO | NO | role_id, module_id, action_id |
+| idx_rp_lookup_allowed | NO | YES | role_id, module_id, action_id |
+
 ---
 
 ### roles
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V1__init_tenant.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V1__init_tenant.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V24__remove_not_null.sql
 - Primary key: id
 
 #### Columns
@@ -7107,7 +7977,7 @@ status IN ('INACTIVE', 'ACTIVE')
 | Column | Type | Nullable | Default |
 |---|---|---:|---|
 | created_at | TIMESTAMPTZ | NO | now() |
-| created_by | VARCHAR(20) | NO | 'COMPANY' CHECK (created_by IN ('COMPANY')) |
+| created_by | VARCHAR(20) | YES | 'COMPANY' CHECK (created_by IN ('COMPANY')) |
 | description | VARCHAR(255) | YES | — |
 | id | BIGSERIAL | NO | — |
 | is_app_user | BOOLEAN | NO | FALSE |
@@ -7190,6 +8060,12 @@ salary_type IN ('CTC', 'FIXED', 'HOURLY')
 |---|---|---|---|
 | fk_sia_invoice | invoice_id | sales_invoices(id) | ON DELETE CASCADE |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_sia_invoice | NO | NO | invoice_id |
+
 ---
 
 ### sales_invoice_audit_logs
@@ -7213,6 +8089,12 @@ salary_type IN ('CTC', 'FIXED', 'HOURLY')
 | Name | Columns | References | Actions |
 |---|---|---|---|
 | fk_sial_invoice | invoice_id | sales_invoices(id) | ON DELETE CASCADE |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_sial_invoice | NO | NO | invoice_id |
 
 ---
 
@@ -7256,19 +8138,31 @@ salary_type IN ('CTC', 'FIXED', 'HOURLY')
 item_type IN ('SERVICE','PRODUCT')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_sil_invoice | NO | NO | invoice_id |
+
 ---
 
 ### sales_invoices
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V36__invoicing_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V36__invoicing_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V53__invoice_attachment_file_storage_tenant.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V60__invoice_branch_state_snapshot.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V69__invoice_attachment_file_key.sql
 - Primary key: id
 
 #### Columns
 
 | Column | Type | Nullable | Default |
 |---|---|---:|---|
+| attachment_content_type | VARCHAR(100) | YES | — |
+| attachment_file_data | BYTEA | YES | — |
+| attachment_file_key | VARCHAR(800) | YES | — |
+| attachment_file_name | VARCHAR(255) | YES | — |
+| attachment_size_bytes | BIGINT | YES | — |
 | billing_address_snapshot | TEXT | YES | — |
 | branch_id | VARCHAR(30) | NO | — |
+| branch_state_snapshot | VARCHAR(100) | YES | — |
 | cgst_amount | NUMERIC(14,2) | NO | 0 |
 | contact_person_snapshot | VARCHAR(200) | YES | — |
 | contract_id | VARCHAR(50) | YES | — |
@@ -7320,6 +8214,15 @@ status IN ('DRAFT','SENT','PARTIAL','PAID','OVERDUE','CANCELLED')
 credit_period_days BETWEEN 1 AND 365
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_si_branch_status | NO | NO | branch_id, status |
+| idx_si_customer | NO | NO | customer_id |
+| idx_si_dates | NO | NO | invoice_date, due_date |
+| idx_si_so | NO | NO | sales_order_id |
+
 ---
 
 ### sales_order_cancellation_logs
@@ -7345,17 +8248,25 @@ credit_period_days BETWEEN 1 AND 365
 |---|---|---|---|
 | fk_socl_sales_order | sales_order_id | sales_orders(id) | ON DELETE CASCADE |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_socl_sales_order | NO | NO | sales_order_id |
+| idx_socl_cancelled_at | NO | NO | cancelled_at DESC |
+
 ---
 
 ### sales_order_product_lines
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V20__sales_order_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V20__sales_order_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V46__sales_order_product_lines_audit_columns.sql
 - Primary key: id
 
 #### Columns
 
 | Column | Type | Nullable | Default |
 |---|---|---:|---|
+| created_at | TIMESTAMPTZ | NO | now() |
 | display_order | INTEGER | NO | 1 |
 | hsn_code | VARCHAR(20) | YES | — |
 | id | VARCHAR(50) | NO | — |
@@ -7369,6 +8280,7 @@ credit_period_days BETWEEN 1 AND 365
 | tax_percent | NUMERIC(6,3) | NO | 0 |
 | unit_price | NUMERIC(14,2) | NO | 0 |
 | uom | VARCHAR(30) | YES | — |
+| updated_at | TIMESTAMPTZ | YES | — |
 
 #### Foreign Keys
 
@@ -7376,11 +8288,17 @@ credit_period_days BETWEEN 1 AND 365
 |---|---|---|---|
 | fk_sopl_so | sales_order_id | sales_orders(id) | ON DELETE CASCADE |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_sopl_so | NO | NO | sales_order_id |
+
 ---
 
 ### sales_order_site_chemicals
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V20__sales_order_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V20__sales_order_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V47__sales_order_sites_services_chemicals_audit_columns.sql
 - Primary key: id
 
 #### Columns
@@ -7388,6 +8306,7 @@ credit_period_days BETWEEN 1 AND 365
 | Column | Type | Nullable | Default |
 |---|---|---:|---|
 | coverage_sqft | NUMERIC(12,2) | YES | — |
+| created_at | TIMESTAMPTZ | NO | now() |
 | display_order | INTEGER | NO | 1 |
 | hsn_code | VARCHAR(20) | YES | — |
 | id | VARCHAR(50) | NO | — |
@@ -7399,6 +8318,7 @@ credit_period_days BETWEEN 1 AND 365
 | sales_order_site_id | VARCHAR(50) | NO | — |
 | unit_price | NUMERIC(14,2) | NO | 0 |
 | uom | VARCHAR(30) | YES | — |
+| updated_at | TIMESTAMPTZ | YES | — |
 
 #### Foreign Keys
 
@@ -7406,18 +8326,26 @@ credit_period_days BETWEEN 1 AND 365
 |---|---|---|---|
 | fk_sosc_site | sales_order_site_id | sales_order_sites(id) | ON DELETE CASCADE |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_sosc_site | NO | NO | sales_order_site_id |
+
 ---
 
 ### sales_order_site_services
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V20__sales_order_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V20__sales_order_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V25__task_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V47__sales_order_sites_services_chemicals_audit_columns.sql
 - Primary key: id
 
 #### Columns
 
 | Column | Type | Nullable | Default |
 |---|---|---:|---|
+| created_at | TIMESTAMPTZ | NO | now() |
 | display_order | INTEGER | NO | 1 |
+| executed_visits | NUMERIC(12,2) | NO | 0 |
 | hsn_code | VARCHAR(20) | YES | — |
 | id | VARCHAR(50) | NO | — |
 | line_total | NUMERIC(14,2) | NO | 0 |
@@ -7428,6 +8356,7 @@ credit_period_days BETWEEN 1 AND 365
 | tax_amount | NUMERIC(14,2) | NO | 0 |
 | tax_percent | NUMERIC(6,3) | NO | 0 |
 | unit_price | NUMERIC(14,2) | NO | 0 |
+| updated_at | TIMESTAMPTZ | YES | — |
 | visits | NUMERIC(12,2) | NO | 1 |
 
 #### Foreign Keys
@@ -7436,11 +8365,17 @@ credit_period_days BETWEEN 1 AND 365
 |---|---|---|---|
 | fk_soss_site | sales_order_site_id | sales_order_sites(id) | ON DELETE CASCADE |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_soss_site | NO | NO | sales_order_site_id |
+
 ---
 
 ### sales_order_sites
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V20__sales_order_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V20__sales_order_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V47__sales_order_sites_services_chemicals_audit_columns.sql
 - Primary key: id
 
 #### Columns
@@ -7455,6 +8390,7 @@ credit_period_days BETWEEN 1 AND 365
 | contact_person | VARCHAR(200) | YES | — |
 | contract_site_id | VARCHAR(50) | YES | — |
 | country | VARCHAR(100) | NO | 'India' |
+| created_at | TIMESTAMPTZ | NO | now() |
 | display_order | INTEGER | NO | 1 |
 | google_map_url | TEXT | YES | — |
 | id | VARCHAR(50) | NO | — |
@@ -7462,12 +8398,19 @@ credit_period_days BETWEEN 1 AND 365
 | site_name | VARCHAR(200) | NO | — |
 | state | VARCHAR(100) | NO | — |
 | sub_category | VARCHAR(20) | NO | — |
+| updated_at | TIMESTAMPTZ | YES | — |
 
 #### Foreign Keys
 
 | Name | Columns | References | Actions |
 |---|---|---|---|
 | fk_sos_so | sales_order_id | sales_orders(id) | ON DELETE CASCADE |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_sos_so | NO | NO | sales_order_id |
 
 ---
 
@@ -7541,6 +8484,17 @@ delivery_address_type IS NULL OR delivery_address_type IN ('REGISTERED_SITE', 'C
 priority IS NULL OR priority IN ('NORMAL', 'URGENT', 'CRITICAL')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_so_customer | NO | NO | customer_id |
+| idx_so_branch | NO | NO | branch_id |
+| idx_so_contract | NO | NO | contract_id |
+| idx_so_status | NO | NO | status |
+| idx_so_date | NO | NO | so_date |
+| uk_so_contract_billing_period | YES | YES | contract_id, contract_payment_line_id |
+
 ---
 
 ### service_audit_logs
@@ -7573,9 +8527,9 @@ change_type IN ('CREATE', 'UPDATE', 'DEACTIVATE')
 
 #### Indexes
 
-| Name | Unique | Columns |
-|---|---:|---|
-| idx_service_audit_logs_service | NO | service_id |
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_service_audit_logs_service | NO | NO | service_id |
 
 ---
 
@@ -7607,7 +8561,7 @@ change_type IN ('CREATE', 'UPDATE', 'DEACTIVATE')
 
 ### service_category_area
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V14__service_management_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V14__service_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V90__service_category_area_drop_pricing_mode.sql
 - Primary key: id
 
 #### Columns
@@ -7635,15 +8589,15 @@ change_type IN ('CREATE', 'UPDATE', 'DEACTIVATE')
 
 #### Indexes
 
-| Name | Unique | Columns |
-|---|---:|---|
-| idx_service_category_area_cat | NO | service_category_id |
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_service_category_area_cat | NO | NO | service_category_id |
 
 ---
 
 ### service_category_fixed
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V14__service_management_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V14__service_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V85__service_category_fixed_link_price.sql
 - Primary key: id
 
 #### Columns
@@ -7655,7 +8609,6 @@ change_type IN ('CREATE', 'UPDATE', 'DEACTIVATE')
 | display_order | INTEGER | YES | — |
 | id | VARCHAR(50) | NO | — |
 | is_active | BOOLEAN | NO | TRUE |
-| price_amount | DOUBLE PRECISION | NO | — |
 | service_category_id | VARCHAR(50) | NO | — |
 | service_sub_category_id | VARCHAR(50) | YES | — |
 | tier_name | VARCHAR(150) | NO | — |
@@ -7671,9 +8624,9 @@ change_type IN ('CREATE', 'UPDATE', 'DEACTIVATE')
 
 #### Indexes
 
-| Name | Unique | Columns |
-|---|---:|---|
-| idx_service_category_fixed_cat | NO | service_category_id |
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_service_category_fixed_cat | NO | NO | service_category_id |
 
 ---
 
@@ -7703,9 +8656,9 @@ change_type IN ('CREATE', 'UPDATE', 'DEACTIVATE')
 
 #### Indexes
 
-| Name | Unique | Columns |
-|---|---:|---|
-| idx_service_category_inspection_cat | NO | service_category_id |
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_service_category_inspection_cat | NO | NO | service_category_id |
 
 ---
 
@@ -7762,9 +8715,9 @@ change_type IN ('CREATE', 'UPDATE', 'DEACTIVATE')
 
 #### Indexes
 
-| Name | Unique | Columns |
-|---|---:|---|
-| idx_service_custom_pricing_fields_block | NO | block_id |
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_service_custom_pricing_fields_block | NO | NO | block_id |
 
 ---
 
@@ -7799,6 +8752,13 @@ change_type IN ('CREATE', 'UPDATE', 'DEACTIVATE')
 | fk_sec_execution | service_execution_id | service_executions(id) | ON DELETE CASCADE |
 | fk_sec_product | inventory_product_id | inventory_products(id) | ON DELETE RESTRICT |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_sec_execution | NO | NO | service_execution_id |
+| idx_sec_product | NO | NO | inventory_product_id |
+
 ---
 
 ### service_execution_treatments
@@ -7820,6 +8780,12 @@ change_type IN ('CREATE', 'UPDATE', 'DEACTIVATE')
 |---|---|---|---|
 | fk_set_execution | service_execution_id | service_executions(id) | ON DELETE CASCADE |
 | fk_set_treatment | service_treatment_id | service_treatments(id) | ON DELETE RESTRICT |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_set_treatment | NO | NO | service_treatment_id |
 
 ---
 
@@ -7857,6 +8823,12 @@ change_type IN ('CREATE', 'UPDATE', 'DEACTIVATE')
 ```text
 infestation_level IN ('HIGH', 'MEDIUM', 'LOW')
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_service_executions_task | NO | NO | task_id, sort_order |
 
 ---
 
@@ -7918,9 +8890,9 @@ infestation_level IN ('HIGH', 'MEDIUM', 'LOW')
 
 #### Indexes
 
-| Name | Unique | Columns |
-|---|---:|---|
-| idx_service_products_service | NO | service_id |
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_service_products_service | NO | NO | service_id |
 
 ---
 
@@ -7949,9 +8921,9 @@ infestation_level IN ('HIGH', 'MEDIUM', 'LOW')
 
 #### Indexes
 
-| Name | Unique | Columns |
-|---|---:|---|
-| idx_service_species_service | NO | service_id |
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_service_species_service | NO | NO | service_id |
 
 ---
 
@@ -8054,11 +9026,11 @@ status IN ('ACTIVE', 'INACTIVE')
 
 #### Indexes
 
-| Name | Unique | Columns |
-|---|---:|---|
-| idx_services_status | NO | status |
-| idx_services_price_type | NO | price_type |
-| idx_services_created_at | NO | created_at |
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_services_status | NO | NO | status |
+| idx_services_price_type | NO | NO | price_type |
+| idx_services_created_at | NO | NO | created_at |
 
 ---
 
@@ -8109,13 +9081,14 @@ status IN ('ACTIVE', 'INACTIVE')
 ### services_service_category_fixed
 
 - Junction table: yes
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V14__service_management_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V14__service_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V85__service_category_fixed_link_price.sql
 - Primary key: service_id, service_category_fixed_id
 
 #### Columns
 
 | Column | Type | Nullable | Default |
 |---|---|---:|---|
+| price_amount | DOUBLE PRECISION | YES | — |
 | service_category_fixed_id | VARCHAR(50) | NO | — |
 | service_id | VARCHAR(50) | NO | — |
 
@@ -8321,9 +9294,11 @@ chk_stock_ledger_qty: assets_qty >= 0 AND consumable_qty >= 0 AND resell_qty >= 
 
 #### Indexes
 
-| Name | Unique | Columns |
-|---|---:|---|
-| idx_stock_ledger_product | NO | product_id |
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_stock_ledger_branch | NO | NO | branch_id |
+| idx_stock_ledger_product | NO | NO | product_id |
+| idx_stock_ledger_product | NO | NO | product_id |
 
 ---
 
@@ -8350,9 +9325,10 @@ chk_stock_ledger_qty: assets_qty >= 0 AND consumable_qty >= 0 AND resell_qty >= 
 
 #### Indexes
 
-| Name | Unique | Columns |
-|---|---:|---|
-| idx_stock_movement_ref | NO | reference_type, reference_id |
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_stock_movement_reference | NO | NO | reference_type, reference_id |
+| idx_stock_movement_ref | NO | NO | reference_type, reference_id |
 
 ---
 
@@ -8433,11 +9409,19 @@ resell_appr_qty >= 0
 |---|---|
 | uq_stock_request_recipients_request_email | request_id, recipient_email |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_stock_request_recipients_email | NO | NO | recipient_email |
+| idx_srr_stock_request_id | NO | NO | stock_request_id |
+| idx_srr_recipient_user_id | NO | NO | recipient_user_id |
+
 ---
 
 ### stock_requests
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V12__stock_management_core.sql, seravion-connect-backend/src/main/resources/db/mysql/module11_stock_management_hybrid_mysql.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V12__stock_management_core.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V54__stock_request_transfer_receipt_fields_tenant.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V57__stock_request_receipt_package_condition.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V59__stock_request_asset_id_assignment_mode.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V66__stock_request_split_link.sql, seravion-connect-backend/src/main/resources/db/mysql/module11_stock_management_hybrid_mysql.sql
 - Primary key: id
 
 #### Columns
@@ -8446,7 +9430,9 @@ resell_appr_qty >= 0
 |---|---|---:|---|
 | alternative_source | VARCHAR(30) | YES | — |
 | approval_type | VARCHAR(30) | YES | — |
+| asset_id_assignment_mode | VARCHAR(20) | YES | — |
 | carrier | VARCHAR(120) | YES | — |
+| confirm_receipt | BOOLEAN | NO | FALSE |
 | created_at | TIMESTAMPTZ | NO | NOW() |
 | created_by | VARCHAR(80) | YES | — |
 | deleted_at | TIMESTAMPTZ | YES | — |
@@ -8463,6 +9449,8 @@ resell_appr_qty >= 0
 | notes_for_approver | TEXT | YES | — |
 | priority | VARCHAR(15) | NO | 'NORMAL' |
 | purpose | TEXT | NO | — |
+| receipt_package_condition | VARCHAR(40) | YES | — |
+| received_date | DATE | YES | — |
 | remarks | TEXT | YES | — |
 | request_id | VARCHAR(40) | NO | — |
 | request_type | VARCHAR(30) | NO | — |
@@ -8470,6 +9458,7 @@ resell_appr_qty >= 0
 | requested_by_user_id | BIGINT | YES | — |
 | required_by_date | DATE | NO | — |
 | sent_to | TEXT | YES | — |
+| split_from_request_id | VARCHAR(40) | YES | — |
 | status | VARCHAR(40) | NO | 'DRAFT' |
 | to_branch_id | VARCHAR(30) | NO | — |
 | updated_at | TIMESTAMPTZ | YES | — |
@@ -8483,9 +9472,12 @@ resell_appr_qty >= 0
 
 #### Indexes
 
-| Name | Unique | Columns |
-|---|---:|---|
-| idx_stock_requests_status | NO | status |
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_stock_requests_status | NO | NO | status |
+| idx_stock_requests_branches | NO | NO | from_branch_id, to_branch_id |
+| idx_stock_requests_split_from | NO | NO | split_from_request_id |
+| idx_stock_requests_status | NO | NO | status |
 
 ---
 
@@ -8554,7 +9546,7 @@ resell_qty >= 0
 
 ### stock_transfers
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V12__stock_management_core.sql, seravion-connect-backend/src/main/resources/db/mysql/module11_stock_management_hybrid_mysql.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V12__stock_management_core.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V54__stock_request_transfer_receipt_fields_tenant.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V58__stock_transfer_receipt_enrichment.sql, seravion-connect-backend/src/main/resources/db/mysql/module11_stock_management_hybrid_mysql.sql
 - Primary key: id
 
 #### Columns
@@ -8562,6 +9554,7 @@ resell_qty >= 0
 | Column | Type | Nullable | Default |
 |---|---|---:|---|
 | carrier | VARCHAR(120) | YES | — |
+| confirm_receipt | BOOLEAN | NO | FALSE |
 | created_at | TIMESTAMPTZ | NO | NOW() |
 | created_by | VARCHAR(80) | YES | — |
 | dispatch_date | DATE | YES | — |
@@ -8569,6 +9562,12 @@ resell_qty >= 0
 | from_branch_id | VARCHAR(30) | NO | — |
 | id | BIGSERIAL | NO | — |
 | lr_number | VARCHAR(80) | YES | — |
+| receipt_package_condition | VARCHAR(40) | YES | — |
+| receipt_photo_content_type | VARCHAR(120) | YES | — |
+| receipt_photo_data | BYTEA | YES | — |
+| receipt_photo_file_name | VARCHAR(255) | YES | — |
+| received_by | VARCHAR(160) | YES | — |
+| received_date | DATE | YES | — |
 | reference_request_id | VARCHAR(40) | YES | — |
 | remarks | TEXT | YES | — |
 | status | VARCHAR(40) | NO | 'DRAFT' |
@@ -8587,9 +9586,11 @@ resell_qty >= 0
 
 #### Indexes
 
-| Name | Unique | Columns |
-|---|---:|---|
-| idx_stock_transfers_status | NO | status |
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_stock_transfers_status | NO | NO | status |
+| idx_stock_transfers_branches | NO | NO | from_branch_id, to_branch_id |
+| idx_stock_transfers_status | NO | NO | status |
 
 ---
 
@@ -8637,6 +9638,12 @@ chk_subscription_plan_duration_type: duration_type IN ('MONTHLY', 'QUARTERLY', '
 chk_subscription_plan_status: status IN ('ACTIVE', 'INACTIVE')
 chk_subscription_plan_valid_dates: valid_to IS NULL OR valid_from IS NULL OR valid_to >= valid_from
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_subscription_plans_status | NO | NO | status |
 
 ---
 
@@ -8691,6 +9698,12 @@ resolution_risk_threshold_pct > 0 AND resolution_risk_threshold_pct < 100
 | fk_sta_ticket | ticket_id | support_tickets(id) | ON DELETE CASCADE |
 | fk_sta_user | performed_by_user_id | users(id) | ON DELETE SET NULL |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_sta_ticket_time | NO | NO | ticket_id, performed_at DESC |
+
 ---
 
 ### support_ticket_assignment_history
@@ -8718,6 +9731,12 @@ resolution_risk_threshold_pct > 0 AND resolution_risk_threshold_pct < 100
 | fk_stah_ticket | ticket_id | support_tickets(id) | ON DELETE CASCADE |
 | fk_stah_from | from_user_id | users(id) | ON DELETE SET NULL |
 | fk_stah_to | to_user_id | users(id) | ON DELETE RESTRICT |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_stah_ticket | NO | NO | ticket_id, assigned_at DESC |
 
 ---
 
@@ -8752,6 +9771,12 @@ resolution_risk_threshold_pct > 0 AND resolution_risk_threshold_pct < 100
 phase IN ('RAISE', 'RESOLUTION', 'CLOSE', 'NOTE')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_attach_ticket | NO | NO | ticket_id |
+
 ---
 
 ### support_ticket_tasks
@@ -8781,6 +9806,12 @@ phase IN ('RAISE', 'RESOLUTION', 'CLOSE', 'NOTE')
 | Name | Columns |
 |---|---|
 | uq_stt_ticket_task | ticket_id, task_id |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_stt_task | NO | NO | task_id |
 
 ---
 
@@ -8851,6 +9882,7 @@ phase IN ('RAISE', 'RESOLUTION', 'CLOSE', 'NOTE')
 | response_sla_deadline_at | TIMESTAMPTZ | NO | — |
 | response_sla_met | BOOLEAN | YES | — |
 | sales_order_id | VARCHAR(50) | YES | — |
+| sla_risk_at | TIMESTAMPTZ | YES | — |
 | status | VARCHAR(30) | NO | 'OPEN' CHECK (status IN ( 'OPEN' |
 | subject | VARCHAR(100) | NO | — |
 | ticket_number | VARCHAR(50) | NO | — |
@@ -8887,6 +9919,20 @@ resolve_customer_rating IS NULL OR (resolve_customer_rating >= 1 AND resolve_cus
 close_reason IS NULL OR close_reason IN ( 'RESOLVED_CUSTOMER_SATISFACTION', 'DUPLICATE_REQUEST', 'CUSTOMER_NON_RESPONSIVE', 'OUT_OF_SCOPE' )
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_st_branch_status | NO | NO | branch_id, status |
+| idx_st_customer | NO | NO | customer_id |
+| idx_st_so | NO | NO | sales_order_id |
+| idx_st_related_task | NO | NO | related_task_id |
+| idx_st_created | NO | NO | created_at |
+| idx_st_assigned_user | NO | NO | assigned_user_id |
+| idx_st_escalation | NO | NO | escalation_level |
+| idx_st_resolution_expected | NO | NO | resolution_expected_at |
+| idx_st_priority_status | NO | NO | priority, status |
+
 ---
 
 ### task_audit_logs
@@ -8904,6 +9950,12 @@ close_reason IS NULL OR close_reason IN ( 'RESOLVED_CUSTOMER_SATISFACTION', 'DUP
 | performed_at | TIMESTAMPTZ | NO | now() |
 | performed_by | VARCHAR(100) | YES | — |
 | task_id | VARCHAR(50) | NO | — |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_task_audit_task | NO | NO | task_id |
 
 ---
 
@@ -8941,6 +9993,13 @@ close_reason IS NULL OR close_reason IN ( 'RESOLVED_CUSTOMER_SATISFACTION', 'DUP
 ratings BETWEEN 1 AND 5
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_tcf_task | NO | NO | task_id |
+| idx_tcf_technician | NO | NO | technician_id |
+
 ---
 
 ### task_materials
@@ -8968,22 +10027,34 @@ ratings BETWEEN 1 AND 5
 |---|---|---|---|
 | fk_tm_task | task_id | tasks(id) | ON DELETE CASCADE |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_task_mat_task | NO | NO | task_id |
+
 ---
 
 ### task_photos
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V25__task_management_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V25__task_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V35__task_photos_evidence_columns.sql
 - Primary key: id
 
 #### Columns
 
 | Column | Type | Nullable | Default |
 |---|---|---:|---|
+| deleted_at | TIMESTAMPTZ | YES | — |
 | file_path | VARCHAR(500) | NO | — |
 | id | VARCHAR(50) | NO | — |
+| latitude | NUMERIC(10, 7) | YES | — |
+| longitude | NUMERIC(10, 7) | YES | — |
+| mime_type | VARCHAR(100) | YES | — |
 | photo_type | VARCHAR(30) | NO | — |
+| sort_order | INTEGER | NO | 0 |
 | task_id | VARCHAR(50) | NO | — |
 | uploaded_at | TIMESTAMPTZ | NO | now() |
+| uploaded_by | BIGINT | YES | — |
 
 #### Foreign Keys
 
@@ -8996,6 +10067,14 @@ ratings BETWEEN 1 AND 5
 ```text
 photo_type IN ('BEFORE', 'AFTER', 'TREATMENT')
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_task_photos_task | NO | NO | task_id |
+| idx_task_photos_task_type | NO | NO | task_id, photo_type |
+| idx_task_photos_task_sort | NO | NO | task_id, photo_type, sort_order |
 
 ---
 
@@ -9022,11 +10101,18 @@ photo_type IN ('BEFORE', 'AFTER', 'TREATMENT')
 | fk_tt_task | task_id | tasks(id) | ON DELETE CASCADE |
 | fk_tt_user | user_id | users(id) | — |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_task_tech_task | NO | NO | task_id |
+| idx_task_tech_user | NO | NO | user_id |
+
 ---
 
 ### tasks
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V25__task_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V27__customer_support_management_module.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V25__task_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V27__customer_support_management_module.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V29__mobile_field_operations.sql
 - Primary key: id
 
 #### Columns
@@ -9058,6 +10144,8 @@ photo_type IN ('BEFORE', 'AFTER', 'TREATMENT')
 | site_contact_mobile | VARCHAR(20) | YES | — |
 | site_contact_name | VARCHAR(200) | YES | — |
 | site_id | VARCHAR(50) | YES | — |
+| site_latitude | NUMERIC(10, 7) | YES | — |
+| site_longitude | NUMERIC(10, 7) | YES | — |
 | site_name | VARCHAR(255) | NO | — |
 | so_site_service_id | VARCHAR(50) | YES | — |
 | source_type | VARCHAR(30) | NO | — |
@@ -9090,6 +10178,16 @@ status IN ('PENDING', 'IN_PROGRESS', 'COMPLETED', 'OVERDUE', 'CANCELLED')
 priority IN ('NORMAL', 'URGENT', 'CRITICAL')
 customer_rating BETWEEN 1 AND 5
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_tasks_date | NO | NO | scheduled_date |
+| idx_tasks_status | NO | NO | status |
+| idx_tasks_branch | NO | NO | branch_id |
+| idx_tasks_so | NO | NO | sales_order_id |
+| idx_tasks_ticket_id | NO | YES | ticket_id |
 
 ---
 
@@ -9134,6 +10232,16 @@ chk_tax_category: tax_category IN ('CENTRAL', 'STATE', 'INTEGRATED', 'CESS')
 chk_applicability: applicability IN ('GOODS', 'SERVICES', 'BOTH')
 chk_status: status IN ('ACTIVE', 'INACTIVE')
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_tax_types_status | NO | NO | status |
+| idx_tax_types_applicability | NO | NO | applicability |
+| idx_tax_types_tax_category | NO | NO | tax_category |
+| idx_tax_types_created_at | NO | NO | created_at |
+| idx_tax_types_tax_name_trgm | NO | NO | tax_name |
 
 ---
 
@@ -9219,6 +10327,12 @@ chk_status: status IN ('ACTIVE', 'INACTIVE')
 category IN ('STRUCTURAL_GAPS', 'HYGIENE_SANITATION', 'PEST_SIGHTING')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_tos_task | NO | NO | task_id |
+
 ---
 
 ### technician_observation_structural_picks
@@ -9268,6 +10382,14 @@ category IN ('STRUCTURAL_GAPS', 'HYGIENE_SANITATION', 'PEST_SIGHTING')
 | fk_technician_tracking_user | user_id | users(id) | — |
 | fk_technician_tracking_task | task_id | tasks(id) | ON DELETE SET NULL |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_technician_tracking_user_recorded | NO | NO | user_id, recorded_at DESC |
+| idx_technician_tracking_task | NO | NO | task_id |
+| idx_technician_tracking_user_local_date | NO | NO | user_id, local_date DESC |
+
 ---
 
 ### user_additional_data
@@ -9308,6 +10430,12 @@ category IN ('STRUCTURAL_GAPS', 'HYGIENE_SANITATION', 'PEST_SIGHTING')
 |---|---|
 | — | user_id |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_user_additional_data_user_id | NO | NO | user_id |
+
 ---
 
 ### user_branches
@@ -9327,6 +10455,45 @@ category IN ('STRUCTURAL_GAPS', 'HYGIENE_SANITATION', 'PEST_SIGHTING')
 | Name | Columns | References | Actions |
 |---|---|---|---|
 | fk_ub_user | user_id | users(id) | ON DELETE CASCADE |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_user_branches_user_id | NO | NO | user_id |
+| idx_user_branches_branch_id | NO | NO | branch_id |
+
+---
+
+### user_devices
+
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V82__user_devices.sql
+- Primary key: id
+
+#### Columns
+
+| Column | Type | Nullable | Default |
+|---|---|---:|---|
+| active | BOOLEAN | NO | TRUE |
+| deviceModel | VARCHAR(200) | YES | — |
+| deviceType | VARCHAR(50) | YES | — |
+| fcmToken | VARCHAR(500) | NO | — |
+| id | BIGSERIAL | NO | — |
+| lastRegisteredAt | TIMESTAMPTZ | YES | — |
+| user_id | BIGINT | NO | — |
+
+#### Foreign Keys
+
+| Name | Columns | References | Actions |
+|---|---|---|---|
+| fk_user_devices_user | user_id | users(id) | ON DELETE CASCADE |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| uk_user_devices_fcm_token | YES | NO | fcmToken |
+| idx_user_devices_user_active | NO | NO | user_id, active |
 
 ---
 
@@ -9355,11 +10522,18 @@ category IN ('STRUCTURAL_GAPS', 'HYGIENE_SANITATION', 'PEST_SIGHTING')
 |---|---|---|---|
 | fk_user_doc_user | user_id | users(id) | ON DELETE CASCADE |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_user_documents_user_id | NO | NO | user_id |
+| idx_user_documents_user_type | NO | NO | user_id, document_type |
+
 ---
 
 ### user_leave_details
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V8__employee_management.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V26__user_salary_leave_ot_shift_reset.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V8__employee_management.sql
 - Primary key: id
 
 #### Columns
@@ -9374,6 +10548,8 @@ category IN ('STRUCTURAL_GAPS', 'HYGIENE_SANITATION', 'PEST_SIGHTING')
 | id | BIGSERIAL | NO | — |
 | leave_approval_role_id | BIGINT | YES | — |
 | leave_reset_cycle | VARCHAR(20) | NO | — |
+| leave_reset_from | DATE | YES | — |
+| leave_reset_to | DATE | YES | — |
 | max_carry_forward_days | INT | YES | — |
 | paid_leave | INT | NO | 0 |
 | sick_leave | INT | NO | 0 |
@@ -9400,11 +10576,17 @@ category IN ('STRUCTURAL_GAPS', 'HYGIENE_SANITATION', 'PEST_SIGHTING')
 leave_reset_cycle IN ('YEARLY', 'MONTHLY', 'CUSTOM')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_user_leave_details_user_id | NO | NO | user_id |
+
 ---
 
 ### user_permissions
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V4__user_permission.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V4__user_permission.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V8__employee_management.sql
 - Primary key: id
 
 #### Columns
@@ -9416,6 +10598,7 @@ leave_reset_cycle IN ('YEARLY', 'MONTHLY', 'CUSTOM')
 | created_at | TIMESTAMPTZ | NO | now() |
 | id | BIGSERIAL | NO | — |
 | module_id | BIGINT | NO | — |
+| receiver_role_ids | BIGINT[] | YES | — |
 | updated_at | TIMESTAMPTZ | NO | now() |
 | user_id | BIGINT | NO | — |
 
@@ -9432,6 +10615,13 @@ leave_reset_cycle IN ('YEARLY', 'MONTHLY', 'CUSTOM')
 | Name | Columns |
 |---|---|
 | uk_up_user_module_action | user_id, module_id, action_id |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_up_lookup | NO | NO | user_id, module_id, action_id |
+| idx_up_lookup_allowed_true | NO | YES | user_id, module_id, action_id |
 
 ---
 
@@ -9460,7 +10650,7 @@ leave_reset_cycle IN ('YEARLY', 'MONTHLY', 'CUSTOM')
 
 ### user_salary_details
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V8__employee_management.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V26__user_salary_leave_ot_shift_reset.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V8__employee_management.sql
 - Primary key: id
 
 #### Columns
@@ -9472,6 +10662,8 @@ leave_reset_cycle IN ('YEARLY', 'MONTHLY', 'CUSTOM')
 | basic_salary | NUMERIC(12,2) | NO | — |
 | created_at | TIMESTAMPTZ | NO | now() |
 | created_by | VARCHAR(100) | YES | — |
+| custom_shift_from | TIME | YES | — |
+| custom_shift_to | TIME | YES | — |
 | deductions | NUMERIC(12,2) | NO | 0.00 |
 | esi_applicable | BOOLEAN | NO | FALSE |
 | holiday_work_amount | NUMERIC(12,2) | YES | — |
@@ -9484,6 +10676,8 @@ leave_reset_cycle IN ('YEARLY', 'MONTHLY', 'CUSTOM')
 | max_ot_hours_per_month | INT | YES | — |
 | other_allowance | NUMERIC(12,2) | NO | 0.00 |
 | overtime_applicable | BOOLEAN | NO | FALSE |
+| overtime_shift_incentive | NUMERIC(12, 2) | YES | — |
+| overtime_shift_type | VARCHAR(50) | YES | — |
 | overtime_type | VARCHAR(20) | YES | — |
 | per_hour_incentive_pay | NUMERIC(12,2) | YES | — |
 | pf_applicable | BOOLEAN | NO | FALSE |
@@ -9510,16 +10704,23 @@ leave_reset_cycle IN ('YEARLY', 'MONTHLY', 'CUSTOM')
 #### Check Constraints
 
 ```text
+overtime_shift_type IS NULL OR overtime_shift_type IN ('NIGHT', 'NORMAL', 'CUSTOM')
 salary_type IN ('CTC', 'FIXED', 'HOURLY')
 holiday_work_type IN ('FIXED', 'PER_DAY', 'PER_HOUR')
 overtime_type IN ('PER_HOUR', 'PER_DAY')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_user_salary_details_user_id | NO | NO | user_id |
+
 ---
 
 ### users
 
-- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V3__users_table.sql
+- Sources: seravion-connect-backend/src/main/resources/db/migration/tenant/V30__user_profile_image.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V33__users_upi_id.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V3__users_table.sql, seravion-connect-backend/src/main/resources/db/migration/tenant/V8__employee_management.sql
 - Primary key: id
 
 #### Columns
@@ -9529,6 +10730,7 @@ overtime_type IN ('PER_HOUR', 'PER_DAY')
 | alternate_number | VARCHAR(15) | YES | — |
 | contact_number | VARCHAR(15) | NO | — |
 | created_at | TIMESTAMPTZ | NO | now() |
+| created_by | VARCHAR(100) | YES | — |
 | current_address_line1 | VARCHAR(255) | NO | — |
 | current_address_line2 | VARCHAR(255) | YES | — |
 | current_city | VARCHAR(100) | NO | — |
@@ -9544,6 +10746,7 @@ overtime_type IN ('PER_HOUR', 'PER_DAY')
 | first_name | VARCHAR(100) | NO | — |
 | id | BIGSERIAL | NO | — |
 | is_active | BOOLEAN | NO | TRUE |
+| is_application_user | BOOLEAN | NO | FALSE |
 | last_login_at | TIMESTAMPTZ | YES | — |
 | last_name | VARCHAR(100) | NO | — |
 | password_hash | VARCHAR(512) | NO | — |
@@ -9553,10 +10756,13 @@ overtime_type IN ('PER_HOUR', 'PER_DAY')
 | permanent_country | VARCHAR(100) | NO | — |
 | permanent_pincode | VARCHAR(20) | NO | — |
 | permanent_state | VARCHAR(100) | NO | — |
+| profile_image_url | VARCHAR(1024) | YES | — |
 | reporting_manager_id | BIGINT | YES | — |
 | role_id | BIGINT | NO | — |
 | status | VARCHAR(20) | NO | 'ACTIVE' |
 | updated_at | TIMESTAMPTZ | NO | now() |
+| updated_by | VARCHAR(100) | YES | — |
+| upi_id | VARCHAR(120) | YES | — |
 | username | VARCHAR(255) | NO | — |
 
 #### Foreign Keys
@@ -9573,6 +10779,16 @@ overtime_type IN ('PER_HOUR', 'PER_DAY')
 | — | emp_id |
 | — | email |
 | — | username |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_users_emp_id | NO | NO | emp_id |
+| idx_users_email | NO | NO | email |
+| idx_users_username | NO | NO | username |
+| idx_users_role_id | NO | NO | role_id |
+| idx_users_reporting_manager_id | NO | NO | reporting_manager_id |
 
 ---
 
@@ -9602,6 +10818,13 @@ overtime_type IN ('PER_HOUR', 'PER_DAY')
 | updated_at | TIMESTAMPTZ | YES | — |
 | updated_by | VARCHAR(100) | YES | — |
 | vendor_id | VARCHAR(50) | NO | — |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_vendor_product_supplies_vendor_id | NO | NO | vendor_id |
+| idx_vendor_product_supplies_product_id | NO | NO | product_id |
 
 ---
 
@@ -9661,6 +10884,20 @@ overtime_type IN ('PER_HOUR', 'PER_DAY')
 | vendor_status | VARCHAR(50) | NO | 'ACTIVE' |
 | vendor_type | VARCHAR(50) | NO | — |
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_vendors_vendor_name_lower | NO | NO | lower(vendor_name |
+| idx_vendors_contact_person_lower | NO | NO | lower(contact_person |
+| idx_vendors_email_id_lower | NO | NO | lower(email_id |
+| idx_vendors_phone_number | NO | NO | phone_number |
+| idx_vendors_gst_number | NO | NO | gst_number |
+| idx_vendors_vendor_type | NO | NO | vendor_type |
+| idx_vendors_vendor_category | NO | NO | vendor_category |
+| idx_vendors_vendor_status | NO | NO | vendor_status |
+| idx_vendors_contract_end_date | NO | NO | contract_end_date |
+
 ---
 
 ### voucher_allocations
@@ -9697,6 +10934,13 @@ settlement_action IN ('KEEP_OPEN','SETTLE_CLOSE')
 status_after IN ('PARTIAL','PAID')
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_va_voucher | NO | NO | voucher_id |
+| idx_va_doc | NO | NO | document_type, document_id |
+
 ---
 
 ### voucher_audit_logs
@@ -9720,6 +10964,12 @@ status_after IN ('PARTIAL','PAID')
 | Name | Columns | References | Actions |
 |---|---|---|---|
 | fk_val_voucher | voucher_id | vouchers(id) | ON DELETE CASCADE |
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_val_voucher | NO | NO | voucher_id |
 
 ---
 
@@ -9752,6 +11002,12 @@ status_after IN ('PARTIAL','PAID')
 chk_vjl_one_side: (CASE WHEN dr_amount > 0 THEN 1 ELSE 0 END) + (CASE WHEN cr_amount > 0 THEN 1 ELSE 0 END) = 1
 ```
 
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_vjl_voucher | NO | NO | voucher_id |
+
 ---
 
 ### voucher_settlement_links
@@ -9781,6 +11037,12 @@ chk_vjl_one_side: (CASE WHEN dr_amount > 0 THEN 1 ELSE 0 END) + (CASE WHEN cr_am
 ```text
 settlement_type IN ('CREDIT_NOTE','DEBIT_NOTE')
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_vsl_voucher | NO | NO | voucher_id |
 
 ---
 
@@ -9833,6 +11095,15 @@ payment_mode IN ('CASH','BANK','UPI','CHEQUE','CARD','ADJUSTMENT')
 gross_amount > 0
 status IN ('POSTED','VOID')
 ```
+
+#### Indexes
+
+| Name | Unique | Partial | Columns |
+|---|---:|---:|---|
+| idx_voucher_type_date | NO | NO | voucher_type, voucher_date |
+| idx_voucher_party | NO | NO | party_type, party_id |
+| idx_voucher_branch_date | NO | NO | branch_id, voucher_date |
+| uq_voucher_ref_nonempty | YES | YES | lower(trim(reference_no |
 
 ---
 
