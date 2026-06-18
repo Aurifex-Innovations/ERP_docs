@@ -131,7 +131,6 @@ India AMC/field service needs **different GSTINs** at company, branch, and site 
 | Contract inherits site tax context | Per-site commercial lines | **19** | P0 |
 | Invoice: IGST when branch ≠ site state | IGST gaps | **28** | P0 |
 | Vendor bill tax matches vendor state | Light validation | **13, 29** | P1 |
-| Super Admin sets `tax_regime` at approval | India-only defaults | **3, 9** | P1 |
 | GST summary by branch/GSTIN | Scattered exports | **28, 31** | P2 |
 
 ---
