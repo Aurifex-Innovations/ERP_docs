@@ -225,16 +225,3 @@ Prioritized for **config + handoff + CEO first day** — not full V2.
 
 ---
 
-## Suggested ownership (for planning meeting)
-
-| Stream | Week 1 focus |
-|--------|----------------|
-| **Product / Manager** | Plan module checklist definition; onboarding stepper copy; tenant settings wireframes; ops checklist |
-| **Super Admin UI** | Plan editor, tenant settings, approval handoff |
-| **CEO onboarding UI** | Status stepper, plan preview, post-login sidebar |
-| **Backend** | Plan modules storage, trial limit persist, limit checks, effective modules for login |
-| **QA** | Happy path: signup → approve → configure → subscribe → login → create branch within limit |
-
----
-
-If you want this as a **Week 1-only Jira epic breakdown** (user stories with acceptance criteria, still non-technical), say the word and we can split by epic: Plans, Approval, Tenant Settings, CEO Onboarding, Limits.
