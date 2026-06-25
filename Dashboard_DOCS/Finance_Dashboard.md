@@ -137,7 +137,6 @@ The Bills Dashboard centralizes all vendor expenses, highlights overdue payments
 | Upcoming Bills (Next 7 Days) | Cash needed to pay very soon | `PurchaseBill` | SUM(amount) WHERE dueDate within NEXT_7_DAYS AND status != 'PAID' |
 | Total Expenses This Month | Total volume of money spent currently | `PurchaseBill` | SUM(amount) WHERE billDate within THIS_MONTH |
 | Bills Paid This Month | Total expenses cleared current month | `PurchaseBill` | SUM(amount) WHERE status = 'PAID' AND paymentDate within THIS_MONTH |
-| Early Payment Discounts Available | Money saved by paying early | `PurchaseBill` | SUM(discountAmount) WHERE discountDate >= CURRENT_DATE |
 
 ---
 
