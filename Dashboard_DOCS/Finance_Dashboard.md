@@ -177,18 +177,9 @@ The Bills Dashboard centralizes all vendor expenses, highlights overdue payments
   - amountOwed  
   - penaltyRisk  
 - Source: `PurchaseBill`  
-- Purpose: Pay immediately to avoid late fees or service cutoffs  
+- Purpose: Pay immediately to avoid late fees or service cutoffs    
 
-### 2. Bills Eligible for Discount
-- Columns:
-  - id  
-  - vendorName  
-  - amount  
-  - discountDeadline  
-- Source: `PurchaseBill`  
-- Purpose: Optimize cash utilization by grabbing early payment savings  
-
-### 3. Recurring Subscriptions
+### 2. Recurring Subscriptions
 - Columns:
   - id  
   - vendorName  
