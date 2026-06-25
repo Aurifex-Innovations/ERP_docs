@@ -43,9 +43,6 @@
    - *Detailed Purpose:* Triggers a high-priority warning to the business owner when a significant payment reaches critical delinquency, prompting legal or collection agency escalation.
 2. **Top Customer Stopped Paying:** 
    - *Detailed Purpose:* Notifies management if a traditionally reliable, high-volume customer misses a payment, often signaling a lost account or bankruptcy risk.
-3. **Daily Collection Goal Met:** 
-   - *Detailed Purpose:* Positive reinforcement alert. Notifies the team when enough money has been collected to cover the week's payroll or critical expenses.
-
 ---
 
 ## Module 2: Bills (Money Going Out)
