@@ -76,14 +76,14 @@ Platform module: **Quotation Management**.
 | **Read** | List, view, open routes |
 | **Add** | Create / Save Draft / Send (create path) |
 | **Edit** | Edit draft |
-| **Delete** | Soft-delete draft |
+| **Delete** | **Delete** button on **DRAFT** quotations only (reason required) |
 | **Export / Download** | PDF |
 
 **Request / Approve** appear in the catalog but are **not** used for quotation workflows.
 
 **Important:** Quotation APIs today do **not** enforce module authorities as strictly as Invoice / Sales Order. The **UI** gates buttons; CEO bypass applies in UI. Treat API hardening as a known gap.
 
-**Record rule:** Only **DRAFT** can be fully edited or soft-deleted. After Send, change commercial content via **Create Revised Quotation** (new draft).
+**Record rule:** Only **DRAFT** quotations can be fully edited or **deleted**. After Send, change commercial content via **Create Revised Quotation** (new draft). Sent / Viewed / Accepted / Rejected / Expired / Revised quotations cannot be deleted.
 
 ---
 
@@ -123,7 +123,8 @@ flowchart TD
 
 | Action | Allowed from | Result |
 |--------|--------------|--------|
-| Edit / soft-delete | DRAFT only | Update or soft-delete |
+| Edit | DRAFT only | Update draft |
+| Delete | DRAFT only | Delete draft (reason required); disappears from quotation list |
 | Send | DRAFT | → SENT, token, email PDF |
 | Resend | SENT / VIEWED (blocked for DRAFT / ACCEPTED / REJECTED / EXPIRED) | Re-email |
 | Accept / Reject | SENT / VIEWED | Terminal commercial status |
@@ -499,7 +500,7 @@ Public payload is slim (identity, status, totals, canAccept/Reject flags) — no
 
 **Filters:** Status, Quotation Type, Branch (if multi-branch), Created date range, Amount range, Source Type (Lead / Customer / Prospect — **FROM_GMA may be missing from filter chips**). Search by quotation id / client. Page size 10.
 
-**Row actions:** View; Edit (draft); PDF; Delete (draft). List does **not** expose Send/Resend/Accept (those live on Add/View).
+**Row actions:** View; Edit (**DRAFT** only); PDF; **Delete** (**DRAFT** only, reason required). List does **not** expose Send/Resend/Accept (those live on Add/View).
 
 ### 11.2 Add / Edit
 
@@ -546,7 +547,7 @@ flowchart LR
 
 ### 12.1 Sales Order handoff
 
-- Eligible: status **ACCEPTED**, not soft-deleted, `salesOrderConsumed=false`  
+- Eligible: status **ACCEPTED**, not deleted, `salesOrderConsumed=false`  
 - APIs: `GET /api/v1/sales-orders/eligible-quotations`, `GET /api/v1/sales-orders/scaffold/quotation?quotationId=`  
 - Field-for-field SO mapping is owned by Sales Order module; payment/frequency may not copy 1:1.
 
@@ -594,10 +595,10 @@ flowchart LR
 - Address/city length rules on locations  
 
 **Lifecycle**
-- Edit/delete: DRAFT only  
+- Edit: **DRAFT only**  
+- Delete: **DRAFT only** (reason required; draft leaves the quotation list). Non-draft statuses cannot be deleted.  
 - Accept/Reject: SENT/VIEWED  
 - Revise: SENT/VIEWED/REJECTED/EXPIRED  
-- Soft-delete: reason required (Other → detail)
 
 **Line math**
 - Commercial line ≈ rate × totalVisits  
@@ -646,17 +647,19 @@ flowchart LR
 2. Parent becomes REVISED; edit new DRAFT; Send again.  
 3. From Lead: Negotiation + follow-up.
 
-### Scenario 6 — Soft-delete bad draft
+### Scenario 6 — Delete a DRAFT quotation
 
-1. List → Delete on DRAFT → choose reason → confirm.  
-2. Removed from active list (soft-deleted). No reactivation product flow.
+1. Quotation list → **Delete** on a **DRAFT** row only.  
+2. Choose deletion reason (if **Other**, enter detail) → confirm.  
+3. Draft is deleted and no longer appears in the list.  
+4. Sent / Viewed / Accepted / Rejected / Expired / Revised quotations have **no Delete** action.
 
 ---
 
 ## 16. Data the business cares about
 
 ### Header
-Quotation number, status, source type, lead/customer/gma/prospect, type, mode, contract fields, subtotals, tax, discount, grand total, valid till, payment terms, special/internal notes, public token, revise link, soft-delete reason, timestamps (sent/viewed/accepted/rejected/expired).
+Quotation number, status, source type, lead/customer/gma/prospect, type, mode, contract fields, subtotals, tax, discount, grand total, valid till, payment terms, special/internal notes, public token, revise link, deletion reason (when a **DRAFT** was deleted), timestamps (sent/viewed/accepted/rejected/expired).
 
 ### Per site
 Site name, address block, pincode, map, category/sub-category, area, **branchId**, nested services.
@@ -694,7 +697,7 @@ Product, HSN, qty, unit price, tax splits, line total.
 | POST | `/api/v1/quotations` | Create draft or send |
 | PUT | `/api/v1/quotations/{id}` | Update draft |
 | GET | `/api/v1/quotations/by-id?id=` | Detail |
-| DELETE | `/api/v1/quotations?id=` | Soft-delete draft (+ reason) |
+| DELETE | `/api/v1/quotations?id=` | **Delete DRAFT only** (reason required). Non-draft → rejected |
 | POST | `/api/v1/quotations/{id}/send` | Send |
 | POST | `/api/v1/quotations/{id}/resend` | Resend |
 | GET | `/api/v1/quotations/{id}/pdf` | Staff PDF |
@@ -724,7 +727,7 @@ Product, HSN, qty, unit price, tax splits, line total.
 
 **Available today**
 - Four create sources: Lead, Customer, New Prospect, From GMA  
-- Revise flow; soft-delete drafts  
+- Revise flow; **Delete** for **DRAFT** quotations only (reason required)  
 - Branch → Site → Service commercial tree + Linked Branch + pincode  
 - Service Master FIXED / AREA_BASED / INSPECTION with visit math  
 - Product HSN GST + optional service GST  
