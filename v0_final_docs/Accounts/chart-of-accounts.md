@@ -67,12 +67,16 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  postableQ["Postable?"] -->|Yes| canAttach["Ledgers may attach; type LEDGER"]
-  postableQ -->|No| groupOnly["Container only; type GROUP"]
-  gpQ["Affects gross profit?"] -->|Yes| inGp["Used in GP-style P and L grouping"]
+  choices["Yes / No choices on a head"]
+  choices --> postableQ["Postable?"]
+  choices --> gpQ["Affects gross profit?"]
+  choices --> parentQ["Has parent?"]
+  postableQ -->|Yes| canAttach["Ledgers may attach type LEDGER"]
+  postableQ -->|No| groupOnly["Container only type GROUP"]
+  gpQ -->|Yes| inGp["Used in GP-style P and L grouping"]
   gpQ -->|No| notGp["Normal Balance Sheet or P and L only"]
-  parentQ["Has parent?"] -->|No| rootHead["Root in that primary group"]
-  parentQ -->|Yes| childHead["Child; parent must same group"]
+  parentQ -->|No| rootHead["Root in that primary group"]
+  parentQ -->|Yes| childHead["Child parent must same group"]
 ```
 
 | Question | Yes | No |
