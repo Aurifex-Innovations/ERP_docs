@@ -6,9 +6,9 @@ Pest-control and multi-branch operations need a single **product master** for ch
 
 Every stock movement, purchase order line, sales order line, and quotation line points to a **product ID from this master**. Without a correct product master, stock quantities, GST on invoices, and purchase costing cannot stay consistent across branches.
 
-**Outcomes today:** create products with or without multiple size variants; attach brand, HSN, UOM, and packaging; soft-deactivate products; list/search/filter; sync zero-quantity stock ledger placeholders when a product is created; feed Stock, Purchase, Sales, and Quotation.
+**Outcomes today:** create products with or without multiple size variants; attach **one or more categories** (primary plus extra categories); attach brand, HSN, UOM, and packaging; soft-deactivate products; list/search/filter; sync zero-quantity stock ledger placeholders when a product is created; feed Stock, Purchase, Sales, and Quotation.
 
-**What this module is not:** it does **not** hold live warehouse quantity, batch numbers, manufacturing dates, or expiry dates. Those belong to **Stock Management** when goods are received into central/branch stock.
+**What this module is not:** it does **not** hold live warehouse quantity, batch numbers, manufacturing dates, or expiry dates. Those belong to **Stock Management** (Central inbound) or **Purchase Order Branch GRN** (branch-direct inbound). Extra categories are **labels on the SKU**; they do **not** auto-split received quantity into Assets / Consumable / Resell.
 
 ---
 
@@ -103,7 +103,8 @@ Delete from list marks the product **Inactive**. Status can also be set Active/I
 - **UOM and packaging quantities** (Base UOM, Secondary UOM, Qty Per Package, Units Per Package, Variant Quantity)
 - **HSN and GST** (tax classification and rate display/calculation)
 - **Variants** (group key, per-SKU codes and pricing)
-- **What is missing** (batch, expiry, manufacturing date on product)
+- **Multiple categories** (primary category + extra categories — see **§4E**)
+- **What is missing** (batch, expiry, manufacturing date on product; extra categories do not drive stock split)
 
 ---
 
@@ -427,6 +428,65 @@ Once created, **Base UOM** and **HSN Code** are marked not updatable in persiste
 
 ---
 
+## 4E. Extra Categories (multi-category) — in depth
+
+### 4E.1 Why this exists
+
+A pest-control SKU is often **one physical item** that the business talks about in more than one way. Example: a **sprayer** is a machine/tool for the catalog, and also an **asset** for stock custody. Previously the catalog allowed **only one category**. Operators then either mis-tagged the SKU (so GRN defaulted to the wrong bucket) or created duplicate products.
+
+**As built today:** the user can select **several categories** on Add and Edit. The system stores:
+
+| Piece | Business meaning |
+|-------|------------------|
+| **Primary category** | The **first** selected category. This is still the official classification used by stock default split, PO line category, ledger category filter, and most reports. |
+| **Extra categories** | The remaining selected categories, kept as additional labels on the same SKU. Existing products with only one category keep extras empty. |
+
+Selecting Chemical + Asset does **not** create two products. It is still **one SKU, one product ID, one stock bucket**.
+
+### 4E.2 What the user sees
+
+**Add / Edit:** Category is a **multi-select** (chips). At least one category is required. The first chip is treated as primary.
+
+**List:** Category column shows **all** selected labels joined (not primary only).
+
+**View:** Shows joined category labels.
+
+**Other modules (PO line, Branch GRN default split, Central stock auto-split):** they still see **only the primary category**. Extra labels are **not** sent as a list on the PO line.
+
+### 4E.3 How this does **not** change receiving stock (critical)
+
+When goods are received, quantity is split into **Assets / Consumable / Resell**. That split is decided as follows:
+
+| Receive path | How split is decided |
+|--------------|----------------------|
+| **Branch GRN** (branch-direct PO) | User can type the three quantities. If they leave them blank, the system defaults **100% of qty** from **primary** category only: Asset / Sprayer / Electric pump / Machine / Trap / Tool → all Assets; Resale → all Resell; everything else (including Chemical, Consumable, Other) → all Consumable. |
+| **Add to Central Stock** | User **always** ticks and types the three buckets. Extra categories never auto-fill those checkboxes. |
+
+**Worked example**
+
+SKU: “Handheld Sprayer”. Categories selected: **Sprayer** (first / primary) + **Asset** (extra).
+
+- Catalog list shows: Sprayer, Asset.  
+- Branch GRN default: **all qty → Assets** (because primary is Sprayer). Extra “Asset” did not change that — it would have been Assets anyway.  
+- If the user had selected **Chemical** first and **Asset** second: GRN default would be **all Consumable**. The extra Asset tag would **not** move any qty into Assets. The receiver must type Assets qty by hand if some units are serialized assets.
+
+**Rule to train:** Extra categories are for **finding and describing** the SKU. They are **not** a mixed-split engine. Mixed Assets + Consumable on one receipt is always a **manual split** on the receive screen.
+
+### 4E.4 List filter caveat
+
+The Product Master filter includes Asset / Consumable / Resale in the category picker, but the list filter that is actually sent still matches **primary category only**, and some of those values may not be applied. A SKU whose primary is Chemical and extra is Asset will **not** appear when filtering “Asset”. Search by name/code still finds it.
+
+### 4E.5 Downstream modules (what they copy)
+
+| Module | What it uses |
+|--------|----------------|
+| Stock ledger category column | Primary category name only |
+| Purchase Order line “product category” | Primary only |
+| Branch GRN default Assets/Consumable/Resell | Primary only |
+| Product dropdown in other modules | Returns the full category list if the client reads it; current PO receive screen uses the single primary on the PO line |
+
+---
+
 ## 5. CRUD Operations
 
 ### 5.1 Create (Add)
@@ -435,7 +495,7 @@ Once created, **Base UOM** and **HSN Code** are marked not updatable in persiste
 
 **First:** User opens Product Master and clicks **Add Product**.
 
-**Then:** User completes identity (name, code, category, brand, status), Units & Packaging (Base UOM, package type, Qty Per Package, optional Units Per Package), HSN + pricing, optional images. Optionally clicks **Add Variant** for multiple sizes.
+**Then:** User completes identity (name, code, **one or more categories**, brand, status), Units & Packaging (Base UOM, package type, Qty Per Package, optional Units Per Package), HSN + pricing, optional images. Optionally clicks **Add Variant** for multiple sizes. The first category is primary; further categories are extra labels only.
 
 **Finally:** System creates one SKU (or BASE + variant SKUs). Zero-quantity stock ledger placeholders are prepared for the new product(s). User returns to the list.
 
@@ -443,9 +503,9 @@ Once created, **Base UOM** and **HSN Code** are marked not updatable in persiste
 
 **Who:** CEO, or staff with Product Management **Read**.
 
-Columns: Product (name, brand, SKU), Category, HSN Code, Base UOM, Package, Default (total cost), Status, Created Date, Created By.
+Columns: Product (name, brand, SKU), Category (**all labels joined**), HSN Code, Base UOM, Package, Default (total cost), Status, Created Date, Created By.
 
-Search is server-side (name/code). Filters: Status, Category, Package Type, Date range. Pagination is server-side.
+Search is server-side (name, code, also HSN and brand on the server). Filters: Status, Category, Package Type, Date range. Pagination is server-side. Status filter **All** still tends to show Active only because the list defaults to Active when status is omitted. Category filter matches **primary** category, not extra labels.
 
 ### 5.3 Read — Detail / Get details
 
@@ -485,7 +545,7 @@ Inactive can also be set via the Status radio on Add/Edit without using Delete.
 |----------------------|--------|---------|-------|
 | Product Name | Editable / Required | Editable | |
 | Product Code | Editable / Required | **Locked** | Tied to SKU row |
-| Category | Editable / Required | Editable | |
+| Category (multi-select) | Editable / Required (at least one) | Editable | First selected = primary; rest = extra labels. Does not auto-split stock. |
 | Sub-Type | Editable / Optional | Editable | |
 | Company / Brand | Editable / Required | Editable | Can add new brand |
 | Description | Editable / Optional | Editable | |
@@ -529,7 +589,7 @@ Inactive can also be set via the Status radio on Add/Edit without using Delete.
 
 | Dropdown | Source | Notes |
 |----------|--------|-------|
-| Category | Fixed list | Chemical, Sprayer, Machine, Asset, Consumable, Resale, etc. |
+| Category | Fixed list (multi-select) | Chemical, Sprayer, Electric pump, Machine, Trap, Tool, Other, Asset, Consumable, Resale. First = primary. |
 | Sub-Type | Fixed list | Pest-control oriented subtypes |
 | Company / Brand | Brand master API | Can create brand inline |
 | Base UOM / Secondary UOM | Fixed list | No UOM master API |
@@ -591,14 +651,28 @@ flowchart TD
 
 **First:** Product already exists in Product Master (no batch on product).
 
-**Then:** In Stock Management, user adds to central stock choosing the product ID, quantity in Base UOM, and enters batch number + manufacturing/expiry where required.
+**Then:** If the company receives at Central, user **Adds to Central Stock** and types Assets / Consumable / Resell. If the company is on **branch-direct** purchase, user **Receives Against PO (Branch GRN)** instead — extra categories on the SKU do not auto-fill that split.
 
-**Finally:** Stock holds batch/expiry; Product Master still only defines the catalog attributes.
+**Finally:** Stock holds batch/expiry and quantity buckets; Product Master still only defines the catalog attributes.
 
 ```mermaid
 flowchart TD
-  productReady["First: Product master SKU exists"] --> stockReceive["Then: Receive stock with batch and expiry"]
-  stockReceive --> qtyLive["Finally: Quantity lives on stock entry"]
+  productReady["First: Product master SKU exists"] --> stockReceive["Then: Central inbound or Branch GRN"]
+  stockReceive --> qtyLive["Finally: Quantity lives on stock not on product"]
+```
+
+### 9.5 Catalog admin — Tag a sprayer as Asset as well
+
+**First:** User opens Add or Edit and selects **Sprayer** then **Asset**.
+
+**Then:** Saves the SKU. List shows both labels.
+
+**Finally:** Purchase and receive still treat **Sprayer** as primary (default all qty to Assets on Branch GRN). The extra Asset tag is for people reading the catalog, not for mixed-split math.
+
+```mermaid
+flowchart TD
+  pickCats["First: Select Sprayer then Asset"] --> saveSkuCats["Then: Save one SKU"]
+  saveSkuCats --> extraDone["Finally: Extra label stored; primary still drives GRN default"]
 ```
 
 ---
@@ -609,7 +683,7 @@ flowchart TD
 |--------------|------------|
 | **Tax Module** | HSN master and tax type rates (CGST/SGST/IGST/CESS). Product stores HSN code and computed tax amounts. |
 | **Stock Management** | Uses product ID; copies product code, name, HSN, Base UOM. Holds **quantity, batch, manufacturing date, expiry**. Product create triggers zero-qty ledger placeholders. Inactive product can soft-affect stock entries. |
-| **Purchase Order** | Lines reference product ID; UOM defaults to Base UOM; GST % from HSN mapping or override. |
+| **Purchase Order** | Lines reference product ID; UOM defaults to Base UOM; GST % from HSN mapping or override; line shows **primary** category only. Branch GRN default split uses primary category (see Stock / PO docs). |
 | **Sales Order / Quotation** | Lines reference product ID; tax from HSN; only Active products selectable. |
 | **Brand master** | Owned under Product Management permissions; used on every product. |
 | **Service / GMA / Tasks** | May reference inventory products for materials usage. |
@@ -631,7 +705,9 @@ flowchart LR
 | Product ID | System key used everywhere (`PRD-…`) |
 | Product Name / Code | Display name and unique business code |
 | Group Key | Links BASE + variants of one logical product |
-| Category / Sub-Type | Classification for filters and reporting |
+| Category (primary) | Official classification; drives Branch GRN default split and ledger category |
+| Extra categories | Additional labels on the same SKU; not used for auto-split |
+| Sub-Type | Pest-control subtype |
 | Brand | Manufacturer / company brand |
 | Status / Variant Status | Active usable vs Inactive retired |
 | Base UOM | Unit of stock measurement |
@@ -685,7 +761,8 @@ stateDiagram-v2
 9. **Base UOM / HSN** shown editable on Edit but persistence may ignore changes.
 10. **Product Code / Package Type** sometimes missing required asterisk in UI while still validated.
 11. **Label inconsistencies:** “Unit Per Package” vs “Units Per Package”; View typo “Unit Per Pakage”.
-12. **List category filters** omit some categories available on Add (e.g. Asset/Consumable/Resale).
+12. **List category filters** still match **primary** category only. Extra categories are not searched. Filter UI may list Asset / Consumable / Resale while the applied filter set can drop those values. Status **All** still defaults to Active on the server.
+12a. **Extra categories do not drive stock split** on Central inbound or Branch GRN. Mixed buckets require the receiver to type quantities.
 13. **Sidebar related-route highlighting** may not match live add/edit/view paths.
 14. **Legacy Add Product route** still exists with expiry on variants — parallel to Product Master and easy to confuse.
 15. **No Product request/approve** despite unused REQUEST/APPROVE permission keys.
@@ -704,6 +781,7 @@ stateDiagram-v2
 - Brand create/select
 - HSN selection from Tax Module with rate-assisted pricing on Add
 - Packaging metadata: Base UOM, Secondary UOM, Package Type, Qty Per Package, Units Per Package
+- Multiple categories on one SKU (primary + extra labels)
 - Cross-use by Stock, Purchase, Sales, Quotation via product ID
 - RBAC-gated Add / View / Edit / Delete on list
 
@@ -712,6 +790,7 @@ stateDiagram-v2
 - Batch ID, expiry, manufacturing date on the product catalog
 - Multi-variant edit/view family management
 - Request/approve for product changes
+- Extra categories used as an auto-split engine for Assets / Consumable / Resell
 - Dedicated UOM master table
 - Reliable live GST breakdown on View screen
 
@@ -758,6 +837,7 @@ stateDiagram-v2
 | Product Master list | Delete | Row action | Soft-deactivate confirm |
 | Add Product | Add Variant | Button | Adds another size/SKU block |
 | Add Product | Remove variant | Icon | Removes that variant block |
+| Add / Edit Product | Category | Multi-select chips | First category = primary; rest stored as extra labels |
 | Add Product | HSN select | Dropdown | Loads tax rates; enables GST calc |
 | Add Product | Tax checkboxes | Checkbox | Changes Total GST and pricing math |
 | Add Product | Qty Per Package / Unit Per Package | Number | Saves packaging metadata |
