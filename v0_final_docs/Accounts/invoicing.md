@@ -1,4 +1,4 @@
-# Invoicing (Sales) — Product & Business Documentation
+[# Invoicing (Sales) — Product & Business Documentation
 
 This document describes **Invoicing** as it exists today. It is written in easy language so a new person — sales, finance, or tester — can understand **how a bill to the customer is created**, **how it links to a sales order or is typed by hand**, **when the system creates a draft by itself**, **how branch and customer control what you see**, and **what happens in the books when you approve**. Positive and negative tester cases are at the **end**.
 
@@ -891,3 +891,4 @@ If Approve fails, check: customer **Active** + **CUSTOMER** ledger Active, `SALE
 ---
 
 *Documented from live Invoicing screens, invoice create/approve/credit-note services, sales-order auto-draft, contract periodic and visit billing, and ledger posting. Auto-draft rules are only the cases implemented today — not planned billing ideas.*
+](https://ai.studio/apps/55ca0ebd-23ea-4670-b719-763547ca0d78)
