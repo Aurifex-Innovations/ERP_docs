@@ -1,4 +1,4 @@
-[# Invoicing (Sales) — Product & Business Documentation
+# Invoicing (Sales) — Product & Business Documentation
 
 This document describes **Invoicing** as it exists today. It is written in easy language so a new person — sales, finance, or tester — can understand **how a bill to the customer is created**, **how it links to a sales order or is typed by hand**, **when the system creates a draft by itself**, **how branch and customer control what you see**, and **what happens in the books when you approve**. Positive and negative tester cases are at the **end**.
 
@@ -14,7 +14,7 @@ The company must tell the customer **how much to pay**, for which work or goods,
 
 **Invoicing** is that official bill. Until an invoice is **approved and sent**, it is only a **draft** (no money in the books). After approve, the customer ledger is debited and sales/tax books are credited. Receipts later reduce pending amount.
 
-**Outcomes today:** create drafts (manual, from sales order, or automatic from contract/product SO); edit/delete/cancel drafts; approve & send (posts ledgers); record receipts; issue credit notes; PDF/email; export Excel/Tally; mark overdue; branch and customer snapshots on the bill.
+**Outcomes today:** create drafts (manual, from sales order, or automatic from contract/product SO); edit/delete/cancel drafts; approve & send (posts ledgers); record receipts (**Paid** / **Partial**); issue credit notes (**Adjusted** / **Partial**); PDF/email; export Excel/Tally; mark overdue; branch and customer snapshots on the bill.
 
 ```mermaid
 flowchart TD
@@ -42,7 +42,7 @@ flowchart LR
 |------|--------|----------------|
 | 1–2 | [COA](./chart-of-accounts.md) + [Ledgers](./ledger-management.md) | Customer book + sales/tax books must exist **before Approve** |
 | 3 | **Invoicing** | Draft = paper only. Approve = customer **owes** grand total |
-| 4 | [Payments](./payments.md) | Receipt reduces pending → Partial / Paid |
+| 4 | [Payments](./payments.md) | Receipt reduces pending → Partial / Paid; credit note reduces pending → Partial / Adjusted |
 
 **Draft never hits ledgers. Only Approve & Send posts books.**
 
@@ -85,7 +85,7 @@ flowchart TD
 | Same state (branch vs customer)? | CGST + SGST | IGST |
 | Can edit / delete / cancel? | **Only unpaid Draft** | Sent and later: no |
 | Approve from the list? | **No** | Only create/edit form |
-| Record Payment button? | Status Sent / Partial / Overdue | Draft / Paid / Cancelled |
+| Record Payment button? | Status Sent / Partial / Overdue | Draft / Paid / **Adjusted** / Cancelled |
 | Request / approve queue? | **No** | Approve & Send is the post step |
 | Draft posts ledgers? | **No** | Only after Approve |
 
@@ -95,21 +95,29 @@ flowchart TD
 flowchart TD
   draftInv["Draft: no books"] -->|"Approve and Send"| sentInv["Sent: customer owes"]
   sentInv -->|"Part receipt"| partialInv["Partial"]
-  sentInv -->|"Full receipt or settle-close"| paidInv["Paid"]
+  sentInv -->|"Full receipt"| paidInv["Paid: cash closed"]
+  sentInv -->|"Full credit note"| adjustedInv["Adjusted: CN closed"]
   sentInv -->|"Past due job"| overdueInv["Overdue"]
-  partialInv --> paidInv
+  partialInv -->|"More receipt covers pending"| paidInv
+  partialInv -->|"CN covers remaining pending"| adjustedInv
+  partialInv -->|"Settle and Close receipt"| adjustedInv
+  overdueInv --> partialInv
   overdueInv --> paidInv
+  overdueInv --> adjustedInv
   draftInv -->|"Delete or cancel"| cancelInv["Cancelled"]
 ```
 
-| Status | Books posted? | Pending | What user can do |
-|--------|---------------|---------|------------------|
-| **Draft** | No | Not in books | Edit, delete, cancel, Approve & Send |
-| **Sent** | Yes | = grand total | Record Payment, credit note, PDF |
-| **Partial** | Yes | > 0 | Another receipt |
-| **Overdue** | Yes | > 0 | Same as Sent; marked past due |
-| **Paid** | Yes | 0 | PDF; no Record Payment |
-| **Cancelled** | No (never sent) | — | Stopped; only from unpaid Draft |
+| Status | Books posted? | Pending | Typical received | How it closes | What user can do |
+|--------|---------------|---------|------------------|---------------|------------------|
+| **Draft** | No | Not in books | 0 | — | Edit, delete, cancel, Approve & Send |
+| **Sent** | Yes | = grand total | 0 | — | Record Payment, credit note, PDF |
+| **Partial** | Yes | > 0 | may be > 0 | Partial receipt and/or partial CN | Another receipt or CN |
+| **Overdue** | Yes | > 0 | any | Same as Sent; marked past due | Same as Sent |
+| **Paid** | Yes | 0 | **> 0** | **Full cash/advance receipt** | PDF; view receipt; no Record Payment |
+| **Adjusted** | Yes | 0 | often **0** | **Full credit note** (or settle-close CN) | PDF; no Record Payment; no new CN |
+| **Cancelled** | No (never sent) | — | — | Unpaid draft abandoned | Stopped; only from unpaid Draft |
+
+**Paid vs Adjusted (important):** Both mean the customer no longer owes anything (`pending = 0`). **Paid** means closure was by **money received**. **Adjusted** means closure was by **credit note** — common when `received = 0` but a CN wrote off the full balance. A **Settle & Close** receipt (partial cash + auto CN for the rest) also ends as **Adjusted**.
 
 #### Dropdown / enum map (pick one)
 
@@ -126,7 +134,7 @@ flowchart TD
 | Field | Options (live) | Quick rule |
 |-------|----------------|------------|
 | Creation mode | **DIRECT** or **FROM_SO** | Auto drafts are FROM_SO |
-| Invoice status | **Draft, Sent, Partial, Paid, Overdue, Cancelled** | See status map |
+| Invoice status | **Draft, Sent, Partial, Paid, Adjusted, Overdue, Cancelled** | See status map |
 | Tax type | Tax invoice (and proforma uses **same posting path** today) | Approve still posts |
 | Contract plan | **Periodic / Per visit / Every N visits / Manual only** | Only first three auto-draft (visit needs Auto draft **on**) |
 | Credit note reason | Payment Settlement, Pricing Error, Service Issue, Full Cancellation, Other | Settle & Close from Payments uses Payment Settlement |
@@ -252,7 +260,7 @@ Every invoice **must** have one **branch**.
 | List filter | Optional branch chips; **single-branch users** get that branch auto-applied |
 | List with no branch filter | Service returns **all invoices in the company** (not limited to the user’s branches) |
 | Summary cards | Optional one branch; list screen currently loads summary **without** branch (company-wide cards) |
-| Export Excel | Defaults to the logged-in user’s branches and issued statuses (Sent, Partial, Paid, Overdue) |
+| Export Excel | Defaults to the logged-in user’s branches and issued statuses (Sent, Partial, Paid, **Adjusted**, Overdue) |
 | Ledger posting | Uses the invoice’s branch on each book line |
 
 **GST split:** branch **state** vs customer **state** (snapshots). Same state → CGST+SGST; different → IGST.
@@ -274,8 +282,8 @@ flowchart LR
 | GST registration / site | Optional; used to pick the right GSTIN for that branch/site |
 | Active customer | Auto-creates a **customer ledger** (see Ledger docs). Approve **needs** that Active CUSTOMER ledger |
 | Draft customer | You may still type a Direct invoice if the id exists, but **Approve fails** without an Active customer ledger |
-| Receipt | Allocated to this invoice; pending down; status Partial or Paid |
-| Credit note | Reduces pending; posts reverse books; source Manual or Auto-from-payment (settle-close) |
+| Receipt | Allocated to this invoice; pending down; **received** up; status **Partial** or **Paid** |
+| Credit note | Reduces **pending only** (does not increase received); posts reverse books; status **Partial** or **Adjusted** when pending reaches 0; source Manual or Auto-from-payment (settle-close) |
 | SO cancel | Finance can cancel **unpaid drafts** on that SO; paid/sent invoices are left |
 
 ---
@@ -294,11 +302,35 @@ On **Approve & Send** (Tax or Proforma — same posting path today):
 
 Then: status **Sent**; pending = grand total; notification “invoice generated.”
 
-**Receipt** later: Bank Debit, Customer Credit (see Ledger doc). Pending falls; Partial or Paid.
+**Receipt** later: Bank Debit, Customer Credit (see Ledger doc). Pending falls; **received** rises; status **Partial** or **Paid** (cash closure).
 
-**Credit note:** Sales Adjustment Debit, GST output Debit, Customer Credit. Pending falls.
+**Credit note:** Sales Adjustment Debit, GST output Debit, Customer Credit. Pending falls; **received unchanged**; status **Partial** (if balance remains) or **Adjusted** (if pending becomes zero).
 
 **If approve fails:** draft should not stay Sent if posting throws (transaction rolls back). Typical messages: customer ledger not found/active; sales income missing; tax > grand total; unbalanced books.
+
+### 1.7 Status scenarios (when Paid, Partial, Adjusted, Draft)
+
+Use this when testing or explaining finance screens.
+
+| Scenario | Start | Action | End status | Pending | Received |
+|----------|-------|--------|------------|---------|----------|
+| New bill | — | Save draft | **Draft** | not in books | 0 |
+| Issue to customer | Draft | Approve & Send | **Sent** | = grand total | 0 |
+| Customer pays part | Sent | Receipt ₹5,000 on ₹10,000 | **Partial** | ₹5,000 | ₹5,000 |
+| Customer pays all | Sent / Partial | Receipt covers remaining | **Paid** | 0 | = grand total |
+| Write off part | Sent | CN ₹3,000 on ₹10,000 | **Partial** | ₹7,000 | 0 |
+| Write off all (CN only) | Sent | CN ₹10,000 | **Adjusted** | 0 | 0 |
+| Partial cash + settle close | Partial | Receipt + **Settle & Close** auto-CN | **Adjusted** | 0 | partial cash only |
+| Past due, no payment | Sent / Partial | Run Overdue Check | **Overdue** | > 0 | any |
+| Abandon before send | Draft | Delete or Cancel | **Cancelled** | — | — |
+
+**Rules in plain language:**
+
+- **Draft** — paper only; no customer balance in books yet.
+- **Partial** — something was applied (cash **or** CN) but money is still owed.
+- **Paid** — fully settled by **receipts**; you should see **received > 0** on a typical cash-paid invoice.
+- **Adjusted** — fully settled by **credit note**; often **received = 0**; badge shows **Adjusted** (not Paid).
+- You **cannot** issue another credit note on **Paid** or **Adjusted** (no pending left).
 
 ---
 
@@ -401,7 +433,7 @@ Columns: Invoice No, Date, Customer, SO No (link to SO), Amount, Pending, Due Da
 
 Search: invoice # / customer name / SO id. Filters: branch, status, type (Tax / Proforma / Credit note type), date range.
 
-Cards: Total Receivable (pending on Sent/Partial/Overdue), Overdue pending, Paid this month (receipt allocations), Draft count.
+Cards: Total Receivable (pending on Sent/Partial/Overdue), Overdue pending, Paid this month (**cash receipt** allocations only — not Adjusted), Draft count.
 
 ### 5.3 Read — Detail
 
@@ -413,7 +445,7 @@ Loads header snapshots, lines, sites, amounts, credit notes, audit. Actions: bac
 
 **Who:** Edit. **Draft only.**
 
-Same fields as create (mode can stay From SO / Direct). Recalculates tax; pending = grand − received. Sent/Partial/Paid/Overdue/Cancelled cannot be updated.
+Same fields as create (mode can stay From SO / Direct). Recalculates tax; pending = grand − received. Sent/Partial/Paid/**Adjusted**/Overdue/Cancelled cannot be updated.
 
 ### 5.5 Inactive / Delete
 
@@ -443,10 +475,15 @@ Not used. Drafts sit on the Invoicing list (status Draft).
 ```mermaid
 flowchart TD
   draft["Draft"] --> sent["Approve: Sent"]
-  sent --> partial["Receipt: Partial"]
-  partial --> paid["Fully paid"]
+  sent --> partial["Receipt or partial CN: Partial"]
+  sent --> paid["Full receipt: Paid"]
+  sent --> adjusted["Full CN: Adjusted"]
+  partial --> paid
+  partial --> adjusted
   sent --> overdue["Past due: Overdue"]
+  overdue --> partial
   overdue --> paid
+  overdue --> adjusted
   draft --> cancelled["Cancel unpaid draft"]
 ```
 
@@ -545,13 +582,14 @@ flowchart TD
 ### 9.4 Finance — Approve, collect, credit
 
 **First:** Approve & Send (customer + sales + GST books).  
-**Then:** Customer pays → receipt allocated (Partial/Paid).  
-**Finally:** If needed, credit note (manual or settle-close on receipt).
+**Then:** Customer pays → receipt allocated (**Partial** / **Paid**). Or finance issues credit note (**Partial** / **Adjusted**).  
+**Finally:** If shortfall after partial receipt, **Settle & Close** on receipt auto-issues CN → invoice becomes **Adjusted**.
 
 ```mermaid
 flowchart TD
-  sendInv["First: Approve and send"] --> getPaid["Then: Receipt allocated"]
-  getPaid --> cnIfNeed["Finally: Credit note if reducing"]
+  sendInv["First: Approve and send"] --> getPaid["Then: Receipt or credit note"]
+  getPaid --> paidPath["Full cash: Paid"]
+  getPaid --> adjPath["Full CN or settle-close: Adjusted"]
 ```
 
 ### 9.5 Finance — Drop an unpaid draft
@@ -584,7 +622,7 @@ flowchart LR
 | **Contracts** | Periodic / visit auto-draft; payment lines; Manual only = no auto invoice |
 | **Tasks** | Completion can create visit draft |
 | **Ledgers / COA** | Approve and credit notes post; receipts post customer + bank |
-| **Payments** | Receipts allocate; settle-close auto credit note |
+| **Payments** | Receipts allocate (Partial/Paid); settle-close auto credit note → **Adjusted** |
 | **Tax / HSN** | Line HSN must be Active with CGST/SGST or IGST for the supply |
 | **Stock** | Product line qty cannot exceed branch available qty on create/update |
 | **Branches** | Invoice branch, GST state, stock, list/export scope |
@@ -594,7 +632,7 @@ flowchart LR
 
 ## 11. Data the Business Cares About
 
-**Header:** Invoice number, type (Tax / Proforma), creation mode (FROM_SO / DIRECT), status (Draft, Sent, Partial, Paid, Overdue, Cancelled), dates, due date, credit days, branch, customer id + snapshots, GST registration, SO / extra SOs, contract, ship-to, amounts, received, pending, e-invoice required flag, notes, attachment.
+**Header:** Invoice number, type (Tax / Proforma), creation mode (FROM_SO / DIRECT), status (Draft, Sent, Partial, Paid, **Adjusted**, Overdue, Cancelled), dates, due date, credit days, branch, customer id + snapshots, GST registration, SO / extra SOs, contract, ship-to, amounts, received, pending, e-invoice required flag, notes, attachment.
 
 **Lines:** Service or Product, item, description, HSN/SAC, qty, UOM, rate, discount %, tax %, taxable, tax amount, line total.
 
@@ -605,9 +643,10 @@ flowchart LR
 | Status | Meaning |
 |--------|---------|
 | Draft | Not sent; no books |
-| Sent | Approved; customer owes full pending |
-| Partial | Some receipt/credit; still pending |
-| Paid | Pending zero |
+| Sent | Approved; customer owes full pending; no receipt/CN yet |
+| Partial | Some receipt and/or CN applied; **pending > 0** |
+| Paid | **Pending zero** — closed by **cash/advance receipts** (`received` usually > 0) |
+| Adjusted | **Pending zero** — closed by **credit note** (often `received = 0`) |
 | Overdue | Sent/Partial past due date (after overdue run) |
 | Cancelled | Abandoned unpaid draft (or listed after cancel path) |
 
@@ -631,6 +670,7 @@ flowchart LR
 | Only Draft can update / approve | Error |
 | Only unpaid Draft can delete/cancel | Error |
 | Credit amount > pending | Error |
+| Credit note on **Paid** or **Adjusted** | Error (no pending balance) |
 | Approve needs Active customer ledger + sales income | Error |
 | Invoice number unique | Conflict |
 
@@ -638,9 +678,14 @@ flowchart LR
 flowchart TD
   draftSt["Draft"] --> sentSt["Sent"]
   sentSt --> partialSt["Partial"]
+  sentSt --> paidSt["Paid"]
+  sentSt --> adjustedSt["Adjusted"]
   sentSt --> overdueSt["Overdue"]
-  partialSt --> paidSt["Paid"]
+  partialSt --> paidSt
+  partialSt --> adjustedSt
+  overdueSt --> partialSt
   overdueSt --> paidSt
+  overdueSt --> adjustedSt
   draftSt --> cancelSt["Cancelled"]
 ```
 
@@ -668,7 +713,7 @@ flowchart TD
 
 ## 14. Existing Functionality Summary
 
-Today a permitted user can create **Direct** or **From SO** drafts, receive **auto drafts** from product SO open, periodic contract billing, and visit/N-visit task completion, edit/delete/cancel **unpaid drafts**, **Approve & Send** (customer + sales + GST books), collect via receipts, issue credit notes, export Excel/Tally/PDF, email, and mark overdue. They cannot edit sent invoices, auto-approve, or push e-invoice IRN from this screen.
+Today a permitted user can create **Direct** or **From SO** drafts, receive **auto drafts** from product SO open, periodic contract billing, and visit/N-visit task completion, edit/delete/cancel **unpaid drafts**, **Approve & Send** (customer + sales + GST books), collect via receipts (**Paid** / **Partial**), issue credit notes (**Adjusted** when fully settled by CN), export Excel/Tally/PDF, email, and mark overdue. They cannot edit sent invoices, auto-approve, or push e-invoice IRN from this screen.
 
 ---
 
@@ -731,7 +776,7 @@ Sidebar: **Finance & Accounts → Invoicing (Sales)**.
 | `/Invoices` | SO No | Link | Opens sales order |
 | `/Invoices` | View / Edit / Delete | Icons | Detail / edit draft / delete draft |
 | `/Invoices` | PDF | Icon | Download if issued |
-| `/Invoices` | Payment / Receipt | Icons | Receipt entry or find voucher |
+| `/Invoices` | Payment / Receipt | Icons | Receipt entry (Sent/Partial/Overdue) or find voucher (**Paid** only) |
 | `/Invoices` | Send / Resend | Icons | Email |
 | `/Invoices` | Cancel | Icon | Credit note screen (issued invoices) |
 | `/add-invoices` | Direct / From SO | Radio | Mode |
@@ -761,6 +806,7 @@ Use this as a **checklist**. Expected results are what the product does **today*
 | P6 | Single-branch user | That branch auto-selected on list |
 | P7 | Search by invoice number or customer name | Matching rows |
 | P8 | Filter status Draft | Only drafts |
+| P8b | Filter status **Adjusted** | Only CN-settled invoices |
 | P9 | Click SO number on FROM_SO row | Sales order detail opens |
 
 ### 16.2 Positive — Direct invoice
@@ -792,10 +838,11 @@ Use this as a **checklist**. Expected results are what the product does **today*
 
 | # | Try this | Expect |
 |---|----------|--------|
-| P25 | Full receipt allocated | Status Paid; pending 0; list Payment icon becomes Receipt |
-| P26 | Partial receipt | Status Partial; pending reduced |
-| P27 | Manual credit note ≤ pending | CN issued; pending down; customer Cr on statement |
-| P28 | Receipt settle-close shortfall | Auto credit note; invoice can go Paid |
+| P25 | Full receipt allocated | Status **Paid**; pending 0; received > 0; list shows Receipt icon (not Payment) |
+| P26 | Partial receipt | Status **Partial**; pending reduced; received increased |
+| P27 | Manual credit note ≤ pending (not full) | CN issued; pending down; status stays **Partial** if balance remains |
+| P27b | Manual credit note = full pending (no receipts) | Status **Adjusted**; pending 0; received 0; badge **Adjusted** |
+| P28 | Receipt **Settle & Close** on remaining shortfall | Auto credit note; invoice becomes **Adjusted** (not Paid) |
 | P29 | Run Overdue Check on Sent past due date | Status Overdue; overdue card increases |
 | P30 | PDF on Sent | File downloads |
 | P31 | Email send/resend | Success if mail configured |
@@ -857,6 +904,7 @@ Use this as a **checklist**. Expected results are what the product does **today*
 | N35 | Approve already Sent | Only draft can be approved |
 | N36 | Receipt against Draft | Should not treat as issued (allocate only issued invoices in payments) |
 | N37 | Credit amount > pending | Cannot exceed pending |
+| N37b | Credit note on **Adjusted** or **Paid** invoice | No pending balance / not allowed |
 | N38 | Credit note on Draft | Should fail / not offered |
 | N39 | Delete draft after a receipt was allocated | Has payment activity; cannot delete |
 | N40 | Inactive customer ledger then approve | Cannot post to inactive |
@@ -879,16 +927,16 @@ Use this as a **checklist**. Expected results are what the product does **today*
 2. Direct Tax invoice → Save Draft → Approve & Send → customer statement shows Debit.  
 3. Product SO Open → auto Draft → Approve.  
 4. From SO service order → Save → Approve.  
-5. Receipt full amount → Paid.  
-6. Credit note for a small amount on another Sent invoice.  
-7. Unpaid Draft delete.  
-8. Run Overdue Check on a Sent invoice with due date yesterday.  
-9. PDF + Excel export.  
-10. (If contract available) Per-visit auto draft on task complete → Approve.
+5. Receipt full amount → **Paid**.  
+6. Full credit note on Sent invoice (no cash) → **Adjusted**.  
+7. Partial credit note on another Sent invoice → **Partial**.  
+8. Unpaid Draft delete.  
+9. Run Overdue Check on a Sent invoice with due date yesterday.  
+10. PDF + Excel export (filter includes **Adjusted**).  
+11. (If contract available) Per-visit auto draft on task complete → Approve.
 
 If Approve fails, check: customer **Active** + **CUSTOMER** ledger Active, `SALES_INCOME` Active INTERNAL, HSN/tax masters, and branch stock for product lines.
 
 ---
 
-*Documented from live Invoicing screens, invoice create/approve/credit-note services, sales-order auto-draft, contract periodic and visit billing, and ledger posting. Auto-draft rules are only the cases implemented today — not planned billing ideas.*
-](https://ai.studio/apps/55ca0ebd-23ea-4670-b719-763547ca0d78)
+*Documented from live Invoicing screens, invoice create/approve/credit-note services, sales-order auto-draft, contract periodic and visit billing, and ledger posting. Invoice status **Adjusted** (BUG268) distinguishes credit-note closure from cash **Paid**. Auto-draft rules are only the cases implemented today — not planned billing ideas.*
