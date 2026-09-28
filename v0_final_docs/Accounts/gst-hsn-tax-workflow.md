@@ -17,9 +17,9 @@ Indian businesses that sell goods or services under **GST (Goods and Services Ta
 
 If staff type arbitrary percentages on every line, rates drift, CGST/SGST/IGST get mixed up, and HSN codes become inconsistent. Seravion Connect therefore separates:
 
-| Master | Business job |
-|--------|----------------|
-| **Tax Configuration** | Define reusable GST **tax types** (CGST, SGST, IGST, CESS) with rates |
+| Master                | Business job                                                             |
+| --------------------- | ------------------------------------------------------------------------ |
+| **Tax Configuration** | Define reusable GST **tax types** (CGST, SGST, IGST, CESS) with rates    |
 | **HSN Configuration** | Define **HSN/SAC codes** and **attach** the right tax types to each code |
 
 Day-to-day documents (products, services, quotations, sales orders, invoices, bills, stock) pick an **HSN/SAC**. The system then derives tax from the **mapped tax types** — not from free typing.
@@ -32,11 +32,11 @@ Day-to-day documents (products, services, quotations, sales orders, invoices, bi
 
 GST is a destination-based tax. For a given taxable supply, the **total GST rate** (for example 18%) is split differently based on whether the supply is **within one state** or **across states**.
 
-| Component | Full name | Who collects | When it applies |
-|-----------|-----------|--------------|-----------------|
-| **CGST** | Central GST | Central government | **Intra-state** supply (seller and place of supply in the **same** state / UT) |
-| **SGST** | State GST | State / UT government | Same **intra-state** supply (paired with CGST) |
-| **IGST** | Integrated GST | Central government (settled with states) | **Inter-state** supply (seller and place of supply in **different** states / UTs), and certain other cases (e.g. some imports / SEZ patterns as per law) |
+| Component | Full name      | Who collects                             | When it applies                                                                                                                                          |
+| --------- | -------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **CGST**  | Central GST    | Central government                       | **Intra-state** supply (seller and place of supply in the **same** state / UT)                                                                           |
+| **SGST**  | State GST      | State / UT government                    | Same **intra-state** supply (paired with CGST)                                                                                                           |
+| **IGST**  | Integrated GST | Central government (settled with states) | **Inter-state** supply (seller and place of supply in **different** states / UTs), and certain other cases (e.g. some imports / SEZ patterns as per law) |
 
 **CESS** (Compensation Cess or similar) may apply on notified goods/services **on top of** the base GST. In Seravion, CESS is a separate tax category that can be linked on an HSN in addition to CGST/SGST/IGST.
 
@@ -44,10 +44,10 @@ GST is a destination-based tax. For a given taxable supply, the **total GST rate
 
 For an item notified at **18% GST**:
 
-| Supply type | What appears on invoice | Rates |
-|-------------|-------------------------|-------|
-| **Intra-state** (same state) | CGST + SGST | Usually **9% + 9%** (= 18%) |
-| **Inter-state** (different states) | IGST | Usually **18%** (single line, not CGST+SGST) |
+| Supply type                        | What appears on invoice | Rates                                        |
+| ---------------------------------- | ----------------------- | -------------------------------------------- |
+| **Intra-state** (same state)       | CGST + SGST             | Usually **9% + 9%** (= 18%)                  |
+| **Inter-state** (different states) | IGST                    | Usually **18%** (single line, not CGST+SGST) |
 
 Important business rule: **CGST rate and SGST rate must match** for the same slab, and **CGST + SGST must equal IGST** for that slab. Seravion enforces this when an HSN is saved as **Active**.
 
@@ -64,12 +64,12 @@ flowchart TD
 
 On **Tax Configuration**, tax category maps as:
 
-| Screen category | Indian GST meaning |
-|-----------------|--------------------|
-| **Central** | CGST |
-| **State** | SGST / UTGST-style state share |
-| **Integrated** | IGST |
-| **CESS** | Additional cess (optional) |
+| Screen category | Indian GST meaning             |
+| --------------- | ------------------------------ |
+| **Central**     | CGST                           |
+| **State**       | SGST / UTGST-style state share |
+| **Integrated**  | IGST                           |
+| **CESS**        | Additional cess (optional)     |
 
 Each tax type also has a **default rate (%)**, **applicability** (Goods / Services / Both), and **Active / Inactive** status.
 
@@ -96,13 +96,13 @@ Seravion does **not** keep a separate SAC-only master. Service codes are stored 
 
 ### 3.3 Why HSN/SAC matters under law and operations
 
-| Need | Why it matters |
-|------|----------------|
-| **Correct GST rate** | Rate slabs and exemptions are tied to classification; wrong code → wrong tax |
-| **Invoice compliance** | GST invoices are expected to show HSN/SAC where applicable |
-| **ITC and disputes** | Clear classification reduces mismatches with customers/vendors |
-| **Reporting** | Returns and analytics group sales by classification |
-| **Internal control** | One master code reused on products, services, stock, and invoices |
+| Need                   | Why it matters                                                               |
+| ---------------------- | ---------------------------------------------------------------------------- |
+| **Correct GST rate**   | Rate slabs and exemptions are tied to classification; wrong code → wrong tax |
+| **Invoice compliance** | GST invoices are expected to show HSN/SAC where applicable                   |
+| **ITC and disputes**   | Clear classification reduces mismatches with customers/vendors               |
+| **Reporting**          | Returns and analytics group sales by classification                          |
+| **Internal control**   | One master code reused on products, services, stock, and invoices            |
 
 Without a shared HSN master, every product/service could invent a different code or rate, breaking GST consistency.
 
@@ -130,12 +130,12 @@ flowchart TD
 
 For an HSN marked **Active**, Seravion requires a GST-ready mapping:
 
-| Must link | Purpose |
-|-----------|---------|
-| **Central (CGST)** | Intra-state half |
-| **State (SGST)** | Intra-state half (rate must match CGST) |
+| Must link             | Purpose                                        |
+| --------------------- | ---------------------------------------------- |
+| **Central (CGST)**    | Intra-state half                               |
+| **State (SGST)**      | Intra-state half (rate must match CGST)        |
 | **Integrated (IGST)** | Inter-state full rate (must equal CGST + SGST) |
-| **CESS** (optional) | Extra cess if needed; may repeat |
+| **CESS** (optional)   | Extra cess if needed; may repeat               |
 
 Also:
 
@@ -149,11 +149,11 @@ This mirrors Indian GST practice: one slab, two posting paths.
 
 **Step A — Tax Configuration (create three types):**
 
-| Tax name (example) | Category | Rate | Applicability |
-|--------------------|----------|------|---------------|
-| CGST 9% | Central | 9 | Goods or Both |
-| SGST 9% | State | 9 | Goods or Both |
-| IGST 18% | Integrated | 18 | Goods or Both |
+| Tax name (example) | Category   | Rate | Applicability |
+| ------------------ | ---------- | ---- | ------------- |
+| CGST 9%            | Central    | 9    | Goods or Both |
+| SGST 9%            | State      | 9    | Goods or Both |
+| IGST 18%           | Integrated | 18   | Goods or Both |
 
 **Step B — HSN Configuration:**
 
@@ -195,12 +195,12 @@ flowchart TD
 
 ### 5.3 Change management
 
-| Change | Correct path |
-|--------|----------------|
-| New GST slab (e.g. 5% or 28%) | Add new tax types → create/update HSN mappings → assign to products |
-| Rate change for a class | Update tax type rates and/or remount HSN links; use Effective From / Change Reason on tax edit |
-| Retire a code | Soft-inactive the HSN so new documents cannot use it |
-| Retire a tax type | Remove it from all HSNs first; then soft-inactive the tax type |
+| Change                        | Correct path                                                                                   |
+| ----------------------------- | ---------------------------------------------------------------------------------------------- |
+| New GST slab (e.g. 5% or 28%) | Add new tax types → create/update HSN mappings → assign to products                            |
+| Rate change for a class       | Update tax type rates and/or remount HSN links; use Effective From / Change Reason on tax edit |
+| Retire a code                 | Soft-inactive the HSN so new documents cannot use it                                           |
+| Retire a tax type             | Remove it from all HSNs first; then soft-inactive the tax type                                 |
 
 Tax type **cannot** be inactivated while any HSN still links it. Active documents reject **Inactive** HSN codes.
 
@@ -210,12 +210,12 @@ Tax type **cannot** be inactivated while any HSN still links it. Active document
 
 Both screens sit under **Setup & Configuration** and share the **Tax Management** permission module (CEO has full access).
 
-| Goal | Where | Typical user |
-|------|-------|--------------|
-| Define CGST / SGST / IGST / CESS rates | Tax Configuration | CEO / Finance |
-| Define HSN/SAC and attach those rates | HSN Configuration | CEO / Finance / Setup |
-| Use HSN on product or service | Product / Service masters | Inventory / Ops |
-| Charge GST on invoice | Invoicing (via HSN + place of supply) | Sales / Accounts |
+| Goal                                   | Where                                 | Typical user          |
+| -------------------------------------- | ------------------------------------- | --------------------- |
+| Define CGST / SGST / IGST / CESS rates | Tax Configuration                     | CEO / Finance         |
+| Define HSN/SAC and attach those rates  | HSN Configuration                     | CEO / Finance / Setup |
+| Use HSN on product or service          | Product / Service masters             | Inventory / Ops       |
+| Charge GST on invoice                  | Invoicing (via HSN + place of supply) | Sales / Accounts      |
 
 Detailed RBAC matrices: [Tax Configuration §3](./tax-configuration.md) · [HSN Configuration §3](./hsn-configuration.md).
 
@@ -223,26 +223,26 @@ Detailed RBAC matrices: [Tax Configuration §3](./tax-configuration.md) · [HSN 
 
 ## 7. Rules the product enforces (GST-aligned)
 
-| Rule | Business meaning |
-|------|------------------|
-| Tax types are masters | Rates are reusable and controlled |
-| HSN links tax types | Classification drives tax, not free typing |
+| Rule                                | Business meaning                                  |
+| ----------------------------------- | ------------------------------------------------- |
+| Tax types are masters               | Rates are reusable and controlled                 |
+| HSN links tax types                 | Classification drives tax, not free typing        |
 | Active HSN needs CGST + SGST + IGST | Supports both same-state and other-state invoices |
-| CGST rate = SGST rate | Intra-state halves stay equal |
-| CGST + SGST = IGST | Same slab for inter-state |
-| CGST/SGST ≤ 50%; IGST is full rate | Prevents storing “half” rates as IGST |
-| Soft inactive (not hard delete) | Audit-friendly retirement |
-| Place of supply drives component | Intra → CGST+SGST; Inter → IGST |
+| CGST rate = SGST rate               | Intra-state halves stay equal                     |
+| CGST + SGST = IGST                  | Same slab for inter-state                         |
+| CGST/SGST ≤ 50%; IGST is full rate  | Prevents storing “half” rates as IGST             |
+| Soft inactive (not hard delete)     | Audit-friendly retirement                         |
+| Place of supply drives component    | Intra → CGST+SGST; Inter → IGST                   |
 
 ---
 
 ## 8. Why both modules are required (not one)
 
-| If you only had… | What breaks |
-|------------------|-------------|
-| **Tax only** | No statutory classification on invoices; products cannot share one government code; posting has no HSN anchor |
-| **HSN only (with free %)** | Rates drift; CGST/SGST/IGST mix-ups; no reusable rate master; hard to fix a slab company-wide |
-| **Both (current design)** | One tax catalogue + one classification catalogue + automatic path for intra vs inter-state GST |
+| If you only had…           | What breaks                                                                                                   |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| **Tax only**               | No statutory classification on invoices; products cannot share one government code; posting has no HSN anchor |
+| **HSN only (with free %)** | Rates drift; CGST/SGST/IGST mix-ups; no reusable rate master; hard to fix a slab company-wide                 |
+| **Both (current design)**  | One tax catalogue + one classification catalogue + automatic path for intra vs inter-state GST                |
 
 That is the **actual need**: compliance + consistency + less manual error on every commercial document.
 
@@ -250,12 +250,12 @@ That is the **actual need**: compliance + consistency + less manual error on eve
 
 ## 9. Quick reference — screens and journeys
 
-| Screen | Route (app) | Job in GST workflow |
-|--------|-------------|---------------------|
-| Tax Configuration | `/Tax`, `/add-tax` | Create/edit CGST, SGST, IGST, CESS types |
-| HSN Configuration | `/hsn`, `/add-hsn` | Create/edit HSN/SAC and link tax types |
-| Products / Services | Product & service masters | Store Active HSN/SAC |
-| Commercial docs | Quotation, SO, Invoice, PO, Bills, Stock | Use HSN; apply GST path by place of supply |
+| Screen              | Route (app)                              | Job in GST workflow                        |
+| ------------------- | ---------------------------------------- | ------------------------------------------ |
+| Tax Configuration   | `/Tax`, `/add-tax`                       | Create/edit CGST, SGST, IGST, CESS types   |
+| HSN Configuration   | `/hsn`, `/add-hsn`                       | Create/edit HSN/SAC and link tax types     |
+| Products / Services | Product & service masters                | Store Active HSN/SAC                       |
+| Commercial docs     | Quotation, SO, Invoice, PO, Bills, Stock | Use HSN; apply GST path by place of supply |
 
 **Setup journey (summary):**
 
@@ -283,5 +283,3 @@ Seravion Connect today implements a **GST-based taxation system** by combining:
 3. **Document + posting logic** — same HSN, correct CGST+SGST or IGST split by place of supply, amounts to GST ledgers.
 
 Together they meet the real operational need: **government-aligned classification, correct GST components, and consistent tax across the ERP**.
-U p d a t e s   c o m p l e t e  
- 

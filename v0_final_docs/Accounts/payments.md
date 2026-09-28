@@ -52,11 +52,11 @@ flowchart LR
   payHere --> ledgers
 ```
 
-| Step | Module | What it does |
-|------|--------|----------------|
-| 1–2 | [COA](./chart-of-accounts.md) + [Ledgers](./ledger-management.md) | Bank/cash + customer/vendor books must exist |
-| 3 | [Invoicing](./invoicing.md) / [Bill Management](./bill-management.md) | Sent invoice or pending bill = debt |
-| 4 | **Payments** | Receipt / Payment / Contra / Journal. Save = Posted |
+| Step | Module                                                                | What it does                                        |
+| ---- | --------------------------------------------------------------------- | --------------------------------------------------- |
+| 1–2  | [COA](./chart-of-accounts.md) + [Ledgers](./ledger-management.md)     | Bank/cash + customer/vendor books must exist        |
+| 3    | [Invoicing](./invoicing.md) / [Bill Management](./bill-management.md) | Sent invoice or pending bill = debt                 |
+| 4    | **Payments**                                                          | Receipt / Payment / Contra / Journal. Save = Posted |
 
 **If Payments is wrong, outstanding, cash, bank, and “Paid” flags are all wrong.**
 **Testing Scenarios:** See the [Testing Scenarios Document](./testing-scenarios.md) for full end-to-end paths involving receipts, payments, and bill settlements.
@@ -75,12 +75,12 @@ flowchart TD
   postedJ --> books
 ```
 
-| Door | When to use | Party | Number style |
-|------|-------------|-------|--------------|
-| **Receipt** | Customer paid us | Customer | `RCP-YYYY-####` |
-| **Payment** | We paid vendor | Vendor | `PAY-YYYY-####` |
-| **Contra** | Cash ↔ bank or bank ↔ bank | None | `CNT-YYYY-####` |
-| **Journal** | Books only, no cash tray | None | `JRN-YYYY-####` |
+| Door        | When to use                | Party    | Number style    |
+| ----------- | -------------------------- | -------- | --------------- |
+| **Receipt** | Customer paid us           | Customer | `RCP-YYYY-####` |
+| **Payment** | We paid vendor             | Vendor   | `PAY-YYYY-####` |
+| **Contra**  | Cash ↔ bank or bank ↔ bank | None     | `CNT-YYYY-####` |
+| **Journal** | Books only, no cash tray   | None     | `JRN-YYYY-####` |
 
 There is **no Draft voucher**. Cancel on the form = nothing saved.
 
@@ -96,24 +96,24 @@ flowchart TD
   settleQ -->|Settle and Close| writeOff["Auto credit or debit note then Paid"]
 ```
 
-| Question | Yes | No |
-|----------|-----|-----|
-| Need a customer? | Receipt | Contra / Journal |
-| Need a vendor? | Payment | Contra / Journal |
-| Need bank/cash book? | Receipt / Payment / Contra | Journal (any ledgers) |
-| UTR required? | Bank Transfer / UPI on the screen | Cash / Cheque / Card |
-| Cheque date required? | Receipt + Cheque (≤ 3 months) | Payment cheque **not** required |
-| Allocate to documents? | Optional on receipt/payment | Contra / Journal never allocate |
-| Shortfall + Keep Open? | Document **Partial** | — |
-| Shortfall + Settle & Close? | Auto CN (invoice) or DN (bill) → **Paid** | Reason required on screen |
-| TDS on vendor payment? | Extra TDS payable credit | Two lines only |
-| TDS on customer receipt? | Dr **TDS Receivable** + Cr customer (BUG258) | Amount also counts in settlement / allocate cap |
-| Adjust Advance on screen? | Only if advance balance > 0 | Balance stays 0 today → section hidden |
-| Carry to Advance toggle change save? | **No** | Leftover is always unallocated |
-| Edit a posted voucher? | **No** | Void stamp only |
-| Void reverse books? | **No** | Invoice/bill/ledgers stay |
-| Request / approve? | **No** | Save = Posted |
-| Future date? | Blocked on **all four screens** | Receipt/Payment **API may still allow** |
+| Question                             | Yes                                          | No                                              |
+| ------------------------------------ | -------------------------------------------- | ----------------------------------------------- |
+| Need a customer?                     | Receipt                                      | Contra / Journal                                |
+| Need a vendor?                       | Payment                                      | Contra / Journal                                |
+| Need bank/cash book?                 | Receipt / Payment / Contra                   | Journal (any ledgers)                           |
+| UTR required?                        | Bank Transfer / UPI on the screen            | Cash / Cheque / Card                            |
+| Cheque date required?                | Receipt + Cheque (≤ 3 months)                | Payment cheque **not** required                 |
+| Allocate to documents?               | Optional on receipt/payment                  | Contra / Journal never allocate                 |
+| Shortfall + Keep Open?               | Document **Partial**                         | —                                               |
+| Shortfall + Settle & Close?          | Auto CN (invoice) or DN (bill) → **Paid**    | Reason required on screen                       |
+| TDS on vendor payment?               | Extra TDS payable credit                     | Two lines only                                  |
+| TDS on customer receipt?             | Dr **TDS Receivable** + Cr customer (BUG258) | Amount also counts in settlement / allocate cap |
+| Adjust Advance on screen?            | Only if advance balance > 0                  | Balance stays 0 today → section hidden          |
+| Carry to Advance toggle change save? | **No**                                       | Leftover is always unallocated                  |
+| Edit a posted voucher?               | **No**                                       | Void stamp only                                 |
+| Void reverse books?                  | **No**                                       | Invoice/bill/ledgers stay                       |
+| Request / approve?                   | **No**                                       | Save = Posted                                   |
+| Future date?                         | Blocked on **all four screens**              | Receipt/Payment **API may still allow**         |
 
 #### Status map (this module + documents it touches)
 
@@ -125,26 +125,26 @@ flowchart LR
 
 **Voucher**
 
-| Status | In register? | In summary cards? | Books / invoice / bill |
-|--------|--------------|-------------------|------------------------|
-| **Posted** | Yes | Yes (receipts & payments) | Live |
-| **Void** | Yes | **No** | **Unchanged** (not reversed) |
+| Status     | In register? | In summary cards?         | Books / invoice / bill       |
+| ---------- | ------------ | ------------------------- | ---------------------------- |
+| **Posted** | Yes          | Yes (receipts & payments) | Live                         |
+| **Void**   | Yes          | **No**                    | **Unchanged** (not reversed) |
 
 **Invoice after a receipt** (see [Invoicing](./invoicing.md))
 
-| Settlement | Invoice becomes |
-|------------|-----------------|
-| Allocate = pending | **Paid** |
-| Allocate < pending + Keep Open | **Partial** |
-| Allocate < pending + Settle & Close | **Paid** (auto credit note) |
-| Allocate nothing | Unchanged; leftover = unallocated |
+| Settlement                          | Invoice becomes                   |
+| ----------------------------------- | --------------------------------- |
+| Allocate = pending                  | **Paid**                          |
+| Allocate < pending + Keep Open      | **Partial**                       |
+| Allocate < pending + Settle & Close | **Paid** (auto credit note)       |
+| Allocate nothing                    | Unchanged; leftover = unallocated |
 
 **Bill after a payment**
 
-| Settlement | Bill becomes |
-|------------|----------------|
-| Allocate = pending | **Paid** |
-| Allocate < pending + Keep Open | **Partial** |
+| Settlement                          | Bill becomes               |
+| ----------------------------------- | -------------------------- |
+| Allocate = pending                  | **Paid**                   |
+| Allocate < pending + Keep Open      | **Partial**                |
 | Allocate < pending + Settle & Close | **Paid** (auto debit note) |
 
 #### Dropdown / enum map (pick one)
@@ -163,26 +163,26 @@ flowchart TD
   mode --> adj["ADJUSTMENT: contra and journal"]
 ```
 
-| Field | Options (exactly these) | Quick rule |
-|-------|-------------------------|------------|
-| Voucher type | **RECEIPT, PAYMENT, CONTRA, JOURNAL** | Tabs + create buttons |
-| Status | **POSTED, VOID** | No draft |
-| Party type | **CUSTOMER, VENDOR, NONE** | Receipt / Payment / Contra+Journal |
-| Payment mode | **CASH, BANK, UPI, CHEQUE, CARD, ADJUSTMENT** | Screen labels map: Bank Transfer → BANK |
-| Settlement | **KEEP_OPEN** or **SETTLE_CLOSE** | Only when allocated < pending |
-| Receipt settle reason (screen) | Payment Settlement, Pricing Error, Service Issue, Other | Stored on auto credit note remarks |
+| Field                          | Options (exactly these)                                     | Quick rule                                |
+| ------------------------------ | ----------------------------------------------------------- | ----------------------------------------- |
+| Voucher type                   | **RECEIPT, PAYMENT, CONTRA, JOURNAL**                       | Tabs + create buttons                     |
+| Status                         | **POSTED, VOID**                                            | No draft                                  |
+| Party type                     | **CUSTOMER, VENDOR, NONE**                                  | Receipt / Payment / Contra+Journal        |
+| Payment mode                   | **CASH, BANK, UPI, CHEQUE, CARD, ADJUSTMENT**               | Screen labels map: Bank Transfer → BANK   |
+| Settlement                     | **KEEP_OPEN** or **SETTLE_CLOSE**                           | Only when allocated < pending             |
+| Receipt settle reason (screen) | Payment Settlement, Pricing Error, Service Issue, Other     | Stored on auto credit note remarks        |
 | Payment settle reason (screen) | Payment Settlement, Purchase Return, Discount, Error, Other | Must match debit-note **codes** on server |
-| Allocation document | **INVOICE** (receipt) or **BILL** (payment) | |
+| Allocation document            | **INVOICE** (receipt) or **BILL** (payment)                 |                                           |
 
 **Which door? (quick)**
 
-| What happened in real life | Pick |
-|----------------------------|------|
-| Customer paid into bank / cash / UPI / cheque / card | **Receipt** |
-| We paid a supplier | **Payment** |
-| Cash deposited to bank, or ATM cash, or bank-to-bank | **Contra** |
-| Wrong expense head, TDS receivable, opening correction | **Journal** |
-| Want to undo a posted voucher | **Void** (label only) or a **new** opposite journal/receipt — Void does not reverse |
+| What happened in real life                             | Pick                                                                                |
+| ------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| Customer paid into bank / cash / UPI / cheque / card   | **Receipt**                                                                         |
+| We paid a supplier                                     | **Payment**                                                                         |
+| Cash deposited to bank, or ATM cash, or bank-to-bank   | **Contra**                                                                          |
+| Wrong expense head, TDS receivable, opening correction | **Journal**                                                                         |
+| Want to undo a posted voucher                          | **Void** (label only) or a **new** opposite journal/receipt — Void does not reverse |
 
 ---
 
@@ -190,11 +190,11 @@ flowchart TD
 
 Think of the company as four layers:
 
-| Layer | Easy name | What it stores |
-|-------|-----------|----------------|
-| Chart of Accounts | Folder | “Bank accounts”, “Sundry debtors” |
-| Ledger | Book / file | “HDFC Current”, “Customer Acme” |
-| Invoice / Bill | What is owed | “Acme must pay ₹11,800” |
+| Layer                     | Easy name                  | What it stores                           |
+| ------------------------- | -------------------------- | ---------------------------------------- |
+| Chart of Accounts         | Folder                     | “Bank accounts”, “Sundry debtors”        |
+| Ledger                    | Book / file                | “HDFC Current”, “Customer Acme”          |
+| Invoice / Bill            | What is owed               | “Acme must pay ₹11,800”                  |
 | **Voucher (this module)** | **Proof that money moved** | “RCP-2026-0007 received ₹11,800 in HDFC” |
 
 ```text
@@ -220,12 +220,12 @@ If Payments is wrong, **every other finance screen is wrong**: customer outstand
 
 ### 1.2 Four voucher types (what each one is for)
 
-| Type | Everyday meaning | Party | Money books | Typical number |
-|------|------------------|-------|-------------|----------------|
-| **Receipt** | Customer paid us (cash, bank, UPI, cheque, card) | Customer | Bank or cash is **debited** (money in) | `RCP-YYYY-####` |
-| **Payment** | We paid a vendor | Vendor | Bank or cash is **credited** (money out) | `PAY-YYYY-####` |
-| **Contra** | We moved money between our own cash/bank books | None | Destination **debit**, source **credit** | `CNT-YYYY-####` |
-| **Journal** | We adjusted books without cash moving | None | Any ledgers, debit total = credit total | `JRN-YYYY-####` |
+| Type        | Everyday meaning                                 | Party    | Money books                              | Typical number  |
+| ----------- | ------------------------------------------------ | -------- | ---------------------------------------- | --------------- |
+| **Receipt** | Customer paid us (cash, bank, UPI, cheque, card) | Customer | Bank or cash is **debited** (money in)   | `RCP-YYYY-####` |
+| **Payment** | We paid a vendor                                 | Vendor   | Bank or cash is **credited** (money out) | `PAY-YYYY-####` |
+| **Contra**  | We moved money between our own cash/bank books   | None     | Destination **debit**, source **credit** | `CNT-YYYY-####` |
+| **Journal** | We adjusted books without cash moving            | None     | Any ledgers, debit total = credit total  | `JRN-YYYY-####` |
 
 Allowed payment modes on a voucher: **Cash, Bank, UPI, Cheque, Card, Adjustment**.  
 Contra and Journal are saved as mode **Adjustment**.  
@@ -291,17 +291,17 @@ That is the whole machine. Everything else is a real-world case of A–F.
 
 The product does not hard-code job titles such as “Cashier.” Access is by **Payments rights** on the login role, plus **CEO** who can do everything.
 
-| Who | Why they use Payments |
-|-----|------------------------|
-| **CEO** | Full access. Can create any voucher, view, download PDF, and void. |
-| **Finance / accountant with Add** | Daily money desk: receipts from customers, payments to vendors, contra, journal. |
-| **Finance with View only** | Watch the register, open vouchers, see allocations. Cannot Save a new voucher. |
-| **Finance with Export** | Download voucher PDF from the list or the view screen. |
-| **Finance with Delete (screen)** | Sees the Void (trash) button. |
-| **Finance with Edit (server)** | Void is accepted by the server. |
-| **Sales / invoicing user** | Does not need Payments Add to **see** Record Payment on an invoice, but Save on Receipt Entry still needs Payments Add. |
-| **Purchase / bills user** | Make Payment on a bill is shown if they have Payments **View**; Save still needs Payments Add. |
-| **Anyone without Payments rights** | Payments menu is hidden. Direct URL is blocked by the same module guard. |
+| Who                                | Why they use Payments                                                                                                   |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| **CEO**                            | Full access. Can create any voucher, view, download PDF, and void.                                                      |
+| **Finance / accountant with Add**  | Daily money desk: receipts from customers, payments to vendors, contra, journal.                                        |
+| **Finance with View only**         | Watch the register, open vouchers, see allocations. Cannot Save a new voucher.                                          |
+| **Finance with Export**            | Download voucher PDF from the list or the view screen.                                                                  |
+| **Finance with Delete (screen)**   | Sees the Void (trash) button.                                                                                           |
+| **Finance with Edit (server)**     | Void is accepted by the server.                                                                                         |
+| **Sales / invoicing user**         | Does not need Payments Add to **see** Record Payment on an invoice, but Save on Receipt Entry still needs Payments Add. |
+| **Purchase / bills user**          | Make Payment on a bill is shown if they have Payments **View**; Save still needs Payments Add.                          |
+| **Anyone without Payments rights** | Payments menu is hidden. Direct URL is blocked by the same module guard.                                                |
 
 ```mermaid
 flowchart LR
@@ -316,15 +316,15 @@ flowchart LR
 
 Login role decides the **Payments** menu and each button. CEO is treated as full access.
 
-| Role / right | View list | View detail | Add | Edit voucher | Inactive / Delete | Submit request | Receive / act | Approve | Reject |
-|--------------|-----------|-------------|-----|--------------|-------------------|----------------|---------------|---------|--------|
-| CEO | Yes | Yes | Yes | No (no edit form) | Void via server | No | No | No | No |
-| Payments View | Yes | Yes | No | No | No | No | No | No | No |
-| Payments Add | Yes if also View | Yes if also View | Yes (all four types) | No | No | No | No | No | No |
-| Payments Edit | — | — | — | No field edit | **Void is allowed on server** | No | No | No | No |
-| Payments Delete | — | — | — | No | **Void button is shown** | No | No | No | No |
-| Payments Export | — | — | — | No | No | No | No | No | No |
-| No Payments rights | No | No | No | No | No | No | No | No | No |
+| Role / right       | View list        | View detail      | Add                  | Edit voucher      | Inactive / Delete             | Submit request | Receive / act | Approve | Reject |
+| ------------------ | ---------------- | ---------------- | -------------------- | ----------------- | ----------------------------- | -------------- | ------------- | ------- | ------ |
+| CEO                | Yes              | Yes              | Yes                  | No (no edit form) | Void via server               | No             | No            | No      | No     |
+| Payments View      | Yes              | Yes              | No                   | No                | No                            | No             | No            | No      | No     |
+| Payments Add       | Yes if also View | Yes if also View | Yes (all four types) | No                | No                            | No             | No            | No      | No     |
+| Payments Edit      | —                | —                | —                    | No field edit     | **Void is allowed on server** | No             | No            | No      | No     |
+| Payments Delete    | —                | —                | —                    | No                | **Void button is shown**      | No             | No            | No      | No     |
+| Payments Export    | —                | —                | —                    | No                | No                            | No             | No            | No      | No     |
+| No Payments rights | No               | No               | No                   | No                | No                            | No             | No            | No      | No     |
 
 **Record-level rules:** there is **no** “own vouchers only” filter. Anyone with View sees the **full company register** (all branches, all types). Branch is stored on the voucher at create time but is **not** used to hide rows.
 
@@ -342,11 +342,11 @@ Menu: **Finance & Accounts → Payments**.
 
 Four summary cards load on open:
 
-| Card | Meaning |
-|------|---------|
-| Total Receipts | Sum of **Posted** receipt voucher amounts |
-| Total Payments | Sum of **Posted** payment voucher amounts |
-| Net Cash Flow | Receipts minus payments (can be negative) |
+| Card             | Meaning                                                      |
+| ---------------- | ------------------------------------------------------------ |
+| Total Receipts   | Sum of **Posted** receipt voucher amounts                    |
+| Total Payments   | Sum of **Posted** payment voucher amounts                    |
+| Net Cash Flow    | Receipts minus payments (can be negative)                    |
 | Unallocated Adv. | Sum of leftover (unallocated) amounts on **Posted receipts** |
 
 Tabs: **All / Receipts / Payments / Contras / Journals**.  
@@ -428,12 +428,12 @@ There is **no draft save**. Cancel discards the form.
 
 Required inputs by type:
 
-| Type | Must have |
-|------|-----------|
+| Type    | Must have                                                                                                  |
+| ------- | ---------------------------------------------------------------------------------------------------------- |
 | Receipt | Date, branch, customer, mode, bank/cash book, amount received > 0. UTR if Bank/UPI. Cheque date if Cheque. |
-| Payment | Date, branch, vendor, mode, bank/cash book, amount paid > 0. UTR if Bank/UPI. |
-| Contra | Date, branch, from ledger, to ledger (different), amount > 0 |
-| Journal | Date, branch, narration, debit ledger, credit ledger (different), amount > 0 |
+| Payment | Date, branch, vendor, mode, bank/cash book, amount paid > 0. UTR if Bank/UPI.                              |
+| Contra  | Date, branch, from ledger, to ledger (different), amount > 0                                               |
+| Journal | Date, branch, narration, debit ledger, credit ledger (different), amount > 0                               |
 
 ### 5.2 Read — List
 
@@ -509,73 +509,73 @@ There is only **Add**. View is read-only. Void is a list action, not a form.
 
 ### 7.1 Receipt Entry
 
-| Field (business name) | On Add | On Edit | Notes |
-|----------------------|--------|---------|-------|
-| Receipt date | Editable / Required | No edit screen | Screen blocks future date |
-| Branch | Editable / Required | — | Locked display if the user has only one branch |
-| Customer | Editable / Required | — | Loads that customer’s open invoices |
-| Current balance | Locked | — | Shown; not filled from books today (stays 0) |
-| Advance balance | Locked | — | Shown; not filled from unallocated receipts (stays 0) |
-| Adjust Advance? | Hidden unless advance > 0 | — | Section never appears while advance stays 0 |
-| Advance applied | Locked when visible | — | FIFO fill of oldest invoices |
-| Payment mode | Editable / Required | — | Cash, Bank Transfer, UPI, Cheque, Card |
-| Bank / cash book | Required except Cash | — | Cash auto-picks cash-in-hand |
-| Ref / UTR | Required for Bank Transfer and UPI | — | |
-| Cheque date | Required if Cheque | — | Screen rejects older than 3 months; **not sent to server** |
-| Amount received | Editable / Required | — | Bank/cash only; Total Settlement = cash + advance + TDS must be > 0 |
-| Invoice tick + allocate | Editable | — | Cannot exceed that invoice’s pending |
-| Carry to Advance? | Toggle | — | Follows leftover; leftover is saved even if toggle is off |
-| Keep Open / Settle & Close | Shown if shortfall | — | Reason required for Settle & Close |
-| TDS deducted by customer | Editable | — | Included in settlement; posts **Dr TDS Receivable / Cr Customer** (BUG258) |
-| Notes | Editable | — | |
-| Save | Visible | — | Needs Payments Add |
-| Save & Print Receipt | Visible | — | **No action wired** |
-| Cancel | Visible | — | Goes back |
+| Field (business name)      | On Add                             | On Edit        | Notes                                                                      |
+| -------------------------- | ---------------------------------- | -------------- | -------------------------------------------------------------------------- |
+| Receipt date               | Editable / Required                | No edit screen | Screen blocks future date                                                  |
+| Branch                     | Editable / Required                | —              | Locked display if the user has only one branch                             |
+| Customer                   | Editable / Required                | —              | Loads that customer’s open invoices                                        |
+| Current balance            | Locked                             | —              | Shown; not filled from books today (stays 0)                               |
+| Advance balance            | Locked                             | —              | Shown; not filled from unallocated receipts (stays 0)                      |
+| Adjust Advance?            | Hidden unless advance > 0          | —              | Section never appears while advance stays 0                                |
+| Advance applied            | Locked when visible                | —              | FIFO fill of oldest invoices                                               |
+| Payment mode               | Editable / Required                | —              | Cash, Bank Transfer, UPI, Cheque, Card                                     |
+| Bank / cash book           | Required except Cash               | —              | Cash auto-picks cash-in-hand                                               |
+| Ref / UTR                  | Required for Bank Transfer and UPI | —              |                                                                            |
+| Cheque date                | Required if Cheque                 | —              | Screen rejects older than 3 months; **not sent to server**                 |
+| Amount received            | Editable / Required                | —              | Bank/cash only; Total Settlement = cash + advance + TDS must be > 0        |
+| Invoice tick + allocate    | Editable                           | —              | Cannot exceed that invoice’s pending                                       |
+| Carry to Advance?          | Toggle                             | —              | Follows leftover; leftover is saved even if toggle is off                  |
+| Keep Open / Settle & Close | Shown if shortfall                 | —              | Reason required for Settle & Close                                         |
+| TDS deducted by customer   | Editable                           | —              | Included in settlement; posts **Dr TDS Receivable / Cr Customer** (BUG258) |
+| Notes                      | Editable                           | —              |                                                                            |
+| Save                       | Visible                            | —              | Needs Payments Add                                                         |
+| Save & Print Receipt       | Visible                            | —              | **No action wired**                                                        |
+| Cancel                     | Visible                            | —              | Goes back                                                                  |
 
 ### 7.2 Payment Entry
 
-| Field (business name) | On Add | On Edit | Notes |
-|----------------------|--------|---------|-------|
-| Payment date | Editable / Required | No edit screen | Screen blocks future date |
-| Branch | Editable / Required | — | Single-branch display lock |
-| Vendor | Editable / Required | — | Loads unpaid bills |
-| Current / Advance balance | Locked | — | Stay 0; vendor advance is not a live apply path |
-| Payment mode | Editable / Required | — | Cash, Bank Transfer (NEFT/RTGS), UPI, Cheque |
-| Bank account | Required if not Cash | — | |
-| Ref / UTR | Required for Bank / UPI | — | |
-| Cheque date | Shown if Cheque | — | **Screen does not require it** (unlike receipt); not sent to server |
-| Amount paid | Editable / Required | — | Must be > 0 |
-| Bill tick + allocate | Editable | — | Cannot exceed bill pending |
-| TDS applicable | Yes / No | — | Rate, TDS amount, net payable when Yes |
-| Shortfall | Locked | — | Calculated |
-| Keep Open / Settle & Close | Editable | — | Reason required for Settle & Close |
-| Save / Cancel | Visible | — | |
-| Save & Print Voucher | Visible | — | **No action wired** |
+| Field (business name)      | On Add                  | On Edit        | Notes                                                               |
+| -------------------------- | ----------------------- | -------------- | ------------------------------------------------------------------- |
+| Payment date               | Editable / Required     | No edit screen | Screen blocks future date                                           |
+| Branch                     | Editable / Required     | —              | Single-branch display lock                                          |
+| Vendor                     | Editable / Required     | —              | Loads unpaid bills                                                  |
+| Current / Advance balance  | Locked                  | —              | Stay 0; vendor advance is not a live apply path                     |
+| Payment mode               | Editable / Required     | —              | Cash, Bank Transfer (NEFT/RTGS), UPI, Cheque                        |
+| Bank account               | Required if not Cash    | —              |                                                                     |
+| Ref / UTR                  | Required for Bank / UPI | —              |                                                                     |
+| Cheque date                | Shown if Cheque         | —              | **Screen does not require it** (unlike receipt); not sent to server |
+| Amount paid                | Editable / Required     | —              | Must be > 0                                                         |
+| Bill tick + allocate       | Editable                | —              | Cannot exceed bill pending                                          |
+| TDS applicable             | Yes / No                | —              | Rate, TDS amount, net payable when Yes                              |
+| Shortfall                  | Locked                  | —              | Calculated                                                          |
+| Keep Open / Settle & Close | Editable                | —              | Reason required for Settle & Close                                  |
+| Save / Cancel              | Visible                 | —              |                                                                     |
+| Save & Print Voucher       | Visible                 | —              | **No action wired**                                                 |
 
 ### 7.3 Contra Entry
 
-| Field | On Add | On Edit | Notes |
-|-------|--------|---------|-------|
-| Date | Editable / Required | No edit | Screen + server block future |
-| Branch | Editable / Required | — | |
-| Transfer From | Editable / Required | — | Active bank or cash only |
-| Transfer To | Editable / Required | — | Must differ from From |
-| Amount | Editable / Required | — | > 0 |
-| Reference / Notes | Optional | — | |
-| Save / Cancel | Visible | — | |
+| Field             | On Add              | On Edit | Notes                        |
+| ----------------- | ------------------- | ------- | ---------------------------- |
+| Date              | Editable / Required | No edit | Screen + server block future |
+| Branch            | Editable / Required | —       |                              |
+| Transfer From     | Editable / Required | —       | Active bank or cash only     |
+| Transfer To       | Editable / Required | —       | Must differ from From        |
+| Amount            | Editable / Required | —       | > 0                          |
+| Reference / Notes | Optional            | —       |                              |
+| Save / Cancel     | Visible             | —       |                              |
 
 ### 7.4 Journal Entry
 
-| Field | On Add | On Edit | Notes |
-|-------|--------|---------|-------|
-| Voucher date | Editable / Required | No edit | Screen + server block future |
-| Branch | Editable / Required | — | |
-| Narration | Editable / Required | — | Header text stored as notes |
-| Debit ledger | Editable / Required | — | Any active ledger |
-| Credit ledger | Editable / Required | — | Must differ |
-| Amount | Editable / Required | — | > 0; same on both sides |
-| Debit / credit line note | Optional | — | |
-| Save / Cancel | Visible | — | |
+| Field                    | On Add              | On Edit | Notes                        |
+| ------------------------ | ------------------- | ------- | ---------------------------- |
+| Voucher date             | Editable / Required | No edit | Screen + server block future |
+| Branch                   | Editable / Required | —       |                              |
+| Narration                | Editable / Required | —       | Header text stored as notes  |
+| Debit ledger             | Editable / Required | —       | Any active ledger            |
+| Credit ledger            | Editable / Required | —       | Must differ                  |
+| Amount                   | Editable / Required | —       | > 0; same on both sides      |
+| Debit / credit line note | Optional            | —       |                              |
+| Save / Cancel            | Visible             | —       |                              |
 
 Roles without Add never see these forms as working Save (menu buttons are hidden). They may still open a URL if they have the module at all.
 
@@ -585,41 +585,41 @@ Roles without Add never see these forms as working Save (menu buttons are hidden
 
 ### 8.1 List rendering
 
-| Column | What you see |
-|--------|----------------|
-| Voucher | Human number (`RCP-2026-0001`) |
-| Type | Badge: Receipt / Payment / Contra / Journal |
-| Date | Voucher date |
-| Party | Intended as customer/vendor name — **list response has no name**, so this often shows a dash |
-| Ref | UTR / reference, or dash |
-| Amount | ₹ amount (absolute) |
-| Mode | Stored mode (CASH, BANK, UPI, …) |
-| Allocated To | Intended invoice/bill ids — **list does not include allocations**, so usually a dash |
-| Settlement | Intended note — **not on list**, usually a dash |
-| Action | View / PDF / Void |
+| Column       | What you see                                                                                 |
+| ------------ | -------------------------------------------------------------------------------------------- |
+| Voucher      | Human number (`RCP-2026-0001`)                                                               |
+| Type         | Badge: Receipt / Payment / Contra / Journal                                                  |
+| Date         | Voucher date                                                                                 |
+| Party        | Intended as customer/vendor name — **list response has no name**, so this often shows a dash |
+| Ref          | UTR / reference, or dash                                                                     |
+| Amount       | ₹ amount (absolute)                                                                          |
+| Mode         | Stored mode (CASH, BANK, UPI, …)                                                             |
+| Allocated To | Intended invoice/bill ids — **list does not include allocations**, so usually a dash         |
+| Settlement   | Intended note — **not on list**, usually a dash                                              |
+| Action       | View / PDF / Void                                                                            |
 
 Refresh: changing tab, search, filter, or page reloads. There is no separate Refresh button.  
 Voided rows remain on the list. Summary cards skip them.
 
 ### 8.2 Dropdowns & lookups
 
-| Dropdown | Where options come from | Search / depend |
-|----------|-------------------------|-----------------|
-| Customer (receipt) | Customer master list | Changing customer reloads invoices |
-| Vendor (payment) | Vendor master list | Changing vendor reloads bills |
-| Branch | Current user’s branches | If exactly one, shown locked |
-| Bank / cash book | Ledgers whose type is Bank or Cash | Cash mode auto-picks Cash type |
-| Invoice rows | Invoices for that customer in Sent, Partial, Overdue (up to 50) | Tick + allocate |
-| Bill rows | Bills for that vendor in Pending, Partial, Overdue with pending > 0 (up to 100) | Tick + allocate |
-| Transfer From / To (contra) | Same bank/cash ledgers | Must differ |
-| Debit / Credit ledger (journal) | All ledgers (name/code) | Must differ |
-| Payment mode (receipt) | Cash, Bank Transfer, UPI, Cheque, Card | Shows bank / UTR / cheque date |
-| Payment mode (payment) | Cash, Bank Transfer (NEFT/RTGS), UPI, Cheque | Same idea |
-| Settle reason (receipt) | Payment Settlement, Pricing Error, Service Issue, Other | Required if Settle & Close |
-| Settle reason (payment) | Payment Settlement, Purchase Return, Discount, Error, Other | Required if Settle & Close |
-| Filter: voucher type | Receipt, Payment, Contra, Journal | Combined with tabs |
-| Filter: payment mode | UPI, Cheque, Cash, Bank Transfer, Adjustment | Sent as those labels (see gaps) |
-| Filter: party | Built from names on **current page** rows | Often empty because names are missing |
+| Dropdown                        | Where options come from                                                         | Search / depend                       |
+| ------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------- |
+| Customer (receipt)              | Customer master list                                                            | Changing customer reloads invoices    |
+| Vendor (payment)                | Vendor master list                                                              | Changing vendor reloads bills         |
+| Branch                          | Current user’s branches                                                         | If exactly one, shown locked          |
+| Bank / cash book                | Ledgers whose type is Bank or Cash                                              | Cash mode auto-picks Cash type        |
+| Invoice rows                    | Invoices for that customer in Sent, Partial, Overdue (up to 50)                 | Tick + allocate                       |
+| Bill rows                       | Bills for that vendor in Pending, Partial, Overdue with pending > 0 (up to 100) | Tick + allocate                       |
+| Transfer From / To (contra)     | Same bank/cash ledgers                                                          | Must differ                           |
+| Debit / Credit ledger (journal) | All ledgers (name/code)                                                         | Must differ                           |
+| Payment mode (receipt)          | Cash, Bank Transfer, UPI, Cheque, Card                                          | Shows bank / UTR / cheque date        |
+| Payment mode (payment)          | Cash, Bank Transfer (NEFT/RTGS), UPI, Cheque                                    | Same idea                             |
+| Settle reason (receipt)         | Payment Settlement, Pricing Error, Service Issue, Other                         | Required if Settle & Close            |
+| Settle reason (payment)         | Payment Settlement, Purchase Return, Discount, Error, Other                     | Required if Settle & Close            |
+| Filter: voucher type            | Receipt, Payment, Contra, Journal                                               | Combined with tabs                    |
+| Filter: payment mode            | UPI, Cheque, Cash, Bank Transfer, Adjustment                                    | Sent as those labels (see gaps)       |
+| Filter: party                   | Built from names on **current page** rows                                       | Often empty because names are missing |
 
 ### 8.3 Detail / get-details rendering
 
@@ -736,44 +736,44 @@ flowchart LR
   rcpt --> so["Sales order / contract line"]
 ```
 
-| Other area | How it connects |
-|------------|-----------------|
-| **Customers** | Receipt party. Customer must have an **active customer ledger**. |
-| **Vendors** | Payment party. Vendor must have an **active vendor ledger**. |
-| **Branches** | Stored on every voucher. Used on create; not used to filter the register. |
-| **Invoices** | Receipt allocates to Sent / Partial / Overdue. Pending and status update. Settle & Close issues an automatic credit note (reason Payment Settlement). |
-| **Bills** | Payment allocates to unpaid bills. Settle & Close issues an automatic debit note. |
-| **Ledgers / COA** | Every save posts debit and credit. Bank/Cash pickers are Bank and Cash type ledgers. Journal can post to any active ledger. |
-| **Credit / debit notes** | Created automatically on Settle & Close; they themselves post more ledger lines. |
-| **Sales orders** | After receipt, if linked invoices are fully paid, the SO may be closed. |
-| **Contracts** | When an invoice becomes Paid, the related contract payment line can be marked paid. |
-| **Notifications** | Receipt → Payment Received. Vendor payment → Payment Dispatched. |
-| **Reports / P&L / Balance sheet / Trial** | Those screens are guarded with the same Payments module key in the menu map; they are **not** voucher create screens. |
-| **Old Payments Received / Payments Made / Journal Voucher / Add Voucher** | Still have URLs. They are **not** the live money desk (demo or leftover data). Testers should use **Payments** under Finance. |
+| Other area                                                                | How it connects                                                                                                                                       |
+| ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Customers**                                                             | Receipt party. Customer must have an **active customer ledger**.                                                                                      |
+| **Vendors**                                                               | Payment party. Vendor must have an **active vendor ledger**.                                                                                          |
+| **Branches**                                                              | Stored on every voucher. Used on create; not used to filter the register.                                                                             |
+| **Invoices**                                                              | Receipt allocates to Sent / Partial / Overdue. Pending and status update. Settle & Close issues an automatic credit note (reason Payment Settlement). |
+| **Bills**                                                                 | Payment allocates to unpaid bills. Settle & Close issues an automatic debit note.                                                                     |
+| **Ledgers / COA**                                                         | Every save posts debit and credit. Bank/Cash pickers are Bank and Cash type ledgers. Journal can post to any active ledger.                           |
+| **Credit / debit notes**                                                  | Created automatically on Settle & Close; they themselves post more ledger lines.                                                                      |
+| **Sales orders**                                                          | After receipt, if linked invoices are fully paid, the SO may be closed.                                                                               |
+| **Contracts**                                                             | When an invoice becomes Paid, the related contract payment line can be marked paid.                                                                   |
+| **Notifications**                                                         | Receipt → Payment Received. Vendor payment → Payment Dispatched.                                                                                      |
+| **Reports / P&L / Balance sheet / Trial**                                 | Those screens are guarded with the same Payments module key in the menu map; they are **not** voucher create screens.                                 |
+| **Old Payments Received / Payments Made / Journal Voucher / Add Voucher** | Still have URLs. They are **not** the live money desk (demo or leftover data). Testers should use **Payments** under Finance.                         |
 
 ---
 
 ## 11. Data the Business Cares About
 
-| Business name | Meaning |
-|---------------|---------|
-| Voucher id / number | Internal id vs printed number (`RCP-2026-0001`) |
-| Type | Receipt, Payment, Contra, Journal |
-| Date | Business date of the money event |
-| Branch | Branch stamped at create |
-| Party type / party | Customer, Vendor, or None |
-| Mode | Cash, Bank, UPI, Cheque, Card, Adjustment |
-| Bank/cash book | Which till or bank received or paid |
-| From / To books | Contra only |
-| Reference / UTR | Bank or UPI proof (unique if filled) |
-| Gross / amount | Receipt settlement total or amount paid / transfer / journal total |
-| TDS amount | On receipt: posts **TDS Receivable** when > 0 (BUG258). On payment: posts **TDS Payable** when > 0 (unless bill already withheld — BUG271). |
-| Advance applied | How much old customer advance was used on this receipt (server field) |
-| Allocated / unallocated | How much hit documents vs leftover |
-| Status | Posted or Void |
-| Allocation | Document type Invoice or Bill, amounts, keep-open vs settle-close, status after |
-| Journal lines | Ledger, debit or credit, line note |
-| Notes / narration | Internal remark |
+| Business name           | Meaning                                                                                                                                     |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Voucher id / number     | Internal id vs printed number (`RCP-2026-0001`)                                                                                             |
+| Type                    | Receipt, Payment, Contra, Journal                                                                                                           |
+| Date                    | Business date of the money event                                                                                                            |
+| Branch                  | Branch stamped at create                                                                                                                    |
+| Party type / party      | Customer, Vendor, or None                                                                                                                   |
+| Mode                    | Cash, Bank, UPI, Cheque, Card, Adjustment                                                                                                   |
+| Bank/cash book          | Which till or bank received or paid                                                                                                         |
+| From / To books         | Contra only                                                                                                                                 |
+| Reference / UTR         | Bank or UPI proof (unique if filled)                                                                                                        |
+| Gross / amount          | Receipt settlement total or amount paid / transfer / journal total                                                                          |
+| TDS amount              | On receipt: posts **TDS Receivable** when > 0 (BUG258). On payment: posts **TDS Payable** when > 0 (unless bill already withheld — BUG271). |
+| Advance applied         | How much old customer advance was used on this receipt (server field)                                                                       |
+| Allocated / unallocated | How much hit documents vs leftover                                                                                                          |
+| Status                  | Posted or Void                                                                                                                              |
+| Allocation              | Document type Invoice or Bill, amounts, keep-open vs settle-close, status after                                                             |
+| Journal lines           | Ledger, debit or credit, line note                                                                                                          |
+| Notes / narration       | Internal remark                                                                                                                             |
 
 ---
 
@@ -786,30 +786,30 @@ flowchart TD
 
 Only those two statuses exist. Posted → Void is one-way.
 
-| Rule | What happens |
-|------|----------------|
-| Voucher number unique | System generates `RCP/PAY/CNT/JRN-year-####` |
-| Reference unique when filled | Duplicate UTR/reference is rejected |
-| Gross amount > 0 | Zero or negative rejected |
-| Receipt allocate ≤ invoice pending | Rejected if more |
-| Receipt total allocate ≤ settlement amount | Rejected if more |
-| Payment allocate ≤ bill pending | Rejected if more |
-| Invoice must exist for receipt allocation | Not found → fail |
-| Bill must exist for payment allocation | Not found → fail |
-| Customer active ledger required | Receipt fails without it |
-| Vendor active ledger required | Payment fails without it |
-| Bank/cash ledger must exist | Receipt/payment fail if missing |
-| Contra from ≠ to | Rejected |
-| Contra books must be active Bank or Cash | Rejected otherwise |
-| Contra amount ≤ source **positive** balance | Rejected only when source balance is already > 0 and too small |
-| Journal ≥ 2 lines, each Dr **or** Cr not both | Rejected |
-| Journal debit total = credit total | Rejected if not balanced |
-| Journal / Contra date not in the future | Server rejects |
-| Receipt / Payment future date | **Screen** rejects; **server does not** (API can still post a future date) |
-| Advance applied ≤ customer unallocated receipts | Server rejects if the advance field is sent and too high |
-| Cheque stale (receipt screen) | Older than 3 months blocked on screen only |
-| Only Posted can be voided | Second void fails |
-| Invalid type / mode / party / status | Rejected with a clear allowed-values message |
+| Rule                                            | What happens                                                               |
+| ----------------------------------------------- | -------------------------------------------------------------------------- |
+| Voucher number unique                           | System generates `RCP/PAY/CNT/JRN-year-####`                               |
+| Reference unique when filled                    | Duplicate UTR/reference is rejected                                        |
+| Gross amount > 0                                | Zero or negative rejected                                                  |
+| Receipt allocate ≤ invoice pending              | Rejected if more                                                           |
+| Receipt total allocate ≤ settlement amount      | Rejected if more                                                           |
+| Payment allocate ≤ bill pending                 | Rejected if more                                                           |
+| Invoice must exist for receipt allocation       | Not found → fail                                                           |
+| Bill must exist for payment allocation          | Not found → fail                                                           |
+| Customer active ledger required                 | Receipt fails without it                                                   |
+| Vendor active ledger required                   | Payment fails without it                                                   |
+| Bank/cash ledger must exist                     | Receipt/payment fail if missing                                            |
+| Contra from ≠ to                                | Rejected                                                                   |
+| Contra books must be active Bank or Cash        | Rejected otherwise                                                         |
+| Contra amount ≤ source **positive** balance     | Rejected only when source balance is already > 0 and too small             |
+| Journal ≥ 2 lines, each Dr **or** Cr not both   | Rejected                                                                   |
+| Journal debit total = credit total              | Rejected if not balanced                                                   |
+| Journal / Contra date not in the future         | Server rejects                                                             |
+| Receipt / Payment future date                   | **Screen** rejects; **server does not** (API can still post a future date) |
+| Advance applied ≤ customer unallocated receipts | Server rejects if the advance field is sent and too high                   |
+| Cheque stale (receipt screen)                   | Older than 3 months blocked on screen only                                 |
+| Only Posted can be voided                       | Second void fails                                                          |
+| Invalid type / mode / party / status            | Rejected with a clear allowed-values message                               |
 
 **Settle & Close (receipt):** leftover on each allocated invoice becomes an automatic credit note (Payment Settlement). Invoice should then be Paid.
 
@@ -826,7 +826,7 @@ These are **live** mismatches. Testers should expect them; they are not “futur
 1. **Void does not undo money.** Ledgers, invoice pending, bill pending, allocations, credit/debit notes stay. Void is a stamp only.
 2. **Void button vs Void server rights differ** (Delete vs Edit).
 3. **No voucher edit.** Wrong amount means a new journal/contra/receipt — or a misleading Void.
-4. **Customer advance on screen does not load.** Current and advance balances stay ₹0, so “Adjust Advance?” almost never appears. The server *can* apply advance if `advanceApplied` is sent; the live Save body can send it when the toggle is used. Default server setting does **not** infer advance from leftover receipts. Result: applying old advance from the screen is not a working end-to-end path today.
+4. **Customer advance on screen does not load.** Current and advance balances stay ₹0, so “Adjust Advance?” almost never appears. The server _can_ apply advance if `advanceApplied` is sent; the live Save body can send it when the toggle is used. Default server setting does **not** infer advance from leftover receipts. Result: applying old advance from the screen is not a working end-to-end path today.
 5. **“Carry to Advance?”** does not change the save. Leftover is always stored as unallocated.
 6. **Customer / ledger `tdsApplicable` / TDS section** on masters is **display / master-data only** — Receipt Entry does not auto-fill TDS section or rate; the user enters TDS rupees.
 7. **Cheque date** is validated on receipt screen and not stored. Payment cheque date is not even required.
@@ -876,104 +876,104 @@ Not available today: voucher edit, approval queue, true void-and-reverse, workin
 
 ### 15.1 APIs
 
-| Method | Path | Purpose (plain language) | Used by (screen/flow) |
-|--------|------|--------------------------|------------------------|
-| POST | `/api/v1/vouchers/receipts` | Create posted customer receipt + invoice allocations | Receipt Entry Save |
-| POST | `/api/v1/vouchers/payments` | Create posted vendor payment + bill allocations | Payment Entry Save |
-| POST | `/api/v1/vouchers/contra` | Create posted cash/bank transfer | Contra Save |
-| POST | `/api/v1/vouchers/journal` | Create posted balanced journal | Journal Save |
-| GET | `/api/v1/vouchers` | List vouchers (type, party, mode, search, page) | Payments register |
-| GET | `/api/v1/vouchers/summary` | Posted receipt/payment totals and unallocated receipts | Register cards |
-| GET | `/api/v1/vouchers/by-id` | One voucher (journal lines for Journal; ledger entry lines for Receipt/Payment/Contra) | View Voucher |
-| GET | `/api/v1/vouchers/allocations` | Allocation rows for one voucher | View Voucher |
-| POST | `/api/v1/vouchers/void` | Mark posted voucher Void | Register Void |
-| GET | `/api/v1/vouchers/pdf` | Download voucher PDF | Register PDF, View Download PDF |
-| GET | `/api/v1/invoices` | Open invoices for a customer | Receipt allocation table |
-| GET | `/api/v1/bills` | Bills for a vendor | Payment allocation table |
-| GET | `/api/v1/ledgers` | Bank/cash (and all, for journal) | All money forms |
-| GET | `/api/v1/ledgers/by-id` | Bank/cash name on view | View Voucher posting |
-| GET | Customer / vendor dropdowns | Party pickers | Receipt / Payment |
-| GET | Current user branches | Branch picker | All create forms |
+| Method | Path                           | Purpose (plain language)                                                               | Used by (screen/flow)           |
+| ------ | ------------------------------ | -------------------------------------------------------------------------------------- | ------------------------------- |
+| POST   | `/api/v1/vouchers/receipts`    | Create posted customer receipt + invoice allocations                                   | Receipt Entry Save              |
+| POST   | `/api/v1/vouchers/payments`    | Create posted vendor payment + bill allocations                                        | Payment Entry Save              |
+| POST   | `/api/v1/vouchers/contra`      | Create posted cash/bank transfer                                                       | Contra Save                     |
+| POST   | `/api/v1/vouchers/journal`     | Create posted balanced journal                                                         | Journal Save                    |
+| GET    | `/api/v1/vouchers`             | List vouchers (type, party, mode, search, page)                                        | Payments register               |
+| GET    | `/api/v1/vouchers/summary`     | Posted receipt/payment totals and unallocated receipts                                 | Register cards                  |
+| GET    | `/api/v1/vouchers/by-id`       | One voucher (journal lines for Journal; ledger entry lines for Receipt/Payment/Contra) | View Voucher                    |
+| GET    | `/api/v1/vouchers/allocations` | Allocation rows for one voucher                                                        | View Voucher                    |
+| POST   | `/api/v1/vouchers/void`        | Mark posted voucher Void                                                               | Register Void                   |
+| GET    | `/api/v1/vouchers/pdf`         | Download voucher PDF                                                                   | Register PDF, View Download PDF |
+| GET    | `/api/v1/invoices`             | Open invoices for a customer                                                           | Receipt allocation table        |
+| GET    | `/api/v1/bills`                | Bills for a vendor                                                                     | Payment allocation table        |
+| GET    | `/api/v1/ledgers`              | Bank/cash (and all, for journal)                                                       | All money forms                 |
+| GET    | `/api/v1/ledgers/by-id`        | Bank/cash name on view                                                                 | View Voucher posting            |
+| GET    | Customer / vendor dropdowns    | Party pickers                                                                          | Receipt / Payment               |
+| GET    | Current user branches          | Branch picker                                                                          | All create forms                |
 
 Rights: Add on the four create posts; View on list/summary/by-id/allocations/pdf; **Edit** on void. CEO allowed on all.
 
 ### 15.2 Frontend Screen Routes
 
-| Route | Screen purpose | Primary users |
-|-------|----------------|---------------|
-| `/payment-dashboard` | Money register + summary + create buttons | Finance |
-| `/receipt-entry` | Create customer receipt | Finance / from invoice |
-| `/payment-entry` | Create vendor payment | Finance / from bill |
-| `/contra` | Create contra | Finance |
-| `/journal` | Create two-line journal | Finance |
-| `/view-voucher` | Read-only voucher (needs id in navigation) | Finance |
+| Route                                                                                                                                                              | Screen purpose                                | Primary users              |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------- | -------------------------- |
+| `/payment-dashboard`                                                                                                                                               | Money register + summary + create buttons     | Finance                    |
+| `/receipt-entry`                                                                                                                                                   | Create customer receipt                       | Finance / from invoice     |
+| `/payment-entry`                                                                                                                                                   | Create vendor payment                         | Finance / from bill        |
+| `/contra`                                                                                                                                                          | Create contra                                 | Finance                    |
+| `/journal`                                                                                                                                                         | Create two-line journal                       | Finance                    |
+| `/view-voucher`                                                                                                                                                    | Read-only voucher (needs id in navigation)    | Finance                    |
 | `/Payments-Received`, `/payment-received-detail`, `/payments-made`, `/add-payments-recieved`, `/add-payments-made`, `/voucher`, `/add-voucher`, `/journal-voucher` | Leftover / demo paths — **not** the live desk | Avoid for official testing |
 
 ### 15.3 Click Events, Filters, Search & Controls
 
-| Screen / Route | Control | Type | What happens |
-|----------------|---------|------|--------------|
-| Payments register | + Add Receipt | Button | Opens Receipt Entry |
-| Payments register | + Payment | Button | Opens Payment Entry |
-| Payments register | + Contra | Button | Opens Contra |
-| Payments register | + Journal | Button | Opens Journal |
-| Payments register | All / Receipts / Payments / Contras / Journals | Tabs | Reloads list with that type; remembers tab |
-| Payments register | Search | Text | After 0.5s, searches number / reference / party id |
-| Payments register | Voucher type chips | Filter | Extra type filter if tab is All |
-| Payments register | Payment mode | Multi-select | Sent only if exactly one mode chosen |
-| Payments register | Party | Multi-select | Sends party id if a UUID token is selected |
-| Payments register | Voucher date | Date range | Local filter on current page only |
-| Payments register | Page / page size | Pager | Server page |
-| Payments register | View (eye) | Icon | Opens View Voucher with id |
-| Payments register | PDF | Icon | Downloads PDF if Export |
-| Payments register | Void (trash) | Icon | Confirm then void if Delete |
-| Receipt Entry | Receipt date | Date | Required; no future |
-| Receipt Entry | Branch | Select / locked | Required |
-| Receipt Entry | Customer | Select | Loads invoices |
-| Receipt Entry | Current / Advance balance | Read-only | Display only (0 today) |
-| Receipt Entry | Adjust Advance? | Toggle | FIFO-fills invoices if advance > 0 |
-| Receipt Entry | Payment mode | Select | Shows bank / UTR / cheque date |
-| Receipt Entry | Bank account | Select | Required unless Cash |
-| Receipt Entry | Ref / UTR | Text | Required for Bank Transfer and UPI |
-| Receipt Entry | Cheque date | Date | Required if Cheque; max 3 months old |
-| Receipt Entry | Amount received | Money | Bank/cash only; Total Settlement = cash + advance + TDS |
-| Receipt Entry | Invoice tick | Checkbox | Include in allocation |
-| Receipt Entry | Allocate amount | Text | Per invoice; cannot exceed pending |
-| Receipt Entry | Carry to Advance? | Toggle | Display only |
-| Receipt Entry | Keep Open / Settle & Close | Radio | Shown if shortfall |
-| Receipt Entry | Settlement reason | Select | Required if Settle & Close |
-| Receipt Entry | TDS deducted by customer | Money | Part of settlement; posts TDS Receivable (BUG258) |
-| Receipt Entry | Notes | Text | Optional |
-| Receipt Entry | Save | Button | Posts receipt |
-| Receipt Entry | Save & Print Receipt | Button | No action |
-| Receipt Entry | Cancel | Button | Back |
-| Payment Entry | Payment date | Date | Required; no future |
-| Payment Entry | Branch | Select / locked | Required |
-| Payment Entry | Vendor | Select | Loads unpaid bills |
-| Payment Entry | Current / Advance balance | Read-only | Display only |
-| Payment Entry | Payment mode | Select | Shows bank / UTR / cheque date |
-| Payment Entry | Bank account | Select | Required if not Cash |
-| Payment Entry | Ref / UTR | Text | Required for Bank / UPI |
-| Payment Entry | Cheque date | Date | Shown; not required |
-| Payment Entry | Amount paid | Money | Required > 0 |
-| Payment Entry | Bill tick / allocate | Checkbox + text | Same idea as invoices |
-| Payment Entry | TDS Yes / No | Radio | Shows rate, TDS amount, net payable |
-| Payment Entry | TDS rate % | Number | Computes TDS from amount paid |
-| Payment Entry | Keep Open / Settle & Close | Radio | Always visible |
-| Payment Entry | Settlement reason | Select | Required if Settle & Close |
-| Payment Entry | Save / Cancel | Buttons | Post / back |
-| Payment Entry | Save & Print Voucher | Button | No action |
-| Contra | Date, branch, from, to, amount | Fields | Required; from ≠ to |
-| Contra | Reference / Notes | Text | Optional |
-| Contra | Save / Cancel | Buttons | Post / back |
-| Journal | Date, branch, narration | Fields | Required |
-| Journal | Debit ledger / Credit ledger / Amount | Fields | Required; ledgers differ |
-| Journal | Line notes | Text | Optional |
-| Journal | Save / Cancel | Buttons | Post / back |
-| View Voucher | Back to Register | Button | Previous screen |
-| View Voucher | Download PDF | Button | Downloads PDF |
-| Invoice detail / list | Record Payment | Button | Receipt Entry prefilled |
-| Bill view | Make Payment | Button | Payment Entry prefilled |
+| Screen / Route        | Control                                        | Type            | What happens                                            |
+| --------------------- | ---------------------------------------------- | --------------- | ------------------------------------------------------- |
+| Payments register     | + Add Receipt                                  | Button          | Opens Receipt Entry                                     |
+| Payments register     | + Payment                                      | Button          | Opens Payment Entry                                     |
+| Payments register     | + Contra                                       | Button          | Opens Contra                                            |
+| Payments register     | + Journal                                      | Button          | Opens Journal                                           |
+| Payments register     | All / Receipts / Payments / Contras / Journals | Tabs            | Reloads list with that type; remembers tab              |
+| Payments register     | Search                                         | Text            | After 0.5s, searches number / reference / party id      |
+| Payments register     | Voucher type chips                             | Filter          | Extra type filter if tab is All                         |
+| Payments register     | Payment mode                                   | Multi-select    | Sent only if exactly one mode chosen                    |
+| Payments register     | Party                                          | Multi-select    | Sends party id if a UUID token is selected              |
+| Payments register     | Voucher date                                   | Date range      | Local filter on current page only                       |
+| Payments register     | Page / page size                               | Pager           | Server page                                             |
+| Payments register     | View (eye)                                     | Icon            | Opens View Voucher with id                              |
+| Payments register     | PDF                                            | Icon            | Downloads PDF if Export                                 |
+| Payments register     | Void (trash)                                   | Icon            | Confirm then void if Delete                             |
+| Receipt Entry         | Receipt date                                   | Date            | Required; no future                                     |
+| Receipt Entry         | Branch                                         | Select / locked | Required                                                |
+| Receipt Entry         | Customer                                       | Select          | Loads invoices                                          |
+| Receipt Entry         | Current / Advance balance                      | Read-only       | Display only (0 today)                                  |
+| Receipt Entry         | Adjust Advance?                                | Toggle          | FIFO-fills invoices if advance > 0                      |
+| Receipt Entry         | Payment mode                                   | Select          | Shows bank / UTR / cheque date                          |
+| Receipt Entry         | Bank account                                   | Select          | Required unless Cash                                    |
+| Receipt Entry         | Ref / UTR                                      | Text            | Required for Bank Transfer and UPI                      |
+| Receipt Entry         | Cheque date                                    | Date            | Required if Cheque; max 3 months old                    |
+| Receipt Entry         | Amount received                                | Money           | Bank/cash only; Total Settlement = cash + advance + TDS |
+| Receipt Entry         | Invoice tick                                   | Checkbox        | Include in allocation                                   |
+| Receipt Entry         | Allocate amount                                | Text            | Per invoice; cannot exceed pending                      |
+| Receipt Entry         | Carry to Advance?                              | Toggle          | Display only                                            |
+| Receipt Entry         | Keep Open / Settle & Close                     | Radio           | Shown if shortfall                                      |
+| Receipt Entry         | Settlement reason                              | Select          | Required if Settle & Close                              |
+| Receipt Entry         | TDS deducted by customer                       | Money           | Part of settlement; posts TDS Receivable (BUG258)       |
+| Receipt Entry         | Notes                                          | Text            | Optional                                                |
+| Receipt Entry         | Save                                           | Button          | Posts receipt                                           |
+| Receipt Entry         | Save & Print Receipt                           | Button          | No action                                               |
+| Receipt Entry         | Cancel                                         | Button          | Back                                                    |
+| Payment Entry         | Payment date                                   | Date            | Required; no future                                     |
+| Payment Entry         | Branch                                         | Select / locked | Required                                                |
+| Payment Entry         | Vendor                                         | Select          | Loads unpaid bills                                      |
+| Payment Entry         | Current / Advance balance                      | Read-only       | Display only                                            |
+| Payment Entry         | Payment mode                                   | Select          | Shows bank / UTR / cheque date                          |
+| Payment Entry         | Bank account                                   | Select          | Required if not Cash                                    |
+| Payment Entry         | Ref / UTR                                      | Text            | Required for Bank / UPI                                 |
+| Payment Entry         | Cheque date                                    | Date            | Shown; not required                                     |
+| Payment Entry         | Amount paid                                    | Money           | Required > 0                                            |
+| Payment Entry         | Bill tick / allocate                           | Checkbox + text | Same idea as invoices                                   |
+| Payment Entry         | TDS Yes / No                                   | Radio           | Shows rate, TDS amount, net payable                     |
+| Payment Entry         | TDS rate %                                     | Number          | Computes TDS from amount paid                           |
+| Payment Entry         | Keep Open / Settle & Close                     | Radio           | Always visible                                          |
+| Payment Entry         | Settlement reason                              | Select          | Required if Settle & Close                              |
+| Payment Entry         | Save / Cancel                                  | Buttons         | Post / back                                             |
+| Payment Entry         | Save & Print Voucher                           | Button          | No action                                               |
+| Contra                | Date, branch, from, to, amount                 | Fields          | Required; from ≠ to                                     |
+| Contra                | Reference / Notes                              | Text            | Optional                                                |
+| Contra                | Save / Cancel                                  | Buttons         | Post / back                                             |
+| Journal               | Date, branch, narration                        | Fields          | Required                                                |
+| Journal               | Debit ledger / Credit ledger / Amount          | Fields          | Required; ledgers differ                                |
+| Journal               | Line notes                                     | Text            | Optional                                                |
+| Journal               | Save / Cancel                                  | Buttons         | Post / back                                             |
+| View Voucher          | Back to Register                               | Button          | Previous screen                                         |
+| View Voucher          | Download PDF                                   | Button          | Downloads PDF                                           |
+| Invoice detail / list | Record Payment                                 | Button          | Receipt Entry prefilled                                 |
+| Bill view             | Make Payment                                   | Button          | Payment Entry prefilled                                 |
 
 ---
 
@@ -1011,7 +1011,7 @@ Pending ₹11,800. Customer pays ₹11,000 and you agree to waive ₹800.
 Pending ₹11,800. Customer pays ₹15,000.
 
 1. Allocate 11,800; leftover ₹3,200 is **unallocated** on the receipt (advance sitting on this voucher).
-2. Invoice Paid. Next invoice *should* be able to consume that ₹3,200 — **on the server, if advance is sent**. On the live screen, advance balance does not load, so the next receipt will not show Adjust Advance. Testers: treat leftover as stored, but **on-screen reuse is broken** (see N-series).
+2. Invoice Paid. Next invoice _should_ be able to consume that ₹3,200 — **on the server, if advance is sent**. On the live screen, advance balance does not load, so the next receipt will not show Adjust Advance. Testers: treat leftover as stored, but **on-screen reuse is broken** (see N-series).
 
 ### Scenario E — Pay several invoices with one receipt
 
@@ -1127,44 +1127,44 @@ When the receipt makes the invoice Paid, the contract payment line can mark paid
 
 Work in a tenant with: active customer + customer ledger, active vendor + vendor ledger, at least one Bank and one Cash ledger, one Sent invoice, one Pending bill, Payments Add + View (+ Export/Delete/Edit as needed).
 
-| ID | What to do | Expected |
-|----|------------|----------|
-| P1 | Open Payments with View | Register + four cards load |
-| P2 | Tab Receipts / Payments / Contras / Journals | List type matches tab |
-| P3 | Search a known RCP number | That row appears |
-| P4 | + Add Receipt with Add right | Form opens; single branch locked if only one |
-| P5 | Pick customer with a Sent invoice | Invoice table fills (number, date, total, pending) |
-| P6 | Record Payment from invoice detail | Receipt form opens with that customer and invoice ticked, allocate = pending |
-| P7 | Full receipt, Bank Transfer, UTR, allocate 100% | Success; invoice Paid; bank Dr; customer Cr; RCP number on register |
-| P8 | Cash receipt | No bank picker; cash ledger used; posts |
-| P9 | UPI receipt with UTR | Posts; mode UPI |
-| P10 | Card receipt | Posts; mode CARD |
-| P11 | Cheque receipt, cheque date today | Posts (date itself not on voucher) |
-| P12 | Partial receipt, Keep Open | Invoice Partial; pending reduced by allocated |
-| P13 | Short receipt, Settle & Close + reason | Auto credit note; invoice Paid |
-| P14 | Receipt larger than invoices, allocate only pending | Invoice Paid; unallocated = extra |
-| P15 | One receipt, two invoices, both full | Both Paid; one voucher |
-| P16 | Receipt with notes | Notes on view screen |
-| P17 | Make Payment from bill | Payment form, vendor + bill ticked |
-| P18 | Full vendor payment, no TDS | Bill Paid; vendor Dr; bank Cr |
-| P19 | Partial vendor payment, Keep Open | Bill Partial |
-| P20 | Payment with TDS Yes and a rate | Voucher stores TDS; three ledger lines exist (vendor / bank / TDS) |
-| P21 | Cash vendor payment | Cash ledger credited |
-| P22 | Contra cash → bank, amount within positive source balance | CNT posted; dest Dr; source Cr |
-| P23 | Contra bank → bank, different books | Posts |
-| P24 | Journal two different ledgers, narration, amount | JRN posted; two lines; Dr total = Cr total |
-| P25 | Open View on each type | Header, amount, mode; allocations empty on contra/journal |
-| P26 | Download PDF from list (Export) and from View | File downloads |
-| P27 | Void with Edit (or CEO) + Delete button | Status Void; second void fails |
-| P28 | Role with only View | No + buttons; cannot Save if URL opened |
-| P29 | CEO without extra rights | Can create, view, PDF, void |
-| P30 | After last invoice Paid on an SO | SO close-if-fully-paid runs (SO no longer open if rule matches) |
-| P31 | Duplicate check: new receipt, different UTR | Allowed |
-| P32 | Pagination: page size 10 with >10 vouchers | Next page shows older rows |
-| P33 | Notification after receipt / payment | Payment Received / Dispatched notice exists |
-| P34 | View allocations after receipt | Invoice id, pending before, allocated, status after |
-| P35 | Journal line notes | Shown on view journal lines |
-| P36 | Receipt cash 9,000 + TDS 1,000, allocate 10,000 | Invoice Paid; Dr bank 9k + Dr TDS Receivable 1k + Cr customer 10k; View/PDF show all lines (Scenario H) |
+| ID  | What to do                                                | Expected                                                                                                |
+| --- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| P1  | Open Payments with View                                   | Register + four cards load                                                                              |
+| P2  | Tab Receipts / Payments / Contras / Journals              | List type matches tab                                                                                   |
+| P3  | Search a known RCP number                                 | That row appears                                                                                        |
+| P4  | + Add Receipt with Add right                              | Form opens; single branch locked if only one                                                            |
+| P5  | Pick customer with a Sent invoice                         | Invoice table fills (number, date, total, pending)                                                      |
+| P6  | Record Payment from invoice detail                        | Receipt form opens with that customer and invoice ticked, allocate = pending                            |
+| P7  | Full receipt, Bank Transfer, UTR, allocate 100%           | Success; invoice Paid; bank Dr; customer Cr; RCP number on register                                     |
+| P8  | Cash receipt                                              | No bank picker; cash ledger used; posts                                                                 |
+| P9  | UPI receipt with UTR                                      | Posts; mode UPI                                                                                         |
+| P10 | Card receipt                                              | Posts; mode CARD                                                                                        |
+| P11 | Cheque receipt, cheque date today                         | Posts (date itself not on voucher)                                                                      |
+| P12 | Partial receipt, Keep Open                                | Invoice Partial; pending reduced by allocated                                                           |
+| P13 | Short receipt, Settle & Close + reason                    | Auto credit note; invoice Paid                                                                          |
+| P14 | Receipt larger than invoices, allocate only pending       | Invoice Paid; unallocated = extra                                                                       |
+| P15 | One receipt, two invoices, both full                      | Both Paid; one voucher                                                                                  |
+| P16 | Receipt with notes                                        | Notes on view screen                                                                                    |
+| P17 | Make Payment from bill                                    | Payment form, vendor + bill ticked                                                                      |
+| P18 | Full vendor payment, no TDS                               | Bill Paid; vendor Dr; bank Cr                                                                           |
+| P19 | Partial vendor payment, Keep Open                         | Bill Partial                                                                                            |
+| P20 | Payment with TDS Yes and a rate                           | Voucher stores TDS; three ledger lines exist (vendor / bank / TDS)                                      |
+| P21 | Cash vendor payment                                       | Cash ledger credited                                                                                    |
+| P22 | Contra cash → bank, amount within positive source balance | CNT posted; dest Dr; source Cr                                                                          |
+| P23 | Contra bank → bank, different books                       | Posts                                                                                                   |
+| P24 | Journal two different ledgers, narration, amount          | JRN posted; two lines; Dr total = Cr total                                                              |
+| P25 | Open View on each type                                    | Header, amount, mode; allocations empty on contra/journal                                               |
+| P26 | Download PDF from list (Export) and from View             | File downloads                                                                                          |
+| P27 | Void with Edit (or CEO) + Delete button                   | Status Void; second void fails                                                                          |
+| P28 | Role with only View                                       | No + buttons; cannot Save if URL opened                                                                 |
+| P29 | CEO without extra rights                                  | Can create, view, PDF, void                                                                             |
+| P30 | After last invoice Paid on an SO                          | SO close-if-fully-paid runs (SO no longer open if rule matches)                                         |
+| P31 | Duplicate check: new receipt, different UTR               | Allowed                                                                                                 |
+| P32 | Pagination: page size 10 with >10 vouchers                | Next page shows older rows                                                                              |
+| P33 | Notification after receipt / payment                      | Payment Received / Dispatched notice exists                                                             |
+| P34 | View allocations after receipt                            | Invoice id, pending before, allocated, status after                                                     |
+| P35 | Journal line notes                                        | Shown on view journal lines                                                                             |
+| P36 | Receipt cash 9,000 + TDS 1,000, allocate 10,000           | Invoice Paid; Dr bank 9k + Dr TDS Receivable 1k + Cr customer 10k; View/PDF show all lines (Scenario H) |
 
 ---
 
@@ -1174,107 +1174,107 @@ Easy language: “this should fail or behave badly — confirm the actual result
 
 ### Access and buttons
 
-| ID | What to try | Expected / watch |
-|----|-------------|------------------|
-| N1 | User with no Payments module | Menu hidden; URL blocked |
-| N2 | View-only user clicks Save on a pasted Receipt URL | Server refuses Add |
-| N3 | Delete without Edit → Void | Button shows; server refuses |
-| N4 | Edit without Delete | No Void button; API void would work |
-| N5 | Export off, click PDF on list | PDF icon hidden |
-| N6 | View-only user still sees Record Payment / Make Payment | Can open form; Save fails |
+| ID  | What to try                                             | Expected / watch                    |
+| --- | ------------------------------------------------------- | ----------------------------------- |
+| N1  | User with no Payments module                            | Menu hidden; URL blocked            |
+| N2  | View-only user clicks Save on a pasted Receipt URL      | Server refuses Add                  |
+| N3  | Delete without Edit → Void                              | Button shows; server refuses        |
+| N4  | Edit without Delete                                     | No Void button; API void would work |
+| N5  | Export off, click PDF on list                           | PDF icon hidden                     |
+| N6  | View-only user still sees Record Payment / Make Payment | Can open form; Save fails           |
 
 ### Receipt validation
 
-| ID | What to try | Expected / watch |
-|----|-------------|------------------|
-| N7 | Future receipt date on screen | Blocked |
-| N8 | Future receipt date via API | **May post** (server does not block) |
-| N9 | No customer / no branch / no mode / amount 0 | Screen errors |
-| N10 | Bank Transfer without UTR | Screen error |
-| N11 | Bank Transfer without bank book | Screen error |
-| N12 | Cash mode but no cash ledger in masters | Error: no cash-in-hand |
-| N13 | Cheque date empty | Screen error |
-| N14 | Cheque date 4 months ago | Stale cheque error |
-| N15 | Allocate more than invoice pending | Snackbar; no save |
-| N16 | Total allocate > cash + advance + TDS settlement | Snackbar; no save |
-| N17 | Settle & Close without reason | Reason required |
-| N18 | Allocate a Paid or Draft invoice (if forced) | Not in the list; server would reject pending 0 / not found |
-| N19 | Customer with no active ledger | Save fails: customer ledger not found/active |
-| N20 | Missing / wrong bank ledger id | Bank/cash ledger not found |
-| N21 | Same UTR as an existing voucher | Duplicate reference |
-| N22 | Save & Print Receipt | Nothing happens |
-| N23 | Adjust Advance with advance showing 0 | Section hidden; cannot test FIFO on UI |
-| N24 | After Scenario D leftover, open new receipt for same customer | Advance still 0; Adjust Advance missing — **advance reuse broken on UI** |
-| N25 | Receipt TDS 1,000 + cash 9,000 + allocate 10,000 | Posts; TDS Receivable Dr 1,000; invoice pending reduced by 10,000 (Scenario H) |
+| ID  | What to try                                                   | Expected / watch                                                               |
+| --- | ------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| N7  | Future receipt date on screen                                 | Blocked                                                                        |
+| N8  | Future receipt date via API                                   | **May post** (server does not block)                                           |
+| N9  | No customer / no branch / no mode / amount 0                  | Screen errors                                                                  |
+| N10 | Bank Transfer without UTR                                     | Screen error                                                                   |
+| N11 | Bank Transfer without bank book                               | Screen error                                                                   |
+| N12 | Cash mode but no cash ledger in masters                       | Error: no cash-in-hand                                                         |
+| N13 | Cheque date empty                                             | Screen error                                                                   |
+| N14 | Cheque date 4 months ago                                      | Stale cheque error                                                             |
+| N15 | Allocate more than invoice pending                            | Snackbar; no save                                                              |
+| N16 | Total allocate > cash + advance + TDS settlement              | Snackbar; no save                                                              |
+| N17 | Settle & Close without reason                                 | Reason required                                                                |
+| N18 | Allocate a Paid or Draft invoice (if forced)                  | Not in the list; server would reject pending 0 / not found                     |
+| N19 | Customer with no active ledger                                | Save fails: customer ledger not found/active                                   |
+| N20 | Missing / wrong bank ledger id                                | Bank/cash ledger not found                                                     |
+| N21 | Same UTR as an existing voucher                               | Duplicate reference                                                            |
+| N22 | Save & Print Receipt                                          | Nothing happens                                                                |
+| N23 | Adjust Advance with advance showing 0                         | Section hidden; cannot test FIFO on UI                                         |
+| N24 | After Scenario D leftover, open new receipt for same customer | Advance still 0; Adjust Advance missing — **advance reuse broken on UI**       |
+| N25 | Receipt TDS 1,000 + cash 9,000 + allocate 10,000              | Posts; TDS Receivable Dr 1,000; invoice pending reduced by 10,000 (Scenario H) |
 
 ### Payment validation
 
-| ID | What to try | Expected / watch |
-|----|-------------|------------------|
-| N26 | Future payment date on screen | Blocked |
-| N27 | Future payment date via API | **May post** |
-| N28 | No vendor / amount 0 / no mode | Screen errors |
-| N29 | Bank/UPI without UTR | Screen error |
-| N30 | Allocate more than bill pending | Snackbar |
-| N31 | Settle & Close without reason | Reason required |
-| N32 | Vendor with no active ledger | Save fails |
-| N33 | Cheque payment with empty cheque date | **May save** (not required) |
-| N34 | Save & Print Voucher | Nothing happens |
+| ID  | What to try                                       | Expected / watch                               |
+| --- | ------------------------------------------------- | ---------------------------------------------- |
+| N26 | Future payment date on screen                     | Blocked                                        |
+| N27 | Future payment date via API                       | **May post**                                   |
+| N28 | No vendor / amount 0 / no mode                    | Screen errors                                  |
+| N29 | Bank/UPI without UTR                              | Screen error                                   |
+| N30 | Allocate more than bill pending                   | Snackbar                                       |
+| N31 | Settle & Close without reason                     | Reason required                                |
+| N32 | Vendor with no active ledger                      | Save fails                                     |
+| N33 | Cheque payment with empty cheque date             | **May save** (not required)                    |
+| N34 | Save & Print Voucher                              | Nothing happens                                |
 | N35 | TDS Yes, rate 10%, then check bank vs Net Payable | Bank credit = Amount Paid, **not** Net Payable |
-| N36 | Settle & Close with reason “Purchase Return” | Debit note may fail or reject reason code |
-| N37 | Allocate more than amount paid on server | Screen tries to stop; server may not |
+| N36 | Settle & Close with reason “Purchase Return”      | Debit note may fail or reject reason code      |
+| N37 | Allocate more than amount paid on server          | Screen tries to stop; server may not           |
 
 ### Contra / Journal
 
-| ID | What to try | Expected / watch |
-|----|-------------|------------------|
-| N38 | Contra From = To | Screen + server refuse |
-| N39 | Contra future date | Screen + server refuse |
-| N40 | Contra amount 0 or negative | Refuse |
-| N41 | Contra from a customer ledger | Must be bank or cash |
-| N42 | Contra from inactive bank | Refuse |
-| N43 | Contra amount > positive source balance | Refuse |
+| ID  | What to try                                              | Expected / watch         |
+| --- | -------------------------------------------------------- | ------------------------ |
+| N38 | Contra From = To                                         | Screen + server refuse   |
+| N39 | Contra future date                                       | Screen + server refuse   |
+| N40 | Contra amount 0 or negative                              | Refuse                   |
+| N41 | Contra from a customer ledger                            | Must be bank or cash     |
+| N42 | Contra from inactive bank                                | Refuse                   |
+| N43 | Contra amount > positive source balance                  | Refuse                   |
 | N44 | Contra when source balance is 0 or negative, huge amount | **May post** (overdraft) |
-| N45 | Journal same debit and credit ledger | Screen refuse |
-| N46 | Journal empty narration | Refuse |
-| N47 | Journal amount 0 | Refuse |
-| N48 | Journal future date | Screen + server refuse |
-| N49 | Journal inactive ledger | Server refuse |
-| N50 | Try three journal lines on the screen | Cannot; only two fields |
+| N45 | Journal same debit and credit ledger                     | Screen refuse            |
+| N46 | Journal empty narration                                  | Refuse                   |
+| N47 | Journal amount 0                                         | Refuse                   |
+| N48 | Journal future date                                      | Screen + server refuse   |
+| N49 | Journal inactive ledger                                  | Server refuse            |
+| N50 | Try three journal lines on the screen                    | Cannot; only two fields  |
 
 ### List, view, void, filters
 
-| ID | What to try | Expected / watch |
-|----|-------------|------------------|
-| N51 | Filter mode “Bank Transfer” | Often **no rows** (stored as BANK) |
-| N52 | Date range across months | Only current page filtered |
-| N53 | Party column / Allocated To / Settlement | Often dashes |
-| N54 | Unallocated Adv. card after Scenario D | Often **₹0** (wrong field name) |
-| N55 | Open `/view-voucher` with no id | “No voucher found” |
-| N56 | View a Contra | Prefer journal lines; books debit destination / credit source |
-| N57 | View a receipt with TDS | TDS block + full journal lines including TDS Receivable |
-| N58 | View a TDS payment | TDS block + full journal lines including TDS Payable when enrichment loads |
-| N59 | Void a Void voucher | Refuse: only posted can be voided |
-| N60 | Void a receipt then check invoice and bank | Invoice still Paid; bank still up — **not undone** |
-| N61 | Void then expect summary to drop | Cards skip Void; list still shows the row |
-| N62 | Search by customer **name** | No match (search is number / UTR / party id) |
-| N63 | Expect register limited to my branch | All branches visible |
-| N64 | Old URL `/payments-made` | Demo/static or leftover — not live PAY vouchers |
-| N65 | Two receipts racing the same last rupee | Second allocate should fail or pending 0 |
-| N66 | Refresh View Voucher | Id was only in navigation — may show not found |
+| ID  | What to try                                | Expected / watch                                                           |
+| --- | ------------------------------------------ | -------------------------------------------------------------------------- |
+| N51 | Filter mode “Bank Transfer”                | Often **no rows** (stored as BANK)                                         |
+| N52 | Date range across months                   | Only current page filtered                                                 |
+| N53 | Party column / Allocated To / Settlement   | Often dashes                                                               |
+| N54 | Unallocated Adv. card after Scenario D     | Often **₹0** (wrong field name)                                            |
+| N55 | Open `/view-voucher` with no id            | “No voucher found”                                                         |
+| N56 | View a Contra                              | Prefer journal lines; books debit destination / credit source              |
+| N57 | View a receipt with TDS                    | TDS block + full journal lines including TDS Receivable                    |
+| N58 | View a TDS payment                         | TDS block + full journal lines including TDS Payable when enrichment loads |
+| N59 | Void a Void voucher                        | Refuse: only posted can be voided                                          |
+| N60 | Void a receipt then check invoice and bank | Invoice still Paid; bank still up — **not undone**                         |
+| N61 | Void then expect summary to drop           | Cards skip Void; list still shows the row                                  |
+| N62 | Search by customer **name**                | No match (search is number / UTR / party id)                               |
+| N63 | Expect register limited to my branch       | All branches visible                                                       |
+| N64 | Old URL `/payments-made`                   | Demo/static or leftover — not live PAY vouchers                            |
+| N65 | Two receipts racing the same last rupee    | Second allocate should fail or pending 0                                   |
+| N66 | Refresh View Voucher                       | Id was only in navigation — may show not found                             |
 
 ### Data and books sanity (always check after a “successful” save)
 
-| ID | What to try | Expected / watch |
-|----|-------------|------------------|
+| ID  | What to try                                              | Expected / watch                                                          |
+| --- | -------------------------------------------------------- | ------------------------------------------------------------------------- |
 | N67 | Receipt posted (no TDS), open customer + bank statements | One Cr customer, one Dr bank/cash, same amount, same date, voucher number |
-| N68 | Receipt with TDS (Scenario H) | Bank Dr cash; TDS Receivable Dr TDS; customer Cr settlement |
-| N69 | Payment with TDS, open three ledgers | Vendor Dr = paid + TDS; bank Cr = paid; TDS Cr = TDS |
-| N70 | Contra, open both money books | Dest Dr = amount; source Cr = amount |
-| N71 | Journal, trial of those two ledgers | Equal opposite amounts |
-| N72 | Settle & Close receipt | Credit note exists; invoice Paid; extra ledger lines from the note |
-| N73 | Allocate nothing, receipt amount > 0 | Allowed; full amount unallocated; invoices unchanged |
-| N74 | Payment allocate nothing | Allowed; bills unchanged; vendor + bank still post the paid amount |
+| N68 | Receipt with TDS (Scenario H)                            | Bank Dr cash; TDS Receivable Dr TDS; customer Cr settlement               |
+| N69 | Payment with TDS, open three ledgers                     | Vendor Dr = paid + TDS; bank Cr = paid; TDS Cr = TDS                      |
+| N70 | Contra, open both money books                            | Dest Dr = amount; source Cr = amount                                      |
+| N71 | Journal, trial of those two ledgers                      | Equal opposite amounts                                                    |
+| N72 | Settle & Close receipt                                   | Credit note exists; invoice Paid; extra ledger lines from the note        |
+| N73 | Allocate nothing, receipt amount > 0                     | Allowed; full amount unallocated; invoices unchanged                      |
+| N74 | Payment allocate nothing                                 | Allowed; bills unchanged; vendor + bank still post the paid amount        |
 
 ---
 
@@ -1285,5 +1285,3 @@ Easy language: “this should fail or behave badly — confirm the actual result
 3. **Screen said yes, next screen cannot see it** (advance, party name, unallocated card, mode filter) → log as display/integration gap, not “receipt failed.”
 
 Payments is the money hub: **if the voucher number exists and ledgers balance, the money moved.** Invoice/bill status is a second check. Void is a **third**, weaker check — do not use Void as the way to correct a live mistake until reversal exists.
-)U p d a t e s   c o m p l e t e  
- 
