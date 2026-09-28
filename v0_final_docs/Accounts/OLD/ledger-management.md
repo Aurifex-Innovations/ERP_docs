@@ -2,9 +2,7 @@
 
 This document describes **Ledger Management** as it exists today. It is written so a new person — operator, accountant, developer, or tester — can understand **what a ledger is**, **how books are created automatically vs by hand**, **how every money event writes debit and credit lines**, and **how the statement is built**. Negative and failure cases for testers are at the **end**.
 
-Related: [Chart of Accounts](./chart-of-accounts.md) is the folder tree. Ledgers are the **files inside those folders** that actually receive rupees. [Payments](./payments.md) · [Petty Cash](./petty-cash.md).
-
-**Internal Accounts (planned):** New ref types (`PETTY_PAYMENT`, `FUND_TRANSFER`, `MANUAL_EXPENSE`, `SALARY_PAYMENT`) and posting keys will write through the same `FinancePostingHelper` spine — [BRD](../prd/internal-accounts-brd.md) · [PRD](../prd/internal-accounts-prd.md) · [Build phases](../prd/internal-accounts-build-phases.md).
+Related: [Chart of Accounts](./chart-of-accounts.md) is the folder tree. Ledgers are the **files inside those folders** that actually receive rupees.
 
 **Start here:** [§1.0 Quick visual atlas](#10-quick-visual-atlas-read-this-first) — whole-system flow, how a **new** book is born (auto vs manual), **Yes/No**, **status**, and **type** dropdowns. Same atlas: [COA](./chart-of-accounts.md#10-quick-visual-atlas-read-this-first) · [Invoicing](./invoicing.md#10-quick-visual-atlas-read-this-first) · [Payments](./payments.md#10-quick-visual-atlas-read-this-first).
 
@@ -402,9 +400,9 @@ Create uses **Create Ledger**. Edit uses **Edit Ledger** (separate screen).
 | Linked customer / vendor | Required if type CUSTOMER / VENDOR | Editable | Selecting party fills GST, PAN, contact |
 | GSTIN / PAN / contact / address | Shown for customer/vendor | Editable | GSTIN/PAN/phone/email format checks |
 | Bank name / account / IFSC / type / branch | Shown and required for BANK | Editable | |
-| Opening balance | Editable, ≥ 0 | Editable (confirm if posted activity) | Not a voucher line; statement start (BUG235) |
-| Opening type (DR/CR) | Required | Editable | DR assets/receivables; CR liabilities/income |
-| Opening as-on date | Required | Editable | Books-start label; not used in period math |
+| Opening balance | Editable, ≥ 0 | Editable | Not a posted line; used as statement start |
+| Opening type | DR / CR required | Editable | |
+| Opening as on | Required, default today | Editable | |
 | Credit limit / period | Editable | Editable | Limit triggers notice after posting |
 | TDS applicable / section | Editable | Editable | Used as master data; bill/payment still carry their own TDS amounts |
 
@@ -494,11 +492,11 @@ flowchart TD
 
 **How each line’s running balance is built (in depth):**
 
-1. Compute **period opening** = ledger master opening (Credit treated as negative) **plus** all POSTED entries with date **before** From.  
+1. Start with the ledger’s **opening balance**. If opening type is Credit, treat it as negative.  
 2. Load **only entries whose date is between From and To** (oldest first).  
-3. For each line: running = running + Debit − Credit, starting from that period opening.  
+3. For each line: running = running + Debit − Credit.  
 4. Show absolute amount and DR if running ≥ 0, else CR.  
-5. Summary **Opening (period)** and PDF header use the same period opening so monthly/FY statements match professional carry-forward. Master **As-on Date** is books-start metadata only.
+5. **Entries before From are not added.** So a mid-year date range does **not** start from “balance as of From”; it starts from original opening plus only in-range lines. Testers must use this when checking numbers.
 
 ```mermaid
 flowchart TD
@@ -509,8 +507,8 @@ flowchart TD
 ### 9.4 Finance — Edit after use
 
 **First:** Edit.  
-**Then:** Change contact, opening (amount, DR/CR, as-on), type, branch — not code/name/group. If the book already has posted lines and opening fields change, the UI asks to confirm (BUG235).  
-**Finally:** Save. Historical voucher lines are **not** rewritten; list/statement openings and closings recompute from the new master opening.
+**Then:** Change contact, opening, type, branch — not code/name/group.  
+**Finally:** Save. Historical statement lines are **not** rewritten.
 
 ```mermaid
 flowchart TD
@@ -798,7 +796,7 @@ No Inactive transition from the product screens.
 9. **No posting-bindings screen**; only auto-link on save of known codes.  
 10. **Debit note** refs are not clickable on the statement.  
 11. **Print** on statement is commented out.  
-12. **Opening change on edit (BUG235 fixed):** Opening amount, DR/CR, and as-on are editable on Edit. Changing them updates statement/list start figures without rewriting posted vouchers. Confirm when the ledger already has posted activity.  
+12. **Opening change on edit** changes future statement start without rewriting history as a voucher.  
 13. **Edit locks** are UI-only (code/name/group).  
 14. **Petty cash** does not post here.  
 15. **Credit limit** notifies but does not block.  
@@ -806,7 +804,7 @@ No Inactive transition from the product screens.
 17. **COA Read required** to load account groups on Create.  
 18. **Legacy `/ledger`** mock-style route still exists; live list is `/ledger-dashboard`.  
 19. **Add Ledger Save** on create screen is not wrapped in the same permission button helper as the list (route is still protected).  
-20. ~~**GSTIN required** on edit party section~~ — GSTIN is **optional** for customer/vendor party ledgers (format-checked if filled); unregistered parties leave it blank.
+20. **GSTIN required** on edit party section label; create validation only checks format if filled.
 
 ---
 
@@ -946,8 +944,7 @@ Use this section as a **test checklist**. Expected results are what the product 
 |---|----------|--------|
 | T26 | Change code or name or account group | Fields locked; cannot change |
 | T27 | Set Status Inactive and Save | Save succeeds; **status stays Active** (gap — log as bug if you expected Inactive) |
-| T28 | Change opening after invoices exist | List/statement start from new opening; old invoice lines unchanged; confirm dialog on save |
-| T28a | Auto-created party ledger (₹0) then Edit opening | Amount, DR/CR, as-on editable; save persists; statement uses new OB |
+| T28 | Change opening after invoices exist | List/statement start from new opening; old invoice lines unchanged |
 | T29 | Change linked customer to another party | Master updates; **old invoice lines stay on this ledger id**; new invoices for the new customer look up **that customer’s** Active ledger (may be a different book) |
 | T30 | Edit without Edit permission | No pencil; direct URL should not save |
 
@@ -988,8 +985,8 @@ Use this section as a **test checklist**. Expected results are what the product 
 | T51 | Open statement with no id | “No ledger selected” |
 | T52 | Default dates | From 1 Apr of current FY; To today |
 | T53 | From after To | Empty or odd range — record actual; Generate still calls the service |
-| T54 | Invoice dated last FY; statement this FY only | Invoice line not in period; **period opening** includes last FY (carry-forward) |
-| T55 | Full FY covering the invoice | Line present; running = period opening + lines |
+| T54 | Invoice dated last FY; statement this FY only | **Invoice line missing**; running **does not** include last FY (known behavior) |
+| T55 | Full FY covering the invoice | Line present; running = opening + lines |
 | T56 | Click invoice / bill / receipt ref | Correct document opens |
 | T57 | Click debit note ref | **No navigation** (gap) |
 | T58 | PDF | File downloads; same period |
@@ -1049,432 +1046,3 @@ If any happy-path step fails with “ledger not found,” check seed system book
 ---
 
 *Documented from live Ledger Management screens, ledger create/update/statement services, automatic party-book creation, and posting from invoices, bills, receipts, payments, contra, and journals. Teaching pictures match those live debit/credit rules — not extra unbuilt journals on the ledger screen.*
-
----
-
-## 17. Complete Ledger Entries Reference — All Happy-Flow Scenarios
-
-This section is the **definitive journal entry reference** for every business event that touches the General Ledger in Seravion Connect. Every table below matches the actual posting logic in `InvoicingServiceImpl.java`, `BillsServiceImpl.java`, and the Payments voucher service.
-
-> **Legend:**
-> - **DR** = Debit (increases Asset / Expense; decreases Liability / Income / Capital)
-> - **CR** = Credit (increases Liability / Income / Capital; decreases Asset / Expense)
-> - All entries are **balanced**: Total DR = Total CR on every event.
-
----
-
-### 17.1 Sales Invoice → Receipt (Full Happy Path)
-
-#### Step 1 — Invoice Approved (Approve & Send)
-
-**Scenario:** B2B intra-state, Taxable ₹10,000, CGST 9% = ₹900, SGST 9% = ₹900, Grand Total ₹11,800.
-
-| Ledger | DR | CR | Why |
-|--------|----|----|-----|
-| Customer Ledger (e.g., Acme Pvt Ltd) | ₹11,800 | | Customer now owes us |
-| Sales Income | | ₹10,000 | Revenue earned |
-| GST Output — CGST | | ₹900 | GST liability to govt |
-| GST Output — SGST | | ₹900 | GST liability to govt |
-
-**Invoice status:** SENT. Customer pending = ₹11,800.
-
----
-
-#### Step 2 — Full Receipt (Bank Transfer)
-
-**Scenario:** Customer pays entire ₹11,800 via bank transfer.
-
-| Ledger | DR | CR | Why |
-|--------|----|----|-----|
-| Bank Account (e.g., HDFC Current) | ₹11,800 | | Money received in bank |
-| Customer Ledger (Acme Pvt Ltd) | | ₹11,800 | Customer's debt cleared |
-
-**Invoice status:** PAID. Customer pending = ₹0.
-
----
-
-#### Step 3 — Advance / Unallocated Receipt
-
-**Scenario:** Customer pays ₹15,000 but invoice is only ₹11,800. Remaining ₹3,200 is unallocated advance.
-
-| Ledger | DR | CR | Why |
-|--------|----|----|-----|
-| Bank Account | ₹15,000 | | Full cash received |
-| Customer Ledger | | ₹11,800 | Invoice settled |
-| Customer Advance | | ₹3,200 | Excess kept as advance |
-
----
-
-#### Step 4 — Partial Receipt (Keep Open)
-
-**Scenario:** Customer pays ₹5,000 on a ₹11,800 invoice, chooses Keep Open.
-
-| Ledger | DR | CR | Why |
-|--------|----|----|-----|
-| Bank Account | ₹5,000 | | Partial cash received |
-| Customer Ledger | | ₹5,000 | Partial debt cleared |
-
-**Invoice status:** PARTIAL. Pending = ₹6,800.
-
----
-
-#### Step 5 — Settle & Close (Auto Credit Note)
-
-**Scenario:** Customer pays only ₹10,000 of ₹11,800; user selects "Settle & Close." System auto-issues credit note for shortfall ₹1,800.
-
-**Receipt entry (₹10,000 cash):**
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Bank Account | ₹10,000 | |
-| Customer Ledger | | ₹10,000 |
-
-**Auto Credit Note entry (₹1,800 shortfall write-off):**
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Sales Adjustment | ₹1,525 | | Taxable portion reversal |
-| GST Output — CGST | ₹137 | | GST reversed |
-| GST Output — SGST | ₹137 | | GST reversed |
-| Customer Ledger | | ₹1,800 | Customer balance cleared |
-
-**Invoice status:** PAID (Adjusted). Pending = ₹0.
-
----
-
-#### Step 6 — Receipt with Customer TDS
-
-**Scenario:** Customer deducts TDS ₹1,000 (10%) on a ₹11,800 invoice. Customer pays ₹10,800 net.
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Bank Account | ₹10,800 | | Cash received |
-| TDS Receivable | ₹1,000 | | TDS to be claimed from IT dept |
-| Customer Ledger | | ₹11,800 | Full customer liability cleared |
-
----
-
-### 17.2 B2B Inter-State Invoice → Receipt
-
-#### Invoice Approved
-
-**Scenario:** Branch = Karnataka, Customer = Maharashtra. Taxable ₹10,000, IGST 18% = ₹1,800.
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Customer Ledger | ₹11,800 | |
-| Sales Income | | ₹10,000 |
-| GST Output — IGST | | ₹1,800 |
-
-CGST and SGST remain ₹0.
-
----
-
-### 17.3 Credit Note — Manual / Full Write-Off
-
-**Scenario:** ₹11,800 invoice fully written off by a credit note.
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Sales Adjustment | ₹10,000 | |
-| GST Output — CGST | ₹900 | |
-| GST Output — SGST | ₹900 | |
-| Customer Ledger | | ₹11,800 |
-
-**Invoice status:** ADJUSTED (BUG268 — distinguished from cash PAID).
-
----
-
-### 17.4 Purchase Bill → Vendor Payment (Full Happy Path)
-
-#### Step 1 — Bill Confirmed
-
-**Scenario:** Registered vendor, intra-state. Taxable ₹10,000, CGST 9%, SGST 9%. Net Payable ₹11,800.
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Purchase Expense | ₹10,000 | | Expense recognised |
-| GST Input — CGST | ₹900 | | ITC claim |
-| GST Input — SGST | ₹900 | | ITC claim |
-| Vendor Ledger (e.g., ChemCo) | | ₹11,800 | We owe vendor |
-
-**Bill status:** PENDING. Pending = ₹11,800.
-
----
-
-#### Step 2 — Full Vendor Payment (Bank)
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Vendor Ledger (ChemCo) | ₹11,800 | | Vendor debt cleared |
-| Bank Account | | ₹11,800 | Money leaves bank |
-
-**Bill status:** PAID. Pending = ₹0.
-
----
-
-#### Step 3 — Partial Vendor Payment (Keep Open)
-
-**Scenario:** Pay ₹5,000 of ₹11,800.
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Vendor Ledger | ₹5,000 | |
-| Bank Account | | ₹5,000 |
-
-**Bill status:** PARTIAL. Pending = ₹6,800.
-
----
-
-#### Step 4 — Settle & Close (Auto Debit Note)
-
-**Scenario:** Pay ₹10,000 of ₹11,800, choose "Settle & Close." System auto-issues debit note for ₹1,800.
-
-**Payment entry (₹10,000):**
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Vendor Ledger | ₹10,000 | |
-| Bank Account | | ₹10,000 |
-
-**Auto Debit Note entry (₹1,800 adjustment):**
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Vendor Ledger | ₹1,800 | | Vendor balance cleared |
-| Purchase Adjustment | | ₹1,525 | Taxable reversal |
-| GST Input — CGST | | ₹137 | ITC reversed |
-| GST Input — SGST | | ₹137 | ITC reversed |
-
-**Bill status:** PAID. Pending = ₹0.
-
----
-
-### 17.5 Inter-State Bill → Vendor Payment
-
-#### Bill Confirmed
-
-**Scenario:** Branch = Karnataka, Vendor = Maharashtra. Taxable ₹10,000, IGST 18% = ₹1,800.
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Purchase Expense | ₹10,000 | |
-| GST Input — IGST | ₹1,800 | |
-| Vendor Ledger | | ₹11,800 |
-
----
-
-### 17.6 Bill with TDS → Vendor Payment
-
-#### Bill Confirmed
-
-**Scenario:** Taxable ₹10,000, CGST 9%, SGST 9%, TDS @ 1% on ₹11,800 = ₹118. Net Payable = ₹11,682.
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Purchase Expense | ₹10,000 | |
-| GST Input — CGST | ₹900 | |
-| GST Input — SGST | ₹900 | |
-| Vendor Ledger | | ₹11,682 |
-| TDS Payable | | ₹118 |
-
-#### Vendor Payment
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Vendor Ledger | ₹11,682 | |
-| Bank Account | | ₹11,682 |
-
-#### TDS Deposit (later, via Payment/Journal)
-
-| Ledger | DR | CR |
-|--------|----|----|
-| TDS Payable | ₹118 | |
-| Bank Account | | ₹118 |
-
----
-
-### 17.7 Unregistered Vendor (URD) Bill → Payment
-
-#### Bill Confirmed
-
-**Scenario:** URD vendor, ₹10,000 purchase, zero GST.
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Purchase Expense | ₹10,000 | |
-| Vendor Ledger | | ₹10,000 |
-
-No GST Input accounts touched. Net payable = ₹10,000.
-
-#### Payment
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Vendor Ledger | ₹10,000 | |
-| Bank / Cash | | ₹10,000 |
-
----
-
-### 17.8 Debit Note — Manual (Partial Return)
-
-**Scenario:** On a PENDING bill of ₹11,800 (intra-state), return goods worth ₹2,000 (prorated GST).
-
-Prorated ratio = 2,000 / 11,800 = 16.95%.  
-Taxable portion = 10,000 × 16.95% ≈ ₹1,695.  
-CGST = 900 × 16.95% ≈ ₹153. SGST ≈ ₹153.
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Vendor Ledger | ₹2,000 | |
-| Purchase Adjustment | | ₹1,695 |
-| GST Input — CGST | | ₹153 |
-| GST Input — SGST | | ₹153 |
-
-**Bill status:** PARTIAL (pending reduces from ₹11,800 to ₹9,800).
-
----
-
-### 17.9 Contra — Cash Deposit to Bank
-
-**Scenario:** ₹20,000 cash from Cash in Hand is deposited into HDFC bank.
-
-| Ledger | DR | CR |
-|--------|----|----|
-| HDFC Current Account | ₹20,000 | |
-| Cash in Hand | | ₹20,000 |
-
-No customer, no vendor, no GST. Both are the company's own accounts.
-
----
-
-### 17.10 Contra — Bank to Bank Transfer
-
-**Scenario:** Transfer ₹50,000 from HDFC to Axis Bank.
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Axis Bank Account | ₹50,000 | |
-| HDFC Current Account | | ₹50,000 |
-
----
-
-### 17.11 Journal — Correction Entry (No Cash)
-
-**Scenario:** Expense was posted to Telephone Expense but should be Rent Expense. Amount ₹5,000.
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Rent Expense | ₹5,000 | |
-| Telephone Expense | | ₹5,000 |
-
-No money moves. Both ledger statements update.
-
----
-
-### 17.12 Journal — Opening Balance (Asset Ledger)
-
-**Scenario:** Bank account HDFC has opening balance ₹5,00,000 (Debit).
-
-| Ledger | DR | CR |
-|--------|----|----|
-| HDFC Current Account | ₹5,00,000 | |
-| Opening Balance Equity / Adjustment | | ₹5,00,000 |
-
-The system auto-generates this on `updateOpeningBalance`.
-
----
-
-### 17.13 Journal — Opening Balance (Liability Ledger)
-
-**Scenario:** Vendor ChemCo has an opening balance of ₹25,000 (Credit — we owe them from before).
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Opening Balance Equity / Adjustment | ₹25,000 | |
-| Vendor Ledger (ChemCo) | | ₹25,000 |
-
----
-
-### 17.14 Internal Accounts — Petty Cash Fund Transfer (Contra)
-
-**Scenario:** HO transfers ₹10,000 imprest to a branch petty cash box.
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Branch Imprest Fund | ₹10,000 | |
-| HO Bank Account | | ₹10,000 |
-
----
-
-### 17.15 Internal Accounts — Petty Expense (Journal)
-
-**Scenario:** ₹500 spent on office supplies from imprest cash.
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Office Expenses | ₹500 | |
-| Branch Imprest Fund | | ₹500 |
-
----
-
-### 17.16 Internal Accounts — Salary Accrual (Journal)
-
-**Scenario:** Month-end salary ₹1,00,000 gross. Employee PF ₹12,000, Employer PF ₹12,000, ESI ₹3,250, PT ₹500.
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Salary & Wages | ₹1,00,000 | |
-| PF Contribution — Employer | ₹12,000 | |
-| ESI Contribution — Employer | ₹3,250 | |
-| Salary Payable | | ₹87,500 | Net take-home payable |
-| PF Payable | | ₹24,000 | Employer + Employee PF |
-| ESI Payable | | ₹3,250 | |
-| PT Payable | | ₹500 | |
-
----
-
-### 17.17 Internal Accounts — Salary Disbursement (Payment)
-
-| Ledger | DR | CR |
-|--------|----|----|
-| Salary Payable | ₹87,500 | |
-| Bank Account | | ₹87,500 |
-
----
-
-### 17.18 Full Invoice-to-Cash Cycle — Condensed Summary
-
-```
-1. Approve Invoice  → Customer DR   | Sales CR, GST Output CR
-2. Receipt (full)   → Bank DR       | Customer CR
-```
-
-**Net position after both:** Bank ↑, Sales ↑, GST Output ↑, Customer = 0.
-
----
-
-### 17.19 Full Bill-to-Payment Cycle — Condensed Summary
-
-```
-1. Confirm Bill     → Expense DR, GST Input DR  | Vendor CR
-2. Pay Vendor       → Vendor DR                 | Bank CR
-```
-
-**Net position after both:** Expense ↑, GST Input ↑ (ITC), Bank ↓, Vendor = 0.
-
----
-
-### 17.20 Running Balance Direction Quick Reference
-
-| Ledger Type | Normal balance | DR does | CR does |
-|-------------|----------------|---------|---------|
-| Asset (Bank, Cash, Debtors) | Debit | Increases | Decreases |
-| Liability (Creditors, GST Output) | Credit | Decreases | Increases |
-| Income (Sales) | Credit | Decreases | Increases |
-| Expense (Purchase, Rent) | Debit | Increases | Decreases |
-| Capital / Equity | Credit | Decreases | Increases |
-
-> **Tip for testers:** After approving an invoice, the customer ledger should show a **positive (Dr) closing balance** = amount owed. After full receipt, it should return to **₹0** or negative if overpaid (advance).
-
-After confirming a bill, the vendor ledger should show a **positive (Cr) closing balance** = amount we owe. After full payment, it should return to **₹0**.

@@ -1,4 +1,4 @@
-﻿# Invoicing (Sales) — Product & Business Documentation
+# Invoicing (Sales) — Product & Business Documentation
 
 This document describes **Invoicing** as it exists today. It is written in easy language so a new person — sales, finance, or tester — can understand **how a bill to the customer is created**, **how it links to a sales order or is typed by hand**, **when the system creates a draft by itself**, **how branch and customer control what you see**, and **what happens in the books when you approve**. Positive and negative tester cases are at the **end**.
 
@@ -79,7 +79,7 @@ flowchart TD
 
 | Question | Yes | No |
 |----------|-----|-----|
-| Created from SO? | Mode FROM_SO; date not before SO date (if SO date is still future, floor = today); SO not Draft/Cancelled | Mode DIRECT |
+| Created from SO? | Mode FROM_SO; date ≥ SO date; SO not Draft/Cancelled | Mode DIRECT |
 | Auto-draft invoice on contract? | Visit / every-N can fire on task complete | Those visit drafts do not run |
 | Same SO + same month already has an invoice? | Conflict unless acknowledged | Normal save |
 | Same state (branch vs customer)? | CGST + SGST | IGST |
@@ -139,8 +139,6 @@ flowchart TD
 | Contract plan | **Periodic / Per visit / Every N visits / Manual only** | Only first three auto-draft (visit needs Auto draft **on**) |
 | Credit note reason | Payment Settlement, Pricing Error, Service Issue, Full Cancellation, Other | Settle & Close from Payments uses Payment Settlement |
 | GST split | **CGST+SGST** or **IGST** | Same state vs different state |
-| B2C Place of Supply | **Derived from Delivery/Billing Site** | Used when customer is unregistered |
-| Unregistered Branch | **Must use Proforma / Bill of Supply** | System enforces this block on Tax Invoices |
 
 **Auto-draft — will it create a Draft? (quick)**
 
@@ -148,9 +146,7 @@ flowchart TD
 |-----------|-------------|
 | Product SO opened (not left as Draft) | **Yes** (full SO) |
 | One-time service SO opened | **No** |
-| One-time service SO **fully fulfilled** | **Yes** (full SO) — BUG223 |
-| Contract Periodic + window + gates pass (cron **or** SO fulfilled) | **Yes** (full SO) |
-| Contract On Service Completion / On Milestone + SO fulfilled + gates | **Yes** (full SO) — BUG223 |
+| Contract Periodic + window + gates pass | **Yes** (full SO) |
 | Contract Manual only | **No** |
 | Per visit / Every N + Auto draft on + task done | **Yes** (visit line) |
 | Per visit + Auto draft **off** | **No** |
@@ -176,28 +172,13 @@ flowchart TD
 
 ### 1.2 Auto-draft — exactly when it happens
 
-The system creates a **Draft tax invoice** in these **live** cases only. It does **not** auto-approve (status stays **Draft** until Approve & Send).
+The system creates a **Draft tax invoice** in these **live** cases only. It does **not** auto-approve.
 
 #### A) Product sales order opened (not saved as draft)
 
-When a **Product Sale** sales order is created **already Open** (not “save as draft”), or a **Draft product SO is released to Open**, the system immediately creates one **FROM_SO** draft: lines = product lines, branch/customer = SO, tax type = Tax Invoice, credit period 30 days, invoice date = **today** (never a future SO period-end date).
+When a **Product Sale** sales order is created **already Open** (not “save as draft”), or a **Draft product SO is released to Open**, the system immediately creates one **FROM_SO** draft: lines = product lines, branch/customer = SO, tax type = Tax Invoice, credit period 30 days, invoice date = today or SO date (whichever is later).
 
-**Does not auto-draft on open:** contract SO on open, product SO left as Draft.
-
-#### A2) Sales order **fully fulfilled** (BUG223)
-
-When an SO reaches **FULFILLED** (all tasks done, or manual fulfill):
-
-| Case | Auto Draft? |
-|------|-------------|
-| Standalone **one-time service** SO (no contract) | Yes — immediate full-SO Draft |
-| Contract **Periodic** + On Service Completion / On Milestone | Yes — immediate Draft when billing gates pass (does **not** require `autoDraftInvoice`; that flag is visit-mode only and is stored **false** for Periodic) |
-| Contract **Periodic** + Monthly / Quarterly / Half-Yearly / Annually | Yes — immediate Draft when the **same gates + period window** as the daily job pass |
-| Product sale | No (already invoiced on release) |
-| Per visit / Every N visits / Manual only | No (visit path or manual) |
-| Active non-cancelled invoice already on the SO | No — skip duplicate |
-
-Draft notes may include the SO **billing period label** (and frequency) when present. Partial fulfillment does **not** create a full-SO invoice.
+**Does not auto-draft:** One-time service SO, contract SO on open, product SO left as Draft.
 
 #### B) Contract **periodic** billing (scheduler)
 
@@ -208,7 +189,7 @@ For **Active** contracts whose invoicing mode is **Periodic** (not Per visit / E
 - Invoice date falls in the invoicing window for that frequency
 - **No other non-cancelled invoice** already exists for that SO in the **same calendar month**
 
-Then a full-SO draft is created (`create draft from sales order`). The same helper runs on **SO fulfillment** (A2) so accounts do not wait overnight when gates already pass.
+Then a full-SO draft is created (`create draft from sales order`).
 
 **Skipped (no auto draft):**
 
@@ -238,8 +219,7 @@ Then a **smaller** draft is created: **one service line**, quantity = 1 visit (o
 ```mermaid
 flowchart TD
   productOpen["Product SO opened"] --> autoProd["Auto draft full SO"]
-  soFulfilled["SO Fulfilled"] --> autoFulfill["Auto draft full SO when due"]
-  periodicDue["Periodic contract window cron"] --> autoPer["Auto draft full SO"]
+  periodicDue["Periodic contract window"] --> autoPer["Auto draft full SO"]
   taskDone["Task completed"] --> autoVisit["Auto draft visit line"]
 ```
 
@@ -249,42 +229,12 @@ flowchart TD
 
 **From Sales Order**
 
-- You must pick a sales order that is **not Draft and not Cancelled** (Open, Fulfilled, and Billed are eligible on the picker)
+- You must pick a sales order that is **not Draft and not Cancelled**
 - Customer and branch come from that SO (must match)
-- Invoice date cannot be in the future, and cannot be before the SO date floor (see **BUG224** below)
+- Invoice date cannot be before SO date
 - Sites/GST can be loaded from the SO
 - Saved with `FROM_SO` and `salesOrderId`
 - If another non-cancelled invoice already exists for that SO in the **same month**, save returns a conflict unless the user **acknowledges the duplicate**
-
-**BUG224 — Fulfilled SO / future period `soDate` (resolved):** Contract period sales orders often keep `soDate` as the **period end**, which can still be **in the future** even after the SO is **fully Fulfilled**. Manual Create → From Sales Order (and auto-draft from SO) must still work:
-
-| Step | Behaviour today |
-|------|-----------------|
-| Populate invoice date | Always **today** (never copy a future `soDate`) |
-| Validate “not before SO date” | If `soDate` is future, the floor is **today** — billing today is allowed |
-| Validate “not future” | Invoice date still cannot be after today |
-| Backend create / auto-draft mapper | Same rules — no “date before SO date” error when invoicing a Fulfilled SO whose period end is still ahead |
-
-So: **Fulfilled SO + future `soDate` → user can create the invoice manually with invoice date = today; no date-related block.**
-
-**BUG227 — SO-linked lines not deletable (resolved):** When creating/editing a **FROM_SO** invoice, every product/service pulled from the sales order is stamped with `sourceSalesOrderId`. Those lines:
-
-- Show a disabled Delete control (and cannot be multi-selected for “Remove selected”)
-- Stay on the invoice after Save → Edit (field persisted on `sales_invoice_lines`)
-- Cannot be stripped via API draft update (server returns 400)
-
-Newly added catalog or blank rows have **no** `sourceSalesOrderId` and remain deletable. Direct mode “copy lines from SO” does not set FROM_SO linkage (unchanged).
-
-#### SO type ↔ invoice sync matrix
-
-| SO type / case | Invoice link | Line lock | Status notes |
-|----------------|--------------|-----------|--------------|
-| Product sale | Auto draft on open/release; `FROM_SO` | All product lines stamped | SO `invoiceLinked` refreshed when any non-cancelled invoice exists |
-| One-time service | Manual From-SO or fulfill auto-draft (BUG223) | Service lines stamped | FULFILLED does not require invoice Paid |
-| Contract period SO | Cron/fulfill draft; branch-scoped SO | Lines + `contractId` | Invoice branch must equal SO branch; billing sites only from linked SOs |
-| Multi-branch contract | Separate SO per branch | One invoice = one branch | Cannot mix other-branch sites on the same invoice |
-| Per-visit / Every N | Visit draft (subset lines) | Those visit lines stamped to SO | Extra catalog lines deletable |
-| SO status vs invoice | OPEN / FULFILLED / BILLED eligible for From-SO | — | SO → BILLED via payment settlement (`evaluateAndCloseIfFullyPaid`), not when draft is created |
 
 **Direct Invoice**
 
@@ -331,9 +281,6 @@ flowchart LR
 | Invoice stores **customer id** plus **snapshots** (name, GSTIN, address, state, contact) | Later customer edits do **not** rewrite old invoices |
 | GST registration / site | Optional; used to pick the right GSTIN for that branch/site |
 | Active customer | Auto-creates a **customer ledger** (see Ledger docs). Approve **needs** that Active CUSTOMER ledger |
-| No customer GSTIN (B2C) | Allowed; For standard B2C transactions, the Place of Supply (POS) is determined based on the **Billing/Delivery Site State**. The system does not automatically assume the branch state. e-invoice flag stays off. |
-| Customer TDS master | Optional TDS Yes + section + rate % — Money-In autofills TDS when invoice has no expected TDS |
-| Invoice expected TDS ₹ | Optional on create/edit; does **not** change grand total/GST; prefills receipt (pro-rata on partial allocate) |
 | Draft customer | You may still type a Direct invoice if the id exists, but **Approve fails** without an Active customer ledger |
 | Receipt | Allocated to this invoice; pending down; **received** up; status **Partial** or **Paid** |
 | Credit note | Reduces **pending only** (does not increase received); posts reverse books; status **Partial** or **Adjusted** when pending reaches 0; source Manual or Auto-from-payment (settle-close) |
@@ -353,7 +300,7 @@ On **Approve & Send** (Tax or Proforma — same posting path today):
 | Sales Income (`SALES_INCOME` or posting binding) | Credit | Grand total minus GST |
 | GST output ledgers (CGST/SGST/IGST as applicable) | Credit | Tax |
 
-Then: status **Sent**; pending = grand total; customer PDF emailed (best-effort); notification “invoice generated.”
+Then: status **Sent**; pending = grand total; notification “invoice generated.”
 
 **Receipt** later: Bank Debit, Customer Credit (see Ledger doc). Pending falls; **received** rises; status **Partial** or **Paid** (cash closure).
 
@@ -457,7 +404,7 @@ This module **does** use **Approve** (Approve & Send). It does **not** use a sep
 - List with search, status/type/branch/date filters, checkboxes, summary cards  
 - Create Direct or From SO; optional multi-SO sites; attachment (PDF/JPG/PNG, max 5 MB)  
 - Edit draft; delete or cancel unpaid draft  
-- Approve & Send (ledger posting + customer PDF email)  
+- Approve & Send (ledger posting)  
 - Credit notes (manual or auto from receipt settle-close)  
 - PDF, email send/resend, batch PDF zip  
 - Excel export (summary + per branch), Tally CSV  
@@ -523,7 +470,7 @@ Not used. Drafts sit on the Invoicing list (status Draft).
 
 ### 6.3 Approve / Reject / Return
 
-**Approve & Send** (Approve permission): only Draft → Sent + ledger posting + customer PDF email (best-effort). Missing email or delivery failure keeps the invoice Sent and surfaces a warning; use Send/Resend to retry. No reject/return status. To abandon a draft: delete or cancel (unpaid). To reverse a sent invoice: credit note and/or receipts.
+**Approve & Send** (Approve permission): only Draft → Sent + ledger posting. No reject/return status. To abandon a draft: delete or cancel (unpaid). To reverse a sent invoice: credit note and/or receipts.
 
 ```mermaid
 flowchart TD
@@ -555,7 +502,7 @@ Create and edit share the same layout. Edit loads an existing **Draft**.
 | Linked extra SOs / sites | Optional | Editable | Same customer + branch |
 | Ship-to site | Optional | Editable | Must match customer+branch |
 | Invoice type Tax / Proforma | Editable | Editable | Tax needs ≥1 line |
-| Invoice date | Required, not future | Editable | From SO: not before SO-date floor (if SO date is future, floor = today) — BUG224 |
+| Invoice date | Required, not future | Editable | Not before SO date if From SO |
 | Credit period (days) | 1–365, required | Editable | Due date = date + days |
 | Line items | Required for Tax | Editable | Qty, rate, discount %, tax %, HSN |
 | GSTIN / address / state | Filled from customer/SO | Editable snapshots | |
@@ -711,7 +658,6 @@ flowchart LR
 |------|---------|
 | Invoice date not in the future | Error |
 | Tax invoice needs at least one line | Error |
-| Issuing branch lacks GSTIN on Tax Invoice | Error (`Branch has no GSTIN. Use 'Proforma' or 'Bill of Supply' instead of Tax Invoice.`) |
 | Grand total must match rounded line total ± ₹0.02 | Error |
 | Credit period 1–365 | Error |
 | FROM_SO needs SO; SO not Draft/Cancelled | Not eligible |
@@ -753,7 +699,7 @@ flowchart TD
 4. **Approve is not on the list or detail** — only create/edit. Easy to miss.  
 5. **Proforma uses the same ledger posting** as Tax on approve.  
 6. **E-invoice** is only a flag (GSTIN + > ₹50,000); no IRN generation here.  
-7. **Approve & Send** posts ledgers and emails the invoice PDF (sync via Brevo). Missing customer email or Brevo failure does **not** roll back Sent — UI warns and Send/Resend can retry. Explicit Send/Resend still uses Export permission.  
+7. **Send email** uses Export, not Approve — a sent invoice can be emailed without Approve if already Sent.  
 8. **List Cancel** on Sent opens credit note, not status Cancelled.  
 9. **Credit note type** on the list filter does not mean a separate invoice type used for all CNs (CNs are child documents).  
 10. **Direct “copy from SO”** does not set FROM_SO — SO reports may not see that invoice as linked.  
@@ -766,8 +712,6 @@ flowchart TD
 ---
 
 ## 14. Existing Functionality Summary
-
-**Approve & Send** posts customer Dr, sales income Cr, and GST output Cr (CGST/SGST or IGST) to match header tax. Receipt collection (including customer TDS → **TDS Receivable**) is in [payments](./payments.md) Scenario H — it settles pending and does not re-post invoice GST.
 
 Today a permitted user can create **Direct** or **From SO** drafts, receive **auto drafts** from product SO open, periodic contract billing, and visit/N-visit task completion, edit/delete/cancel **unpaid drafts**, **Approve & Send** (customer + sales + GST books), collect via receipts (**Paid** / **Partial**), issue credit notes (**Adjusted** when fully settled by CN), export Excel/Tally/PDF, email, and mark overdue. They cannot edit sent invoices, auto-approve, or push e-invoice IRN from this screen.
 
@@ -786,7 +730,7 @@ Today a permitted user can create **Direct** or **From SO** drafts, receive **au
 | GET | `/api/v1/invoices/summary` | Cards | List cards |
 | DELETE | `/api/v1/invoices/delete` | Delete unpaid draft | List delete |
 | POST | `/api/v1/invoices/cancel-draft` | Cancel unpaid draft | Detail cancel |
-| POST | `/api/v1/invoices/approve-send` | Approve, post ledgers, email PDF | Approve & Send |
+| POST | `/api/v1/invoices/approve-send` | Approve, post ledgers | Approve & Send |
 | POST | `/api/v1/invoices/send` | Email PDF | Send |
 | POST | `/api/v1/invoices/resend` | Re-email PDF | Resend |
 | GET | `/api/v1/invoices/pdf` | PDF | Download |
@@ -882,9 +826,7 @@ Use this as a **checklist**. Expected results are what the product does **today*
 | # | Try this | Expect |
 |---|----------|--------|
 | P17 | From SO: pick Open service SO | Customer/branch/lines filled; FROM_SO |
-| P17b | **BUG224:** From SO — pick a **fully Fulfilled** contract SO whose `soDate` is still a **future** period end; leave invoice date as today; Save | Draft saves; no “invoice date before SO date” / future-date error; invoice date stays **today** |
-| P17c | Same Fulfilled SO; set invoice date to yesterday (before today) while SO date is still future | Validation fails (floor is today) |
-| P18 | Create **Product Sale SO** as Open (not draft) | **Auto Draft** invoice appears on list; invoice date = today |
+| P18 | Create **Product Sale SO** as Open (not draft) | **Auto Draft** invoice appears on list |
 | P19 | Release Draft product SO to Open | Auto Draft invoice created |
 | P20 | Second invoice same SO same month with acknowledge | Allowed (conflict if not acknowledged) |
 | P21 | Periodic Active contract, due window, no invoice this month | Scheduler creates Draft |
@@ -927,8 +869,7 @@ Use this as a **checklist**. Expected results are what the product does **today*
 | N10 | From SO with no SO selected | Sales order required |
 | N11 | From SO using **Draft** or **Cancelled** SO | Not eligible for invoicing |
 | N12 | Customer id ≠ SO customer | Must match SO customer |
-| N13 | Invoice date before SO date (SO date in the past) | Cannot be before SO date |
-| N13b | Invoice date before today when SO date is still future (**BUG224** floor) | Cannot be before today (floor), even though raw SO date is later |
+| N13 | Invoice date before SO date | Cannot be before SO date |
 | N14 | Second invoice same SO same month, no acknowledge | 409 conflict |
 | N15 | Ship-to site from another branch | Must belong to invoice customer and branch |
 | N16 | Credit period 0 or 366 | Validation fail |
@@ -998,4 +939,4 @@ If Approve fails, check: customer **Active** + **CUSTOMER** ledger Active, `SALE
 
 ---
 
-*Documented from live Invoicing screens, invoice create/approve/credit-note services, sales-order auto-draft, contract periodic and visit billing, and ledger posting. Invoice status **Adjusted** (BUG268) distinguishes credit-note closure from cash **Paid**. **BUG224** (Invoice By SO): Fulfilled SO with future period `soDate` can be invoiced manually — date defaults/floors to today. **BUG223**: full SO fulfillment auto-creates a **Draft** (never auto-approves) for standalone service and for Periodic contracts when billing gates/window pass — same helper as the daily cron. **BUG227**: SO-linked invoice lines (`sourceSalesOrderId`) are not deletable on FROM_SO create/edit; API rejects stripping them. Auto-draft rules are only the cases implemented today — not planned billing ideas.*
+*Documented from live Invoicing screens, invoice create/approve/credit-note services, sales-order auto-draft, contract periodic and visit billing, and ledger posting. Invoice status **Adjusted** (BUG268) distinguishes credit-note closure from cash **Paid**. Auto-draft rules are only the cases implemented today — not planned billing ideas.*

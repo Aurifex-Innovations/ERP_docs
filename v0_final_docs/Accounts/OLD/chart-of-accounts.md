@@ -21,8 +21,6 @@ Every rupee that moves through the company must land in a **named bucket**. Sale
 
 **Sibling module:** Ledger Management — the actual books that receive money. COA is the folder; ledgers are the files inside.
 
-**Internal Accounts & Balances:** New seeded heads/ledgers for branch imprest, petty expense, office expense, and salary (plus PF/ESI/PT stubs) — [BRD](../prd/internal-accounts-brd.md) · [PRD](../prd/internal-accounts-prd.md) · [Build phases](../prd/internal-accounts-build-phases.md). When an opening balance is updated on a Ledger, the system synchronizes this automatically with a `LedgerEntry` so the books remain balanced perfectly.
-
 ---
 
 ### 1.0 Quick visual atlas (read this first)
@@ -43,10 +41,8 @@ flowchart LR
 |------|--------|--------------|------|
 | 1 | **Chart of Accounts** | Named folders (Asset / Liability / Income / Expense / Capital) | Create or pick a **postable** folder |
 | 2 | [Ledgers](./ledger-management.md) | Files inside the folder; rupees post here | Party or cash/bank/tax book must exist |
-| 3 | [Invoicing](./invoicing.md) / [Bill Management](./bill-management.md) | Creates the debt | Customer owes / we owe vendor |
+| 3 | [Invoicing](./invoicing.md) / Bills | Creates the debt | Customer owes / we owe vendor |
 | 4 | [Payments](./payments.md) | Settles the debt | Receipt / Payment / Contra / Journal |
-
-**Testing Scenarios:** See the [Testing Scenarios Document](./testing-scenarios.md) for full end-to-end paths involving COA, billing, and invoicing.
 
 **If COA is wrong, every later step posts to the wrong drawer.**
 
@@ -1118,5 +1114,3 @@ Sidebar entry: **Finance & Accounts → Chart of Accounts (COA)** → `/chart-ac
 ---
 
 *Documented from the live Chart of Accounts screens, account-head service, starter catalogue, and ledger handoff. Accounting pictures in section 1 are teaching aids for the same five groups and DR/CR natures the product uses — not extra unbuilt features.*
-U p d a t e s   c o m p l e t e  
- 

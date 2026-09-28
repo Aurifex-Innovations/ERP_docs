@@ -2,7 +2,9 @@
 
 This document describes **Payments** as it exists today. It is written in easy language so a new person — accountant, branch operator, or tester — can understand **how all money in and money out is recorded**, **how receipts settle invoices**, **how vendor payments settle bills**, **how cash/bank transfers and journals work**, and **what actually hits the books**. Positive and negative tester cases are at the **end**.
 
-Related: [Invoicing](./invoicing.md) (customer bills), [Ledger Management](./ledger-management.md) (books that receive debit/credit), [Chart of Accounts](./chart-of-accounts.md) (folders those books sit in).
+Related: [Invoicing](./invoicing.md) (customer bills), [Ledger Management](./ledger-management.md) (books that receive debit/credit), [Chart of Accounts](./chart-of-accounts.md) (folders those books sit in), [Petty Cash](./petty-cash.md) (claims — GL on Paid planned via Internal Accounts).
+
+**Internal Accounts (planned):** Branch imprest, fund transfers, manual expenses, and Petty/Salary GL posting layer on this same money desk without changing Receipt/Payment/Contra/Journal formulas — [BRD](../prd/internal-accounts-brd.md) · [PRD](../prd/internal-accounts-prd.md) · [Build phases](../prd/internal-accounts-build-phases.md).
 
 **Start here:** [§1.0 Quick visual atlas](#10-quick-visual-atlas-read-this-first) — whole-system flow, how a **new** voucher is born (four doors), **Yes/No**, **status**, and **type / mode / settlement** dropdowns. Same atlas: [COA](./chart-of-accounts.md#10-quick-visual-atlas-read-this-first) · [Ledgers](./ledger-management.md#10-quick-visual-atlas-read-this-first) · [Invoicing](./invoicing.md#10-quick-visual-atlas-read-this-first).
 
@@ -53,10 +55,11 @@ flowchart LR
 | Step | Module | What it does |
 |------|--------|----------------|
 | 1–2 | [COA](./chart-of-accounts.md) + [Ledgers](./ledger-management.md) | Bank/cash + customer/vendor books must exist |
-| 3 | [Invoicing](./invoicing.md) / Bills | Sent invoice or pending bill = debt |
+| 3 | [Invoicing](./invoicing.md) / [Bill Management](./bill-management.md) | Sent invoice or pending bill = debt |
 | 4 | **Payments** | Receipt / Payment / Contra / Journal. Save = Posted |
 
 **If Payments is wrong, outstanding, cash, bank, and “Paid” flags are all wrong.**
+**Testing Scenarios:** See the [Testing Scenarios Document](./testing-scenarios.md) for full end-to-end paths involving receipts, payments, and bill settlements.
 
 #### How a **new** voucher works (four doors)
 
@@ -104,7 +107,7 @@ flowchart TD
 | Shortfall + Keep Open? | Document **Partial** | — |
 | Shortfall + Settle & Close? | Auto CN (invoice) or DN (bill) → **Paid** | Reason required on screen |
 | TDS on vendor payment? | Extra TDS payable credit | Two lines only |
-| TDS on customer receipt? | Stored on voucher | **Not** posted to tax book |
+| TDS on customer receipt? | Dr **TDS Receivable** + Cr customer (BUG258) | Amount also counts in settlement / allocate cap |
 | Adjust Advance on screen? | Only if advance balance > 0 | Balance stays 0 today → section hidden |
 | Carry to Advance toggle change save? | **No** | Leftover is always unallocated |
 | Edit a posted voucher? | **No** | Void stamp only |
@@ -269,7 +272,7 @@ flowchart TD
 
 **Step E — Books**
 
-- Receipt: Bank/Cash **Debit**, Customer **Credit** (money in reduces what the customer owes).
+- Receipt: Bank/Cash **Debit**, Customer **Credit**. If customer TDS > 0, also **Dr TDS Receivable** (customer credit = cash + advance + TDS). If advance applied > 0, **Dr Customer Advance** as well.
 - Payment: Vendor **Debit**, Bank/Cash **Credit** (money out reduces what we owe). If TDS > 0, a third credit hits the TDS payable book.
 - Contra: To-account **Debit**, From-account **Credit**.
 - Journal: one debit line and one credit line (screen); totals must match.
@@ -364,7 +367,7 @@ Use when a customer pays cash, transfers to bank, pays UPI, gives a cheque, or p
 
 **Then if there is a shortfall** (allocated less than those invoices still pending): Keep Open (invoice stays Partial) or Settle & Close (system writes an automatic credit note for the leftover so the invoice can close).
 
-**Then optionally** types TDS deducted by the customer (stored on the voucher; see gaps — it is **not** posted as a tax book line). Notes are optional.
+**Then optionally** types TDS deducted by the customer. That amount is part of **Total Settlement** (cash + advance + TDS). Allocate may equal settlement. Books debit **TDS Receivable** and credit the customer for the TDS portion (see [invoicing](./invoicing.md) approve GST + receipt settlement). Notes are optional.
 
 **Unallocated leftover** (received more than allocated) is stored as unallocated on the voucher. That is the company’s idea of **customer advance** for the next bill. The “Carry to Advance?” switch only follows that leftover; it does not call a separate save.
 
@@ -519,11 +522,11 @@ There is only **Add**. View is read-only. Void is a list action, not a form.
 | Bank / cash book | Required except Cash | — | Cash auto-picks cash-in-hand |
 | Ref / UTR | Required for Bank Transfer and UPI | — | |
 | Cheque date | Required if Cheque | — | Screen rejects older than 3 months; **not sent to server** |
-| Amount received | Editable / Required | — | Must be > 0 (or > 0 including advance on screen) |
+| Amount received | Editable / Required | — | Bank/cash only; Total Settlement = cash + advance + TDS must be > 0 |
 | Invoice tick + allocate | Editable | — | Cannot exceed that invoice’s pending |
 | Carry to Advance? | Toggle | — | Follows leftover; leftover is saved even if toggle is off |
 | Keep Open / Settle & Close | Shown if shortfall | — | Reason required for Settle & Close |
-| TDS deducted by customer | Editable | — | Stored on voucher; not posted to tax book |
+| TDS deducted by customer | Editable | — | Included in settlement; posts **Dr TDS Receivable / Cr Customer** (BUG258) |
 | Notes | Editable | — | |
 | Save | Visible | — | Needs Payments Add |
 | Save & Print Receipt | Visible | — | **No action wired** |
@@ -627,9 +630,8 @@ Opening a row:
 3. For receipt/payment, looks up bank/cash ledger name for the posting table.
 4. Builds a posting table:
    - Journal: real lines from the voucher.
-   - Receipt: Bank/Cash debit, party credit (simple two-line picture; advance/TDS extra lines are **not** shown).
-   - Payment: party debit, Bank/Cash credit (TDS third line **not** shown).
-   - Contra: screen currently shows From as debit and To as credit — **the opposite of the live books** (books debit destination / credit source).
+   - Receipt / Payment: **full ledger entry lines** from books when by-id enrichment runs (includes bank, party, TDS Receivable / TDS Payable, advance when present). PDF shows the same journal lines plus allocations.
+   - Contra: from/to names; books debit destination / credit source. If journal lines are loaded, prefer those.
 
 Empty allocations: “No allocations” (normal for contra, journal, or unallocated receipt).
 
@@ -765,7 +767,7 @@ flowchart LR
 | From / To books | Contra only |
 | Reference / UTR | Bank or UPI proof (unique if filled) |
 | Gross / amount | Receipt settlement total or amount paid / transfer / journal total |
-| TDS amount | Stored on voucher; posted on **payment** when > 0 |
+| TDS amount | On receipt: posts **TDS Receivable** when > 0 (BUG258). On payment: posts **TDS Payable** when > 0 (unless bill already withheld — BUG271). |
 | Advance applied | How much old customer advance was used on this receipt (server field) |
 | Allocated / unallocated | How much hit documents vs leftover |
 | Status | Posted or Void |
@@ -824,9 +826,9 @@ These are **live** mismatches. Testers should expect them; they are not “futur
 1. **Void does not undo money.** Ledgers, invoice pending, bill pending, allocations, credit/debit notes stay. Void is a stamp only.
 2. **Void button vs Void server rights differ** (Delete vs Edit).
 3. **No voucher edit.** Wrong amount means a new journal/contra/receipt — or a misleading Void.
-4. **Customer advance on screen does not load.** Current and advance balances stay ₹0, so “Adjust Advance?” almost never appears. The server *can* apply advance if `advanceApplied` is sent; the live Save body **does not send that field** — it folds cash + advance into amount received. Default server setting does **not** infer advance from leftover receipts. Result: applying old advance from the screen is not a working end-to-end path today.
+4. **Customer advance on screen does not load.** Current and advance balances stay ₹0, so “Adjust Advance?” almost never appears. The server *can* apply advance if `advanceApplied` is sent; the live Save body can send it when the toggle is used. Default server setting does **not** infer advance from leftover receipts. Result: applying old advance from the screen is not a working end-to-end path today.
 5. **“Carry to Advance?”** does not change the save. Leftover is always stored as unallocated.
-6. **Receipt TDS** is saved on the voucher but **not posted** to a TDS book (unlike vendor payment TDS).
+6. **Customer / ledger `tdsApplicable` / TDS section** on masters is **display / master-data only** — Receipt Entry does not auto-fill TDS section or rate; the user enters TDS rupees.
 7. **Cheque date** is validated on receipt screen and not stored. Payment cheque date is not even required.
 8. **Save & Print** buttons on receipt and payment do nothing.
 9. **Party name, allocations, settlement note missing on the register** — those columns are usually dashes.
@@ -834,20 +836,19 @@ These are **live** mismatches. Testers should expect them; they are not “futur
 11. **Payment mode filter** sends labels like “Bank Transfer” while the register stores `BANK` — filter often returns nothing.
 12. **Date range filter** is not sent to the server; with page-by-page loading it only affects the current page.
 13. **Register is not branch-scoped.** All company vouchers appear.
-14. **View Contra debit/credit are swapped** vs the books (destination should be debit).
-15. **View posting is simplified** — no advance lines, no TDS third line.
-16. **Journal screen is two ledgers only.** Server allows more lines; UI cannot enter them.
-17. **Receipt/Payment future date** can be posted if the API is called directly.
-18. **Payment allocate vs amount paid** is not checked on the server the way receipt is (screen tries to cap it).
-19. **Vendor payment TDS picture:** screen treats Amount Paid as gross and shows Net = Paid − TDS. Books credit the **full Amount Paid** to bank and **add** TDS on the vendor debit. Testers must not assume Net Payable is what left the bank.
-20. **Settle & Close on payment** sends the reason label (e.g. “Purchase Return”) as the debit-note reason. The note engine expects codes like `PURCHASE_RETURN`. Auto close may fail or mis-file the reason.
-21. **Make Payment / Record Payment** can appear with only Payments View; Save still needs Add.
-22. **Contra overdraft:** if source balance is not positive, large transfers are allowed.
-23. **List loads the full voucher table** then pages in memory — slow on large tenants; not a user-facing filter bug but it affects testers on big data.
-24. **Leftover screens** (Payments Received, Payments Made, old voucher pages) can confuse testers if they bookmark old URLs.
-25. **No bank feed / cheque clearing / bounce workflow.** Cheque is only a mode label.
-26. **No multi-currency.** Amounts are company rupees.
-27. **PDF Export right** is separate from View; View screen still shows Download PDF for anyone who can open it.
+14. **View Contra** may still confuse debit/credit labels vs books if enrichment fails; prefer journal lines when present.
+15. **Journal screen is two ledgers only.** Server allows more lines; UI cannot enter them.
+16. **Receipt/Payment future date** can be posted if the API is called directly.
+17. **Payment allocate vs amount paid** is not checked on the server the way receipt is (screen tries to cap it).
+18. **Vendor payment TDS picture:** screen treats Amount Paid as gross and shows Net = Paid − TDS. Books credit the **full Amount Paid** to bank and **add** TDS on the vendor debit. Testers must not assume Net Payable is what left the bank.
+19. **Settle & Close on payment** sends the reason label (e.g. “Purchase Return”) as the debit-note reason. The note engine expects codes like `PURCHASE_RETURN`. Auto close may fail or mis-file the reason.
+20. **Make Payment / Record Payment** can appear with only Payments View; Save still needs Add.
+21. **Contra overdraft:** if source balance is not positive, large transfers are allowed.
+22. **List loads the full voucher table** then pages in memory — slow on large tenants; not a user-facing filter bug but it affects testers on big data.
+23. **Leftover screens** (Payments Received, Payments Made, old voucher pages) can confuse testers if they bookmark old URLs.
+24. **No bank feed / cheque clearing / bounce workflow.** Cheque is only a mode label.
+25. **No multi-currency.** Amounts are company rupees.
+26. **PDF Export right** is separate from View; View screen still shows Download PDF for anyone who can open it.
 
 ---
 
@@ -856,18 +857,18 @@ These are **live** mismatches. Testers should expect them; they are not “futur
 Fully available today:
 
 - Unified Payments register with type tabs, search, paging, and four create buttons
-- Posted **Receipt** with invoice allocation, Keep Open / Settle & Close (auto credit note), unallocated leftover, customer + bank/cash posting
+- Posted **Receipt** with invoice allocation, Keep Open / Settle & Close (auto credit note), unallocated leftover, customer + bank/cash posting, optional **customer TDS → TDS Receivable** (BUG258)
 - Posted **Payment** with bill allocation, optional TDS posting, Keep Open / Settle & Close (auto debit note), vendor + bank/cash posting
 - Posted **Contra** between active bank/cash books
 - Posted **Journal** (two-line on screen, balanced)
-- View voucher + PDF
+- View voucher + PDF (full ledger lines for receipt/payment when enrichment loads)
 - Void status (no financial reverse)
 - Shortcuts from invoice Record Payment and bill Make Payment
 - Notifications on receipt and vendor payment
 - After receipt: contract payment-line paid flag and sales-order close-when-fully-paid
 - CEO bypass; Payments View / Add / Edit / Delete / Export split as above
 
-Not available today: voucher edit, approval queue, true void-and-reverse, working on-screen advance apply, receipt TDS books, cheque clearing, branch-filtered register, multi-line journal UI.
+Not available today: voucher edit, approval queue, true void-and-reverse, working on-screen advance apply, cheque clearing, branch-filtered register, multi-line journal UI.
 
 ---
 
@@ -883,7 +884,7 @@ Not available today: voucher edit, approval queue, true void-and-reverse, workin
 | POST | `/api/v1/vouchers/journal` | Create posted balanced journal | Journal Save |
 | GET | `/api/v1/vouchers` | List vouchers (type, party, mode, search, page) | Payments register |
 | GET | `/api/v1/vouchers/summary` | Posted receipt/payment totals and unallocated receipts | Register cards |
-| GET | `/api/v1/vouchers/by-id` | One voucher (journal lines if journal) | View Voucher |
+| GET | `/api/v1/vouchers/by-id` | One voucher (journal lines for Journal; ledger entry lines for Receipt/Payment/Contra) | View Voucher |
 | GET | `/api/v1/vouchers/allocations` | Allocation rows for one voucher | View Voucher |
 | POST | `/api/v1/vouchers/void` | Mark posted voucher Void | Register Void |
 | GET | `/api/v1/vouchers/pdf` | Download voucher PDF | Register PDF, View Download PDF |
@@ -935,13 +936,13 @@ Rights: Add on the four create posts; View on list/summary/by-id/allocations/pdf
 | Receipt Entry | Bank account | Select | Required unless Cash |
 | Receipt Entry | Ref / UTR | Text | Required for Bank Transfer and UPI |
 | Receipt Entry | Cheque date | Date | Required if Cheque; max 3 months old |
-| Receipt Entry | Amount received | Money | Required > 0 |
+| Receipt Entry | Amount received | Money | Bank/cash only; Total Settlement = cash + advance + TDS |
 | Receipt Entry | Invoice tick | Checkbox | Include in allocation |
 | Receipt Entry | Allocate amount | Text | Per invoice; cannot exceed pending |
 | Receipt Entry | Carry to Advance? | Toggle | Display only |
 | Receipt Entry | Keep Open / Settle & Close | Radio | Shown if shortfall |
 | Receipt Entry | Settlement reason | Select | Required if Settle & Close |
-| Receipt Entry | TDS deducted by customer | Money | Stored, not posted |
+| Receipt Entry | TDS deducted by customer | Money | Part of settlement; posts TDS Receivable (BUG258) |
 | Receipt Entry | Notes | Text | Optional |
 | Receipt Entry | Save | Button | Posts receipt |
 | Receipt Entry | Save & Print Receipt | Button | No action |
@@ -1029,11 +1030,15 @@ Mode Cheque, cheque date within 3 months. Screen requires the date; server never
 
 ### Scenario H — Customer deducted TDS (receipt TDS field)
 
-Customer pays ₹9,000 and deducted ₹1,000 TDS on a ₹10,000 bill.
+Customer pays ₹9,000 and deducted ₹1,000 TDS on a ₹10,000 invoice (taxable settlement).
 
-1. Amount received 9,000, TDS field 1,000, allocate 10,000 — **screen will block** because allocation cannot exceed amount received (unless you also use advance).
-2. Practical live path: allocate 9,000 Keep Open (invoice Partial 1,000) **or** allocate 9,000 Settle & Close (writes off 1,000 as credit note — **wrong** if TDS is real tax, not a waiver).
-3. The ₹1,000 in the TDS box is **only stored**, not posted to TDS receivable. Testers should not expect a tax ledger line on receipts.
+1. Prefer setup: invoice **Expected TDS** ₹1,000 and/or customer **TDS Yes + rate %** — Receipt autofills TDS (editable).
+2. Amount received (bank) **9,000**, TDS field **1,000** → Total Settlement **10,000**.
+3. Allocate **10,000** — allowed (allocate ≤ cash + advance + TDS).
+4. Save → invoice **Paid** (pending 0). Books: **Dr Bank 9,000**, **Dr TDS Receivable 1,000**, **Cr Customer 10,000**.
+5. View voucher / PDF shows the TDS block **and** all three ledger lines (or more if advance was used).
+
+Cross-link: invoice Approve & Send GST posting is documented in [invoicing](./invoicing.md); receipt settlement does not re-post GST.
 
 ### Scenario I — Vendor paid in full
 
@@ -1159,6 +1164,7 @@ Work in a tenant with: active customer + customer ledger, active vendor + vendor
 | P33 | Notification after receipt / payment | Payment Received / Dispatched notice exists |
 | P34 | View allocations after receipt | Invoice id, pending before, allocated, status after |
 | P35 | Journal line notes | Shown on view journal lines |
+| P36 | Receipt cash 9,000 + TDS 1,000, allocate 10,000 | Invoice Paid; Dr bank 9k + Dr TDS Receivable 1k + Cr customer 10k; View/PDF show all lines (Scenario H) |
 
 ---
 
@@ -1190,7 +1196,7 @@ Easy language: “this should fail or behave badly — confirm the actual result
 | N13 | Cheque date empty | Screen error |
 | N14 | Cheque date 4 months ago | Stale cheque error |
 | N15 | Allocate more than invoice pending | Snackbar; no save |
-| N16 | Total allocate > amount received | Snackbar; no save |
+| N16 | Total allocate > cash + advance + TDS settlement | Snackbar; no save |
 | N17 | Settle & Close without reason | Reason required |
 | N18 | Allocate a Paid or Draft invoice (if forced) | Not in the list; server would reject pending 0 / not found |
 | N19 | Customer with no active ledger | Save fails: customer ledger not found/active |
@@ -1199,7 +1205,7 @@ Easy language: “this should fail or behave badly — confirm the actual result
 | N22 | Save & Print Receipt | Nothing happens |
 | N23 | Adjust Advance with advance showing 0 | Section hidden; cannot test FIFO on UI |
 | N24 | After Scenario D leftover, open new receipt for same customer | Advance still 0; Adjust Advance missing — **advance reuse broken on UI** |
-| N25 | Receipt TDS + allocate pending including TDS | Screen blocks allocate > received; tax book **not** updated |
+| N25 | Receipt TDS 1,000 + cash 9,000 + allocate 10,000 | Posts; TDS Receivable Dr 1,000; invoice pending reduced by 10,000 (Scenario H) |
 
 ### Payment validation
 
@@ -1245,28 +1251,30 @@ Easy language: “this should fail or behave badly — confirm the actual result
 | N53 | Party column / Allocated To / Settlement | Often dashes |
 | N54 | Unallocated Adv. card after Scenario D | Often **₹0** (wrong field name) |
 | N55 | Open `/view-voucher` with no id | “No voucher found” |
-| N56 | View a Contra | From shown as Debit — **opposite of books** |
-| N57 | View a TDS payment | Only two posting lines; TDS block shows amount |
-| N58 | Void a Void voucher | Refuse: only posted can be voided |
-| N59 | Void a receipt then check invoice and bank | Invoice still Paid; bank still up — **not undone** |
-| N60 | Void then expect summary to drop | Cards skip Void; list still shows the row |
-| N61 | Search by customer **name** | No match (search is number / UTR / party id) |
-| N62 | Expect register limited to my branch | All branches visible |
-| N63 | Old URL `/payments-made` | Demo/static or leftover — not live PAY vouchers |
-| N64 | Two receipts racing the same last rupee | Second allocate should fail or pending 0 |
-| N65 | Refresh View Voucher | Id was only in navigation — may show not found |
+| N56 | View a Contra | Prefer journal lines; books debit destination / credit source |
+| N57 | View a receipt with TDS | TDS block + full journal lines including TDS Receivable |
+| N58 | View a TDS payment | TDS block + full journal lines including TDS Payable when enrichment loads |
+| N59 | Void a Void voucher | Refuse: only posted can be voided |
+| N60 | Void a receipt then check invoice and bank | Invoice still Paid; bank still up — **not undone** |
+| N61 | Void then expect summary to drop | Cards skip Void; list still shows the row |
+| N62 | Search by customer **name** | No match (search is number / UTR / party id) |
+| N63 | Expect register limited to my branch | All branches visible |
+| N64 | Old URL `/payments-made` | Demo/static or leftover — not live PAY vouchers |
+| N65 | Two receipts racing the same last rupee | Second allocate should fail or pending 0 |
+| N66 | Refresh View Voucher | Id was only in navigation — may show not found |
 
 ### Data and books sanity (always check after a “successful” save)
 
 | ID | What to try | Expected / watch |
 |----|-------------|------------------|
-| N66 | Receipt posted, open customer + bank statements | One Cr customer, one Dr bank/cash, same amount, same date, voucher number |
-| N67 | Payment with TDS, open three ledgers | Vendor Dr = paid + TDS; bank Cr = paid; TDS Cr = TDS |
-| N68 | Contra, open both money books | Dest Dr = amount; source Cr = amount |
-| N69 | Journal, trial of those two ledgers | Equal opposite amounts |
-| N70 | Settle & Close receipt | Credit note exists; invoice Paid; extra ledger lines from the note |
-| N71 | Allocate nothing, receipt amount > 0 | Allowed; full amount unallocated; invoices unchanged |
-| N72 | Payment allocate nothing | Allowed; bills unchanged; vendor + bank still post the paid amount |
+| N67 | Receipt posted (no TDS), open customer + bank statements | One Cr customer, one Dr bank/cash, same amount, same date, voucher number |
+| N68 | Receipt with TDS (Scenario H) | Bank Dr cash; TDS Receivable Dr TDS; customer Cr settlement |
+| N69 | Payment with TDS, open three ledgers | Vendor Dr = paid + TDS; bank Cr = paid; TDS Cr = TDS |
+| N70 | Contra, open both money books | Dest Dr = amount; source Cr = amount |
+| N71 | Journal, trial of those two ledgers | Equal opposite amounts |
+| N72 | Settle & Close receipt | Credit note exists; invoice Paid; extra ledger lines from the note |
+| N73 | Allocate nothing, receipt amount > 0 | Allowed; full amount unallocated; invoices unchanged |
+| N74 | Payment allocate nothing | Allowed; bills unchanged; vendor + bank still post the paid amount |
 
 ---
 
@@ -1277,4 +1285,5 @@ Easy language: “this should fail or behave badly — confirm the actual result
 3. **Screen said yes, next screen cannot see it** (advance, party name, unallocated card, mode filter) → log as display/integration gap, not “receipt failed.”
 
 Payments is the money hub: **if the voucher number exists and ledgers balance, the money moved.** Invoice/bill status is a second check. Void is a **third**, weaker check — do not use Void as the way to correct a live mistake until reversal exists.
-)
+)U p d a t e s   c o m p l e t e  
+ 
