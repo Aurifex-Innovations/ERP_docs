@@ -1,4 +1,4 @@
-# Chart of Accounts (COA) — Product & Business Documentation
+﻿# Chart of Accounts (COA) — Product & Business Documentation
 
 This document describes the **Chart of Accounts** module as it exists today in Seravion Connect. It is written so a new person — developer, accountant, or operator — can understand **what accounts are**, **what debit and credit mean**, **how the five account groups work**, **how the account tree is built**, and then **who can do what** on the live screens.
 
@@ -1118,5 +1118,3 @@ Sidebar entry: **Finance & Accounts → Chart of Accounts (COA)** → `/chart-ac
 ---
 
 *Documented from the live Chart of Accounts screens, account-head service, starter catalogue, and ledger handoff. Accounting pictures in section 1 are teaching aids for the same five groups and DR/CR natures the product uses — not extra unbuilt features.*
-U p d a t e s   c o m p l e t e  
- 

@@ -1,4 +1,4 @@
-# Payments (Money Hub) — Product & Business Documentation
+﻿# Payments (Money Hub) — Product & Business Documentation
 
 This document describes **Payments** as it exists today. It is written in easy language so a new person — accountant, branch operator, or tester — can understand **how all money in and money out is recorded**, **how receipts settle invoices**, **how vendor payments settle bills**, **how cash/bank transfers and journals work**, and **what actually hits the books**. Positive and negative tester cases are at the **end**.
 

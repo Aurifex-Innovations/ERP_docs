@@ -1,4 +1,4 @@
-# GST Taxation with Tax & HSN — Combined Business Guide
+﻿# GST Taxation with Tax & HSN — Combined Business Guide
 
 **Related product docs:** [Tax Configuration](./tax-configuration.md) · [HSN Configuration](./hsn-configuration.md)
 
