@@ -16,6 +16,8 @@ This directory contains the **complete, in-depth documentation** for the Finance
 | 6 | [payments.md](./payments.md) | Receipt, Payment, Contra, Journal vouchers; allocation; settle & close; TDS |
 | 7 | [internal-accounts.md](./internal-accounts.md) | Internal GL module — imprest, petty cash, salary, fund transfers; opening balance sync |
 | 8 | [testing-scenarios.md](./testing-scenarios.md) | Dedicated end-to-end testing guide for all modules with positive and negative cases |
+| 9 | [proper-books-research.md](./proper-books-research.md) | Accountant research: depreciation, year-end close, next-year opening transfer, and live loopholes |
+| 10 | [live-flow-loopholes-and-plan.md](./live-flow-loopholes-and-plan.md) | Loopholes in live invoices, bills, payments, openings, and closings, with the fix plan |
 
 ---
 
