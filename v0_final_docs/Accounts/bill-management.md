@@ -171,16 +171,26 @@ Net payable = ₹11,800. Vendor ledger credited.
 **Example:** ₹10,000 taxable, 18% GST (intra), TDS 10%.
 
 - Gross line total = ₹11,800
-- TDS = ₹1,180 (10% of ₹11,800)
-- Net payable = ₹10,620
+- TDS = ₹1,000 (10% of the **taxable** value ₹10,000, excluding GST)
+- Net payable = ₹10,800
+
+**TDS base.** TDS is deducted on the value excluding GST when GST is shown separately on the bill,
+per CBDT Circular 23/2017. When GST is not itemised the taxable value already equals the gross, so
+the same formula applies to the gross without any special-casing.
+
+**Server authoritative.** On create and update the server recomputes
+`tdsAmount = round(sum(lineTaxableAmount) × tdsRate / 100)` whenever TDS applies and the rate is
+positive, and overrides whatever amount the client sent. Net payable is then recomputed as
+`sum(lineTotal) − tdsAmount`. The override is logged, and the response carries the applied amounts,
+so a mismatch with a typed figure is not an error — check the returned values rather than the input.
 
 | Account | DR | CR |
 |---------|----|----|
 | Purchase Expense | ₹10,000 | |
 | GST Input CGST | ₹900 | |
 | GST Input SGST | ₹900 | |
-| Vendor Ledger | | ₹10,620 |
-| TDS Payable | | ₹1,180 |
+| Vendor Ledger | | ₹10,800 |
+| TDS Payable | | ₹1,000 |
 
 ### 4.4 Unregistered Vendor (URD) Bill
 
@@ -237,7 +247,8 @@ A **Debit Note** is the purchase-side equivalent of a credit note. It reduces wh
 1. Select Branch, Vendor, Bill Type, Bill Date, Credit Period.
 2. Optionally link a **Purchase Order** (PO). Lines are auto-populated from PO items.
 3. Add/edit line items (Product or Service, HSN/SAC, qty, rate, discount, tax).
-4. System calculates: taxable amount, CGST/SGST or IGST, TDS (optional), net payable.
+4. System calculates: taxable amount, CGST/SGST or IGST, TDS (optional), net payable. TDS is
+   recomputed server-side from the taxable value — see [4.3](#43-bill-with-tds).
 5. For URD vendors: tax fields are disabled and stripped to zero automatically.
 6. **Save** → status = **DRAFT**.
 
@@ -360,7 +371,7 @@ Returns a PDF byte stream for the bill at `GET /api/v1/bills/pdf`.
 | `cgstAmount` | BigDecimal | CGST header total |
 | `sgstAmount` | BigDecimal | SGST header total |
 | `igstAmount` | BigDecimal | IGST header total |
-| `tdsAmount` | BigDecimal | TDS withheld |
+| `tdsAmount` | BigDecimal | TDS withheld — server-computed as `taxableAmount × tdsRate / 100`, never client-trusted |
 | `subTotal` | BigDecimal | Same as taxableAmount |
 | `netPayable` | BigDecimal | `sum(lineTotal) - tdsAmount` |
 | `paidAmount` | BigDecimal | Amount paid so far |

@@ -1,6 +1,6 @@
 # Testing Scenarios — Finance & Accounts Complete Guide
 
-> **Related:** [Bill Management](./bill-management.md) · [Invoicing](./invoicing.md) · [Payments](./payments.md) · [GST Workflow](./gst-hsn-tax-workflow.md) · [Chart of Accounts](./chart-of-accounts.md) · [Ledger Management](./ledger-management.md)
+> **Related:** [Bill Management](./bill-management.md) · [Invoicing](./invoicing.md) · [Payments](./payments.md) · [GST invoice testing](./gst-invoice-testing.md) · [Chart of Accounts](./chart-of-accounts.md) · [Ledger Management](./ledger-management.md)
 
 This document provides **in-depth, end-to-end testing scenarios** for every Finance & Accounts module. Each scenario includes: pre-requisites, exact steps, expected ledger entries, and failure/edge cases.
 
@@ -83,6 +83,8 @@ This document provides **in-depth, end-to-end testing scenarios** for every Fina
 
 ## Part C: Invoicing (Sales)
 
+GST document choice, place of supply, and the three approve journals are tested in one place: [GST invoice testing](./gst-invoice-testing.md). The cases below stay as the short sales pack.
+
 ### C-1: B2B Tax Invoice — Same State (CGST + SGST)
 
 **Pre-requisites:**
@@ -141,17 +143,19 @@ CGST and SGST must be ₹0.
 
 ---
 
-### C-4: Unregistered Branch — Must Use Proforma
+### C-4: Unregistered Branch — Bill of Supply, not a Tax Invoice
 
-**Pre-requisites:** Branch GSTIN is blank.
+**Pre-requisites:** Branch GSTIN is blank (scheme becomes Unregistered).
 
 **Steps:**
 1. Create Invoice → Invoice Type = **Tax Invoice**.
-2. Click Approve & Send.
+2. Save.
 
-**Expected:** Error: `"Branch has no GSTIN. Use 'Proforma' or 'Bill of Supply' instead of Tax Invoice."`
+**Expected:** Save is rejected: `Branch has no GSTIN. Use Bill of Supply instead of Tax Invoice.`
 
-**Fix:** Change Invoice Type to **Proforma** → Approve succeeds.
+**Fix:** Change Invoice Type to **Bill of Supply**. Approve posts the customer and sales only. GST ledgers do not move. A **Proforma** on the same branch is allowed, but approve sets status **Issued** and posts nothing.
+
+Full steps and ledger checks: [GST invoice testing](./gst-invoice-testing.md).
 
 ---
 
@@ -277,8 +281,13 @@ Status → PENDING. Pending = ₹11,800.
 1. Add Bill → Vendor: Contractor, TDS Applicable: ✅ Yes.
 2. TDS Section: 194C, TDS Rate: 1%.
 3. Line: Rate ₹10,000, Tax 18%, Line Total ₹11,800.
-4. TDS = ₹118 (1% of ₹11,800). Net Payable = ₹11,682.
+4. TDS = ₹100 (1% of the **taxable** value ₹10,000, excluding GST). Net Payable = ₹11,700.
 5. Confirm.
+
+TDS is deducted on the value excluding GST when GST is shown separately, per CBDT Circular 23/2017.
+When GST is not itemised the taxable value already equals the gross, so the same formula applies to
+the gross. The server recomputes TDS from the summed line taxable values and overrides whatever the
+client sends, so the stored amount is authoritative.
 
 **Expected Ledger Entries:**
 | Account | DR | CR |
@@ -286,8 +295,8 @@ Status → PENDING. Pending = ₹11,800.
 | Purchase Expense | ₹10,000 | |
 | GST Input CGST | ₹900 | |
 | GST Input SGST | ₹900 | |
-| Contractor Vendor Ledger | | ₹11,682 |
-| TDS Payable | | ₹118 |
+| Contractor Vendor Ledger | | ₹11,700 |
+| TDS Payable | | ₹100 |
 
 ---
 
@@ -370,15 +379,57 @@ Bill → PAID.
 ### E-4: Vendor Payment with TDS
 
 **Steps:**
-1. Bill D-4 PENDING (₹11,682).
-2. Payment → TDS Yes, Section 194C, Rate 1%, TDS = ₹118, Paid: ₹11,682.
+1. Bill D-4 PENDING (₹11,700 net payable, TDS ₹100 already withheld on the bill).
+2. Payment → TDS Yes, Section 194C, Rate 1%, Paid: ₹11,700.
+
+The bill already withheld TDS on confirm, so the payment books no further TDS. Payment-level TDS on
+a TDS-bearing bill is never deducted twice.
+
+**Expected Ledger Entries:**
+| Account | DR | CR |
+|---------|----|----|
+| Contractor Vendor Ledger | ₹11,700 | |
+| Bank | | ₹11,700 |
+
+---
+
+### E-4b: Vendor Payment with TDS on a Bill Without TDS
+
+**Steps:**
+1. Bill: taxable ₹10,000, GST ₹1,800, Line Total ₹11,800, TDS not applicable. PENDING.
+2. Payment → TDS Yes, Section 194C, Rate 1%, Paid: ₹11,800.
+
+The TDS base is the allocated bill's **taxable** value, not the amount paid. For each allocated bill:
+`share = min(1, allocate / billGross)`, `base = billTaxable × share`, `TDS = rate% × base`.
+A full settlement of this bill therefore books ₹100, not ₹118. A payment with no allocations (an
+advance) falls back to `amountPaid × rate%`.
+
+TDS reduces the bank outflow: the vendor is debited the full gross and the bank is credited the net.
 
 **Expected Ledger Entries:**
 | Account | DR | CR |
 |---------|----|----|
 | Contractor Vendor Ledger | ₹11,800 | |
-| Bank | | ₹11,682 |
-| TDS Payable | | ₹118 |
+| Bank | | ₹11,700 |
+| TDS Payable | | ₹100 |
+
+---
+
+### E-4c: Mixed Allocation — One Bill With TDS, One Without
+
+**Steps:**
+1. Bill A: ₹11,800, TDS ₹100 already withheld. Bill B: ₹11,800, no TDS.
+2. Payment → TDS Yes, Rate 1%, Paid: ₹23,600, allocate both bills in full.
+
+Suppression is per bill, not per voucher. Bill A is skipped because it already withheld; only
+Bill B contributes TDS (₹100). A voucher-wide suppression would silently book ₹0 here.
+
+**Expected Ledger Entries:**
+| Account | DR | CR |
+|---------|----|----|
+| Contractor Vendor Ledger | ₹23,600 | |
+| Bank | | ₹23,500 |
+| TDS Payable | | ₹100 |
 
 ---
 
@@ -464,7 +515,7 @@ Bill → PAID.
 | Scenario | Error | What to check |
 |----------|-------|---------------|
 | Approve invoice — no customer ledger | 400: Ledger not found | Create customer ledger or activate customer |
-| Approve invoice — unregistered branch | 400: Branch has no GSTIN | Use Proforma type or set branch GSTIN |
+| Approve or save Tax Invoice — unregistered or composition branch | 400: no GSTIN, or composition cannot issue a Tax Invoice | Use Bill of Supply, or set the branch to Regular with a GSTIN |
 | Confirm bill — URD vendor has GST | 400: Cannot include GST | Clear tax on all lines |
 | Confirm bill — no vendor ledger | 400: Vendor ledger not found | Activate vendor (auto-creates ledger) |
 | Create bill — PO already billed | 409: Bill exists for PO | Cancel existing bill first |

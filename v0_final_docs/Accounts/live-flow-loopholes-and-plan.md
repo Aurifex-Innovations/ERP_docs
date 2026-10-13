@@ -37,7 +37,9 @@ flowchart LR
 
 | Flow | What posts today |
 |------|------------------|
-| Approve a draft tax invoice | Dr Customer (grand) · Cr Sales (grand − GST) · Cr GST output |
+| Approve a draft tax invoice | Dr Customer (grand) · Cr Sales (taxable) · Cr GST output · Cr/Dr Rounding if any |
+| Issue a proforma | No ledger. Status Issued. Pending stays zero |
+| Approve a bill of supply | Dr Customer (grand) · Cr Sales (taxable) · Cr/Dr Rounding if any. No GST |
 | Confirm a draft bill | Dr Purchase expense (taxable) · Dr GST input · Cr Vendor (net payable) · Cr TDS payable if the bill withheld TDS |
 | Receipt allocated to an invoice, no TDS, no advance | Dr Bank · Cr Customer, and the invoice pending falls by the allocated amount |
 | Vendor payment with no TDS | Dr Vendor · Cr Bank, and the bill pending falls by the allocated amount |
@@ -391,8 +393,9 @@ These do not always unbalance the trial balance. They do make a company’s sale
 
 | Hole | Today | Plan |
 |------|--------|------|
-| Round-off sits inside sales | Approve sets income = grand − GST. The `ROUNDING_OFF` ledger is never used. A ₹0.40 round-off becomes sales. | If `roundOffAmount` is not zero, credit or debit `ROUNDING_OFF` and keep sales equal to taxable value. |
-| Proforma approve posts sales | A proforma is not a tax invoice, but approve still debits the customer and credits sales for the full grand (`BUG-0124` only strips GST). A later tax invoice for the same job posts sales again. | Proforma must not post the ledger. Status stays “issued, not in books.” Only the tax invoice posts. If a proforma was already posted, cancel it with the §3.5 reverse before the tax invoice is approved. |
+| Round-off sits inside sales | **Fixed.** Approve credits sales for the taxable amount and posts `roundOffAmount` to `ROUNDING_OFF` (credit if positive, debit if negative). | Keep sales equal to taxable value. |
+| Proforma approve posts sales | **Fixed for new issues.** Approve sets status **Issued**, pending and received stay zero, and no ledger is posted. A later Tax Invoice for the same job can still post. Proformas already posted before this change are left as they are. | Do not renumber or reverse historical proformas in this change. |
+| Bill of Supply was missing | **Fixed.** No GSTIN, composition, or an all-exempt supply saves as Bill of Supply: customer and sales (plus round-off), no GST ledgers. | A regular branch cannot save a Bill of Supply for a taxable line. |
 | Second manual invoice on a sales order is blocked | `BUG-0125` hard-blocks another invoice when one is already Sent. Extra work on the same job cannot be billed. Auto drafts for contracts are exempt, so behaviour depends on the path. | Block only when the new invoice would bill **the same SO line quantity** again. An additional line (extra visit, extra chemical) is allowed. Show the already billed qty on the create screen. |
 | Copy-from-SO on a Direct invoice does not link the order | The job report never sees that invoice. | If lines carry a source sales order id, save the link the same way From SO does. |
 
@@ -451,7 +454,7 @@ Do not start with year close. A close copies today’s errors into next year.
 | **2. Documents match ledgers** | §3.2 Advance, §3.4 Return after payment, §3.5 Cancel posted doc, §3.9 Aging, §3.10 Write-off vs return, §3.14 Control check | Collectors and the bank book use one figure |
 | **3. A real month** | §3.6 Many bills per PO, §3.7 Expense and asset ledgers, §3.11 TDS by section, §3.13 Contra limit and journal approval | Purchase, rent, and TDS look like the company’s chart |
 | **4. New year** | §3.12 next-year opening, plus depreciation from [proper-books-research.md](./proper-books-research.md) | April opens from a balance sheet that already ties |
-| **5. Desk** | §3.15 Round-off, proforma, second invoice, §3.16 Filters and print | Sales reports and the cashier’s screen match the ledger |
+| **5. Desk** | §3.15 second invoice and copy-from-SO (round-off, proforma, and Bill of Supply are done), §3.16 Filters and print | Sales reports and the cashier’s screen match the ledger |
 
 ---
 

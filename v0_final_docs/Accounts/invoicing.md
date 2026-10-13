@@ -2,7 +2,7 @@
 
 This document describes **Invoicing** as it exists today. It is written in easy language so a new person — sales, finance, or tester — can understand **how a bill to the customer is created**, **how it links to a sales order or is typed by hand**, **when the system creates a draft by itself**, **how branch and customer control what you see**, and **what happens in the books when you approve**. Positive and negative tester cases are at the **end**.
 
-Related: [Chart of Accounts](./chart-of-accounts.md) (folders) and [Ledger Management](./ledger-management.md) (books that receive rupees).
+Related: [Chart of Accounts](./chart-of-accounts.md) (folders), [Ledger Management](./ledger-management.md) (books that receive rupees), and [GST invoice testing](./gst-invoice-testing.md) (one script for Tax Invoice, Proforma, and Bill of Supply).
 
 **Start here:** [§1.0 Quick visual atlas](#10-quick-visual-atlas-read-this-first) — whole-system flow, how a **new** invoice is born (Direct / From SO / Auto), **Yes/No**, **status**, and **mode** dropdowns. Same atlas: [COA](./chart-of-accounts.md#10-quick-visual-atlas-read-this-first) · [Ledgers](./ledger-management.md#10-quick-visual-atlas-read-this-first) · [Payments](./payments.md#10-quick-visual-atlas-read-this-first).
 
@@ -12,7 +12,7 @@ Related: [Chart of Accounts](./chart-of-accounts.md) (folders) and [Ledger Manag
 
 The company must tell the customer **how much to pay**, for which work or goods, with tax, due date, and a number they can quote when paying.
 
-**Invoicing** is that official bill. Until an invoice is **approved and sent**, it is only a **draft** (no money in the books). After approve, the customer ledger is debited and sales/tax books are credited. Receipts later reduce pending amount.
+**Invoicing** is that official bill. Until a Tax Invoice or Bill of Supply is **approved and sent**, it is only a **draft** (no money in the books). After approve, the customer ledger is debited and sales (and GST, on a Tax Invoice) are credited. A **Proforma** is only a quote: approve marks it **Issued** and posts nothing. Receipts later reduce pending amount on Sent invoices.
 
 **Outcomes today:** create drafts (manual, from sales order, or automatic from contract/product SO); edit/delete/cancel drafts; approve & send (posts ledgers); record receipts (**Paid** / **Partial**); issue credit notes (**Adjusted** / **Partial**); PDF/email; export Excel/Tally; mark overdue; branch and customer snapshots on the bill.
 
@@ -82,10 +82,11 @@ flowchart TD
 | Created from SO? | Mode FROM_SO; date not before SO date (if SO date is still future, floor = today); SO not Draft/Cancelled | Mode DIRECT |
 | Auto-draft invoice on contract? | Visit / every-N can fire on task complete | Those visit drafts do not run |
 | Same SO + same month already has an invoice? | Conflict unless acknowledged | Normal save |
+| Same SO already has an **approved** invoice (Sent/Partial/Paid/Adjusted/Overdue)? | **Hard block — not acknowledgeable** (BUG-0125) | Cancelled the existing invoice |
 | Same state (branch vs customer)? | CGST + SGST | IGST |
 | Can edit / delete / cancel? | **Only unpaid Draft** | Sent and later: no |
 | Approve from the list? | **No** | Only create/edit form |
-| Record Payment button? | Status Sent / Partial / Overdue | Draft / Paid / **Adjusted** / Cancelled |
+| Record Payment button? | Status Sent / Partial / Overdue | Draft / **Issued** / Paid / **Adjusted** / Cancelled |
 | Request / approve queue? | **No** | Approve & Send is the post step |
 | Draft posts ledgers? | **No** | Only after Approve |
 
@@ -93,7 +94,8 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  draftInv["Draft: no books"] -->|"Approve and Send"| sentInv["Sent: customer owes"]
+  draftInv["Draft: no books"] -->|"Approve Tax or Bill of Supply"| sentInv["Sent: customer owes"]
+  draftInv -->|"Approve Proforma"| issuedInv["Issued: quote, no books"]
   sentInv -->|"Part receipt"| partialInv["Partial"]
   sentInv -->|"Full receipt"| paidInv["Paid: cash closed"]
   sentInv -->|"Full credit note"| adjustedInv["Adjusted: CN closed"]
@@ -110,6 +112,7 @@ flowchart TD
 | Status | Books posted? | Pending | Typical received | How it closes | What user can do |
 |--------|---------------|---------|------------------|---------------|------------------|
 | **Draft** | No | Not in books | 0 | — | Edit, delete, cancel, Approve & Send |
+| **Issued** | No | 0 | 0 | Proforma quote only | PDF. No receipt, credit note, or overdue |
 | **Sent** | Yes | = grand total | 0 | — | Record Payment, credit note, PDF |
 | **Partial** | Yes | > 0 | may be > 0 | Partial receipt and/or partial CN | Another receipt or CN |
 | **Overdue** | Yes | > 0 | any | Same as Sent; marked past due | Same as Sent |
@@ -134,13 +137,13 @@ flowchart TD
 | Field | Options (live) | Quick rule |
 |-------|----------------|------------|
 | Creation mode | **DIRECT** or **FROM_SO** | Auto drafts are FROM_SO |
-| Invoice status | **Draft, Sent, Partial, Paid, Adjusted, Overdue, Cancelled** | See status map |
-| Tax type | Tax invoice (and proforma uses **same posting path** today) | Approve still posts |
+| Invoice status | **Draft, Issued, Sent, Partial, Paid, Adjusted, Overdue, Cancelled** | **Issued** is a proforma quote. It is not a receivable |
+| Invoice type | **Tax Invoice**, **Proforma**, **Bill of Supply** | Tax charges GST and posts it. Proforma is a quote: zero GST, status Issued, no ledger. Bill of Supply posts customer + sales only |
 | Contract plan | **Periodic / Per visit / Every N visits / Manual only** | Only first three auto-draft (visit needs Auto draft **on**) |
 | Credit note reason | Payment Settlement, Pricing Error, Service Issue, Full Cancellation, Other | Settle & Close from Payments uses Payment Settlement |
 | GST split | **CGST+SGST** or **IGST** | Same state vs different state |
 | B2C Place of Supply | **Derived from Delivery/Billing Site** | Used when customer is unregistered |
-| Unregistered Branch | **Must use Proforma / Bill of Supply** | System enforces this block on Tax Invoices |
+| Unregistered or composition branch | **Bill of Supply** (or Proforma as a quote) | Tax Invoice is rejected on save |
 
 **Auto-draft — will it create a Draft? (quick)**
 
@@ -345,19 +348,23 @@ flowchart LR
 
 **Draft = no ledger lines.**
 
-On **Approve & Send** (Tax or Proforma — same posting path today):
+On **Approve & Send**, the journal depends on the document:
 
-| Book | Side | Amount |
-|------|------|--------|
-| Customer ledger (Active, linked to this customer) | Debit | Grand total |
-| Sales Income (`SALES_INCOME` or posting binding) | Credit | Grand total minus GST |
-| GST output ledgers (CGST/SGST/IGST as applicable) | Credit | Tax |
+| Document | Status after approve | Customer | Sales income | GST output | Round-off |
+|----------|----------------------|----------|--------------|------------|-----------|
+| **Tax Invoice** | **Sent** | Debit grand total | Credit **taxable** amount | Credit CGST+SGST or IGST | Credit if positive, debit if negative (`ROUNDING_OFF`) |
+| **Bill of Supply** | **Sent** | Debit grand total | Credit taxable amount | None | Same round-off ledger |
+| **Proforma** | **Issued** | Nothing | Nothing | Nothing | Nothing |
 
-Then: status **Sent**; pending = grand total; customer PDF emailed (best-effort); notification “invoice generated.”
+Pending and received on a proforma stay **zero**. It never enters receipts, credit notes, or the overdue job. A later Tax Invoice for the same job can still post. Proformas that were posted before this rule are left as they are.
+
+Sales income is the taxable amount. Round-off is no longer hidden inside sales.
+
+Then, for Tax Invoice and Bill of Supply: pending = grand total; customer PDF emailed (best-effort); notification “invoice generated.”
 
 **Receipt** later: Bank Debit, Customer Credit (see Ledger doc). Pending falls; **received** rises; status **Partial** or **Paid** (cash closure).
 
-**Credit note:** Sales Adjustment Debit, GST output Debit, Customer Credit. Pending falls; **received unchanged**; status **Partial** (if balance remains) or **Adjusted** (if pending becomes zero).
+**Credit note:** Customer Credit. Tax Invoice also debits GST output and debits sales adjustment for the rest. Bill of Supply debits sales adjustment only. Pending falls; **received unchanged**; status **Partial** (if balance remains) or **Adjusted** (if pending becomes zero). An Issued proforma cannot take a credit note.
 
 **If approve fails:** draft should not stay Sent if posting throws (transaction rolls back). Typical messages: customer ledger not found/active; sales income missing; tax > grand total; unbalanced books.
 
@@ -368,7 +375,8 @@ Use this when testing or explaining finance screens.
 | Scenario | Start | Action | End status | Pending | Received |
 |----------|-------|--------|------------|---------|----------|
 | New bill | — | Save draft | **Draft** | not in books | 0 |
-| Issue to customer | Draft | Approve & Send | **Sent** | = grand total | 0 |
+| Issue a quote | Draft Proforma | Approve & Send | **Issued** | 0 | 0 |
+| Issue to customer | Draft Tax or Bill of Supply | Approve & Send | **Sent** | = grand total | 0 |
 | Customer pays part | Sent | Receipt ₹5,000 on ₹10,000 | **Partial** | ₹5,000 | ₹5,000 |
 | Customer pays all | Sent / Partial | Receipt covers remaining | **Paid** | 0 | = grand total |
 | Write off part | Sent | CN ₹3,000 on ₹10,000 | **Partial** | ₹7,000 | 0 |
@@ -380,6 +388,7 @@ Use this when testing or explaining finance screens.
 **Rules in plain language:**
 
 - **Draft** — paper only; no customer balance in books yet.
+- **Issued** — proforma quote handed to the customer. Still no books, and pending stays zero.
 - **Partial** — something was applied (cash **or** CN) but money is still owed.
 - **Paid** — fully settled by **receipts**; you should see **received > 0** on a typical cash-paid invoice.
 - **Adjusted** — fully settled by **credit note**; often **received = 0**; badge shows **Adjusted** (not Paid).
@@ -554,7 +563,7 @@ Create and edit share the same layout. Edit loads an existing **Draft**.
 | Sales order | Required if From SO | Same | Locked by mode |
 | Linked extra SOs / sites | Optional | Editable | Same customer + branch |
 | Ship-to site | Optional | Editable | Must match customer+branch |
-| Invoice type Tax / Proforma | Editable | Editable | Tax needs ≥1 line |
+| Invoice type Tax / Proforma / Bill of Supply | Editable | Editable | Tax needs ≥1 line and an active HSN/SAC. Proforma and Bill of Supply may omit HSN |
 | Invoice date | Required, not future | Editable | From SO: not before SO-date floor (if SO date is future, floor = today) — BUG224 |
 | Credit period (days) | 1–365, required | Editable | Due date = date + days |
 | Line items | Required for Tax | Editable | Qty, rate, discount %, tax %, HSN |
@@ -685,7 +694,7 @@ flowchart LR
 
 ## 11. Data the Business Cares About
 
-**Header:** Invoice number, type (Tax / Proforma), creation mode (FROM_SO / DIRECT), status (Draft, Sent, Partial, Paid, **Adjusted**, Overdue, Cancelled), dates, due date, credit days, branch, customer id + snapshots, GST registration, SO / extra SOs, contract, ship-to, amounts, received, pending, e-invoice required flag, notes, attachment.
+**Header:** Invoice number (`INV-`, `PI-`, or `BOS-` plus branch code, year, and sequence), type (Tax / Proforma / Bill of Supply), creation mode (FROM_SO / DIRECT), status (Draft, **Issued**, Sent, Partial, Paid, **Adjusted**, Overdue, Cancelled), dates, due date, credit days, branch, customer id + snapshots, GST registration, SO / extra SOs, contract, ship-to, amounts, received, pending, e-invoice required flag, notes, attachment.
 
 **Lines:** Service or Product, item, description, HSN/SAC, qty, UOM, rate, discount %, tax %, taxable, tax amount, line total.
 
@@ -696,7 +705,8 @@ flowchart LR
 | Status | Meaning |
 |--------|---------|
 | Draft | Not sent; no books |
-| Sent | Approved; customer owes full pending; no receipt/CN yet |
+| Issued | Proforma quote; no books; pending and received are zero |
+| Sent | Approved Tax Invoice or Bill of Supply; customer owes full pending; no receipt/CN yet |
 | Partial | Some receipt and/or CN applied; **pending > 0** |
 | Paid | **Pending zero** — closed by **cash/advance receipts** (`received` usually > 0) |
 | Adjusted | **Pending zero** — closed by **credit note** (often `received = 0`) |
@@ -711,12 +721,23 @@ flowchart LR
 |------|---------|
 | Invoice date not in the future | Error |
 | Tax invoice needs at least one line | Error |
-| Issuing branch lacks GSTIN on Tax Invoice | Error (`Branch has no GSTIN. Use 'Proforma' or 'Bill of Supply' instead of Tax Invoice.`) |
+| Proforma or Bill of Supply line tax | Forced to **0%** — CGST/SGST/IGST are 0.00 and grand total = taxable amount |
+| Tax Invoice from a branch with no GSTIN | Error: `Branch has no GSTIN. Use Bill of Supply instead of Tax Invoice.` |
+| Tax Invoice from a composition branch | Error: `A composition branch cannot issue a Tax Invoice. Use Bill of Supply.` |
+| Bill of Supply for a taxable line on a regular GST branch | Error: `A regular GST branch must issue a Tax Invoice for a taxable supply.` |
+| Tax Invoice line with no HSN/SAC | Error: `HSN/SAC is required on a Tax Invoice.` |
+| Tax Invoice approved with taxable value and zero GST | Error: add GST, or use Bill of Supply when the supply is exempt |
+| Place of supply | Selected billing sites set the state. `MH` and `Maharashtra` are the same state. No GST card in that state means B2C: GSTIN cleared, GST still charged |
+| Receipt, credit note, or overdue against an Issued proforma | Rejected. Status is not Sent, Partial, or Overdue |
 | Grand total must match rounded line total ± ₹0.02 | Error |
 | Credit period 1–365 | Error |
 | FROM_SO needs SO; SO not Draft/Cancelled | Not eligible |
 | Customer must match SO; date ≥ SO date | Error |
 | Same SO + same month already invoiced | 409 unless acknowledged |
+| Same SO already has an approved invoice | **Hard block (400)** — cannot be acknowledged away (BUG-0125) |
+| Same SO appears only in `linkedSalesOrderIds` | Duplicate check **still applies** — the guard covers the primary **and** every linked SO (BUG-0125) |
+| Recurring auto-draft (contract cycle, per-visit) on an already-invoiced SO | **Allowed** — exempt from the hard block; only the same-month check applies |
+| SO dropdown / "Additional orders" list | Already-invoiced orders are returned with `invoiced: true`, shown greyed out and labelled "Already invoiced"; they cannot be selected |
 | Ship-to / extra SO must be same customer and branch | Error |
 | HSN unknown / inactive / wrong GST mix | Error |
 | Product qty > branch stock | Error |
@@ -751,17 +772,16 @@ flowchart TD
 2. **Summary cards** on the list are company-wide (no branch passed).  
 3. **Multi-branch filter** may send several ids as one string; service treats `branchId` as a **single** id.  
 4. **Approve is not on the list or detail** — only create/edit. Easy to miss.  
-5. **Proforma uses the same ledger posting** as Tax on approve.  
-6. **E-invoice** is only a flag (GSTIN + > ₹50,000); no IRN generation here.  
-7. **Approve & Send** posts ledgers and emails the invoice PDF (sync via Brevo). Missing customer email or Brevo failure does **not** roll back Sent — UI warns and Send/Resend can retry. Explicit Send/Resend still uses Export permission.  
-8. **List Cancel** on Sent opens credit note, not status Cancelled.  
-9. **Credit note type** on the list filter does not mean a separate invoice type used for all CNs (CNs are child documents).  
-10. **Direct “copy from SO”** does not set FROM_SO — SO reports may not see that invoice as linked.  
-11. **Auto-draft failures** are logged; user may see no draft and no UI error.  
-12. **Overdue** is not automatic until someone clicks Run Overdue Check (or a job if configured separately).  
-13. **Tally export** is all invoices, not filtered.  
-14. **Customer/site PDF** allowed without company Invoice Export for those roles.  
-15. Draft with payment allocations cannot be deleted (correct) but UI may still show delete until the service rejects.
+5. **E-invoice** is only a flag (GSTIN + > ₹50,000); no IRN generation here.  
+6. **Approve & Send** posts ledgers and emails the invoice PDF (sync via Brevo). Missing customer email or Brevo failure does **not** roll back Sent — UI warns and Send/Resend can retry. Explicit Send/Resend still uses Export permission.  
+7. **List Cancel** on Sent opens credit note, not status Cancelled.  
+8. **Credit note type** on the list filter does not mean a separate invoice type used for all CNs (CNs are child documents).  
+9. **Direct “copy from SO”** does not set FROM_SO — SO reports may not see that invoice as linked.  
+10. **Auto-draft failures** are logged; user may see no draft and no UI error.  
+11. **Overdue** is not automatic until someone clicks Run Overdue Check (or a job if configured separately).  
+12. **Tally export** is all invoices, not filtered.  
+13. **Customer/site PDF** allowed without company Invoice Export for those roles.  
+14. Draft with payment allocations cannot be deleted (correct) but UI may still show delete until the service rejects.
 
 ---
 
@@ -930,6 +950,9 @@ Use this as a **checklist**. Expected results are what the product does **today*
 | N13 | Invoice date before SO date (SO date in the past) | Cannot be before SO date |
 | N13b | Invoice date before today when SO date is still future (**BUG224** floor) | Cannot be before today (floor), even though raw SO date is later |
 | N14 | Second invoice same SO same month, no acknowledge | 409 conflict |
+| N14b | Second invoice against an SO whose invoice is **Sent** | **Hard block (400)**, no acknowledge-and-proceed offered (BUG-0125) |
+| N14c | Second invoice where that SO is only in the **linked/extra** SO list | 409 / hard block — linked SOs are checked too (BUG-0125) |
+| N14d | Contract periodic cycle / per-visit auto-draft on an SO already invoiced | Auto-draft still succeeds (exempt from the hard block) |
 | N15 | Ship-to site from another branch | Must belong to invoice customer and branch |
 | N16 | Credit period 0 or 366 | Validation fail |
 | N17 | Unknown or inactive HSN | Error |
@@ -967,7 +990,9 @@ Use this as a **checklist**. Expected results are what the product does **today*
 | N38 | Credit note on Draft | Should fail / not offered |
 | N39 | Delete draft after a receipt was allocated | Has payment activity; cannot delete |
 | N40 | Inactive customer ledger then approve | Cannot post to inactive |
-| N41 | Proforma approve | **Does post** same as Tax (gap — log if you expected no books) |
+| N41 | Proforma approve | Status **Issued**. **No ledger rows.** Pending and received stay 0. A later Tax Invoice for the same job can still post |
+| N41b | Bill of Supply approve | Dr customer (grand), Cr sales (taxable), round-off if any. **No GST ledgers** |
+| N41c | Credit note or receipt on an Issued proforma | Rejected |
 
 ### 16.9 Negative — branch / customer / list
 
