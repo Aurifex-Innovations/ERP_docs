@@ -15,6 +15,9 @@
 | SO auto-heal (retain/soft-patch) | `ContractSoHealService` + `SalesOrderService.softPatchContractPeriodSo` |
 | Service frequency enum | `GmaFrequency` |
 | Excel frequency parse (import) | `ERP_ETL/.../frequency_parser.py` |
+| Task recurring expansion | `RecurringTaskExpansionServiceImpl` |
+| Task stock reservation | `TaskStockReservationService` & `StockManagementService` |
+| Task mobile units & execution | `StockQty`, `MobileTaskQtyUnits`, `TaskServiceExecutionServiceImpl` |
 
 **Related docs:** [Sales Order Cancel & Visit Redistribution](./sales-order-cancel-visit-redistribution.md)
 
@@ -195,35 +198,59 @@ If any line is **paid** or **locked**, expand is skipped (Finance-safe).
 
 ## 5. Service frequencies → annual visits (work clock)
 
-Frequencies live on each **contract site → service** row (`frequency` + optional `annualFrequency`).
+Frequencies live on each **contract site → service** row (`frequency` + optional `annualFrequency` / `totalVisits`).
 
 ### 5.1 Standard ERP enum defaults (`GmaFrequency`)
 
-| Frequency | Default annual visits (12-month term) |
-|-----------|----------------------------------------|
-| WEEKLY | **52** |
-| FORTNIGHTLY | **26** |
-| MONTHLY | **12** |
-| QUARTERLY | **4** |
-| CUSTOM | **Must supply `annualFrequency`** (0 alone is invalid for planning) |
+All standard frequencies are first-class enum entries in `GmaFrequency` with explicit default annual visits:
 
-### 5.2 Common “multiplier” / custom patterns (import & GMA)
+| Frequency | Default annual visits (12-month term) | Rhythm / Meaning |
+|-----------|----------------------------------------|------------------|
+| **DAILY** | **365** *(or 260 business days)* | Every day |
+| **SIX_TIMES_A_WEEK** | **312** | 6 days a week (Mon–Sat) |
+| **FIVE_TIMES_A_WEEK** | **260** | 5 days a week (Mon–Fri weekdays) |
+| **FOUR_TIMES_A_WEEK** | **208** | 4 days a week |
+| **ALTERNATE_DAYS** | **183** | Every other day (≈ 365 ÷ 2) |
+| **THRICE_A_WEEK** | **156** | 3 days a week |
+| **TWICE_A_WEEK** | **104** | 2 days a week |
+| **WEEKLY** | **52** | Once a week |
+| **FOUR_TIMES_A_MONTH** | **48** | Exactly 4 visits per month |
+| **THRICE_A_MONTH** | **36** | Exactly 3 visits per month |
+| **FORTNIGHTLY** | **26** | Once every 2 weeks |
+| **TWICE_A_MONTH** | **24** | Exactly 2 visits per month |
+| **MONTHLY** | **12** | Once a month |
+| **EVERY_2_MONTHS** | **6** | Once every 2 months |
+| **QUARTERLY** | **4** | Once every 3 months |
+| **EVERY_4_MONTHS** | **3** | Once every 4 months |
+| **EVERY_6_MONTHS** | **2** | Once every 6 months |
+| **SINGLE** | **1** | Single / one-time visit |
+| **CUSTOM** | **Must supply `totalVisits`** | 0 alone is invalid; entered manually |
 
-Excel / GMA often encode richer language. Import maps these into `CUSTOM` + an explicit annual count:
+### 5.2 Mapping & Custom patterns (import & GMA)
 
-| Business wording | Typical annual visits | Stored frequency | Notes |
-|------------------|----------------------|------------------|-------|
-| Weekly / once a week | 52 | WEEKLY | Plain weekly |
-| Twice a week / weekly ×2 | **104** | CUSTOM | 52 × 2 |
-| Thrice a week / 3× weekly | **156** | CUSTOM | 52 × 3 |
-| Fortnightly | 26 | FORTNIGHTLY | Every 2 weeks |
-| Monthly | 12 | MONTHLY | Once a month |
-| 3× monthly / thrice in a month | **36** | CUSTOM | 12 × 3 |
-| Quarterly | 4 | QUARTERLY | |
-| Daily | **365** | CUSTOM | Calendar days |
-| Alternative / alternate days | **180** | CUSTOM | ≈ 365 ÷ 2 |
-| Annually / once a year | **1** | CUSTOM | |
-| Fully custom (e.g. 302) | **302** | CUSTOM | Explicit annual kept as-is |
+Excel / GMA phrases map directly to their corresponding `GmaFrequency` enum value:
+
+| Business wording | Typical annual visits | Stored frequency enum | Notes |
+|------------------|----------------------|-----------------------|-------|
+| Daily | 365 | `DAILY` | Calendar days (or 260 under BUSINESS_DAILY) |
+| Six times a week | 312 | `SIX_TIMES_A_WEEK` | Mon–Sat |
+| Five times a week | 260 | `FIVE_TIMES_A_WEEK` | Mon–Fri weekdays |
+| Four times a week | 208 | `FOUR_TIMES_A_WEEK` | 4 days/week |
+| Alternate days | 183 | `ALTERNATE_DAYS` | ≈ 365 ÷ 2 |
+| Thrice a week / 3× weekly | 156 | `THRICE_A_WEEK` | 3 days/week |
+| Twice a week / weekly ×2 | 104 | `TWICE_A_WEEK` | 2 days/week |
+| Weekly / once a week | 52 | `WEEKLY` | Once a week |
+| Four times a month | 48 | `FOUR_TIMES_A_MONTH` | 4 a month |
+| 3× monthly / thrice in a month | 36 | `THRICE_A_MONTH` | 3 a month |
+| Fortnightly | 26 | `FORTNIGHTLY` | Every 2 weeks |
+| Twice a month | 24 | `TWICE_A_MONTH` | 2 a month |
+| Monthly | 12 | `MONTHLY` | Once a month |
+| Every 2 months | 6 | `EVERY_2_MONTHS` | 1 every 2 months |
+| Quarterly | 4 | `QUARTERLY` | 1 every 3 months |
+| Every 4 months | 3 | `EVERY_4_MONTHS` | 1 every 4 months |
+| Every 6 months | 2 | `EVERY_6_MONTHS` | 1 every 6 months |
+| Annually / once a year / single | 1 | `SINGLE` | Single visit |
+| Fully custom (e.g. 14, 302) | 14 / 302 | `CUSTOM` | Explicit `totalVisits` kept as-is |
 
 **Visit count basis (Daily-style only):**
 
@@ -232,7 +259,7 @@ Excel / GMA often encode richer language. Import maps these into `CUSTOM` + an e
 | CALENDAR_DAILY | Daily (365) | Use **365** |
 | BUSINESS_DAILY | Daily | Use **260** working-day year |
 
-Explicit CUSTOM totals that are **not** 365/260 (e.g. 302, 104) are **not** overwritten by visit-count basis.
+Named non-daily cadences (e.g. `FIVE_TIMES_A_WEEK = 260`) are recognized as their own cadence and are **not** overwritten by daily visit count basis.
 
 ### 5.3 Non–12-month contract terms
 
@@ -252,9 +279,9 @@ Example — Site Biocon:
 
 | Service | Frequency | Annual visits |
 |---------|-----------|---------------|
-| Rodocon | Weekly twice | 104 |
-| Moscon | Monthly | 12 |
-| Roachcon | Daily | 365 |
+| Rodocon | Twice a week (`TWICE_A_WEEK`) | 104 |
+| Moscon | Monthly (`MONTHLY`) | 12 |
+| Roachcon | Daily (`DAILY`) | 365 |
 
 They do **not** share a visit pool. Each gets its own split across payment periods. Tasks later consume visits **per service line** on the SO.
 
@@ -286,8 +313,6 @@ Quarterly means **one service every 3 months**. With 12 monthly SOs the plan is:
 |----|----|----|----|----|----|----|----|----|-----|-----|-----|
 | 0 | 0 | **1** | 0 | 0 | **1** | 0 | 0 | **1** | 0 | 0 | **1** |
 
-Wrong (old remainder-on-last style): `0,0,0,0,0,0,0,0,1,1,1,1` — four visits dumped into P9–P12, missing Q1–Q3 work.
-
 **Bold** in tables = periods above the floor average (evenly spaced extras), not “only at year end.”
 
 ---
@@ -300,22 +325,28 @@ Wrong (old remainder-on-last style): `0,0,0,0,0,0,0,0,1,1,1,1` — four visits d
 
 **Frequency catalogue used in all tables**
 
-| Service frequency (business wording) | Stored typically as | Annual visits |
-|--------------------------------------|---------------------|---------------|
-| Monthly service | MONTHLY | 12 |
-| Quarterly service | QUARTERLY | 4 |
-| Fortnightly | FORTNIGHTLY | 26 |
-| Weekly (once a week) | WEEKLY | 52 |
-| Twice a week | CUSTOM | 104 |
-| Thrice a week (3×/week) | CUSTOM | 156 |
-| 4× a week | CUSTOM | 208 |
-| 3× a month | CUSTOM | 36 |
-| Daily (calendar) | CUSTOM + CALENDAR_DAILY | 365 |
-| Daily (business days) | CUSTOM + BUSINESS_DAILY | 260 |
-| Alternative / alternate days | CUSTOM | 180 |
-| Annually (once a year) | CUSTOM | 1 |
-| Custom 14 (example) | CUSTOM | 14 |
-| Custom 302 (example) | CUSTOM | 302 |
+| Service frequency (business wording) | Stored enum (`GmaFrequency`) | Annual visits |
+|--------------------------------------|-----------------------------|---------------|
+| Daily (calendar) | `DAILY` + CALENDAR_DAILY | 365 |
+| Six times a week | `SIX_TIMES_A_WEEK` | 312 |
+| Five times a week / Daily business | `FIVE_TIMES_A_WEEK` / DAILY + BUSINESS_DAILY | 260 |
+| Four times a week | `FOUR_TIMES_A_WEEK` | 208 |
+| Alternate days | `ALTERNATE_DAYS` | 183 |
+| Thrice a week (3×/week) | `THRICE_A_WEEK` | 156 |
+| Twice a week | `TWICE_A_WEEK` | 104 |
+| Weekly (once a week) | `WEEKLY` | 52 |
+| Four times a month | `FOUR_TIMES_A_MONTH` | 48 |
+| Thrice a month (3×/month) | `THRICE_A_MONTH` | 36 |
+| Fortnightly | `FORTNIGHTLY` | 26 |
+| Twice a month | `TWICE_A_MONTH` | 24 |
+| Monthly service | `MONTHLY` | 12 |
+| Every 2 months | `EVERY_2_MONTHS` | 6 |
+| Quarterly service | `QUARTERLY` | 4 |
+| Every 4 months | `EVERY_4_MONTHS` | 3 |
+| Every 6 months | `EVERY_6_MONTHS` | 2 |
+| Annually / Single visit | `SINGLE` | 1 |
+| Custom 14 (example) | `CUSTOM` (14) | 14 |
+| Custom 302 (example) | `CUSTOM` (302) | 302 |
 
 ---
 
@@ -323,17 +354,23 @@ Wrong (old remainder-on-last style): `0,0,0,0,0,0,0,0,1,1,1,1` — four visits d
 
 | Service frequency | Annual | Split across P1 → P12 | Pattern (plain English) |
 |-------------------|--------|------------------------|-------------------------|
-| Monthly service | 12 | 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 | 1 visit every month |
-| Quarterly service | 4 | 0, 0, **1**, 0, 0, **1**, 0, 0, **1**, 0, 0, **1** | **1 visit every 3 months** (P3, P6, P9, P12) |
-| Fortnightly | 26 | 2, 2, 2, 2, 2, **3**, 2, 2, 2, 2, 2, **3** | ~2/month; extras spaced |
-| Weekly (once) | 52 | 4, 4, **5**, 4, 4, **5**, 4, 4, **5**, 4, 4, **5** | ~4–5/month, evenly spaced |
-| Twice a week | 104 | 8, **9**, **9**, 8, **9**, **9**, 8, **9**, **9**, 8, **9**, **9** | ~8–9/month, evenly spaced |
-| Thrice a week | 156 | 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13 | 13 every month |
-| 4× a week | 208 | 17, 17, **18**, 17, 17, **18**, 17, 17, **18**, 17, 17, **18** | ~17–18/month |
-| 3× a month | 36 | 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 | 3 every month |
 | Daily (calendar 365) | 365 | 30, 30, **31**, 30, **31**, 30, 30, **31**, 30, **31**, 30, **31** | ~30–31/month, spaced |
-| Daily (business 260) | 260 | 21, **22**, **22**, 21, **22**, **22**, 21, **22**, **22**, 21, **22**, **22** | ~21–22/month |
-| Alternative days | 180 | 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 | 15 every month |
+| Six times a week | 312 | 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26 | 26 every month |
+| Five times a week / Business Daily | 260 | 21, **22**, **22**, 21, **22**, **22**, 21, **22**, **22**, 21, **22**, **22** | ~21–22/month |
+| Four times a week | 208 | 17, 17, **18**, 17, 17, **18**, 17, 17, **18**, 17, 17, **18** | ~17–18/month |
+| Alternate days | 183 | 15, 15, 15, **16**, 15, 15, 15, **16**, 15, 15, 15, **16** | ~15–16/month |
+| Thrice a week | 156 | 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13 | 13 every month |
+| Twice a week | 104 | 8, **9**, **9**, 8, **9**, **9**, 8, **9**, **9**, 8, **9**, **9** | ~8–9/month, evenly spaced |
+| Weekly (once) | 52 | 4, 4, **5**, 4, 4, **5**, 4, 4, **5**, 4, 4, **5** | ~4–5/month, evenly spaced |
+| Four times a month | 48 | 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 | 4 every month |
+| Thrice a month | 36 | 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 | 3 every month |
+| Fortnightly | 26 | 2, 2, 2, 2, 2, **3**, 2, 2, 2, 2, 2, **3** | ~2/month; extras spaced |
+| Twice a month | 24 | 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 | 2 every month |
+| Monthly service | 12 | 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 | 1 visit every month |
+| Every 2 months | 6 | 0, **1**, 0, **1**, 0, **1**, 0, **1**, 0, **1**, 0, **1** | 1 visit every 2 months (even months) |
+| Quarterly service | 4 | 0, 0, **1**, 0, 0, **1**, 0, 0, **1**, 0, 0, **1** | **1 visit every 3 months** (P3, P6, P9, P12) |
+| Every 4 months | 3 | 0, 0, 0, **1**, 0, 0, 0, **1**, 0, 0, 0, **1** | 1 visit every 4 months (P4, P8, P12) |
+| Every 6 months | 2 | 0, 0, 0, 0, 0, **1**, 0, 0, 0, 0, 0, **1** | 1 visit every 6 months (P6, P12) |
 | Annually (once/year) | 1 | 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, **1** | Single visit on **P12** |
 | Custom 14 | 14 | 1, 1, 1, 1, 1, **2**, 1, 1, 1, 1, 1, **2** | Mostly 1; extras on P6 & P12 |
 | Custom 302 | 302 | 25, 25, 25, 25, 25, **26**, 25, 25, 25, 25, 25, **26** | Mostly 25; extras spaced |
@@ -344,17 +381,23 @@ Wrong (old remainder-on-last style): `0,0,0,0,0,0,0,0,1,1,1,1` — four visits d
 
 | Service frequency | Annual | Split across Q1–Q4 |
 |-------------------|--------|---------------------|
-| Monthly service | 12 | 3, 3, 3, 3 |
-| Quarterly service | 4 | 1, 1, 1, 1 |
-| Fortnightly | 26 | 6, **7**, 6, **7** |
-| Weekly (once) | 52 | 13, 13, 13, 13 |
-| Twice a week | 104 | 26, 26, 26, 26 |
-| Thrice a week | 156 | 39, 39, 39, 39 |
-| 4× a week | 208 | 52, 52, 52, 52 |
-| 3× a month | 36 | 9, 9, 9, 9 |
 | Daily (calendar 365) | 365 | 91, 91, 91, **92** |
-| Daily (business 260) | 260 | 65, 65, 65, 65 |
-| Alternative days | 180 | 45, 45, 45, 45 |
+| Six times a week | 312 | 78, 78, 78, 78 |
+| Five times a week / Business Daily | 260 | 65, 65, 65, 65 |
+| Four times a week | 208 | 52, 52, 52, 52 |
+| Alternate days | 183 | 45, **46**, **46**, **46** |
+| Thrice a week | 156 | 39, 39, 39, 39 |
+| Twice a week | 104 | 26, 26, 26, 26 |
+| Weekly (once) | 52 | 13, 13, 13, 13 |
+| Four times a month | 48 | 12, 12, 12, 12 |
+| Thrice a month | 36 | 9, 9, 9, 9 |
+| Fortnightly | 26 | 6, **7**, 6, **7** |
+| Twice a month | 24 | 6, 6, 6, 6 |
+| Monthly service | 12 | 3, 3, 3, 3 |
+| Every 2 months | 6 | 1, **2**, 1, **2** |
+| Quarterly service | 4 | 1, 1, 1, 1 |
+| Every 4 months | 3 | 0, **1**, **1**, **1** |
+| Every 6 months | 2 | 0, **1**, 0, **1** |
 | Annually (once/year) | 1 | 0, 0, 0, **1** |
 | Custom 14 | 14 | 3, **4**, 3, **4** |
 | Custom 302 | 302 | 75, **76**, 75, **76** |
@@ -365,17 +408,23 @@ Wrong (old remainder-on-last style): `0,0,0,0,0,0,0,0,1,1,1,1` — four visits d
 
 | Service frequency | Annual | H1 / H2 |
 |-------------------|--------|---------|
-| Monthly service | 12 | 6 / 6 |
-| Quarterly service | 4 | 2 / 2 |
-| Fortnightly | 26 | 13 / 13 |
-| Weekly (once) | 52 | 26 / 26 |
-| Twice a week | 104 | 52 / 52 |
-| Thrice a week | 156 | 78 / 78 |
-| 4× a week | 208 | 104 / 104 |
-| 3× a month | 36 | 18 / 18 |
 | Daily (calendar 365) | 365 | 182 / **183** |
-| Daily (business 260) | 260 | 130 / 130 |
-| Alternative days | 180 | 90 / 90 |
+| Six times a week | 312 | 156 / 156 |
+| Five times a week / Business Daily | 260 | 130 / 130 |
+| Four times a week | 208 | 104 / 104 |
+| Alternate days | 183 | 91 / **92** |
+| Thrice a week | 156 | 78 / 78 |
+| Twice a week | 104 | 52 / 52 |
+| Weekly (once) | 52 | 26 / 26 |
+| Four times a month | 48 | 24 / 24 |
+| Thrice a month | 36 | 18 / 18 |
+| Fortnightly | 26 | 13 / 13 |
+| Twice a month | 24 | 12 / 12 |
+| Monthly service | 12 | 6 / 6 |
+| Every 2 months | 6 | 3 / 3 |
+| Quarterly service | 4 | 2 / 2 |
+| Every 4 months | 3 | 1 / **2** |
+| Every 6 months | 2 | 1 / 1 |
 | Annually (once/year) | 1 | 0 / **1** |
 | Custom 14 | 14 | 7 / 7 |
 | Custom 302 | 302 | 151 / 151 |
@@ -388,17 +437,23 @@ All annual visits sit on the **one** SO for that branch. No multi-period split.
 
 | Service frequency | Annual | Split across Y1 |
 |-------------------|--------|-----------------|
-| Monthly service | 12 | 12 |
-| Quarterly service | 4 | 4 |
-| Fortnightly | 26 | 26 |
-| Weekly (once) | 52 | 52 |
-| Twice a week | 104 | 104 |
-| Thrice a week | 156 | 156 |
-| 4× a week | 208 | 208 |
-| 3× a month | 36 | 36 |
 | Daily (calendar 365) | 365 | 365 |
-| Daily (business 260) | 260 | 260 |
-| Alternative days | 180 | 180 |
+| Six times a week | 312 | 312 |
+| Five times a week / Business Daily | 260 | 260 |
+| Four times a week | 208 | 208 |
+| Alternate days | 183 | 183 |
+| Thrice a week | 156 | 156 |
+| Twice a week | 104 | 104 |
+| Weekly (once) | 52 | 52 |
+| Four times a month | 48 | 48 |
+| Thrice a month | 36 | 36 |
+| Fortnightly | 26 | 26 |
+| Twice a month | 24 | 24 |
+| Monthly service | 12 | 12 |
+| Every 2 months | 6 | 6 |
+| Quarterly service | 4 | 4 |
+| Every 4 months | 3 | 3 |
+| Every 6 months | 2 | 2 |
 | Annually (once/year) | 1 | 1 |
 | Custom 14 | 14 | 14 |
 | Custom 302 | 302 | 302 |
@@ -438,20 +493,26 @@ Example — **3 milestones**, Weekly (52): `split(52, 3)` → **17, 17, 18**.
 
 | Service frequency | Annual | Monthly (12 SO) | Quarterly (4 SO) | Half-yearly (2 SO) | Annual (1 SO) |
 |-------------------|--------|-----------------|------------------|--------------------|---------------|
-| Monthly service | 12 | 1 every month | 3, 3, 3, 3 | 6 / 6 | 12 |
-| Quarterly service | 4 | **0,0,1** repeating (every 3rd month) | 1, 1, 1, 1 | 2 / 2 | 4 |
-| Fortnightly | 26 | 2s with **3** on P6 & P12 | 6, **7**, 6, **7** | 13 / 13 | 26 |
-| Weekly (once) | 52 | 4,4,**5** repeating | 13×4 | 26 / 26 | 52 |
-| Twice a week | 104 | 8/**9** alternating pattern | 26×4 | 52 / 52 | 104 |
+| Daily (calendar 365) | 365 | ~30–31 spaced | 91, 91, 91, **92** | 182 / **183** | 365 |
+| Six times a week | 312 | 26 every month | 78×4 | 156 / 156 | 312 |
+| Five times a week / Business Daily | 260 | ~21–22 spaced | 65×4 | 130 / 130 | 260 |
+| Four times a week | 208 | 17, 17, **18** repeating | 52×4 | 104 / 104 | 208 |
+| Alternate days | 183 | ~15–16 spaced | 45, **46**, **46**, **46** | 91 / **92** | 183 |
 | Thrice a week | 156 | 13 every month | 39×4 | 78 / 78 | 156 |
-| 4× a week | 208 | 17,17,**18** repeating | 52×4 | 104 / 104 | 208 |
-| 3× a month | 36 | 3 every month | 9×4 | 18 / 18 | 36 |
-| Daily (calendar 365) | 365 | ~30–31 spaced | 91,91,91,**92** | 182 / **183** | 365 |
-| Daily (business 260) | 260 | ~21–22 spaced | 65×4 | 130 / 130 | 260 |
-| Alternative days | 180 | 15 every month | 45×4 | 90 / 90 | 180 |
-| Annually (once/year) | 1 | all on **P12** | all on **Q4** | all on **H2** | 1 |
-| Custom 14 | 14 | mostly 1; **2** on P6 & P12 | 3,**4**,3,**4** | 7 / 7 | 14 |
-| Custom 302 | 302 | mostly 25; **26** on P6 & P12 | 75,**76**,75,**76** | 151 / 151 | 302 |
+| Twice a week | 104 | 8/**9** alternating pattern | 26×4 | 52 / 52 | 104 |
+| Weekly (once) | 52 | 4, 4, **5** repeating | 13×4 | 26 / 26 | 52 |
+| Four times a month | 48 | 4 every month | 12×4 | 24 / 24 | 48 |
+| Thrice a month | 36 | 3 every month | 9×4 | 18 / 18 | 36 |
+| Fortnightly | 26 | 2s with **3** on P6 & P12 | 6, **7**, 6, **7** | 13 / 13 | 26 |
+| Twice a month | 24 | 2 every month | 6×4 | 12 / 12 | 24 |
+| Monthly service | 12 | 1 every month | 3, 3, 3, 3 | 6 / 6 | 12 |
+| Every 2 months | 6 | 0, **1** repeating (even months) | 1, **2**, 1, **2** | 3 / 3 | 6 |
+| Quarterly service | 4 | **0, 0, 1** repeating (P3, P6, P9, P12) | 1, 1, 1, 1 | 2 / 2 | 4 |
+| Every 4 months | 3 | 0, 0, 0, **1** repeating (P4, P8, P12) | 0, **1**, **1**, **1** | 1 / **2** | 3 |
+| Every 6 months | 2 | 0, 0, 0, 0, 0, **1** (P6, P12) | 0, **1**, 0, **1** | 1 / 1 | 2 |
+| Annually / Single | 1 | all on **P12** | all on **Q4** | all on **H2** | 1 |
+| Custom 14 | 14 | mostly 1; **2** on P6 & P12 | 3, **4**, 3, **4** | 7 / 7 | 14 |
+| Custom 302 | 302 | mostly 25; **26** on P6 & P12 | 75, **76**, 75, **76** | 151 / 151 | 302 |
 
 **Multi-service site:** look up **each** service row separately, then put all those visit lines on the **same** period SO.  
 **Multi-branch:** repeat the whole matrix once per branch (separate SOs).
@@ -572,10 +633,10 @@ Branch A’s visits never consume Branch B’s period capacity (same as cancel/r
 
 | Service | Frequency | Annual |
 |---------|-----------|--------|
-| S1 | Weekly | 52 |
-| S2 | Twice a week | 104 |
-| S3 | Daily | 365 |
-| S4 | Monthly | 12 |
+| S1 | Weekly (`WEEKLY`) | 52 |
+| S2 | Twice a week (`TWICE_A_WEEK`) | 104 |
+| S3 | Daily (`DAILY`) | 365 |
+| S4 | Monthly (`MONTHLY`) | 12 |
 
 **Total planned visits on contract** = 52 + 104 + 365 + 12 = **533**  
 **Across 12 SOs:** each SO’s visit sum varies slightly because remainders land on later months; **year total stays 533**.
@@ -621,7 +682,7 @@ If the contract had been wrongly left with **one** “Year 1” payment line, ac
 
 - [ ] Payment type + invoice plan match commercial intent (Monthly → expect 12 periods).  
 - [ ] Payment grid shows the right number of rows (or rely on activate expand for scheduled types).  
-- [ ] Each site-service has frequency (and `annualFrequency` if CUSTOM).  
+- [ ] Each site-service has frequency (and `totalVisits` if CUSTOM).  
 - [ ] Sum of payment line amounts = total sale value.  
 - [ ] Sum of service sale values = total sale value.  
 - [ ] Preview visit plan (API / UI) — annual vs allocated totals match; warnings empty.
@@ -657,6 +718,8 @@ If the contract had been wrongly left with **one** “Year 1” payment line, ac
 | **Visit plan / visit budget** | Per-period planned visits stored for allocation and remaining-visit logic |
 | **Remainder / cover-up** | Extra visits assigned to the last `annual % periods` SOs |
 | **Visit count basis** | Calendar 365 vs business 260 for daily-style annual totals |
+| **Cadence band** | The pattern group (e.g. `thrice_week`, `six_days`, `weekdays`) mapped to UI auto-suggestion days |
+| **Visit slot** | Capacity on an SO service line; each created task consumes 1 slot |
 
 ---
 
@@ -670,6 +733,8 @@ If the contract had been wrongly left with **one** “Year 1” payment line, ac
 | 2026-08-04 | Visit split: even spacing (cumulative floor) so Quarterly under Monthly = P3/P6/P9/P12, not last-4 dump; docs + `splitAcrossPeriods` updated |
 | 2026-08-04 | §8.1: mixed frequencies — SO amount = visits × unit price (₹5k / ₹20k pattern), not flat total÷12; activate applies visit-based payment amounts |
 | 2026-08-04 | §16: SO auto-heal (retain existing SOs) — manual API, UI amend, ETL ACTIVE amend HTTP heal |
+| 2026-11-12 | Expanded `GmaFrequency` enum with 18 first-class options (`SIX_TIMES_A_WEEK`, `FIVE_TIMES_A_WEEK`, `FOUR_TIMES_A_WEEK`, `ALTERNATE_DAYS`, `THRICE_A_WEEK`, `TWICE_A_WEEK`, `FOUR_TIMES_A_MONTH`, `TWICE_A_MONTH`, `EVERY_2_MONTHS`, `EVERY_4_MONTHS`, `EVERY_6_MONTHS`, etc.); updated §§5, 6, 7 tables |
+| 2026-11-12 | Added §17: End-to-end Recurring Task Generation, Smart Cadence Bands, Slot Availability, Just-in-Time Consumable Stock Reservation, and Mobile Unit Conversions |
 
 ---
 
@@ -745,6 +810,104 @@ After a successful contract amend commit, `ContractServiceImpl` calls `ContractS
 ### Customer ETL ACTIVE amend
 
 When `active_contract_amend_mode` / `--amend-active-contracts`:
+
+1. ETL still scales financials + writes amendment log in SQL.
+2. ETL **does not** INSERT empty DRAFT SO shells for new branches.
+3. After the amend transaction **commits**, ETL calls:
+
+   `POST {backend_base_url}/api/v1/contracts/{contractId}/heal-sales-orders?dryRun=false`
+
+Config (`ERP_ETL/config/import.yaml`):
+
+| Key | Purpose |
+|-----|---------|
+| `heal_sos_on_active_amend` | Default `true` |
+| `backend_base_url` | e.g. `http://localhost:8080` |
+| `backend_heal_token` | JWT with contract edit authority |
+| `backend_tenant_id` | Optional `X-Tenant-ID` |
+
+Heal HTTP failure is reported as an import error for that contract (retry once); do not leave fat/missing SOs silently.
+
+---
+
+## 17. Recurring Task Generation & Consumable Stock Lifecycle
+
+Once an SO is released to **OPEN**, operations schedules visits using the **Recurring Task Generator** (`POST /api/v1/tasks/recurring/preview` & `/recurring`). This bridges the contract visit plan into actual field execution.
+
+```mermaid
+flowchart TD
+    SO["Sales Order Site Service Line<br/>visits = 4 for this period"] --> Modal["User opens Recurring Task Modal<br/>Selects date range, pattern, tech"]
+    Modal --> Cadence["1. UI Smart Cadence Bands (recurringCadence.js)<br/>Auto-suggests on-cadence days based on contract frequency"]
+    Cadence --> Slots["2. Slot Availability Check<br/>Each task consumes 1 slot from SO line visits"]
+    Slots --> Density["3. Backend Density Check (RecurringTaskExpansionServiceImpl)<br/>Compares expanded dates vs expected visits in date range"]
+    Density --> Conflict["4. Tech Conflicts & Preferred Day Matching<br/>Checks technician double-booking and preferred days"]
+    Conflict --> StockRes["5. Task Creation & Stock Reservation (TaskStockReservationService)<br/>&bull; Scheduled Date <= 7 days: Stock RESERVED immediately<br/>&bull; Scheduled Date > 7 days: SCHEDULED (nightly job reserves)"]
+    StockRes --> Mobile["6. Mobile Field Execution (APPLICATION_USER)<br/>&bull; Tech sees 5 ml (converted from 0.005 LTR)<br/>&bull; PUT /my/service-executions submits 4 ml<br/>&bull; Backend converts back to 0.004 LTR"]
+    Mobile --> Settle["7. Task Completion & Stock Settlement<br/>settleConsumableReservations deducts 0.004 LTR from inventory,<br/>releases unused 0.001 LTR reservation"]
+```
+
+### 17.1 Smart Cadence Bands (UI Auto-Suggestions)
+
+The frontend helper `recurringCadence.js` inspects the contract's `GmaFrequency` and automatically groups the service into a **Cadence Band** to suggest visit days on the calendar:
+
+| Cadence Band | `GmaFrequency` Options | UI Auto-Selected Days |
+| :--- | :--- | :--- |
+| `daily` | `DAILY` | All 7 days a week |
+| `six_days` | `SIX_TIMES_A_WEEK` | Monday through Saturday (skips Sunday) |
+| `weekdays` | `FIVE_TIMES_A_WEEK` | Monday through Friday (skips weekends) |
+| `four_week` | `FOUR_TIMES_A_WEEK` | 4 evenly spaced days (e.g. Mon, Tue, Thu, Fri) |
+| `thrice_week` | `THRICE_A_WEEK` | Mon, Wed, Fri |
+| `twice_week` | `TWICE_A_WEEK` | Mon, Thu (or Tue, Fri) |
+| `weekly` | `WEEKLY` | Same day every week (e.g. every Monday) |
+| `four_month` | `FOUR_TIMES_A_MONTH` | 4 evenly spaced days across the month |
+| `thrice_month` | `THRICE_A_MONTH` | 3 evenly spaced days across the month |
+| `fortnightly` | `FORTNIGHTLY` | Every 14 days |
+| `twice_month` | `TWICE_A_MONTH` | 1st and 3rd week (e.g. days ~1 and ~15) |
+| `monthly` | `MONTHLY` | Once a month on the anchor day |
+| `every_2_months` | `EVERY_2_MONTHS` | Spaced once every 2 months |
+| `quarterly` | `QUARTERLY` | Spaced once every 3 months |
+| `every_4_months` | `EVERY_4_MONTHS` | Spaced once every 4 months |
+| `every_6_months` | `EVERY_6_MONTHS` | Spaced once every 6 months |
+
+* If an operator selects a day outside the cadence, the UI tags the service as `off cadence` and warns the operator.
+
+### 17.2 Visit Slot Availability
+
+Each task generated against an SO service line consumes **one planned visit slot**:
+
+$$\text{Remaining Slots} = \text{SO Service Line Planned Visits} - \text{Existing Scheduled/Completed Tasks}$$
+
+* If an SO line has `visits = 4` and 3 tasks are already scheduled, only 1 slot remains.
+* If the user attempts to generate 2 more tasks, the preview flags the extra dates:
+  `"No remaining visit slots fit this date."`
+
+### 17.3 Backend Frequency Density Warnings
+
+In `RecurringTaskExpansionServiceImpl.buildFrequencyDensityWarnings`:
+* The backend resolves the contract cadence from the linked contract site-service.
+* It computes the expected visits for the selected date range:
+  $$\text{expected} = \max\left(1, \text{round}\left(\frac{\text{cadence.totalVisits} \times \text{rangeDays}}{365}\right)\right)$$
+* If the number of selected dates exceeds `expected + 1` (tolerance), the preview flags the dates with `status: WARNING`:
+  > *"Too many visits for {serviceName} ({frequencyName}). About {expected} visits fit this date range, but {generated} are selected. Remove extra dates on the calendar — you can still create if needed."*
+
+### 17.4 Just-in-Time Consumable Stock Reservation
+
+When recurring tasks are created:
+1. **Within 7 Days**: Any task scheduled within the reservation window (`app.task.stock-reserve-window-days`, default 7 days) reserves chemical consumables from the branch stock immediately (`stockReservationStatus = RESERVED`).
+2. **Beyond 7 Days**: Later tasks are created with `stockReservationStatus = SCHEDULED` without locking branch stock far in advance.
+3. **Nightly Job**: `TaskStockReservationService.reserveUpcomingForCurrentTenant()` runs every night, automatically locking stock for tasks that have entered the 7-day window.
+
+### 17.5 Mobile Field Execution & Stock Settlement
+
+1. **Unit Conversion**:
+   * Inventory stores chemical items in base stock UOM (`LTR` or `KG`).
+   * When mobile technicians query `GET /api/v1/mobile/tasks/my/detail-screen` or `/detail`, `MobileTaskQtyUnits` automatically translates quantities to task units (`5 ml` instead of `0.005 LTR`; `250 gram` instead of `0.25 KG`).
+2. **Submitting Chemical Usage**:
+   * Technicians enter actual consumption in `ml` / `gram` on `PUT /api/v1/mobile/tasks/my/service-executions`.
+   * `TaskServiceExecutionServiceImpl` translates `4 ml` back to `0.004 LTR` via `StockQty.fromTaskUnit` and updates `TaskMaterial` and `ServiceExecutionChemicalUsage`.
+3. **Task Completion Settlement**:
+   * On `POST /api/v1/tasks/complete`, `StockManagementService.settleConsumableReservations()` consumes the actual used stock (`0.004 LTR`), returns any unused reservation (`0.001 LTR`) back to available stock, and increments execution counts on the Sales Order.
+ct_amend_mode` / `--amend-active-contracts`:
 
 1. ETL still scales financials + writes amendment log in SQL.
 2. ETL **does not** INSERT empty DRAFT SO shells for new branches.
